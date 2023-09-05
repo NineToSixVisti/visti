@@ -1,0 +1,68 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.2'
+	id 'io.spring.dependency-management' version '1.1.2'
+	id 'org.springdoc.openapi-gradle-plugin' version '1.6.0'
+}
+
+
+group = 'com.spring'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '3.1.2'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.jetbrains:annotations:24.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// OAuth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// db
+	compileOnly 'org.projectlombok:lombok'
+//	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// tester
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.projectlombok:lombok:1.18.26'
+	testImplementation 'org.projectlombok:lombok:1.18.26'
+	testImplementation 'org.projectlombok:lombok:1.18.26'
+	testImplementation 'io.rest-assured:rest-assured:5.3.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
