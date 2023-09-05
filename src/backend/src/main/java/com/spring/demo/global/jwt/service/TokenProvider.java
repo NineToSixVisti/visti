@@ -1,6 +1,6 @@
 package com.spring.demo.global.jwt.service;
 
-import com.spring.demo.utils.advice.ApiException;
+import com.spring.demo.utils.exception.ApiException;
 import com.spring.demo.domain.member.service.CustomUserDetailsService;
 import com.spring.demo.global.jwt.constant.GrantType;
 import com.spring.demo.global.jwt.constant.TokenType;
@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import static com.spring.demo.domain.member.exception.ErrorCode.*;
+import static com.spring.demo.utils.exception.ErrorCode.*;
 
 @Slf4j
 @Component
