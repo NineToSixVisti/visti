@@ -1,6 +1,6 @@
 package com.spring.demo.global.jwt.service;
 
-import com.spring.demo.utils.advice.ApiException;
+import com.spring.demo.utils.exception.ApiException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static com.spring.demo.domain.member.exception.ErrorCode.*;
+import static com.spring.demo.utils.exception.ErrorCode.*;
 
 
 @Slf4j

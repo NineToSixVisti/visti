@@ -2,7 +2,7 @@ package com.spring.demo.domain.storybox.entity;
 
 import com.spring.demo.domain.common.entity.BaseEntity;
 import com.spring.demo.domain.member.entity.Member;
-import com.spring.demo.domain.member.entity.MemberStory;
+import com.spring.demo.domain.member.entity.MemberLikeStory;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class Story extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Member.class)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -37,19 +37,20 @@ public class Story extends BaseEntity {
     private String nft_hash;
 
     @OneToMany(mappedBy = "story")
-    private List<MemberStory> membersLiked = new ArrayList<>();
+    private List<MemberLikeStory> membersLiked = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(targetEntity = StoryBox.class)
     @JoinColumn(name = "storybox_id")
     private StoryBox storyBox;
 
-
     @Builder
-    public Story(String letter_path, String image_path, String audio_path, String video_path){
+    public Story(Member member, String letter_path, String image_path, String audio_path, String video_path, StoryBox storyBox){
+        this.member = member;
         this.letter_path = letter_path;
         this.image_path = image_path;
         this.audio_path = audio_path;
         this.video_path = video_path;
+        this.storyBox = storyBox;
     }
 
     public void makeNFT(String secret_key, String nft_hash){

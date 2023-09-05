@@ -4,6 +4,7 @@ import com.spring.demo.domain.common.entity.BaseEntity;
 import com.spring.demo.domain.member.constant.MemberType;
 import com.spring.demo.domain.member.constant.Role;
 import com.spring.demo.domain.storybox.entity.Story;
+import com.spring.demo.domain.storybox.entity.StoryBoxMember;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +39,9 @@ public class Member extends BaseEntity{
     @Column
     private String refreshToken;
 
+    @Column
+    private Boolean status;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private Role role;
@@ -52,7 +56,10 @@ public class Member extends BaseEntity{
     private List<Story> memberStories = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<MemberStory> memberLikedStories = new ArrayList<>();
+    private List<MemberLikeStory> memberLikedStories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<StoryBoxMember> storyBoxes = new ArrayList<>();
 
     @Builder
     public Member(String email, String password, String name, String nickname, String profile_path, Role role, MemberType memberType){
@@ -63,12 +70,22 @@ public class Member extends BaseEntity{
         this.profile_path = profile_path;
         this.role = role;
         this.memberType = memberType;
+        this.status = true;
     }
+
     public void updateMemberToken(String refreshToken){
         this.refreshToken = refreshToken;
     }
 
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    public void expireMember(){
+        this.email = null;
+        this.name = null;
+        this.profile_path = null;
+        this.role = null;
+        this.status = false;
     }
 }
