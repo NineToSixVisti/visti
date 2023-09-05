@@ -97,10 +97,13 @@ public class SecurityConfig {
     }
 
     private static final String[] WHITELIST = {
+            // Send Mail
+            "/api/member/sendmail",
+
             // Login
             "/api/member/signin",
-            "/api/member/verifyMember",
-            "/api/member/verifyAuthNum",
+            "/api/member/verify-member",
+            "/api/member/verify-authnum",
             "/oauth/**",
 
             // favicon

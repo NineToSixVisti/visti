@@ -3,14 +3,12 @@ package com.spring.demo.domain.member.entity;
 import com.spring.demo.domain.common.entity.BaseEntity;
 import com.spring.demo.domain.member.constant.MemberType;
 import com.spring.demo.domain.member.constant.Role;
-import com.spring.demo.domain.story.entity.Story;
+import com.spring.demo.domain.storybox.entity.Story;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,5 +66,9 @@ public class Member extends BaseEntity{
     }
     public void updateMemberToken(String refreshToken){
         this.refreshToken = refreshToken;
+    }
+
+    public void updatePassword(String password){
+        this.password = password;
     }
 }

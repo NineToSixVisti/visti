@@ -1,4 +1,4 @@
-package com.spring.demo.domain.story.entity;
+package com.spring.demo.domain.storybox.entity;
 
 import com.spring.demo.domain.common.entity.BaseEntity;
 import com.spring.demo.domain.member.entity.Member;
@@ -38,6 +38,11 @@ public class Story extends BaseEntity {
 
     @OneToMany(mappedBy = "story")
     private List<MemberStory> membersLiked = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "storybox_id")
+    private StoryBox storyBox;
+
 
     @Builder
     public Story(String letter_path, String image_path, String audio_path, String video_path){

@@ -174,6 +174,8 @@ public class MemberServiceImpl implements MemberService{
         throw new ApiException(NO_MEMBER_ERROR);
     }
 
+
+
     @Override
     public BaseResponseDTO<Member> getInfo(MemberInformDTO memberInfo) {
         /*

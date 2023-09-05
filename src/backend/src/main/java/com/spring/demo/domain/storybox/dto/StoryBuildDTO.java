@@ -1,4 +1,4 @@
-package com.spring.demo.domain.story.dto;
+package com.spring.demo.domain.storybox.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

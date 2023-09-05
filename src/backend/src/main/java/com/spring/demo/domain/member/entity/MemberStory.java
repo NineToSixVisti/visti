@@ -1,6 +1,6 @@
 package com.spring.demo.domain.member.entity;
 
-import com.spring.demo.domain.story.entity.Story;
+import com.spring.demo.domain.storybox.entity.Story;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

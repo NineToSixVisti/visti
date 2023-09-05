@@ -34,21 +34,22 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/verifyMember")
+    @PostMapping("/verify-member")
     @Operation(summary = "이메일 중복확인", description = "이메일이 중복이 되는지 확인합니다.", tags = {"회원 가입"})
     public ResponseEntity<? extends BaseResponseDTO<String>> verifyMember(@RequestBody MemberInformDTO memberInfo){
         BaseResponseDTO<String> response = memberService.verifyMember(memberInfo);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/verifyAuthNum")
-    @Operation(summary = "이메일 인증[이메일 전송]", description = "이메일이 중복이 되는지 확인을 위한 메일 전송을 진행합니다..", tags = {"회원 가입"})
+    @GetMapping("/sendmail")
+    @Operation(summary = "이메일[이메일 전송]", description = " 메일 전송을 진행합니다.. type : 1. certification [회원 가입] \n 2. find [임시 비밀번호 발급]", tags = {"이메일 전송"})
     public ResponseEntity<? extends BaseResponseDTO<String>> sendMail(@RequestParam String email, @RequestParam String type)
             throws MessagingException {
         BaseResponseDTO<String> response = emailService.sendMail(email, type);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-    @PostMapping("/verifyAuthNum")
+
+    @PostMapping("/verify-authnum")
     @Operation(summary = "이메일 인증[이메일 확인]", description = "이메일이 중복이 되는지 확인합니다.", tags = {"회원 가입"})
     public ResponseEntity<? extends BaseResponseDTO<String>> verifyEmail(@RequestBody AuthDTO verificationCode){
         BaseResponseDTO<String> response = memberService.verifyEmail(verificationCode);
@@ -65,7 +66,7 @@ public class MemberController {
     @PostMapping("/signout")
     @Operation(summary = "로그 아웃", description = "버튼 클릭시 로그아웃 진행[구현 안됨]", tags = {"설정"})
     public ResponseEntity<?> signOut(HttpServletResponse httpResponse){
-        return null;
+        return ResponseEntity.status(200).body("구현이 안되어있습니다.");
     }
 
 
