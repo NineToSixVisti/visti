@@ -7,7 +7,7 @@ import com.spring.demo.domain.member.dto.MemberJoinDTO;
 
 import com.spring.demo.domain.member.dto.MemberLoginDTO;
 import com.spring.demo.domain.member.entity.Member;
-import com.spring.demo.utils.advice.ApiException;
+import com.spring.demo.utils.exception.ApiException;
 import com.spring.demo.domain.member.repository.MemberRepository;
 import com.spring.demo.global.jwt.dto.TokenDTO;
 import com.spring.demo.global.jwt.service.TokenProvider;
@@ -28,7 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.spring.demo.domain.member.exception.ErrorCode.*;
+import static com.spring.demo.utils.exception.ErrorCode.*;
 
 
 @Service
