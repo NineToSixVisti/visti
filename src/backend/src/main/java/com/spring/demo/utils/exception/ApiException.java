@@ -1,7 +1,5 @@
-package com.spring.demo.utils.advice;
+package com.spring.demo.utils.exception;
 
-import com.spring.demo.domain.member.exception.ErrorCode;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
