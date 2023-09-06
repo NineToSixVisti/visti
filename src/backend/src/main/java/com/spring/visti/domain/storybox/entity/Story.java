@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,10 @@ public class Story extends BaseEntity {
     private String secret_key;
     @Column
     private String nft_hash;
+    @Column
+    private Boolean blind;
+    @Column(updatable = false)
+    private LocalDateTime finish_at;
 
     @OneToMany(mappedBy = "story")
     private List<MemberLikeStory> membersLiked = new ArrayList<>();
@@ -44,13 +49,15 @@ public class Story extends BaseEntity {
     private StoryBox storyBox;
 
     @Builder
-    public Story(Member member, String letter_path, String image_path, String audio_path, String video_path, StoryBox storyBox){
+    public Story(Member member, String letter_path, String image_path, String audio_path, String video_path, StoryBox storyBox, Boolean blind, LocalDateTime finish_at){
         this.member = member;
         this.letter_path = letter_path;
         this.image_path = image_path;
         this.audio_path = audio_path;
         this.video_path = video_path;
         this.storyBox = storyBox;
+        this.blind = blind;
+        this.finish_at = finish_at;
     }
 
     public void makeNFT(String secret_key, String nft_hash){
