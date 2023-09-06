@@ -41,8 +41,6 @@ public class MemberServiceImpl implements MemberService{
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    private final EmailService emailService;
     private final AuthService authService;
 
     @Override
@@ -85,7 +83,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public BaseResponseDTO<String> verifyEmail(AuthDTO authInfo) {
+    public BaseResponseDTO<String> verifyAuthNum(AuthDTO authInfo) {
         /*
         example
          authNumber = {

@@ -21,7 +21,7 @@ public class StoryBoxController {
     private final StoryBoxService storyBoxService;
 
     @PostMapping("/create")
-    @Operation(summary = "스토리-박스 만들기", description = "스토리를 만듭니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> createStoryBox(
             @RequestBody StoryBoxBuildDTO storyBoxInfo,
             HttpServletRequest httpServletRequest
@@ -30,19 +30,30 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/setting/{id}")
-    @Operation(summary = "스토리-박스 만들기", description = "스토리를 만듭니다.", tags={"스토리-박스 내부"})
+    @PostMapping("/{storyBoxId}/join")
+    @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.", tags={"스토리-박스 내부"})
+    public ResponseEntity<? extends BaseResponseDTO<String>> joinStoryBox(
+            @PathVariable Long storyBoxId,
+            HttpServletRequest httpServletRequest
+    ) {
+        BaseResponseDTO<String> response = storyBoxService.joinStoryBox(storyBoxId, httpServletRequest);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+
+    @PostMapping("/{storyBoxId}/setting")
+    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
-            @PathVariable Long id,
+            @PathVariable Long storyBoxId,
             @RequestBody StoryBoxSetDTO storyBoxInfo,
             HttpServletRequest httpServletRequest
     ) {
-        BaseResponseDTO<String> response = storyBoxService.setStoryBox(id, storyBoxInfo, httpServletRequest);
+        BaseResponseDTO<String> response = storyBoxService.setStoryBox(storyBoxId, storyBoxInfo, httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "스토리 삭제", description = "스토리를 삭제합니다.", tags={"스토리 내부"})
+    @Operation(summary = "스토리-박스 삭제", description = "스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
             @PathVariable Long id,
             HttpServletRequest httpServletRequest

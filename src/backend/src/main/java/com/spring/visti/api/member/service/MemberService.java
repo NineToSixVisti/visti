@@ -14,7 +14,7 @@ public interface MemberService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
 
     BaseResponseDTO<String> verifyMember(MemberInformDTO memberInfo);
-    BaseResponseDTO<String> verifyEmail(AuthDTO memberInfo);
+    BaseResponseDTO<String> verifyAuthNum(AuthDTO memberInfo);
 
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);
     BaseResponseDTO<?> signOut(HttpServletRequest request);
