@@ -78,7 +78,7 @@ public class MemberController {
 
     @GetMapping("/signout")
     @Operation(summary = "로그 아웃", description = "버튼 클릭시 로그아웃 진행[구현 안됨]", tags = {"마이페이지"})
-    public ResponseEntity<?> signOut(HttpServletResponse httpResponse){
+    public ResponseEntity<?> signOut(HttpServletRequest httpServletRequest){
         return ResponseEntity.status(200).body("구현이 안되어있습니다.");
     }
 

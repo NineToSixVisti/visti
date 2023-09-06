@@ -50,7 +50,6 @@ public class MemberServiceImpl implements MemberService{
         example
          memberInfo = {
             email : example@example.com
-            name : myName
             nickname : myNickname
             password : password
          }
