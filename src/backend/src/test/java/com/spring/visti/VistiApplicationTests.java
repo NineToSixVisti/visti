@@ -30,8 +30,8 @@ class VistiApplicationTests {
 
 	@Test
 	void TestJoinService() {
-		member1 = new MemberJoinDTO("test@test.com", "12345678", "테스터", "테스트중");
-		member2 = new MemberJoinDTO("whipbaek@gmail.com", "12345678", "종인", "ㅋㅋ 고생좀 했네");
+		member1 = new MemberJoinDTO("test@test.com", "12345678", "테스트중");
+		member2 = new MemberJoinDTO("whipbaek@gmail.com", "12345678", "ㅋㅋ 고생좀 했네");
 
 		memberService.signUp(member1);
 
