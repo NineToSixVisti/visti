@@ -5,8 +5,13 @@ import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberStoryRepository;
+import com.spring.visti.domain.report.dto.ReportBuildDTO;
+import com.spring.visti.domain.report.entity.Report;
+import com.spring.visti.domain.report.repository.ReportRepository;
 import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
 import com.spring.visti.domain.storybox.entity.Story;
+import com.spring.visti.domain.storybox.entity.StoryBox;
+import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.global.jwt.service.TokenProvider;
 
@@ -29,11 +34,18 @@ public class StoryServiceImpl implements StoryService{
 
     private final MemberRepository memberRepository;
     private final MemberStoryRepository memberStoryRepository;
+    private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRepository;
     private final TokenProvider tokenProvider;
+
+    private final ReportRepository reportRepository;
+
     @Override
     public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
+
+        boolean canWriteStory = member.dailyStoryCount();
+        if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
 
         Story story = storyBuildDTO.toEntity(member);
         storyRepository.save(story);
@@ -92,6 +104,11 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    public BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest) {
+        return null;
+    }
+
+    @Override
     public BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest) {
 
         // 사용자 조회
@@ -114,6 +131,7 @@ public class StoryServiceImpl implements StoryService{
         storyRepository.delete(story);
         return new BaseResponseDTO<>("스토리 삭제가 완료되었습니다.", 200);
     }
+
 
     public Member getEmail(HttpServletRequest httpServletRequest) {
 

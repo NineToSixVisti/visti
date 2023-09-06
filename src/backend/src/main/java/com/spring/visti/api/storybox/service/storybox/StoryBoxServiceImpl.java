@@ -4,6 +4,7 @@ import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.dto.MemberJoinDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
+import com.spring.visti.domain.storybox.constant.Position;
 import com.spring.visti.domain.storybox.dto.storybox.StoryBoxBuildDTO;
 import com.spring.visti.domain.storybox.dto.storybox.StoryBoxInfoDTO;
 import com.spring.visti.domain.storybox.dto.storybox.StoryBoxSetDTO;
@@ -40,6 +41,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         storyBoxRepository.save(storyBox);
 
+        StoryBoxMember newStoryBoxMember = new StoryBoxMember().joinBox(member, storyBox, Position.HOST);
+
+        storyBoxMemberRepository.save(newStoryBoxMember);
+
         return new BaseResponseDTO<>("스토리-박스 생성이 완료되었습니다.", 200);
     }
 
@@ -58,7 +63,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         StoryBox storyBox = getStoryBox(storyBoxId);
 
-        StoryBoxMember newStoryBoxMember = new StoryBoxMember().joinBox(member, storyBox);
+        StoryBoxMember newStoryBoxMember = new StoryBoxMember().joinBox(member, storyBox, Position.GUEST);
 
         storyBoxMemberRepository.save(newStoryBoxMember);
 
@@ -71,7 +76,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         StoryBox storyBox = getStoryBox(id);
 
-        Long creatorId = storyBox.getId();
+        Long creatorId = storyBox.getCreator().getId();
 
         if (!creatorId.equals(member.getId())){
             throw new ApiException(UNAUTHORIZED_STORY_BOX_ERROR);
@@ -105,7 +110,9 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
         Optional<StoryBoxMember> targetStoryBoxMember = storyBoxes.stream()
-                .filter(storyBoxMember -> storyBoxMember.getStoryBox().getId().equals(storyBoxId))
+                .filter(storyBoxMember ->
+                        storyBoxMember.getStoryBox().getId()
+                                .equals(storyBoxId))
                 .findFirst();
 
         if(targetStoryBoxMember.isPresent()) {
@@ -134,6 +141,17 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         if (optionalStoryBox.isEmpty()){ throw new ApiException(NO_STORY_BOX_ERROR); }
 
         return optionalStoryBox.get();
+    }
+
+    public Boolean isMemberInStoryBox(Long storyBoxId, Member member){
+        StoryBox storyBox = getStoryBox(storyBoxId);
+
+        List<StoryBoxMember> members = storyBox.getStoryBoxMembers();
+
+        return members.stream()
+                .anyMatch(storyBoxMember ->
+                        storyBoxMember.getMember().getId()
+                        .equals(member.getId()));
     }
 
 }

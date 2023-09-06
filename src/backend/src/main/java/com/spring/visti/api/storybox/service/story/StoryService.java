@@ -1,6 +1,7 @@
 package com.spring.visti.api.storybox.service.story;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.domain.report.dto.ReportBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,5 +21,9 @@ public interface StoryService {
 
     BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest);
 
+    BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest);
+
     BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest);
+
+
 }

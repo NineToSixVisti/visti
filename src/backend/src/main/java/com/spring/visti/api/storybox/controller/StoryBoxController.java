@@ -52,13 +52,13 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{storyBoxId}")
     @Operation(summary = "스토리-박스 삭제", description = "스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
-            @PathVariable Long id,
+            @PathVariable Long storyBoxId,
             HttpServletRequest httpServletRequest
     ) {
-        BaseResponseDTO<String> response = storyBoxService.leaveStoryBox(id, httpServletRequest);
+        BaseResponseDTO<String> response = storyBoxService.leaveStoryBox(storyBoxId, httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

@@ -2,6 +2,7 @@ package com.spring.visti.api.storybox.controller;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.story.StoryService;
+import com.spring.visti.domain.report.dto.ReportBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,6 +78,5 @@ public class StoryController {
         BaseResponseDTO<String> response = storyService.deleteStory(storyId, httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
 
 }
