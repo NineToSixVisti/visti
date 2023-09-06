@@ -21,8 +21,6 @@ public interface StoryService {
 
     BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest);
 
-    BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest);
-
     BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest);
 
 

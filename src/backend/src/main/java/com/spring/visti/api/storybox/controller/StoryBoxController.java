@@ -42,7 +42,7 @@ public class StoryBoxController {
 
 
     @PostMapping("/{storyBoxId}/setting")
-    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable Long storyBoxId,
             @RequestBody StoryBoxSetDTO storyBoxInfo,

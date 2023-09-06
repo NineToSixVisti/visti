@@ -63,7 +63,7 @@ public class StoryServiceImpl implements StoryService{
 
         Story story = getStory(storyId);
 
-        return new BaseResponseDTO<Story>("스토리 생성이 완료되었습니다.", 200, story);
+        return new BaseResponseDTO<Story>("스토리 조회가 완료되었습니다.", 200, story);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class StoryServiceImpl implements StoryService{
         Member member = getEmail(httpServletRequest);
 
         List<Story> myStories = member.getMemberStories();
-        return new BaseResponseDTO<List<Story>>("자신이 작성한 스토리 조회가 완료되었습니다.", 200, myStories);
+        return new BaseResponseDTO<List<Story>>("작성한 스토리 조회가 완료되었습니다.", 200, myStories);
     }
 
     @Override
@@ -101,11 +101,6 @@ public class StoryServiceImpl implements StoryService{
                 .toList();
 
         return new BaseResponseDTO<List<Story>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
-    }
-
-    @Override
-    public BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest) {
-        return null;
     }
 
     @Override
