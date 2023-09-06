@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
@@ -41,46 +42,55 @@ public class ReportServiceImpl implements ReportService{
     private final TokenProvider tokenProvider;
 
     @Override
-    public BaseResponseDTO<String> createReport(Long storyBoxId, Long storyId, ReportBuildDTO reportInfo, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, HttpServletRequest httpServletRequest) {
 
         Member reporter = getEmail(httpServletRequest);
 
         Story story = getStory(storyId);
 
-        Optional<Report> checkReport = reportRepository.findByMemberAndStory( reporter, story);
-
-        Report newReport = reportInfo.toEntity(reporter, story);
+        Optional<Report> checkReport = reportRepository.findByReporterAndReportedStory(reporter, story);
 
         if (checkReport.isPresent()){
             throw new ApiException(ALREADY_REPORTED);
         }
 
+        Report newReport = reportInfo.toEntity(reporter, story);
         reportRepository.save(newReport);
         return new BaseResponseDTO<>("신고가 완료되었습니다.", 200);
     }
 
     @Override
-    public BaseResponseDTO<String> readReportDetail(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<Report> readReportDetail(Long reportId, HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
-        return null;
+        Report report = getReport(reportId);
+
+        return new BaseResponseDTO<Report>("신고를 조회합니다.", 200, report);
     }
 
     @Override
-    public BaseResponseDTO<String> readReports(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<List<Report>> readReports(HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
-        return null;
+        List<Report> reports = reportRepository.findReportByProcessed(null);
+
+        return new BaseResponseDTO<List<Report>>("신고된 스토리들을 확인합니다.", 200, reports);
     }
 
+
     @Override
-    public BaseResponseDTO<TokenDTO> updateReport(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> updateReport(Long reportId, Boolean process, HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
-        return null;
+        Report report = getReport(reportId);
+
+        report.processReport(process);
+        reportRepository.save(report);
+
+        return new BaseResponseDTO<>("신고가 처리가 완료되었습니다.", 200);
     }
 
     public Member getEmail(HttpServletRequest httpServletRequest) {
@@ -103,13 +113,13 @@ public class ReportServiceImpl implements ReportService{
         return optionalStory.get();
     }
 
-    public StoryBox getStoryBox(Long storyBoxId) {
+    public Report getReport(Long reportId) {
 
-        Optional<StoryBox> optionalStoryBox = storyBoxRepository.findById(storyBoxId);
+        Optional<Report> optionalReport = reportRepository.findById(reportId);
 
-        if (optionalStoryBox.isEmpty()){ throw new ApiException(NO_STORY_BOX_ERROR); }
+        if (optionalReport.isEmpty()){ throw new ApiException(NO_REPORT_ERROR); }
 
-        return optionalStoryBox.get();
+        return optionalReport.get();
     }
 
 }
