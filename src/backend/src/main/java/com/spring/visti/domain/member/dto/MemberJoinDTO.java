@@ -14,14 +14,12 @@ import lombok.NoArgsConstructor;
 public class MemberJoinDTO {
     private String email;
     private String password;
-    private String name;
     private String nickname;
 
     @Builder
-    public MemberJoinDTO(String email, String password, String name, String nickname){
+    public MemberJoinDTO(String email, String password, String nickname){
         this.email = email;
         this.password = password;
-        this.name = name;
         this.nickname = nickname;
     }
 
@@ -30,7 +28,6 @@ public class MemberJoinDTO {
         return Member.builder()
                 .email(email)
                 .password(password)
-                .name(name)
                 .nickname(nickname)
                 .role(Role.from("USER"))
                 .memberType(memberType)
