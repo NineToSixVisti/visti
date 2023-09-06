@@ -35,17 +35,18 @@ public enum ErrorCode {
     NO_INVITATION_LINK(HttpStatus.NOT_FOUND, "MEMBER007","커뮤니티 초대 링크가 없습니다"),
 
     // Story Part
-    NO_STORY_ERROR(HttpStatus.NOT_FOUND, "STORY001", "스토리 정보가 없습니다."),
+    NO_STORY_ERROR(HttpStatus.BAD_REQUEST, "STORY001", "스토리 정보가 없습니다."),
     UNAUTHORIZED_STORY_ERROR(HttpStatus.FORBIDDEN, "STORY002", "스토리를 삭제할 권한이 없습니다."),
     MAX_STORY_QUOTA_REACHED(HttpStatus.FORBIDDEN, "STORY003", "스토리 작성 할당량 초과"),
 
     // Story Box Part
-    NO_STORY_BOX_ERROR(HttpStatus.NOT_FOUND, "SBOX001", "스토리 박스 정보가 없습니다."),
+    NO_STORY_BOX_ERROR(HttpStatus.BAD_REQUEST, "SBOX001", "스토리 박스 정보가 없습니다."),
     UNAUTHORIZED_STORY_BOX_ERROR(HttpStatus.FORBIDDEN, "SBOX002", "스토리 박스를 삭제할 권한이 없습니다."),
     ALREADY_JOIN_ERROR(HttpStatus.CONFLICT, "SBOX003", "이미 들어가있는 스토리 박스 입니다."),
 
     // Report Part
-    ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다.");
+    ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다."),
+    NO_REPORT_ERROR(HttpStatus.BAD_REQUEST, "REPORT001", "신고가 조회되지 않았습니다.");
 
     
     private HttpStatus status;
