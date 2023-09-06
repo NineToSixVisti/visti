@@ -5,6 +5,7 @@ import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
+import com.spring.visti.utils.exception.ApiException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.spring.visti.utils.exception.ErrorCode.MAX_STORY_QUOTA_REACHED;
 
 @Entity
 @Getter
@@ -43,8 +46,14 @@ public class Member extends BaseEntity{
     private Boolean status;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 16)
     private Role role;
+
+    @Column
+    private Integer dailyStory;
+
+    @Column
+    private Integer reportedCount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -71,6 +80,8 @@ public class Member extends BaseEntity{
         this.role = role;
         this.memberType = memberType;
         this.status = true;
+        this.dailyStory = 0;
+        this.reportedCount = 0;
     }
 
     public void updateMemberToken(String refreshToken){
@@ -79,6 +90,27 @@ public class Member extends BaseEntity{
 
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    public boolean dailyStoryCount(){
+        Integer limit;
+
+        if (this.role.equals(Role.USER)){
+            limit = 5;
+
+            if (this.dailyStory >= limit){
+                return false;
+            }
+
+        } else if (this.role.equals(Role.SUBSCRIBER)) {
+            limit = 6;
+
+            if (this.dailyStory >= limit){
+                return false;
+            }
+        }
+        this.dailyStory += 1;
+        return true;
     }
 
     public void expireMember(){
