@@ -2,25 +2,21 @@ package com.spring.visti.api.report.service;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.Role;
-import com.spring.visti.domain.member.dto.MemberInformDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
-import com.spring.visti.domain.member.dto.MemberLoginDTO;
+
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.report.dto.ReportBuildDTO;
 import com.spring.visti.domain.report.entity.Report;
 import com.spring.visti.domain.report.repository.ReportRepository;
 import com.spring.visti.domain.storybox.entity.Story;
-import com.spring.visti.domain.storybox.entity.StoryBox;
-import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
+
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
-import com.spring.visti.global.jwt.dto.TokenDTO;
+
 import com.spring.visti.global.jwt.service.TokenProvider;
-import com.spring.visti.global.redis.dto.AuthDTO;
 import com.spring.visti.utils.exception.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -87,8 +83,22 @@ public class ReportServiceImpl implements ReportService{
 
         Report report = getReport(reportId);
 
+        // Report 설정
         report.processReport(process);
+
+        // Story 신고 카운팅
+        Story reportStory = report.getReportedStory();
+        Integer storyCount = reportStory.getReportedCount() + 1;
+        reportStory.updateReportCount(storyCount);
+
+        // Member 신고 카운팅
+        Member reportedMember = reportStory.getMember();
+        Integer memberCount =  reportedMember.getReportedCount() + 1;
+        reportedMember.updateReportCount(memberCount);
+
         reportRepository.save(report);
+        storyRepository.save(reportStory);
+        memberRepository.save(reportedMember);
 
         return new BaseResponseDTO<>("신고가 처리가 완료되었습니다.", 200);
     }

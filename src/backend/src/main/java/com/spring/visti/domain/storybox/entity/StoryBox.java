@@ -2,7 +2,7 @@ package com.spring.visti.domain.storybox.entity;
 
 import com.spring.visti.domain.common.entity.BaseEntity;
 import com.spring.visti.domain.member.entity.Member;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxSetDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +27,6 @@ public class StoryBox extends BaseEntity {
     @Column
     private String box_img_path;
 
-    @Column
-    private String storybox_url;
 
     @Column
     private String name;
@@ -36,7 +34,7 @@ public class StoryBox extends BaseEntity {
     @Column
     private String detail;
 
-    @Column
+    @Column(updatable = false)
     private Boolean blind;
 
     @Column(updatable = false)
@@ -49,10 +47,9 @@ public class StoryBox extends BaseEntity {
     private List<StoryBoxMember> storyBoxMembers = new ArrayList<>();
 
     @Builder
-    public StoryBox(Member creator, String box_img_path, String storybox_url, String name, String detail, Boolean blind, LocalDateTime finish_at){
+    public StoryBox(Member creator, String box_img_path, String name, String detail, Boolean blind, LocalDateTime finish_at){
         this.creator = creator;
         this.box_img_path = box_img_path;
-        this.storybox_url = storybox_url;
         this.name = name;
         this.detail = detail;
         this.blind = blind;
@@ -63,17 +60,11 @@ public class StoryBox extends BaseEntity {
         if(storyBoxSetDTO.getBox_img_path() != null) {
             this.box_img_path = storyBoxSetDTO.getBox_img_path();
         }
-        if(storyBoxSetDTO.getStorybox_url() != null) {
-            this.storybox_url = storyBoxSetDTO.getStorybox_url();
-        }
         if(storyBoxSetDTO.getName() != null) {
             this.name = storyBoxSetDTO.getName();
         }
         if(storyBoxSetDTO.getDetail() != null) {
             this.detail = storyBoxSetDTO.getDetail();
-        }
-        if(storyBoxSetDTO.getBlind() != null) {
-            this.blind = storyBoxSetDTO.getBlind();
         }
     }
 

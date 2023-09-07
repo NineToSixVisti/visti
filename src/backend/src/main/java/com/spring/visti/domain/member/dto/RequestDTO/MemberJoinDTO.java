@@ -1,4 +1,4 @@
-package com.spring.visti.domain.member.dto;
+package com.spring.visti.domain.member.dto.RequestDTO;
 
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.entity.Member;

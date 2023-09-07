@@ -5,7 +5,7 @@ import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
-import com.spring.visti.utils.exception.ApiException;
+
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.spring.visti.utils.exception.ErrorCode.MAX_STORY_QUOTA_REACHED;
 
 @Entity
 @Getter
@@ -91,6 +89,8 @@ public class Member extends BaseEntity{
     public void updatePassword(String password){
         this.password = password;
     }
+
+    public void updateReportCount(Integer reportedCount){this.reportedCount = reportedCount;}
 
     public boolean dailyStoryCount(){
         Integer limit;

@@ -36,10 +36,15 @@ public class Story extends BaseEntity {
     private String secret_key;
     @Column
     private String nft_hash;
-    @Column
+    @Column(updatable = false)
     private Boolean blind;
     @Column(updatable = false)
     private LocalDateTime finish_at;
+
+    @Column
+    private Integer reportedCount;
+
+
 
     @OneToMany(mappedBy = "story")
     private List<MemberLikeStory> membersLiked = new ArrayList<>();
@@ -58,10 +63,13 @@ public class Story extends BaseEntity {
         this.storyBox = storyBox;
         this.blind = blind;
         this.finish_at = finish_at;
+        this.reportedCount = 0;
     }
 
     public void makeNFT(String secret_key, String nft_hash){
         this.secret_key = secret_key;
         this.nft_hash = nft_hash;
     }
+
+    public void updateReportCount(Integer reportedCount){this.reportedCount = reportedCount;}
 }

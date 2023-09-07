@@ -1,4 +1,4 @@
-package com.spring.visti.domain.storybox.dto.story;
+package com.spring.visti.domain.storybox.dto.story.RequestDTO;
 
 
 import com.spring.visti.domain.member.entity.Member;

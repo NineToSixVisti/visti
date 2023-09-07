@@ -3,9 +3,10 @@ package com.spring.visti.api.member.controller;
 import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.api.member.service.EmailService;
 import com.spring.visti.api.member.service.MemberService;
-import com.spring.visti.domain.member.dto.MemberInformDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
-import com.spring.visti.domain.member.dto.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.redis.dto.AuthDTO;
@@ -85,10 +86,10 @@ public class MemberController {
 
     @GetMapping("/inform")
     @Operation(summary = "사용자 정보", description = "Post를 통해 받은 Email을 통해 정보를 받아옴", tags = {"마이페이지"})
-    public  ResponseEntity<? extends BaseResponseDTO<Member>> getInfo(
+    public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoDTO>> getInfo(
             HttpServletRequest httpServletRequest
     ){
-        BaseResponseDTO<Member> response = memberService.getInfo(httpServletRequest);
+        BaseResponseDTO<MemberMyInfoDTO> response = memberService.getInfo(httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

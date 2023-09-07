@@ -5,12 +5,10 @@ import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberStoryRepository;
-import com.spring.visti.domain.report.dto.ReportBuildDTO;
-import com.spring.visti.domain.report.entity.Report;
 import com.spring.visti.domain.report.repository.ReportRepository;
-import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
-import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.global.jwt.service.TokenProvider;
@@ -59,20 +57,27 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<Story> readStory(Long storyId) {
+    public BaseResponseDTO<List<StoryExposedDTO>> readMyStories(HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
 
-        Story story = getStory(storyId);
+        List<Story> _myStories = member.getMemberStories();
 
-        return new BaseResponseDTO<Story>("스토리 조회가 완료되었습니다.", 200, story);
+        List<StoryExposedDTO> myStories = _myStories.stream()
+                .map(StoryExposedDTO::of)
+                .toList();
+
+        return new BaseResponseDTO<List<StoryExposedDTO>>("작성한 스토리 조회가 완료되었습니다.", 200, myStories);
     }
 
     @Override
-    public BaseResponseDTO<List<Story>> readMyStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId) {
 
-        List<Story> myStories = member.getMemberStories();
-        return new BaseResponseDTO<List<Story>>("작성한 스토리 조회가 완료되었습니다.", 200, myStories);
+        Story _story = getStory(storyId);
+        StoryExposedDTO story = StoryExposedDTO.of(_story);
+
+        return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
     }
+
 
     @Override
     public BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest) {
@@ -91,16 +96,17 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         List<MemberLikeStory> memberStories = member.getMemberLikedStories();
 
         // MemberStory 리스트에서 Story 리스트를 추출
-        List<Story> stories = memberStories.stream()
+        List<StoryExposedDTO> stories = memberStories.stream()
                 .map(MemberLikeStory::getStory)
+                .map(StoryExposedDTO::of)
                 .toList();
 
-        return new BaseResponseDTO<List<Story>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
+        return new BaseResponseDTO<List<StoryExposedDTO>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
     }
 
     @Override

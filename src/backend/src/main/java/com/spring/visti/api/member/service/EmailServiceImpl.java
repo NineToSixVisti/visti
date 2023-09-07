@@ -42,7 +42,10 @@ public class EmailServiceImpl implements EmailService {
             subject = "[팀명] 임시 비밀번호 입니다.";
 
             // 임시 비밀번호로 Update
-            changePassword(email, authNum);
+            boolean isEmailChanged = changePassword(email, authNum);
+            if (!isEmailChanged){
+                return new BaseResponseDTO<>("Email을 정확히 입력해주세요.", 200);
+            }
         }else if(type.equals("certification")){
             // 인증 작업은 Redis에 저장한 다음 진행
             subject = "[팀명] 회원가입 인증번호입니다.";
@@ -67,14 +70,16 @@ public class EmailServiceImpl implements EmailService {
         return new BaseResponseDTO<>("이메일이 전송되었습니다.", 200);
     }
 
-    private void changePassword(String email, String authNum){
+    private boolean changePassword(String email, String authNum){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         String encryptedPassword = passwordEncoder.encode(authNum);
         if (optionalMember.isPresent()){
             Member member = optionalMember.get();
             member.updatePassword(encryptedPassword);
             memberRepository.save(member);
+            return true;
         }
+        return false;
     }
 
     public String createCode() {

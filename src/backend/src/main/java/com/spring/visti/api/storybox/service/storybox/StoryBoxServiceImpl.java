@@ -1,13 +1,16 @@
 package com.spring.visti.api.storybox.service.storybox;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberExposedDTO;
 import com.spring.visti.domain.member.entity.Member;
+import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.storybox.constant.Position;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxBuildDTO;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxInfoDTO;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxSetDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
+import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
+import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
@@ -51,9 +54,13 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     public BaseResponseDTO<String> joinStoryBox(Long storyBoxId, HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
-        List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
+
+        // 접속한 url 이 유효한지 검사
+
+
 
         // 이미 가입된 스토리 박스인지 확인
+        List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         boolean isAlreadyJoined = storyBoxes.stream()
                 .anyMatch(storyBoxMember -> storyBoxMember.getStoryBox().getId().equals(storyBoxId));
 
@@ -84,21 +91,96 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         storyBox.updateStoryBox(storyBoxSetDTO);
 
-        return  new BaseResponseDTO<>("스토리-박스 수정이 완료되었습니다.", 200);
+        return new BaseResponseDTO<>("스토리-박스 수정이 완료되었습니다.", 200);
     }
 
     @Override
-    public BaseResponseDTO<String> readStoryBoxInfo(StoryBoxInfoDTO memberInfo) {
-        return null;
+    public BaseResponseDTO<List<StoryBoxListDTO>> readMyStoryBoxes(HttpServletRequest httpServletRequest){
+        Member member = getEmail(httpServletRequest);
+
+        List<StoryBoxMember> _myStoryBoxes = member.getStoryBoxes();
+
+        List<StoryBoxListDTO> myStoryBoxes = _myStoryBoxes.stream()
+                .map(myStoryBox -> StoryBoxListDTO.of(myStoryBox.getStoryBox()))
+                .toList();
+
+
+        return new BaseResponseDTO<List<StoryBoxListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
     }
 
     @Override
-    public BaseResponseDTO<String> readMemberOfStoryBox(MemberJoinDTO memberInfo) {
-        return null;
+    public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
+
+        StoryBox storyBox = getStoryBox(id);
+
+        StoryBoxInfoDTO storyBoxInfoDTO = StoryBoxInfoDTO.toResponse(storyBox);
+
+        return new BaseResponseDTO<StoryBoxInfoDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
 
     @Override
-    public BaseResponseDTO<String> readMyStoryBoxes(MemberJoinDTO memberInfo){
+    public BaseResponseDTO<List<StoryBoxStoryListDTO>> readStoriesInStoryBox(Long id, HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
+
+        StoryBox storyBox = getStoryBox(id);
+
+        List<Story> readStoriesInStoryBox = storyBox.getStories();
+
+        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
+        List<Long> likedStoryIds = _memberLikeStory.stream()
+                .map(like -> like.getStory().getId())
+                .toList();
+
+        List<StoryBoxStoryListDTO> storiesInStoryBox = readStoriesInStoryBox.stream()
+                .map(story -> {
+                    StoryExposedDTO storyExposed = StoryExposedDTO.of(story);
+
+                    boolean isLiked = likedStoryIds.contains(story.getId());
+
+                    return StoryBoxStoryListDTO.toResponse(storyExposed, isLiked);
+                })
+                .toList();
+
+        return new BaseResponseDTO<List<StoryBoxStoryListDTO>>("스토리-박스 안의 스토리 조회가 완료되었습니다.", 200, storiesInStoryBox);
+    }
+
+    @Override
+    public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
+        StoryBox storyBox = getStoryBox(id);
+
+        List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
+
+        //private Position position; 받아와야함...
+        List<StoryBoxMemberListDTO> storyBoxMembers = _storyBoxMembers.stream()
+                .map(storyBoxMember -> {
+
+                    MemberExposedDTO memberInform = MemberExposedDTO.of(storyBoxMember.getMember());
+                    Position memberPosition = storyBoxMember.getPosition();
+
+                    return StoryBoxMemberListDTO.toResponse(memberInform, memberPosition);
+                })
+                .toList();
+
+        return new BaseResponseDTO<List<StoryBoxMemberListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxMembers);
+    }
+
+    @Override
+    public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
+
+        StoryBox storyBox = getStoryBox(id);
+
+        StoryBoxDetailDTO storyBoxInfoDTO = StoryBoxDetailDTO.toDetailDTO(storyBox);
+
+        return new BaseResponseDTO<StoryBoxDetailDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
+    }
+
+
+    @Override
+    public BaseResponseDTO<String> makeStoryBoxLink(Long id, HttpServletRequest httpServletRequest) {
+        Member member = getEmail(httpServletRequest);
 
         return null;
     }
@@ -146,9 +228,9 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     public Boolean isMemberInStoryBox(Long storyBoxId, Member member){
         StoryBox storyBox = getStoryBox(storyBoxId);
 
-        List<StoryBoxMember> members = storyBox.getStoryBoxMembers();
+        List<StoryBoxMember> membersInStoryBox = storyBox.getStoryBoxMembers();
 
-        return members.stream()
+        return membersInStoryBox.stream()
                 .anyMatch(storyBoxMember ->
                         storyBoxMember.getMember().getId()
                         .equals(member.getId()));

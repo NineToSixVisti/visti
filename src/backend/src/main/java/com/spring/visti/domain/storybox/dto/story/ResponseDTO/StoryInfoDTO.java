@@ -1,4 +1,4 @@
-package com.spring.visti.domain.storybox.dto.story;
+package com.spring.visti.domain.storybox.dto.story.ResponseDTO;
 
 import com.spring.visti.domain.member.entity.Member;
 import lombok.Builder;
@@ -14,6 +14,7 @@ public class StoryInfoDTO {
     private String image_path;
     private String audio_path;
     private String video_path;
+
     private String secret_key;
     private String nft_hash;
 
