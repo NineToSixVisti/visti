@@ -38,15 +38,15 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-//    @PostMapping("/{storyBoxId}/join")
-//    @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
-//    public ResponseEntity<? extends BaseResponseDTO<String>> joinStoryBox(
-//            @PathVariable Long storyBoxId
-//    ) {
-//        String email = getEmail();
-//        BaseResponseDTO<String> response = storyBoxService.joinStoryBox(storyBoxId, email);
-//        return ResponseEntity.status(response.getStatusCode()).body(response);
-//    }
+    @PostMapping("/{storyBoxId}/join")
+    @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
+    public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
+            @PathVariable Long storyBoxId
+    ) {
+        String email = getEmail();
+        BaseResponseDTO<String> response = storyBoxService.enterStoryBox(storyBoxId, email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
 
 
     @PostMapping("/{storyBoxId}/setting")

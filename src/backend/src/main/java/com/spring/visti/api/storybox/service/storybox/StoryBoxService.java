@@ -14,7 +14,7 @@ import java.util.List;
 public interface StoryBoxService {
     BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, String email);
 
-    BaseResponseDTO<String> joinStoryBox(Long id, String email);
+    BaseResponseDTO<String> enterStoryBox(Long id, String email);
 
     BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email);
 

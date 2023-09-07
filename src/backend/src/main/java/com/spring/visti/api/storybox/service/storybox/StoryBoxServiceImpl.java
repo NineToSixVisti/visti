@@ -51,29 +51,19 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<String> joinStoryBox(Long storyBoxId, String email) {
+    public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
         Member member = getMember(email);
-
-        // 접속한 url 이 유효한지 검사
-
-
 
         // 이미 가입된 스토리 박스인지 확인
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         boolean isAlreadyJoined = storyBoxes.stream()
                 .anyMatch(storyBoxMember -> storyBoxMember.getStoryBox().getId().equals(storyBoxId));
 
-        if (isAlreadyJoined) {
-            throw new ApiException(ALREADY_JOIN_ERROR);
+        if (!isAlreadyJoined) {
+            throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
         }
 
-        StoryBox storyBox = getStoryBox(storyBoxId);
-
-        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(member, storyBox, Position.GUEST);
-
-        storyBoxMemberRepository.save(newStoryBoxMember);
-
-        return new BaseResponseDTO<>("새로운 스토리-박스에 참가하셨습니다.", 200);
+        return new BaseResponseDTO<>("스토리-박스에 참가하셨습니다.", 200);
     }
 
     @Override
