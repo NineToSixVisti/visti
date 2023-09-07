@@ -31,12 +31,11 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException{
-        System.out.println("========================== 우선순위 확인 2======================");
+
         String requestURI = request.getRequestURI();
 
 
         if (isSwaggerRequest(request)) {
-            System.out.println("여기를 지나갑니다");
 
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_SWAGGER"));
             Authentication swaggerAuthentication = new UsernamePasswordAuthenticationToken("swagger", null, authorities);
@@ -50,8 +49,8 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         log.info("JWT Filtering Started! =======================================");
         String accessToken = tokenProvider.getHeaderToken(request, "Access");
         String refreshToken = tokenProvider.getHeaderToken(request, "Refresh");
-        System.out.println(" 엑세스 토큰 : " + accessToken);
-        System.out.println("리프레쉬 토큰 : " + refreshToken);
+        log.info(" 엑세스 토큰 : " + accessToken);
+        log.info("리프레쉬 토큰 : " + refreshToken);
         try {
             // 액세스 토큰의 유효성 검사
             tokenProvider.validateToken(accessToken);

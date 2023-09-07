@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Builder
 public class TokenDTO {
+    private GrantType grantType;
     private String accessToken;
     private Date accessTokenExpireTime;
 
