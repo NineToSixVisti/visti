@@ -35,7 +35,7 @@ fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
             }
         }
         else -> {
-            LazyVerticalGrid(GridCells.Adaptive(150.dp)) {
+            LazyVerticalGrid(GridCells.Adaptive(128.dp)) {
                 items(state.images) { image ->
                     ImageItem(image)
                 }
