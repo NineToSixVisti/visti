@@ -20,32 +20,17 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = DarkBackgroundColor,
-    surface = DarkBackgroundColor,
-    onPrimary = DarkBackgroundColor,
-    onSecondary = DarkBackgroundColor,
-    onTertiary = DarkBackgroundColor,
-    onBackground = White,
-    onSurface = White
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = LightBackgroundColor,
-    surface = LightBackgroundColor,
-    onPrimary = White,
-    onSecondary = White,
-    onTertiary = White,
-    onBackground = DarkBackgroundColor,
-    onSurface = DarkBackgroundColor
 )
 
 @Composable
 fun VistiAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

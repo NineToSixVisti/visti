@@ -105,26 +105,22 @@ fun MainNavigationScreen(
         startDestination = MainNav.Home.route
     ) {
         composable(
-            route = MainNav.Home.route,
-            deepLinks = MainNav.Home.deepLinks
+            route = MainNav.Home.route
         ) {
 
         }
         composable(
-            route = MainNav.Memory.route,
-            deepLinks = MainNav.Memory.deepLinks
+            route = MainNav.Memory.route
         ) {
 //            MainMapScreen(navController)
         }
         composable(
-            route = MainNav.Like.route,
-            deepLinks = MainNav.Like.deepLinks
+            route = MainNav.Like.route
         ) {
 //            CommunityScreen(navController)
         }
         composable(
-            route = MainNav.Profile.route,
-            deepLinks = MainNav.Profile.deepLinks
+            route = MainNav.Profile.route
         ) {
 //            MainChattingScreen(navController)
         }
