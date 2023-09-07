@@ -35,15 +35,15 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
 
-        if (isSwaggerRequest(request)) {
-
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_SWAGGER"));
-            Authentication swaggerAuthentication = new UsernamePasswordAuthenticationToken("swagger", null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(swaggerAuthentication);
-
-            chain.doFilter(request, response);
-            return;
-        }
+//        if (isSwaggerRequest(request)) {
+//
+//            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_SWAGGER"));
+//            Authentication swaggerAuthentication = new UsernamePasswordAuthenticationToken("swagger", null, authorities);
+//            SecurityContextHolder.getContext().setAuthentication(swaggerAuthentication);
+//
+//            chain.doFilter(request, response);
+//            return;
+//        }
 
 
         log.info("JWT Filtering Started! =======================================");
