@@ -7,6 +7,7 @@ import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.repository.MemberRepository;
@@ -174,20 +175,28 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
-    public BaseResponseDTO<MemberMyInfoDTO> getInfo(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
-        Member _member = getEmail(httpServletRequest);
+        Member _member = getMember(email);
 
         MemberMyInfoDTO member = MemberMyInfoDTO.of(_member);
-        System.out.println("Member info: " + member);
 
-        return new BaseResponseDTO<MemberMyInfoDTO>(member.getEmail() + "의 정보입니다.", 200, member);
+
+        return new BaseResponseDTO<MemberMyInfoDTO>(member.getNickname() + "의 간략 정보입니다.", 200, member);
 //        return new BaseResponseDTO("$s 님의 정보를 제공해 드립니다", 200, member);
     }
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
+    @Override
+    public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+        Member _member = getMember(email);
+        MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
+        log.info("Member info: " + member);
+
+        return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
+    }
+
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

@@ -32,15 +32,12 @@ public class StoryServiceImpl implements StoryService{
 
     private final MemberRepository memberRepository;
     private final MemberStoryRepository memberStoryRepository;
-    private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRepository;
-    private final TokenProvider tokenProvider;
 
-    private final ReportRepository reportRepository;
 
     @Override
-    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
+        Member member = getMember(email);
 
         boolean canWriteStory = member.dailyStoryCount();
         if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
@@ -52,36 +49,47 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> createNFT4Story(Long storyId, String email) {
         return null;
     }
 
     @Override
-    public BaseResponseDTO<List<StoryExposedDTO>> readMyStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryExposedDTO>> readMyStories(String email) {
+        Member member = getMember(email);
+        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
+
+        List<Long> likedStoryIds = _memberLikeStory.stream()
+                .map(like -> like.getStory().getId())
+                .toList();
+
 
         List<Story> _myStories = member.getMemberStories();
-
         List<StoryExposedDTO> myStories = _myStories.stream()
-                .map(StoryExposedDTO::of)
+                .map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())))
                 .toList();
 
         return new BaseResponseDTO<List<StoryExposedDTO>>("작성한 스토리 조회가 완료되었습니다.", 200, myStories);
     }
 
     @Override
-    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId) {
+    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
 
+        Member member = getMember(email);
         Story _story = getStory(storyId);
-        StoryExposedDTO story = StoryExposedDTO.of(_story);
+
+        List<MemberLikeStory> mls = _story.getMembersLiked();
+        boolean isMemberLikeStory = mls.stream()
+                .anyMatch(ml -> ml.getMember().getId().equals(member.getId()));
+
+        StoryExposedDTO story = StoryExposedDTO.of(_story, isMemberLikeStory);
 
         return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
     }
 
 
     @Override
-    public BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> likeStory(Long storyId, String email) {
+        Member member = getMember(email);
         Story story = getStory(storyId);
         Optional<MemberLikeStory> isMemberLike = memberStoryRepository.findByMemberAndStory(member, story);
 
@@ -96,24 +104,24 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(String email) {
+        Member member = getMember(email);
         List<MemberLikeStory> memberStories = member.getMemberLikedStories();
 
         // MemberStory 리스트에서 Story 리스트를 추출
         List<StoryExposedDTO> stories = memberStories.stream()
                 .map(MemberLikeStory::getStory)
-                .map(StoryExposedDTO::of)
+                .map(LikedStory -> StoryExposedDTO.of(LikedStory, true))
                 .toList();
 
         return new BaseResponseDTO<List<StoryExposedDTO>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
     }
 
     @Override
-    public BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 
         // 사용자 조회
-        Member member = getEmail(httpServletRequest);
+        Member member = getMember(email);
 
         // 스토리 조회
         Story story = getStory(storyId);
@@ -134,9 +142,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
-
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

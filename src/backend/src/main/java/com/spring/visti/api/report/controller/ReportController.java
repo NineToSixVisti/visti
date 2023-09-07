@@ -4,17 +4,21 @@ import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.api.report.service.ReportService;
 import com.spring.visti.domain.report.dto.RequestDTO.ReportBuildDTO;
 import com.spring.visti.domain.report.dto.ResponseDTO.ReportExposedDTO;
+import com.spring.visti.utils.exception.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
+
+@RestController
 @RequestMapping("/api/report")
 @RequiredArgsConstructor
 @Tag(name = "Report 컨트롤러", description = "신고와 관련된 API 입니다.")
@@ -22,44 +26,56 @@ public class ReportController {
 
     private final ReportService reportService;
 
+
     @PostMapping("/storyid/{storyId}")
     @Operation(summary = "신고 진행", description = "신고를 진행합니다.", tags={"스토리 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> createReport(
             @PathVariable Long storyId,
-            @RequestBody ReportBuildDTO reportInfo,
-            HttpServletRequest httpServletRequest
+            @RequestBody ReportBuildDTO reportInfo
     ) {
-        BaseResponseDTO<String> response = reportService.createReport(storyId, reportInfo, httpServletRequest);
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = reportService.createReport(storyId, reportInfo, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/reports")
     @Operation(summary = "처리 안된 신고 리스트업", description = "처리 안된 신고들을 리스트합니다.", tags={"관리자 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<List<ReportExposedDTO>>> readReports(
-            HttpServletRequest httpServletRequest
-    ) {
-        BaseResponseDTO<List<ReportExposedDTO>> response = reportService.readReports(httpServletRequest);
+    public ResponseEntity<? extends BaseResponseDTO<List<ReportExposedDTO>>> readReports() {
+        String email = getEmail();
+
+        BaseResponseDTO<List<ReportExposedDTO>> response = reportService.readReports(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
     @GetMapping("/{reportId}")
     @Operation(summary = "처리 안된 신고 조회", description = "신고를 조회합니다.", tags={"관리자 페이지"})
     public ResponseEntity<? extends BaseResponseDTO<ReportExposedDTO>> readReportDetail(
-            @PathVariable Long reportId,
-            HttpServletRequest httpServletRequest
+            @PathVariable Long reportId
     ) {
-        BaseResponseDTO<ReportExposedDTO> response = reportService.readReportDetail(reportId, httpServletRequest);
+        String email = getEmail();
+
+        BaseResponseDTO<ReportExposedDTO> response = reportService.readReportDetail(reportId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/{reportId}")
-    @Operation(summary = "신고 처리", description = "신고를 처리합니다.", tags={"신고 내부"})
+    @Operation(summary = "신고 처리", description = "신고를 처리합니다.", tags={"관리자 페이지"})
     public ResponseEntity<? extends BaseResponseDTO<String>> updateReport(
             @PathVariable Long reportId,
-            @RequestBody Boolean process,
-            HttpServletRequest httpServletRequest
+            @RequestBody Boolean process
     ) {
-        BaseResponseDTO<String> response = reportService.updateReport(reportId, process, httpServletRequest);
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = reportService.updateReport(reportId, process, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    private String getEmail(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() != null) {
+            return ((UserDetails) authentication.getPrincipal()).getUsername();
+        }
+        throw new ApiException(NO_MEMBER_ERROR);
     }
 
 }

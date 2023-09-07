@@ -34,14 +34,13 @@ public class ReportServiceImpl implements ReportService{
 
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
-    private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRepository;
-    private final TokenProvider tokenProvider;
+
 
     @Override
-    public BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, String email) {
 
-        Member reporter = getEmail(httpServletRequest);
+        Member reporter = getMember(email);
 
         Story story = getStory(storyId);
 
@@ -57,8 +56,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, String email) {
+        Member member = getMember(email);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         Report _report = getReport(reportId);
@@ -69,8 +68,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public BaseResponseDTO<List<ReportExposedDTO>> readReports(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<ReportExposedDTO>> readReports(String email) {
+        Member member = getMember(email);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         List<Report> _reports = reportRepository.findReportByProcessed(null);
@@ -84,8 +83,8 @@ public class ReportServiceImpl implements ReportService{
 
 
     @Override
-    public BaseResponseDTO<String> updateReport(Long reportId, Boolean process, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> updateReport(Long reportId, Boolean process, String email) {
+        Member member = getMember(email);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         Report report = getReport(reportId);
@@ -110,9 +109,7 @@ public class ReportServiceImpl implements ReportService{
         return new BaseResponseDTO<>("신고가 처리가 완료되었습니다.", 200);
     }
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
-
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

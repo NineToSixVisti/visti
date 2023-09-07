@@ -15,9 +15,7 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
-import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.utils.exception.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,11 +32,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final MemberRepository memberRepository;
     private final StoryBoxMemberRepository storyBoxMemberRepository;
     private final StoryBoxRepository storyBoxRepository;
-    private final TokenProvider tokenProvider;
 
     @Override
-    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, HttpServletRequest httpServletRequest){
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email){
+        Member member = getMember(email);
 
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member);
 
@@ -52,8 +49,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<String> joinStoryBox(Long storyBoxId, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> joinStoryBox(Long storyBoxId, String email) {
+        Member member = getMember(email);
 
         // 접속한 url 이 유효한지 검사
 
@@ -78,8 +75,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, HttpServletRequest httpServletRequest){
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email){
+        Member member = getMember(email);
 
         StoryBox storyBox = getStoryBox(id);
 
@@ -95,22 +92,22 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<List<StoryBoxListDTO>> readMyStoryBoxes(HttpServletRequest httpServletRequest){
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryBoxExposedDTO>> readMyStoryBoxes(String email){
+        Member member = getMember(email);
 
         List<StoryBoxMember> _myStoryBoxes = member.getStoryBoxes();
 
-        List<StoryBoxListDTO> myStoryBoxes = _myStoryBoxes.stream()
-                .map(myStoryBox -> StoryBoxListDTO.of(myStoryBox.getStoryBox()))
+        List<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes.stream()
+                .map(myStoryBox -> StoryBoxExposedDTO.of(myStoryBox.getStoryBox()))
                 .toList();
 
 
-        return new BaseResponseDTO<List<StoryBoxListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
+        return new BaseResponseDTO<List<StoryBoxExposedDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
     }
 
     @Override
-    public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email) {
+        Member member = getMember(email);
 
         StoryBox storyBox = getStoryBox(id);
 
@@ -120,34 +117,27 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<List<StoryBoxStoryListDTO>> readStoriesInStoryBox(Long id, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryExposedDTO>> readStoriesInStoryBox(Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id);
-
         List<Story> readStoriesInStoryBox = storyBox.getStories();
 
+        Member member = getMember(email);
         List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
         List<Long> likedStoryIds = _memberLikeStory.stream()
                 .map(like -> like.getStory().getId())
                 .toList();
 
-        List<StoryBoxStoryListDTO> storiesInStoryBox = readStoriesInStoryBox.stream()
-                .map(story -> {
-                    StoryExposedDTO storyExposed = StoryExposedDTO.of(story);
-
-                    boolean isLiked = likedStoryIds.contains(story.getId());
-
-                    return StoryBoxStoryListDTO.toResponse(storyExposed, isLiked);
-                })
+        List<StoryExposedDTO> storiesInStoryBox = readStoriesInStoryBox.stream()
+                .map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())))
                 .toList();
 
-        return new BaseResponseDTO<List<StoryBoxStoryListDTO>>("스토리-박스 안의 스토리 조회가 완료되었습니다.", 200, storiesInStoryBox);
+        return new BaseResponseDTO<List<StoryExposedDTO>>("스토리-박스 안의 스토리 조회가 완료되었습니다.", 200, storiesInStoryBox);
     }
 
     @Override
-    public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
+        Member member = getMember(email);
         StoryBox storyBox = getStoryBox(id);
 
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
@@ -167,8 +157,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
+        Member member = getMember(email);
 
         StoryBox storyBox = getStoryBox(id);
 
@@ -179,15 +169,15 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
-    public BaseResponseDTO<String> makeStoryBoxLink(Long id, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> makeStoryBoxLink(Long id, String email) {
+        Member member = getMember(email);
 
         return null;
     }
 
     @Override
-    public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId,HttpServletRequest httpServletRequest){
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
+        Member member = getMember(email);
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
 
 
@@ -205,9 +195,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         }
     }
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
-
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

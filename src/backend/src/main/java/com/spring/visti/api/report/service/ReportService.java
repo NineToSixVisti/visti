@@ -9,10 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ReportService {
-    BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, HttpServletRequest httpServletRequest);
-    BaseResponseDTO<List<ReportExposedDTO>> readReports(HttpServletRequest httpServletRequest);
-    BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, HttpServletRequest httpServletRequest);
-    BaseResponseDTO<String> updateReport(Long reportId, Boolean process, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, String email);
+    BaseResponseDTO<List<ReportExposedDTO>> readReports(String email);
+    BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, String email);
+    BaseResponseDTO<String> updateReport(Long reportId, Boolean process, String email);
 
 
 }

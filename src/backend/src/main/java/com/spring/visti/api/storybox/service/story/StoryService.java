@@ -9,19 +9,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface StoryService {
-    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, String email);
 
-    BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createNFT4Story(Long storyId, String email);
 
-    BaseResponseDTO<StoryExposedDTO> readStory(Long storyId);
+    BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email);
 
-    BaseResponseDTO<List<StoryExposedDTO>> readMyStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<List<StoryExposedDTO>> readMyStories(String email);
 
-    BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> likeStory(Long storyId, String email);
 
-    BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(String email);
 
-    BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> deleteStory(Long storyId, String email);
 
 
 }
