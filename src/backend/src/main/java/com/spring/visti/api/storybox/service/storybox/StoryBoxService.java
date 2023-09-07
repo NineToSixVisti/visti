@@ -28,7 +28,9 @@ public interface StoryBoxService {
 
     BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email);
 
-    BaseResponseDTO<String> makeStoryBoxLink(Long id, String email);
+    BaseResponseDTO<String> generateStoryBoxLink(Long id, String email);
+
+    BaseResponseDTO<String> validateStoryBoxLink(String token, String email);
 
     BaseResponseDTO<String> leaveStoryBox(Long id, String email);
 

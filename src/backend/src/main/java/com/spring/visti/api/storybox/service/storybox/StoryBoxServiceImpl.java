@@ -15,14 +15,15 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
-import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -42,7 +43,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         storyBoxRepository.save(storyBox);
 
-        StoryBoxMember newStoryBoxMember = new StoryBoxMember().joinBox(member, storyBox, Position.HOST);
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(member, storyBox, Position.HOST);
 
         storyBoxMemberRepository.save(newStoryBoxMember);
 
@@ -68,7 +69,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         StoryBox storyBox = getStoryBox(storyBoxId);
 
-        StoryBoxMember newStoryBoxMember = new StoryBoxMember().joinBox(member, storyBox, Position.GUEST);
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(member, storyBox, Position.GUEST);
 
         storyBoxMemberRepository.save(newStoryBoxMember);
 
@@ -159,7 +160,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
-        Member member = getMember(email);
+
 
         StoryBox storyBox = getStoryBox(id);
 
@@ -168,13 +169,65 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<StoryBoxDetailDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
 
+    @Override
+    public BaseResponseDTO<String> generateStoryBoxLink(Long id, String email) {
+        Member member = getMember(email);
+        StoryBox storyBox = getStoryBox(id);
+
+        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxAndMember(storyBox, member);
+
+        if (storyBoxMember.isEmpty()){
+            throw new ApiException(NO_MEMBER_ERROR);
+        }
+
+        if (Position.GUEST.equals(storyBoxMember.get().getPosition())){
+            throw new ApiException(NO_AUTHORIZE_ERROR);
+        }
+
+        String token = UUID.randomUUID().toString();
+        LocalDateTime expiryDate = LocalDateTime.now().plusHours(24);
+
+        storyBox.updateToken(token, expiryDate);
+        storyBoxRepository.save(storyBox);
+
+        return new BaseResponseDTO<String>("토큰이 발급되었습니다.", 200, token);
+    }
 
     @Override
-    public BaseResponseDTO<String> makeStoryBoxLink(Long id, String email) {
-        Member member = getMember(email);
+    public BaseResponseDTO<String> validateStoryBoxLink(String token, String email) {
+        Optional<StoryBox> _storyBox = storyBoxRepository.findByToken(token);
 
-        return null;
+        if (_storyBox.isEmpty()){
+            throw new ApiException(NO_STORY_BOX_ERROR);
+        }
+
+        StoryBox storyBox = _storyBox.get();
+        LocalDateTime expiryDate = storyBox.getExpireTime();
+
+        if (LocalDateTime.now().isAfter(expiryDate)){
+            throw new ApiException(NO_INVITATION_LINK);
+        }
+
+        if (email == null){
+            return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
+        }
+
+        List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
+
+        boolean isMemberAlreadyJoin = _storyBoxMembers.stream()
+                .map(StoryBoxMember::getMember)
+                .anyMatch(member -> email.equals(member.getEmail()));
+
+        if (isMemberAlreadyJoin){
+            throw new ApiException(ALREADY_JOIN_ERROR);
+        }
+
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(getMember(email), storyBox, Position.HOST);
+        storyBoxMemberRepository.save(newStoryBoxMember);
+
+        return new BaseResponseDTO<>("새로운 스토리-박스에 참가하셨습니다.", 200);
     }
+
 
     @Override
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
