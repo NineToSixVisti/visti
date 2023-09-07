@@ -5,6 +5,9 @@ import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
+import com.spring.visti.domain.storybox.entity.Story;
+import com.spring.visti.domain.storybox.entity.StoryBox;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -15,7 +18,7 @@ public interface StoryBoxService {
 
     BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email);
 
-    BaseResponseDTO<List<StoryBoxExposedDTO>> readMyStoryBoxes(String email);
+    BaseResponseDTO<List<StoryBoxListDTO>> readMyStoryBoxes(String email);
 
     BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email);
 

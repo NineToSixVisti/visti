@@ -72,9 +72,9 @@ public class StoryBoxController {
 
     @GetMapping("/mystorybox")
     @Operation(summary = "내가 들어간 스토리 박스 조회", description = "스토리 박스를 리스트업 합니다.", tags={"스토리-박스 페이지", "Nav 바", "마이 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxExposedDTO>>> readMyStoryBoxes() {
+    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxListDTO>>> readMyStoryBoxes() {
         String email = getEmail();
-        BaseResponseDTO<List<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(email);
+        BaseResponseDTO<List<StoryBoxListDTO>> response = storyBoxService.readMyStoryBoxes(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

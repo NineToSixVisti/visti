@@ -15,6 +15,7 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
+import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,17 +93,17 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<List<StoryBoxExposedDTO>> readMyStoryBoxes(String email){
+    public BaseResponseDTO<List<StoryBoxListDTO>> readMyStoryBoxes(String email){
         Member member = getMember(email);
 
         List<StoryBoxMember> _myStoryBoxes = member.getStoryBoxes();
 
-        List<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes.stream()
-                .map(myStoryBox -> StoryBoxExposedDTO.of(myStoryBox.getStoryBox()))
+        List<StoryBoxListDTO> myStoryBoxes = _myStoryBoxes.stream()
+                .map(myStoryBox -> StoryBoxListDTO.of(myStoryBox.getStoryBox()))
                 .toList();
 
 
-        return new BaseResponseDTO<List<StoryBoxExposedDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
+        return new BaseResponseDTO<List<StoryBoxListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
     }
 
     @Override
