@@ -39,11 +39,10 @@ public class StoryBox extends BaseEntity {
 
     @Column(updatable = false)
     private LocalDateTime finish_at;
-
-    @OneToMany(mappedBy = "storybox")
+    @OneToMany(mappedBy = "storyBox")
     private List<Story> stories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "storybox")
+    @OneToMany(mappedBy = "storyBox")
     private List<StoryBoxMember> storyBoxMembers = new ArrayList<>();
 
     @Builder

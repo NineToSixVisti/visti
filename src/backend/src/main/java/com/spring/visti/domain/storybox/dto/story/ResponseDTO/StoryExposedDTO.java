@@ -20,10 +20,12 @@ public class StoryExposedDTO {
     private String video_path;
     private Boolean blind;
     private LocalDateTime finish_at;
+    private Boolean like;
+
     @Builder
     public StoryExposedDTO(Long id, Member member, String letter_path,
                         String image_path, String audio_path, String video_path,
-                           Boolean blind, LocalDateTime finish_at
+                           Boolean blind, LocalDateTime finish_at, Boolean like
                         ){
         this.id = id;
         this.member = member;
@@ -33,9 +35,10 @@ public class StoryExposedDTO {
         this.video_path = video_path;
         this.blind = blind;
         this.finish_at = finish_at;
+        this.like = like;
     }
 
-    public static StoryExposedDTO of(Story story){
+    public static StoryExposedDTO of(Story story, Boolean like){
         return StoryExposedDTO.builder()
                 .id(story.getId())
                 .member(story.getMember())
@@ -45,6 +48,7 @@ public class StoryExposedDTO {
                 .video_path(story.getVideo_path())
                 .blind(story.getBlind())
                 .finish_at(story.getFinish_at())
+                .like(like)
                 .build();
     }
 }
