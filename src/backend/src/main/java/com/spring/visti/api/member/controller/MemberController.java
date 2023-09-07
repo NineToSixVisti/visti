@@ -7,7 +7,6 @@ import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
-import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import io.swagger.v3.oas.annotations.Operation;
