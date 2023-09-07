@@ -15,6 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "visti-android"
 include(":app")
+include(":presentation")
 include(":data")
 include(":domain")
-include(":presentation")
