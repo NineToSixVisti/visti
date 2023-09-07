@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.home
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
+import com.ssafy.presentation.ui.theme.LightBackgroundColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
 import com.ssafy.presentation.ui.theme.White
 
@@ -63,13 +65,13 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
         tonalElevation = 0.dp,
         modifier = Modifier.graphicsLayer {
             shape = RoundedCornerShape(
-                topStart = 16.dp,
-                topEnd = 16.dp
+                16.dp
             )
             clip = true
             shadowElevation = 20f
         },
     ) {
+        val isDarkTheme = isSystemInDarkTheme()
         bottomNavigationItems.forEach { item ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
@@ -77,16 +79,17 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
                     selectedTextColor = SecondaryColor,
                     unselectedIconColor = White,
                     unselectedTextColor = White,
-                    indicatorColor = DarkBackgroundColor
+                    indicatorColor = if (isDarkTheme) {
+                        DarkBackgroundColor
+                    } else {
+                        LightBackgroundColor
+                    }
                 ),
                 label = { Text(text = item.title) },
                 icon = { Icon(painter = painterResource(id = item.icon), item.route) },
                 selected = currentRoute == item.route,
                 onClick = {
-//                    NavigationUtils.navigate(
-//                        navController, item.route,
-//                        navController.graph.startDestinationRoute
-//                    )
+
                 },
                 alwaysShowLabel = false
             )
