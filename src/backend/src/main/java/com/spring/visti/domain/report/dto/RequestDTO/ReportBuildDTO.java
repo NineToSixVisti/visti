@@ -1,4 +1,4 @@
-package com.spring.visti.domain.report.dto;
+package com.spring.visti.domain.report.dto.RequestDTO;
 
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.report.entity.Report;
@@ -13,19 +13,16 @@ import lombok.NoArgsConstructor;
 public class ReportBuildDTO {
 
     private String reason4report;
-    private String detail;
 
     @Builder
-    public ReportBuildDTO( String reason4report, String detail ){
+    public ReportBuildDTO( String reason4report ){
         this.reason4report = reason4report;
-        this.detail = detail;
     }
 
     public Report toEntity(Member reporter, Story reportedStory){
         return Report.builder()
                 .reporter(reporter)
                 .reportedStory(reportedStory)
-                .detail(detail)
                 .reason4report(reason4report)
                 .build();
     }

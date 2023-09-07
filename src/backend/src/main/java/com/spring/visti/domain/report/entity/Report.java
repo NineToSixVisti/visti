@@ -30,9 +30,6 @@ public class Report extends BaseEntity {
     private String reason4report;
 
     @Column
-    private String detail;
-
-    @Column
     private Boolean processed;
 
     @Builder
@@ -40,7 +37,6 @@ public class Report extends BaseEntity {
         this.reporter = reporter;
         this.reportedStory = reportedStory;
         this.reason4report = reason4report;
-        this.detail = detail;
     }
 
     public void processReport(Boolean process) {
