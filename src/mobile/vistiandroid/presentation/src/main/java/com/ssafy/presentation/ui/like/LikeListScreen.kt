@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.presentation.ui.like.component.ImageItem
 
@@ -26,6 +25,7 @@ fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
                 Text(text = state.error)
             }
         }
+
         state.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -34,8 +34,11 @@ fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
                 CircularProgressIndicator()
             }
         }
+
         else -> {
-            LazyVerticalGrid(GridCells.Adaptive(128.dp)) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3)
+            ) {
                 items(state.images) { image ->
                     ImageItem(image)
                 }
