@@ -89,4 +89,5 @@ dependencies {
     implementation(Dependencies.RETROFIT.RETROFIT_CONVERTER)
     implementation(Dependencies.OKHTTP.OKHTTP_CORE)
     implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
+    implementation(Dependencies.TOOLBAR)
 }
