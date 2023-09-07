@@ -5,7 +5,8 @@ import com.spring.visti.domain.member.constant.Role;
 
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
-import com.spring.visti.domain.report.dto.ReportBuildDTO;
+import com.spring.visti.domain.report.dto.RequestDTO.ReportBuildDTO;
+import com.spring.visti.domain.report.dto.ResponseDTO.ReportExposedDTO;
 import com.spring.visti.domain.report.entity.Report;
 import com.spring.visti.domain.report.repository.ReportRepository;
 import com.spring.visti.domain.storybox.entity.Story;
@@ -56,23 +57,29 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public BaseResponseDTO<Report> readReportDetail(Long reportId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
-        Report report = getReport(reportId);
+        Report _report = getReport(reportId);
 
-        return new BaseResponseDTO<Report>("신고를 조회합니다.", 200, report);
+        ReportExposedDTO report = ReportExposedDTO.of(_report.getReporter(), _report.getReportedStory(), _report);
+
+        return new BaseResponseDTO<ReportExposedDTO>("신고를 조회합니다.", 200, report);
     }
 
     @Override
-    public BaseResponseDTO<List<Report>> readReports(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<List<ReportExposedDTO>> readReports(HttpServletRequest httpServletRequest) {
         Member member = getEmail(httpServletRequest);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
-        List<Report> reports = reportRepository.findReportByProcessed(null);
+        List<Report> _reports = reportRepository.findReportByProcessed(null);
 
-        return new BaseResponseDTO<List<Report>>("신고된 스토리들을 확인합니다.", 200, reports);
+        List<ReportExposedDTO> reports = _reports.stream()
+                .map(report -> ReportExposedDTO.of(report.getReporter(), report.getReportedStory(), report))
+                .toList();
+
+        return new BaseResponseDTO<List<ReportExposedDTO>>("신고된 스토리들을 확인합니다.", 200, reports);
     }
 
 

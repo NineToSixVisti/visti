@@ -4,7 +4,7 @@ import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.story.StoryService;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
-import com.spring.visti.domain.storybox.entity.Story;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

@@ -6,8 +6,6 @@ import com.spring.visti.api.storybox.service.storybox.StoryBoxService;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
-import com.spring.visti.domain.storybox.entity.Story;
-import com.spring.visti.domain.storybox.entity.StoryBox;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

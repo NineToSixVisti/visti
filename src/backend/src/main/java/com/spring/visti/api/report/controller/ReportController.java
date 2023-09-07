@@ -2,8 +2,8 @@ package com.spring.visti.api.report.controller;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.api.report.service.ReportService;
-import com.spring.visti.domain.report.dto.ReportBuildDTO;
-import com.spring.visti.domain.report.entity.Report;
+import com.spring.visti.domain.report.dto.RequestDTO.ReportBuildDTO;
+import com.spring.visti.domain.report.dto.ResponseDTO.ReportExposedDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,19 +35,19 @@ public class ReportController {
 
     @GetMapping("/reports")
     @Operation(summary = "처리 안된 신고 리스트업", description = "처리 안된 신고들을 리스트합니다.", tags={"관리자 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<List<Report>>> readReports(
+    public ResponseEntity<? extends BaseResponseDTO<List<ReportExposedDTO>>> readReports(
             HttpServletRequest httpServletRequest
     ) {
-        BaseResponseDTO<List<Report>> response = reportService.readReports(httpServletRequest);
+        BaseResponseDTO<List<ReportExposedDTO>> response = reportService.readReports(httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
     @GetMapping("/{reportId}")
     @Operation(summary = "처리 안된 신고 조회", description = "신고를 조회합니다.", tags={"관리자 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<Report>> readReportDetail(
+    public ResponseEntity<? extends BaseResponseDTO<ReportExposedDTO>> readReportDetail(
             @PathVariable Long reportId,
             HttpServletRequest httpServletRequest
     ) {
-        BaseResponseDTO<Report> response = reportService.readReportDetail(reportId, httpServletRequest);
+        BaseResponseDTO<ReportExposedDTO> response = reportService.readReportDetail(reportId, httpServletRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
