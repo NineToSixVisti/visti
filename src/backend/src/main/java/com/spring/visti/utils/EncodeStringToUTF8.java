@@ -7,6 +7,6 @@ import java.nio.charset.StandardCharsets;
 public class EncodeStringToUTF8 {
     public String encodeStringToUTF8(String value) throws UnsupportedEncodingException {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
-        // for gitlab-test
+        // for git lab-test
     }
 }
