@@ -1,6 +1,7 @@
 package com.spring.visti.api.member.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
+import com.spring.visti.api.common.service.DefaultService;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
@@ -11,7 +12,7 @@ import com.spring.visti.global.redis.dto.AuthDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public interface MemberService {
+public interface MemberService extends DefaultService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
 
     BaseResponseDTO<String> verifyMember(MemberInformDTO memberInfo);

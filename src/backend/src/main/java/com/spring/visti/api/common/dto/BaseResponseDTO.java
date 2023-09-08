@@ -1,4 +1,4 @@
-package com.spring.visti.api.dto;
+package com.spring.visti.api.common.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +19,10 @@ public class BaseResponseDTO<T> {
     public BaseResponseDTO(String Message, int statusCode, T detail) {
         this.message = Message;
         this.statusCode = statusCode;
+        this.detail = detail;
+    }
+
+    public void updateDetail(T detail){
         this.detail = detail;
     }
 }

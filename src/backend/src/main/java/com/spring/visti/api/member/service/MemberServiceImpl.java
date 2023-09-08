@@ -1,6 +1,6 @@
 package com.spring.visti.api.member.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
@@ -26,6 +26,7 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class MemberServiceImpl implements MemberService{
     private final AuthService authService;
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> signUp(MemberJoinDTO memberJoinDTO)
             throws RuntimeException {
         /*
@@ -106,6 +108,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberLoginDTO, HttpServletResponse httpResponse) throws RuntimeException { // 이후 내껄로 수정해야함
         /*
         example
@@ -155,6 +158,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<?> signOut(HttpServletRequest httpRequest) {
         // 토큰 탐색
         String accessToken = tokenProvider.getHeaderToken(httpRequest, "Access");
@@ -177,7 +181,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
-        Member _member = getMember(email);
+        Member _member = getMember(email, memberRepository);
 
         MemberMyInfoDTO member = MemberMyInfoDTO.of(_member);
 
@@ -189,20 +193,12 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
-        Member _member = getMember(email);
+        Member _member = getMember(email, memberRepository);
         MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
         log.info("Member info: " + member);
 
         return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
     }
 
-    public Member getMember(String email) {
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-
-        if (optionalMember.isEmpty()){ throw new ApiException(NO_MEMBER_ERROR); }
-
-        return optionalMember.get();
-    }
 
 }

@@ -1,6 +1,6 @@
 package com.spring.visti.api.member.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.redis.service.AuthService;
@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -31,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public BaseResponseDTO<String> sendMail(String email, String type) throws MessagingException {
 
         // 인증 코드 생성
