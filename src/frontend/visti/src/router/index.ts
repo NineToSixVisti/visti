@@ -2,7 +2,7 @@ import StoryboxHome from "../components/Storybox/StoryboxHome"
 
 const routes = [
   {
-    path : "/",
+    path : "/storybox",
     Component : StoryboxHome
   }
 ]
