@@ -14,5 +14,5 @@ public interface MemberLikeStoryRepository extends JpaRepository<MemberLikeStory
 
     Optional<MemberLikeStory> findByMemberAndStory(Member member, Story story);
 
-    boolean existsByMemberAndStory(Member member, Story story);
+    boolean existsByMemberIdAndStoryId(Long memberId, Long storyId);
 }

@@ -4,6 +4,7 @@ import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberExposedDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
+import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.storybox.constant.Position;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
@@ -15,16 +16,21 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
+import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -32,9 +38,12 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 @Slf4j
 @RequiredArgsConstructor
 public class StoryBoxServiceImpl implements StoryBoxService {
+
     private final MemberRepository memberRepository;
+    private final MemberLikeStoryRepository memberLikeStoryRepository;
     private final StoryBoxMemberRepository storyBoxMemberRepository;
     private final StoryBoxRepository storyBoxRepository;
+    private final StoryRepository storyRePository;
 
     @Override
     @Transactional
@@ -89,17 +98,18 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     @Transactional
-    public BaseResponseDTO<List<StoryBoxListDTO>> readMyStoryBoxes(String email){
+    public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 
-        List<StoryBoxMember> _myStoryBoxes = member.getStoryBoxes();
+        Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMember(member, pageable);
 
-        List<StoryBoxListDTO> myStoryBoxes = _myStoryBoxes.stream()
-                .map(myStoryBox -> StoryBoxListDTO.of(myStoryBox.getStoryBox()))
-                .toList();
+        Page<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes
+                .map(myStoryBox -> StoryBoxExposedDTO.of(myStoryBox.getStoryBox()));
 
 
-        return new BaseResponseDTO<List<StoryBoxListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, myStoryBoxes);
+        return new BaseResponseDTO<Page<StoryBoxExposedDTO>>(
+                pageable.getPageNumber() +" 페이지의 스토리-박스 조회가 완료되었습니다.",
+                200, myStoryBoxes);
     }
 
     @Override
@@ -114,6 +124,31 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<StoryBoxInfoDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
 
+    @Override
+    @Transactional
+    public BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email) {
+
+        StoryBox storyBox = getStoryBox(id, storyBoxRepository);
+
+        Member member = getMember(email, memberRepository);
+
+        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
+        Set<Long> likedStoryIds = _memberLikeStory.stream()
+                .map(like -> like.getStory().getId())
+                .collect(Collectors.toSet());
+
+        Page<Story> _storiesInStoryBox = storyRePository.findByStoryBox(storyBox, pageable);
+
+        Page<StoryExposedDTO> storiesInStoryBox = _storiesInStoryBox
+                .map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())));
+
+
+        return new BaseResponseDTO<Page<StoryExposedDTO>>(
+                "스토리-박스 "+ pageable.getPageNumber() + "안의 스토리 조회가 완료되었습니다.",
+                200, storiesInStoryBox);
+    }
+
+    /*
     @Override
     @Transactional
     public BaseResponseDTO<List<StoryExposedDTO>> readStoriesInStoryBox(Long id, String email) {
@@ -133,6 +168,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         return new BaseResponseDTO<List<StoryExposedDTO>>("스토리-박스 안의 스토리 조회가 완료되었습니다.", 200, storiesInStoryBox);
     }
+    */
 
     @Override
     @Transactional
