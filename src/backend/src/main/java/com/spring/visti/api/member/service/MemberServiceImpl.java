@@ -2,10 +2,12 @@ package com.spring.visti.api.member.service;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
-import com.spring.visti.domain.member.dto.MemberInformDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
-import com.spring.visti.domain.member.dto.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.repository.MemberRepository;
@@ -44,24 +46,23 @@ public class MemberServiceImpl implements MemberService{
     private final AuthService authService;
 
     @Override
-    public BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo)
+    public BaseResponseDTO<String> signUp(MemberJoinDTO memberJoinDTO)
             throws RuntimeException {
         /*
         example
          memberInfo = {
             email : example@example.com
-            name : myName
             nickname : myNickname
             password : password
          }
         */
-        if(memberRepository.findByEmail(memberInfo.getEmail()).isPresent()){
+        if(memberRepository.findByEmail(memberJoinDTO.getEmail()).isPresent()){
             throw new ApiException(REGISTER_DUPLICATED_EMAIL);
         }
 
-        String encryptedPassword = passwordEncoder.encode(memberInfo.getPassword());
+        String encryptedPassword = passwordEncoder.encode(memberJoinDTO.getPassword());
 
-        Member member = memberInfo.toEntity(encryptedPassword, MemberType.SOCIAL);
+        Member member = memberJoinDTO.toEntity(encryptedPassword, MemberType.SOCIAL);
 
         memberRepository.save(member);
 
@@ -105,7 +106,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse httpResponse) throws RuntimeException { // 이후 내껄로 수정해야함
+    public BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberLoginDTO, HttpServletResponse httpResponse) throws RuntimeException { // 이후 내껄로 수정해야함
         /*
         example
          memberInfo = {
@@ -115,7 +116,7 @@ public class MemberServiceImpl implements MemberService{
         */
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = memberInfo.toAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = memberLoginDTO.toAuthentication();
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -174,19 +175,28 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
-    public BaseResponseDTO<Member> getInfo(HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
-        Member member = getEmail(httpServletRequest);
+        Member _member = getMember(email);
 
-        System.out.println("Member info: " + member);
+        MemberMyInfoDTO member = MemberMyInfoDTO.of(_member);
 
-        return new BaseResponseDTO<>(member.getEmail() + "의 정보입니다.", 200, member);
+
+        return new BaseResponseDTO<MemberMyInfoDTO>(member.getNickname() + "의 간략 정보입니다.", 200, member);
 //        return new BaseResponseDTO("$s 님의 정보를 제공해 드립니다", 200, member);
     }
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
+    @Override
+    public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+        Member _member = getMember(email);
+        MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
+        log.info("Member info: " + member);
+
+        return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
+    }
+
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

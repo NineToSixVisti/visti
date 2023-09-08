@@ -1,4 +1,4 @@
-package com.spring.visti.domain.storybox.dto.storybox;
+package com.spring.visti.domain.storybox.dto.storybox.RequestDTO;
 
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.storybox.entity.StoryBox;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class StoryBoxBuildDTO {
 
     private String box_img_path;
-    private String storybox_url;
     private String name;
     private String detail;
     private Boolean blind;

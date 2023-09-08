@@ -30,21 +30,16 @@ public class Report extends BaseEntity {
     private String reason4report;
 
     @Column
-    private String detail;
-
-    @Column
-    private boolean processed;
+    private Boolean processed;
 
     @Builder
     public Report(Member reporter, Story reportedStory, String reason4report, String detail) {
         this.reporter = reporter;
         this.reportedStory = reportedStory;
         this.reason4report = reason4report;
-        this.detail = detail;
-        this.processed = false;  // Default value
     }
 
-    public void processReport() {
-        this.processed = true;
+    public void processReport(Boolean process) {
+        this.processed = process;
     }
 }

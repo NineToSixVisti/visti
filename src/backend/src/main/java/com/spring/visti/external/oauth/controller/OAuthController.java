@@ -23,7 +23,7 @@ public class OAuthController {
     private final OAuthServiceFactory serviceFactory;
 
     @GetMapping("/oauth/{provider}")
-    @Operation(summary = "OAuth 진행", description = "[네이버|카카오] 소셜 로그인", tags={"스토리-박스 내부"})
+    @Operation(summary = "OAuth 진행", description = "[네이버|카카오] 소셜 로그인", tags={"회원 가입", "메인 페이지"})
     public ResponseEntity<? extends BaseResponseDTO<TokenDTO>> OAuthLoginService(
             @PathVariable String provider,
             @RequestParam Map<String, String> params

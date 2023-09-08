@@ -1,29 +1,27 @@
 package com.spring.visti.api.storybox.service.story;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
-import com.spring.visti.domain.report.dto.ReportBuildDTO;
-import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 public interface StoryService {
-    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, String email);
 
-    BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createNFT4Story(Long storyId, String email);
 
-    BaseResponseDTO<Story> readStory(Long storyId);
+    BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email);
 
-    BaseResponseDTO<List<Story>> readMyStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<List<StoryExposedDTO>> readMyStories(String email);
 
-    BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> likeStory(Long storyId, String email);
 
-    BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(String email);
 
-    BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest);
-
-    BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> deleteStory(Long storyId, String email);
 
 
 }

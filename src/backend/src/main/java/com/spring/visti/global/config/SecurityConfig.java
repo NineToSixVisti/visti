@@ -1,4 +1,4 @@
-package com.spring.visti.domain.common.config;
+package com.spring.visti.global.config;
 
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.service.TokenAuthFilter;
@@ -47,7 +47,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable) // csrf disable
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/api/member/signin").permitAll()
-                .requestMatchers("/api/member/inform").hasRole("USER")
+                .requestMatchers("/api/member/inform").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new TokenAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
@@ -99,6 +99,7 @@ public class SecurityConfig {
 
             // Login
             "/api/member/signin",
+            "/api/member/signup",
             "/api/member/verify-member",
             "/api/member/verify-authnum",
             "/oauth/**",

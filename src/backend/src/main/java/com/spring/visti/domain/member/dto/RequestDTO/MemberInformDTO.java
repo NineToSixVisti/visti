@@ -1,4 +1,4 @@
-package com.spring.visti.domain.member.dto;
+package com.spring.visti.domain.member.dto.RequestDTO;
 
 import lombok.Builder;
 import lombok.Getter;

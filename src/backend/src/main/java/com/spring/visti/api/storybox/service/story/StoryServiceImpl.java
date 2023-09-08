@@ -5,12 +5,10 @@ import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberStoryRepository;
-import com.spring.visti.domain.report.dto.ReportBuildDTO;
-import com.spring.visti.domain.report.entity.Report;
 import com.spring.visti.domain.report.repository.ReportRepository;
-import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
-import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.global.jwt.service.TokenProvider;
@@ -34,15 +32,12 @@ public class StoryServiceImpl implements StoryService{
 
     private final MemberRepository memberRepository;
     private final MemberStoryRepository memberStoryRepository;
-    private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRepository;
-    private final TokenProvider tokenProvider;
 
-    private final ReportRepository reportRepository;
 
     @Override
-    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
+        Member member = getMember(email);
 
         boolean canWriteStory = member.dailyStoryCount();
         if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
@@ -54,29 +49,47 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> createNFT4Story(Long storyId, String email) {
         return null;
     }
 
     @Override
-    public BaseResponseDTO<Story> readStory(Long storyId) {
+    public BaseResponseDTO<List<StoryExposedDTO>> readMyStories(String email) {
+        Member member = getMember(email);
+        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
 
-        Story story = getStory(storyId);
+        List<Long> likedStoryIds = _memberLikeStory.stream()
+                .map(like -> like.getStory().getId())
+                .toList();
 
-        return new BaseResponseDTO<Story>("스토리 생성이 완료되었습니다.", 200, story);
+
+        List<Story> _myStories = member.getMemberStories();
+        List<StoryExposedDTO> myStories = _myStories.stream()
+                .map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())))
+                .toList();
+
+        return new BaseResponseDTO<List<StoryExposedDTO>>("작성한 스토리 조회가 완료되었습니다.", 200, myStories);
     }
 
     @Override
-    public BaseResponseDTO<List<Story>> readMyStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
 
-        List<Story> myStories = member.getMemberStories();
-        return new BaseResponseDTO<List<Story>>("자신이 작성한 스토리 조회가 완료되었습니다.", 200, myStories);
+        Member member = getMember(email);
+        Story _story = getStory(storyId);
+
+        List<MemberLikeStory> mls = _story.getMembersLiked();
+        boolean isMemberLikeStory = mls.stream()
+                .anyMatch(ml -> ml.getMember().getId().equals(member.getId()));
+
+        StoryExposedDTO story = StoryExposedDTO.of(_story, isMemberLikeStory);
+
+        return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
     }
 
+
     @Override
-    public BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<String> likeStory(Long storyId, String email) {
+        Member member = getMember(email);
         Story story = getStory(storyId);
         Optional<MemberLikeStory> isMemberLike = memberStoryRepository.findByMemberAndStory(member, story);
 
@@ -91,28 +104,24 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    public BaseResponseDTO<List<StoryExposedDTO>> readLikedStories(String email) {
+        Member member = getMember(email);
         List<MemberLikeStory> memberStories = member.getMemberLikedStories();
 
         // MemberStory 리스트에서 Story 리스트를 추출
-        List<Story> stories = memberStories.stream()
+        List<StoryExposedDTO> stories = memberStories.stream()
                 .map(MemberLikeStory::getStory)
+                .map(LikedStory -> StoryExposedDTO.of(LikedStory, true))
                 .toList();
 
-        return new BaseResponseDTO<List<Story>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
+        return new BaseResponseDTO<List<StoryExposedDTO>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
     }
 
     @Override
-    public BaseResponseDTO<String> reportStory(Long storyId, HttpServletRequest httpServletRequest) {
-        return null;
-    }
-
-    @Override
-    public BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 
         // 사용자 조회
-        Member member = getEmail(httpServletRequest);
+        Member member = getMember(email);
 
         // 스토리 조회
         Story story = getStory(storyId);
@@ -133,9 +142,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
-
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
+    public Member getMember(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

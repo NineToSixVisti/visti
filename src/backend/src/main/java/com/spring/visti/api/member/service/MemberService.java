@@ -1,10 +1,11 @@
 package com.spring.visti.api.member.service;
 
 import com.spring.visti.api.dto.BaseResponseDTO;
-import com.spring.visti.domain.member.dto.MemberInformDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
-import com.spring.visti.domain.member.dto.MemberLoginDTO;
-import com.spring.visti.domain.member.entity.Member;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,5 +19,7 @@ public interface MemberService {
 
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);
     BaseResponseDTO<?> signOut(HttpServletRequest request);
-    BaseResponseDTO<Member> getInfo(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<MemberMyInfoDTO> getInfo(String email);
+
+    BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email);
 }

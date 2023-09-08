@@ -45,7 +45,8 @@ public enum ErrorCode {
     ALREADY_JOIN_ERROR(HttpStatus.CONFLICT, "SBOX003", "이미 들어가있는 스토리 박스 입니다."),
 
     // Report Part
-    ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다.");
+    ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다."),
+    NO_REPORT_ERROR(HttpStatus.NOT_FOUND, "REPORT002", "신고가 조회되지 않았습니다.");
 
     
     private HttpStatus status;
