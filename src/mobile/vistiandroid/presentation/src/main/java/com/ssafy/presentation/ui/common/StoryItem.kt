@@ -32,7 +32,7 @@ fun StoryItem(
                 .data(image.downloadUrl)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.ic_launcher_background),
+            placeholder = painterResource(R.drawable.placeholder),
             contentDescription = image.author,
             modifier = Modifier
                 .aspectRatio(1f / 1f)
