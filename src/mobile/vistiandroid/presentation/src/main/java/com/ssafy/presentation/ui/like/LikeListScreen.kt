@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.like
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.presentation.ui.common.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.like.component.ToolbarWithLikeList
+import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,13 +47,15 @@ fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
                 topBar = {
                     ToolbarWithLikeList()
                 },
+                modifier = Modifier.background(DarkBackgroundColor)
             ) { innerPadding ->
                 Column(
                     modifier = Modifier
                         .padding(innerPadding),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    StoryLazyVerticalGrid(state.images)
+                    val grouped = state.images.groupBy { it.author }
+                    StoryLazyVerticalGrid(grouped)
                 }
             }
         }
