@@ -1,11 +1,18 @@
 package com.ssafy.presentation.ui.home
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -15,8 +22,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +46,8 @@ import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.LightBackgroundColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
 import com.ssafy.presentation.ui.theme.White
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,84 +61,73 @@ fun HomeScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val state = rememberCollapsingToolbarScaffoldState()
+    val scrollState = rememberScrollState()
 
-    /*CollapsingToolbarScaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+    CollapsingToolbarScaffold(
+        modifier = Modifier.fillMaxSize(),
         state = state,
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
         toolbar = {
-            val textSize = (18 + (30 - 18) * state.toolbarState.progress).sp
-
             Box(
                 modifier = Modifier
-                    .background(Color.Black)
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .pin()
-            )
-
-            Text(
-                text = "Title",
-                modifier = Modifier
-                    .road(Alignment.CenterStart, Alignment.BottomEnd)
-                    .padding(60.dp, 16.dp, 16.dp, 16.dp),
-                color = Color.White,
-                fontSize = textSize
-            )
-
-            Image(
-                modifier = Modifier
-                    .pin()
-                    .padding(16.dp),
-                painter = painterResource(id = R.drawable.ic_home),
-                contentDescription = null
-            )
-        }
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            items(100) {
-                Text(
-                    text = "Item $it",
-                    modifier = Modifier.padding(8.dp)
+                    .fillMaxSize()
+                    .height(500.dp),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.image_backgroud_sky),
+                    contentDescription = "toolbar background",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(state.toolbarState.progress)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(1 - state.toolbarState.progress)
+                        .background(Color.Red)
                 )
             }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(0.5f)
-                .background(Color.Blue)
-                .height(40.dp)
-        )
-    }*/
-    Scaffold(
-
-        bottomBar = {
-            if (MainNav.isMainRoute(currentRoute)) {
-                MainBottomNavigationBar(navController = navController, currentRoute = currentRoute)
-            }
-        },
-        topBar = {
-
+            Image(
+                modifier = Modifier
+                    .padding(0.dp, 16.dp, 0.dp, 16.dp)
+                    .road(Alignment.Center, Alignment.BottomEnd)
+                    .alpha(1 - state.toolbarState.progress),
+                painter = painterResource(id = R.drawable.image_39),
+                contentDescription = "home_logo"
+            )
         },
     ) {
-        MainNavigationScreen(
-            innerPaddings = it,
-            navController = navController
-        )
+        Scaffold(
+            bottomBar = {
+                if (MainNav.isMainRoute(currentRoute)) {
+                    MainBottomNavigationBar(
+                        navController = navController,
+                        currentRoute = currentRoute
+                    )
+                }
+            },
+        ) {
+            MainNavigationScreen(
+                innerPaddings = it,
+                navController = navController
+            )
+        }
+
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            MainContent()
+            MainContent()
+            MainContent()
+            MainContent()
+        }
+
+
     }
-    Box {
-        mainContent()
-    }
+
 }
 
 @Composable
-fun mainContent() {
+fun MainContent() {
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(resId = R.raw.animation_lm9xow59)
     )
