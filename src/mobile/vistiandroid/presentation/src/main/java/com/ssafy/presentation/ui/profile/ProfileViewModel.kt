@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
         getImagesUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _state.value = LikeListState(images = result.data ?: emptyList())
+                    _state.value = LikeListState(stories = result.data ?: emptyList())
                 }
                 is Resource.Error -> {
                     _state.value = LikeListState(error = result.message ?: "An error occurred")

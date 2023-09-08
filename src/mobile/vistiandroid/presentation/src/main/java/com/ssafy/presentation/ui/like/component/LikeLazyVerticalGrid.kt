@@ -11,11 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ssafy.domain.model.Image
+import com.ssafy.domain.model.Story
 import com.ssafy.presentation.ui.common.StoryItem
 
 @Composable
-fun LikeLazyVerticalGrid(grouped: Map<String, List<Image>>) {
+fun LikeLazyVerticalGrid(grouped: Map<String, List<Story>>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3)
     ) {
