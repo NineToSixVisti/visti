@@ -40,11 +40,11 @@ public class StoryBoxController {
 
     @PostMapping("/{storyBoxId}/join")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
-    public ResponseEntity<? extends BaseResponseDTO<String>> joinStoryBox(
+    public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
             @PathVariable Long storyBoxId
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.joinStoryBox(storyBoxId, email);
+        BaseResponseDTO<String> response = storyBoxService.enterStoryBox(storyBoxId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -119,13 +119,31 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/{storyBoxId}/link")
+    @GetMapping("/{storyBoxId}/generate")
     @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 제공해줍니다.", tags={"스토리-박스 내부"})
-    public ResponseEntity<? extends BaseResponseDTO<String>> makeStoryBoxLink(
+    public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
             @PathVariable Long storyBoxId
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.makeStoryBoxLink(storyBoxId, email);
+        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(storyBoxId, email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/validate")
+    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"스토리-박스 내부"})
+    public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
+            @RequestParam String token
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email;
+        if (authentication != null && authentication.getPrincipal() != null) {
+            email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        }else{
+            email = null;
+        }
+
+        BaseResponseDTO<String> response = storyBoxService.validateStoryBoxLink(token, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

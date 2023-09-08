@@ -117,6 +117,8 @@ public class StoryServiceImpl implements StoryService{
         return new BaseResponseDTO<List<StoryExposedDTO>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
     }
 
+
+
     @Override
     public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 

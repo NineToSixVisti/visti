@@ -27,7 +27,6 @@ public class StoryBox extends BaseEntity {
     @Column
     private String box_img_path;
 
-
     @Column
     private String name;
 
@@ -39,6 +38,11 @@ public class StoryBox extends BaseEntity {
 
     @Column(updatable = false)
     private LocalDateTime finish_at;
+
+    @Column
+    private String token;
+    private LocalDateTime expireTime;
+
     @OneToMany(mappedBy = "storyBox")
     private List<Story> stories = new ArrayList<>();
 
@@ -65,6 +69,11 @@ public class StoryBox extends BaseEntity {
         if(storyBoxSetDTO.getDetail() != null) {
             this.detail = storyBoxSetDTO.getDetail();
         }
+    }
+
+    public void updateToken(String token, LocalDateTime expireTime){
+        this.token = token;
+        this.expireTime = expireTime;
     }
 
 }

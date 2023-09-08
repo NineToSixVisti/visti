@@ -39,7 +39,7 @@ public class StoryBoxMember {
         this.reportCount = 0;
     }
 
-    public  StoryBoxMember joinBox(Member member, StoryBox storyBox, Position position){
+    public static StoryBoxMember joinBox(Member member, StoryBox storyBox, Position position){
         return StoryBoxMember.builder()
                 .member(member)
                 .storyBox(storyBox)
