@@ -1,4 +1,4 @@
-package com.ssafy.presentation.ui.like.component
+package com.ssafy.presentation.ui.common
 
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
