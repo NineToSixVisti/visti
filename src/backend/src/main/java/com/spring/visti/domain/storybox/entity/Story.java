@@ -3,6 +3,7 @@ package com.spring.visti.domain.storybox.entity;
 import com.spring.visti.domain.common.entity.BaseEntity;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
+import com.spring.visti.domain.storybox.constant.StoryType;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,26 +25,26 @@ public class Story extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StoryType main_file_type;
+    @Column(nullable = false)
+    private String main_file_path;
+
+    @Enumerated(EnumType.STRING)
     @Column
-    private String letter_path;
+    private StoryType sub_file_type;
     @Column
-    private String image_path;
-    @Column
-    private String audio_path;
-    @Column
-    private String video_path;
+    private String sub_file_path;
+
+
     @Column
     private String secret_key;
     @Column
     private String nft_hash;
-    @Column(updatable = false)
-    private Boolean blind;
-    @Column(updatable = false)
-    private LocalDateTime finish_at;
 
     @Column
     private Integer reportedCount;
-
 
 
     @OneToMany(mappedBy = "story")
@@ -54,15 +55,20 @@ public class Story extends BaseEntity {
     private StoryBox storyBox;
 
     @Builder
-    public Story(Member member, String letter_path, String image_path, String audio_path, String video_path, StoryBox storyBox, Boolean blind, LocalDateTime finish_at){
+    public Story(Member member,
+                 StoryType main_file_type, String main_file_path,
+                 StoryType sub_file_type, String sub_file_path,
+                 StoryBox storyBox
+    ){
         this.member = member;
-        this.letter_path = letter_path;
-        this.image_path = image_path;
-        this.audio_path = audio_path;
-        this.video_path = video_path;
         this.storyBox = storyBox;
-        this.blind = blind;
-        this.finish_at = finish_at;
+
+        this.main_file_path = main_file_path;
+        this.main_file_type = main_file_type;
+
+        this.sub_file_path = sub_file_path;
+        this.sub_file_type = sub_file_type;
+
         this.reportedCount = 0;
     }
 
