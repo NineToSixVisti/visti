@@ -1,6 +1,6 @@
 package com.spring.visti.external.oauth.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.jwt.dto.TokenDTO;
