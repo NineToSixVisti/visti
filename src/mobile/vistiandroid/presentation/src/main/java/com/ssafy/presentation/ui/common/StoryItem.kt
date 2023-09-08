@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,12 +28,18 @@ fun StoryItem(
 ) {
     Box {
         val isFavorite = true
+        val placedHolder = if(!isSystemInDarkTheme()) {
+            R.drawable.placeholder
+        } else {
+            R.drawable.placeholder_dark
+        }
+
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(image.downloadUrl)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.placeholder),
+            placeholder = painterResource(placedHolder),
             contentDescription = image.author,
             modifier = Modifier
                 .aspectRatio(1f / 1f)
