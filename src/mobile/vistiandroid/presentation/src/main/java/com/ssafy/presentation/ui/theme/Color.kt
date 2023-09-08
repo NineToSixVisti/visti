@@ -19,3 +19,5 @@ val Black = Color(0xFF000000)
 
 val LightBackgroundColor = Color(0xFFFFFBFE)
 val DarkBackgroundColor = Color(0xFF1C1B1F)
+val NavigationBackgroundColor = Color(0xDD1C1B1F)
+val IndicatorBackgroundColor = Color(0x00000000)
