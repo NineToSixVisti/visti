@@ -1,6 +1,6 @@
 package com.spring.visti.api.member.controller;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.member.service.EmailService;
 import com.spring.visti.api.member.service.MemberService;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;

@@ -1,6 +1,6 @@
 package com.spring.visti.api.report.controller;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.report.service.ReportService;
 import com.spring.visti.domain.report.dto.RequestDTO.ReportBuildDTO;
 import com.spring.visti.domain.report.dto.ResponseDTO.ReportExposedDTO;

@@ -1,6 +1,6 @@
 package com.spring.visti.external.oauth.kakao.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.domain.member.entity.Member;

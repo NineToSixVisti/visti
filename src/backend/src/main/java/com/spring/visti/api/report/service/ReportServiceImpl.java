@@ -1,6 +1,6 @@
 package com.spring.visti.api.report.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.Role;
 
 import com.spring.visti.domain.member.entity.Member;
@@ -11,16 +11,14 @@ import com.spring.visti.domain.report.entity.Report;
 import com.spring.visti.domain.report.repository.ReportRepository;
 import com.spring.visti.domain.storybox.entity.Story;
 
-import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 
-import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.utils.exception.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +36,12 @@ public class ReportServiceImpl implements ReportService{
 
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> createReport(Long storyId, ReportBuildDTO reportInfo, String email) {
 
-        Member reporter = getMember(email);
+        Member reporter = getMember(email, memberRepository);
 
-        Story story = getStory(storyId);
+        Story story = getStory(storyId, storyRepository);
 
         Optional<Report> checkReport = reportRepository.findByReporterAndReportedStory(reporter, story);
 
@@ -57,7 +56,7 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public BaseResponseDTO<ReportExposedDTO> readReportDetail(Long reportId, String email) {
-        Member member = getMember(email);
+        Member member = getMember(email, memberRepository);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         Report _report = getReport(reportId);
@@ -69,7 +68,7 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public BaseResponseDTO<List<ReportExposedDTO>> readReports(String email) {
-        Member member = getMember(email);
+        Member member = getMember(email, memberRepository);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         List<Report> _reports = reportRepository.findReportByProcessed(null);
@@ -83,8 +82,9 @@ public class ReportServiceImpl implements ReportService{
 
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> updateReport(Long reportId, Boolean process, String email) {
-        Member member = getMember(email);
+        Member member = getMember(email, memberRepository);
         if (!Role.ADMIN.equals(member.getRole())){ throw new ApiException(NO_AUTHORIZE_ERROR); }
 
         Report report = getReport(reportId);
@@ -107,24 +107,6 @@ public class ReportServiceImpl implements ReportService{
         memberRepository.save(reportedMember);
 
         return new BaseResponseDTO<>("신고가 처리가 완료되었습니다.", 200);
-    }
-
-    public Member getMember(String email) {
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-
-        if (optionalMember.isEmpty()){ throw new ApiException(NO_MEMBER_ERROR); }
-
-        return optionalMember.get();
-    }
-
-    public Story getStory(Long storyId) {
-
-        Optional<Story> optionalStory = storyRepository.findById(storyId);
-
-        if (optionalStory.isEmpty()){ throw new ApiException(NO_STORY_ERROR); }
-
-        return optionalStory.get();
     }
 
     public Report getReport(Long reportId) {

@@ -1,6 +1,6 @@
 package com.spring.visti.external.oauth.controller;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.external.oauth.service.OAuthService;
 import com.spring.visti.external.oauth.service.OAuthServiceFactory;
 import com.spring.visti.global.jwt.dto.TokenDTO;

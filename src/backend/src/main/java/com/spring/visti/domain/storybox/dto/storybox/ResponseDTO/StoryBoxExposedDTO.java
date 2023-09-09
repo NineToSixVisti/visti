@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class StoryBoxListDTO {
+public class StoryBoxExposedDTO {
 
     private Long id;
     private String box_img_path;
@@ -19,9 +19,9 @@ public class StoryBoxListDTO {
     private Boolean blind;
 
     @Builder
-    public StoryBoxListDTO(Long id, String box_img_path, String name,
-                           LocalDateTime created_at, LocalDateTime finished_at,
-                           Boolean blind){
+    public StoryBoxExposedDTO(Long id, String box_img_path, String name,
+                              LocalDateTime created_at, LocalDateTime finished_at,
+                              Boolean blind){
         this.id = id;
         this.box_img_path = box_img_path;
         this.name = name;
@@ -30,8 +30,8 @@ public class StoryBoxListDTO {
         this.blind = blind;
     }
 
-    public static StoryBoxListDTO of(StoryBox storyBox){
-        return StoryBoxListDTO.builder()
+    public static StoryBoxExposedDTO of(StoryBox storyBox){
+        return StoryBoxExposedDTO.builder()
                 .id(storyBox.getId())
                 .box_img_path(storyBox.getBox_img_path())
                 .name(storyBox.getName())
