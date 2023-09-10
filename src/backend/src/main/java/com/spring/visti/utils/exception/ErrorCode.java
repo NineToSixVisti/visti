@@ -54,9 +54,5 @@ public enum ErrorCode {
     private String code;
     private final String message;
 
-    ErrorCode(String message, HttpStatus status) {
-        this.message = message;
-        this.status = status;
-    }
 
 }
