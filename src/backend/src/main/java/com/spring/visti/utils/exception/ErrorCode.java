@@ -9,12 +9,13 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // Authentication Part
-    REGISTER_PW_LEN_ERROR(HttpStatus.BAD_REQUEST, "AUTH001", "비밀번호는 8자 이상이어야 합니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "AUTH001", "비밀번호의 형식이 잘못되었습니다."),
     EMAIL_INPUT_ERROR(HttpStatus.BAD_REQUEST, "AUTH002", "이메일 인증 번호가 잘못되었습니다."),
     REGISTER_DUPLICATED_EMAIL(HttpStatus.CONFLICT, "AUTH003", "이미 가입되어 있는 유저입니다."),
     LOGIN_INFO_ERROR(HttpStatus.UNAUTHORIZED, "AUTH004", "로그인 정보가 일치하지 않습니다."),
     NO_MEMBER_ERROR(HttpStatus.NOT_FOUND, "AUTH005", "유저 정보가 없습니다."),
     NO_AUTHORIZE_ERROR(HttpStatus.NOT_FOUND, "AUTH005", "접근 권한이 없습니다."),
+    INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "AUTH006", "이메일 형식이 잘못되었습니다."),
 
     // JWT Notification Part
     NO_TOKEN_HEADER(HttpStatus.UNAUTHORIZED, "AUTH010", "토큰이 존재하지 않습니다."),
