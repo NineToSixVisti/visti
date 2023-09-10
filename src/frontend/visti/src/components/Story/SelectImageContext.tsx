@@ -6,20 +6,17 @@ type SelectedImageContextType = {
 };
 
 export const SelectedImageContext = createContext<SelectedImageContextType | undefined>(undefined);
+  
+export const SelectedImageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-interface SelectedImageProviderProps {
-    children: React.ReactNode;
-  }
-  
-  export const SelectedImageProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  
-    return (
-      <SelectedImageContext.Provider value={{ selectedImage, setSelectedImage }}>
-        {children}
-      </SelectedImageContext.Provider>
-    );
-  };
+  return (
+    <SelectedImageContext.Provider value={{ selectedImage, setSelectedImage }}>
+      {children}
+    </SelectedImageContext.Provider>
+  );
+};
+
 export const useSelectedImage = () => {
   const context = useContext(SelectedImageContext);
   if (!context) {
@@ -27,4 +24,5 @@ export const useSelectedImage = () => {
   }
   return context;
 };
-export default SelectedImageContext; 
+
+export default SelectedImageContext;
