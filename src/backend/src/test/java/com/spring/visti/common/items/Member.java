@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Member {
      public final static String email = "tncks097@naver.com";
-     public final static String accountPassWord = "qwer1234";
+     public final static String accountPassWord = "Qwert1234!@";
      public final static String nickname = "테스트 닉네임";
      public static String profile_path;
      public static String refreshToken;
@@ -41,4 +41,15 @@ public class Member {
                 .password(accountPassWord)
                 .build();
     }
+
+    public static MemberJoinDTO 회원가입_정보작성(String nickname, String email, String accountPassWord) {
+        return MemberJoinDTO.builder()
+                .nickname(nickname)
+                .email(email)
+                .password(accountPassWord)
+                .build();
+    }
+
+
+
 }

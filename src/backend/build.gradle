@@ -63,6 +63,7 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured:2.0.6.RELEASE'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'io.rest-assured:spring-mock-mvc'
+	implementation 'org.jsoup:jsoup:1.15.3'
 }
 
 tasks.named('test') {
