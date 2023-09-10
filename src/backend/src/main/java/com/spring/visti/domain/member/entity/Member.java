@@ -69,10 +69,9 @@ public class Member extends BaseEntity{
     private List<StoryBoxMember> storyBoxes = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String name, String nickname, String profile_path, Role role, MemberType memberType){
+    public Member(String email, String password, String nickname, String profile_path, Role role, MemberType memberType){
         this.email = email;
         this.password = password;
-        this.name = name;
         this.nickname = nickname;
         this.profile_path = profile_path;
         this.role = role;
