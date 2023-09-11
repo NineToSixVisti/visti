@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -65,12 +69,12 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = {
-//            if (MainNav.isMainRoute(currentRoute)) {
-//                MainBottomNavigationBar(
-//                    navController = navController,
-//                    currentRoute = currentRoute
-//                )
-//            }
+            if (MainNav.isMainRoute(currentRoute)) {
+                MainBottomNavigationBar(
+                    navController = navController,
+                    currentRoute = currentRoute
+                )
+            }
         },
     ) {
 
@@ -113,11 +117,39 @@ fun HomeScreen(
             },
         ) {
 
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                MainContent()
-                MainContent()
-                MainContent()
-                MainContent()
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(start = 20.dp, top = 20.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    MainContent()
+                    Content()
+                }
+                Text(
+                    text = "진행중인 기록",
+                    modifier = Modifier.padding(top = 20.dp, bottom = 5.dp),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                LazyRow {
+                    items(5) {
+                        ImageListItem()
+                    }
+                }
+                Text(
+                    text = "과거의 기록",
+                    modifier = Modifier.padding(top = 20.dp, bottom = 5.dp),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                LazyRow {
+                    items(5) {
+                        HomeStoryImage()
+                    }
+                }
             }
         }
 
@@ -129,10 +161,144 @@ fun HomeScreen(
         )
     }
 
+}
+
+@Composable
+fun HomeStoryImage() {
+    Card(
+        modifier = Modifier
+            .padding(end = 10.dp), shape = RoundedCornerShape(12.dp)
+    ) {
+        Box(modifier = Modifier.size(200.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.image_backgroud_sky),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize(), contentDescription = "과거의 기록"
+            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(10.dp)
+            ) {
+                Card(
+                    modifier = Modifier
+                        .alpha(0.2f), shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .background(Color.Black)
+                            .padding(all = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+
+                        ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_like),
+                            contentDescription = "홈화면 좋아요"
+                        )
+
+                    }
+
+                }
+                Row(modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp)) {
+
+                }
 
 
+            }
+        }
+    }
+
+}
+
+@Composable
+fun ImageListItem() {
+    Card(
+        modifier = Modifier
+            .padding(end = 10.dp), shape = RoundedCornerShape(12.dp)
+    ) {
+        Box(modifier = Modifier.size(200.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.image_backgroud_sky),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize(), contentDescription = "진행중인 기록"
+            )
+            Column(
+                modifier = Modifier.align(Alignment.BottomStart)
+            ) {
+                Text(
+                    text = "버니즈 9기",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 20.dp, bottom = 5.dp)
+                )
+                Card(
+                    modifier = Modifier
+                        .alpha(0.2f)
+                        .padding(horizontal = 10.dp), shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .background(Color.Black),
+                        verticalAlignment = Alignment.CenterVertically,
+
+                        ) {
+                        Text(
+                            text = "2023.09.01 ~ 09.30",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp)
+                        )
+                    }
+
+                }
+                Row(modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp)) {
+
+                }
 
 
+            }
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun Content() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.End,
+    ) {
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(
+                text = "희주님", fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "의",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+        }
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(
+                text = "보관된 추억은 ", fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "34", fontSize = 18.sp, color = PrimaryColor, fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = "개입니다!",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+        }
+
+    }
 }
 
 @Composable
@@ -235,7 +401,9 @@ fun MainContent() {
         LottieCompositionSpec.RawRes(resId = R.raw.animation_calendar)
     )
     LottieAnimation(
-        modifier = Modifier.size(size = 240.dp),
+        modifier = Modifier
+            .height(80.dp)
+            .width(120.dp),
         composition = composition,
         iterations = LottieConstants.IterateForever // animate forever
     )
