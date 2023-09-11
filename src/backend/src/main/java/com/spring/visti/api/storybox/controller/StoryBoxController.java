@@ -12,6 +12,9 @@ import com.spring.visti.utils.urlshortener.UrlShortener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,7 +65,7 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/{storyBoxId}/leave")
+    @DeleteMapping("/{storyBoxId}/delete")
     @Operation(summary = "스토리-박스 나가기", description = "스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
             @PathVariable Long storyBoxId
@@ -72,11 +75,16 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    private static final String perPageBox = "5";
     @GetMapping("/mystorybox")
     @Operation(summary = "내가 들어간 스토리 박스 조회", description = "스토리 박스를 리스트업 합니다.", tags={"스토리-박스 페이지", "Nav 바", "마이 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxListDTO>>> readMyStoryBoxes() {
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryBoxExposedDTO>>> readMyStoryBoxes(
+            @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
+    ) {
         String email = getEmail();
-        BaseResponseDTO<List<StoryBoxListDTO>> response = storyBoxService.readMyStoryBoxes(email);
+
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(PageRequest.of(page, size), email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -91,13 +99,16 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    private static final String perPageStory = "3";
     @GetMapping("/{storyBoxId}/story-list")
     @Operation(summary = "스토리 박스의 스토리 리스트업", description = "스토리박스 내의 스토리를 모두 리스트업 합니다.", tags={"스토리-박스 내부"})
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryExposedDTO>>> readStoryInStoryBox(
-            @PathVariable Long storyBoxId
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryExposedDTO>>> readStoryInStoryBox(
+            @PathVariable Long storyBoxId,
+            @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name= "size", required = false, defaultValue = perPageStory ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<List<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(storyBoxId, email);
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(PageRequest.of(page, size), storyBoxId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
