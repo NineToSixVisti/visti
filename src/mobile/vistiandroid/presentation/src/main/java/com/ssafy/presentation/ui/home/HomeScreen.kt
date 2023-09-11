@@ -63,69 +63,75 @@ fun HomeScreen(
     val state = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberScrollState()
 
-    CollapsingToolbarScaffold(
-        modifier = Modifier.fillMaxSize(),
-        state = state,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(520.dp),
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.image_backgroud_sky),
-                    contentDescription = "toolbar background",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(state.toolbarState.progress)
-                )
+    Scaffold(
+        bottomBar = {
+//            if (MainNav.isMainRoute(currentRoute)) {
+//                MainBottomNavigationBar(
+//                    navController = navController,
+//                    currentRoute = currentRoute
+//                )
+//            }
+        },
+    ) {
+
+        CollapsingToolbarScaffold(
+            modifier = Modifier.fillMaxSize(),
+            state = state,
+            scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+            toolbar = {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .alpha(1 - state.toolbarState.progress)
-                        .background(PrimaryColor)
-                )
-            }
-            TopScrollView(state)
-
-            Image(
-                modifier = Modifier
-                    .padding(0.dp, 16.dp, 0.dp, 16.dp)
-                    .road(Alignment.Center, Alignment.BottomEnd)
-                    .size(20.dp)
-                    .alpha(1 - state.toolbarState.progress),
-                painter = painterResource(id = R.drawable.image_39),
-                contentDescription = "home_logo"
-            )
-        },
-    ) {
-        Scaffold(
-            bottomBar = {
-                if (MainNav.isMainRoute(currentRoute)) {
-                    MainBottomNavigationBar(
-                        navController = navController,
-                        currentRoute = currentRoute
+                        .height(520.dp),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.image_backgroud_sky),
+                        contentDescription = "toolbar background",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .alpha(state.toolbarState.progress)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .alpha(1 - state.toolbarState.progress)
+                            .background(PrimaryColor)
                     )
                 }
+                TopScrollView(state)
+
+                Image(
+                    modifier = Modifier
+                        .padding(0.dp, 16.dp, 0.dp, 16.dp)
+                        .road(Alignment.Center, Alignment.BottomEnd)
+                        .size(20.dp)
+                        .alpha(1 - state.toolbarState.progress),
+                    painter = painterResource(id = R.drawable.image_39),
+                    contentDescription = "home_logo"
+                )
             },
         ) {
-            MainNavigationScreen(
-                innerPaddings = it,
-                navController = navController
-            )
-        }
 
-        Column(modifier = Modifier.verticalScroll(scrollState)) {
-            MainContent()
-            MainContent()
-            MainContent()
-            MainContent()
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
+                MainContent()
+                MainContent()
+                MainContent()
+                MainContent()
+            }
         }
 
 
+
+        MainNavigationScreen(
+            innerPaddings = it,
+            navController = navController
+        )
     }
+
+
+
+
 
 }
 
