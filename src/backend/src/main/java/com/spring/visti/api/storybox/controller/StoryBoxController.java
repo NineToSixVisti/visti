@@ -8,6 +8,7 @@ import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
 import com.spring.visti.utils.exception.ApiException;
+import com.spring.visti.utils.urlshortener.UrlShortener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -131,7 +133,7 @@ public class StoryBoxController {
     }
 
     @GetMapping("/{storyBoxId}/generate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 제공해줍니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
             @PathVariable Long storyBoxId
     ) {
@@ -140,8 +142,18 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/{shortenedUrl}")
+    @Operation(summary = "스토리박스 숏링크 수집", description = "스토리박스에 접속가능한 링크를 제공해줍니다.", tags={"앱 외부에서 접근"})
+    public RedirectView redirect(
+            @PathVariable String shortenedUrl
+    ) {
+        String expandedUrl = UrlShortener.expand(shortenedUrl);
+        // 원래의 URL로 리다이렉트
+        return new RedirectView(expandedUrl);
+    }
+
     @GetMapping("/validate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"서버에서 리다이랙트 접근"})
     public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
             @RequestParam String token
     ) {

@@ -3,6 +3,7 @@ package com.spring.visti;
 import com.spring.visti.api.member.service.MemberService;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,9 @@ class VistiApplicationTests {
 	private MemberService memberService;
 	private MemberJoinDTO member1;
 	private MemberJoinDTO member2;
+	private MemberJoinDTO member3;
+	private MemberJoinDTO member4;
+
 
 	private MemberLoginDTO loginMember1;
 	private MemberLoginDTO loginMember2;
@@ -29,15 +33,22 @@ class VistiApplicationTests {
 	private MemberLoginDTO failLoginMember2;
 
 	@Test
+	@Transactional
 	void TestJoinService() {
 		member1 = new MemberJoinDTO("test@test.com", "12345678", "테스트중");
 		member2 = new MemberJoinDTO("whipbaek@gmail.com", "12345678", "ㅋㅋ 고생좀 했네");
 
-		memberService.signUp(member1);
+
 
 		memberService.signUp(member1);
+
+		memberService.signUp(member2);
 
 		TestLogInService();
+	}
+
+	public void rollbackTest(){
+		throw new RuntimeException("런타임 엑셉션");
 	}
 
 	@Test

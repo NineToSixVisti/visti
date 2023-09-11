@@ -18,6 +18,7 @@ import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.utils.exception.ApiException;
+import com.spring.visti.utils.urlshortener.UrlShortener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -224,9 +225,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         storyBox.updateToken(token, expiryDate);
         storyBoxRepository.save(storyBox);
 
-        String urlPath = "/validate?token="+token;
+        String urlPath = "validate?token="+token;
+        String shortenedUrl = UrlShortener.shorten(urlPath);
 
-        return new BaseResponseDTO<String>("토큰이 발급되었습니다.", 200, token);
+        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, shortenedUrl);
     }
 
     @Override
