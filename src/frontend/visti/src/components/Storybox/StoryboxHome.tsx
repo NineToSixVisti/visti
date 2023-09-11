@@ -37,17 +37,24 @@ const StoryboxHome = () => {
       ]
     }
   )
+  const [search, setSerch] = useState("");
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSerch(e.target.value)
+  }
 
   const navigate = useNavigate();
 
   return (
     <StoryboxWWrap>
       <LogoWrap>
-        <img src="/assets/Visti-red.svg" alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
+        <img src={process.env.PUBLIC_URL +"/assets/Visti-red.svg"} alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
       </LogoWrap>
       <TopWrap>
-        <img src="/assets/storybox-create.svg" alt="create" onClick={()=>{navigate("/storybox/join")}}/>
-        <Search/>
+        <img src={process.env.PUBLIC_URL +"/assets/storybox-create.svg"} alt="create" onClick={()=>{navigate("/storybox/join")}}/>
+        <SearchWrap>
+          <input type="text" value={search} onChange={onChange} placeholder='검색어 입력'/>
+          <img src={process.env.PUBLIC_URL + '/assets/search_button.svg'} alt="search"/>
+        </SearchWrap>
       </TopWrap>
       {
         boxList ? 
@@ -71,9 +78,13 @@ const StoryboxHome = () => {
               <p>버니즈(2023.01.01 ~ 12.12)</p>
             </NameWrap>
           </BoxWrap>
+          <BoxWrap>
+            <NameWrap>
+              <p>버니즈(2023.01.01 ~ 12.12)</p>
+            </NameWrap>
+          </BoxWrap>
         </MainBoxWrap>
-      }
-      
+      }      
     </StoryboxWWrap>
   )
 }
@@ -97,16 +108,39 @@ const LogoWrap = styled.div`
 `
 
 const TopWrap = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: space-evenly;
-  margin: 10px 0;
-`
+  justify-content: space-between; 
+  align-items: center; 
+  margin: 10px 25px 20px 22px;
+  padding: 0 10px; 
 
-const Search = styled.div`
-  width: 70%;
-  background-color: red;
-`
+  >img {
+    margin-right: 10px; 
+  }
+`;
+
+const SearchWrap = styled.div`
+  flex-grow: 1; 
+  width: 272px;
+  height: 20px;
+  position: relative; 
+
+  >input {
+    width: 100%;
+    height: 100%;
+    border-radius : 8px;
+  }
+
+  >img {
+    position: absolute; 
+    right: 5px; 
+    top: 60%; 
+    transform: translateY(-50%); 
+    width: 15px; 
+    height: 15px; 
+    cursor: pointer; 
+  }
+`;
 
 
 const MainWrap = styled.div`
@@ -137,9 +171,8 @@ const MainBoxWrap = styled.div`
   flex-direction: column;
 
   overflow-y: auto; 
-  -ms-overflow-style: none; /* 인터넷 익스플로러 */
-  scrollbar-width: none; /* 파이어폭스 */
-  &::-webkit-scrollbar {
+  scrollbar-width: none; // 파이어폭스
+  &::-webkit-scrollbar { // 웹킷 기반 브라우저
     display: none;
   }
 `
