@@ -15,6 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.spring.visti.global.jwt.service.TokenProvider;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.Arrays;
+
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +35,10 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> {
             web.ignoring()
-                    .requestMatchers(WHITELIST);
+                    .requestMatchers(toH2Console())
+                    .requestMatchers(Arrays.stream(WHITELIST)
+                            .map(AntPathRequestMatcher::new)
+                            .toArray(RequestMatcher[]::new));
         };
     }
 
@@ -44,37 +54,20 @@ public class SecurityConfig {
         System.out.println("========================== 우선순위 확인 1======================");
         // Filter
         http
-            .csrf(AbstractHttpConfigurer::disable) // csrf disable
-            .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/api/member/signin").permitAll()
-                .requestMatchers("/api/member/inform").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(new TokenAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .csrf(AbstractHttpConfigurer::disable) // csrf disable
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers(new AntPathRequestMatcher("/api/member/signin")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/member/inform")).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(new TokenAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-
-//        // 기본 제거
-//        http.httpBasic(withDefaults());
-
-//         cors header access
-//        http.cors().configurationSource(corsConfigurationSource());
-
-
-        // cors disable
-//        http.cors(cors -> cors.disable());
 
         // STATELESS
         http.sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        // 권한설정
-//        http.authorizeRequests(request -> {
-//            request
-//                    .requestMatchers(new AntPathRequestMatcher("/api/controller/**")).permitAll()
-//                    .anyRequest().permitAll();
-//
-//        });
         return http.build();
     }
 
@@ -94,6 +87,9 @@ public class SecurityConfig {
     }
 
     private static final String[] WHITELIST = {
+            // for test h2
+            "/h2-console/**",
+
             // Send Mail
             "/api/member/sendmail",
 
@@ -103,9 +99,6 @@ public class SecurityConfig {
             "/api/member/verify-member",
             "/api/member/verify-authnum",
             "/oauth/**",
-
-            // favicon
-            "/favicon.ico",
 
             // Swagger
             "/api/v3/auth/**",

@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -58,6 +59,15 @@ public class MemberServiceImpl implements MemberService{
             password : password
          }
         */
+
+        if (!isValidEmail(memberJoinDTO.getEmail())) {
+            throw new ApiException(INVALID_EMAIL_FORMAT);
+        }
+
+        if (!isValidPassword(memberJoinDTO.getPassword())) {
+            throw new ApiException(INVALID_PASSWORD_FORMAT);
+        }
+
         if(memberRepository.findByEmail(memberJoinDTO.getEmail()).isPresent()){
             throw new ApiException(REGISTER_DUPLICATED_EMAIL);
         }
@@ -79,6 +89,10 @@ public class MemberServiceImpl implements MemberService{
             email : example@example.com
          }
         */
+        if (!isValidEmail(memberInfo.getEmail())) {
+            throw new ApiException(INVALID_EMAIL_FORMAT);
+        }
+
         if(memberRepository.findByEmail(memberInfo.getEmail()).isPresent()){
             throw new ApiException(REGISTER_DUPLICATED_EMAIL);
         }
@@ -200,5 +214,18 @@ public class MemberServiceImpl implements MemberService{
         return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
     }
 
+
+    public static boolean isValidEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(email).matches();
+    }
+
+    public static boolean isValidPassword(String password) {
+        // 8자리 이상, 대문자 포함, 특수문자 하나 이상 포함
+        String regex = "^(?=.*[A-Z])(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(password).matches();
+    }
 
 }
