@@ -3,7 +3,7 @@ import StoryHome from "../components/Story/StoryHome"
 import StoryCreator from "../components/Story/StoryCreator";
 const routes = [
   {
-    path : "/",
+    path : "/storybox",
     Component : StoryboxHome
   },
   {

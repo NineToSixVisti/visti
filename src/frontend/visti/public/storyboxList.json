@@ -1,0 +1,30 @@
+{
+    "message": "string",
+    "statusCode": 0,
+    "detail": [
+      {
+        "id": 0,
+        "box_img_path": "string",
+        "name": "버니즈",
+        "created_at": "2023-09-06T02:28:55.241Z",
+        "finished_at": "2023-12-12T02:28:55.241Z",
+        "blind": false
+      },
+      {
+        "id": 1,
+        "box_img_path": "string",
+        "name": "소원",
+        "created_at": "2023-07-08T02:28:55.241Z",
+        "finished_at": "2023-09-08T02:28:55.241Z",
+        "blind": true
+      },
+      {
+        "id": 3,
+        "box_img_path": "string",
+        "name": "싸피 D102",
+        "created_at": "2023-09-08T02:28:55.241Z",
+        "finished_at": "2023-10-10T02:28:55.241Z",
+        "blind": false
+      }
+    ]
+  }
