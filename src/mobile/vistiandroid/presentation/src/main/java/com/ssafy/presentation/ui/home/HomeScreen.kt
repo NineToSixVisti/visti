@@ -69,12 +69,12 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = {
-            if (MainNav.isMainRoute(currentRoute)) {
-                MainBottomNavigationBar(
-                    navController = navController,
-                    currentRoute = currentRoute
-                )
-            }
+//            if (MainNav.isMainRoute(currentRoute)) {
+//                MainBottomNavigationBar(
+//                    navController = navController,
+//                    currentRoute = currentRoute
+//                )
+//            }
         },
     ) {
 
