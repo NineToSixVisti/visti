@@ -13,8 +13,9 @@ object Versions {
     const val RETROFIT_VERSION = "2.9.0"
     const val OKHTTP_VERSION = "4.9.0"
     const val COMPOSE_VERSION = "1.7.2"
-    const val COIL_VERSION = "2.2.2"
+    const val COIL_VERSION = "2.4.0"
     const val ROTTIE_VERISON = "6.1.0"
+
 }
 
 object Dependencies {

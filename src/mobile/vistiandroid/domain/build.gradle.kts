@@ -37,6 +37,7 @@ dependencies {
     implementation(Dependencies.AndroidX.CORE_KTX)
     implementation(Dependencies.AndroidX.APPCOMPAT)
     implementation(Dependencies.MATERIAL)
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.Test.TEST_EXT)
     androidTestImplementation(Dependencies.Test.ESPRESSO_CORE)
