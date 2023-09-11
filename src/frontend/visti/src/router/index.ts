@@ -1,5 +1,8 @@
 import StoryboxHome from "../components/Storybox/StoryboxHome"
 import StoryHome from "../components/Story/StoryHome"
+import StoryboxCreate from "../components/Storybox/StoryboxCreate";
+
+
 const routes = [
   {
     path : "/storybox",
@@ -8,7 +11,11 @@ const routes = [
   {
     path : "/StoryHome",
     Component : StoryHome
-  }
+  },
+  {
+    path : "/storybox/join",
+    Component : StoryboxCreate
+  },
 
 ]
 

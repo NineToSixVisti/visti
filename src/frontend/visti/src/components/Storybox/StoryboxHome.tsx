@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
+import { useNavigate } from 'react-router-dom';
 
 const StoryboxHome = () => {
   const [boxList, setBoxList] = useState(false)
@@ -37,6 +38,7 @@ const StoryboxHome = () => {
     }
   )
 
+  const navigate = useNavigate();
 
   return (
     <StoryboxWWrap>
@@ -44,7 +46,7 @@ const StoryboxHome = () => {
         <img src="/assets/Visti-red.svg" alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
       </LogoWrap>
       <TopWrap>
-        <img src="/assets/storybox-create.svg" alt="create"/>
+        <img src="/assets/storybox-create.svg" alt="create" onClick={()=>{navigate("/storybox/join")}}/>
         <Search/>
       </TopWrap>
       {
@@ -61,12 +63,12 @@ const StoryboxHome = () => {
           </BoxWrap>
           <BoxWrap>
             <NameWrap>
-              버니즈(2023.01.01 ~ 12.12)
+              <p>버니즈(2023.01.01 ~ 12.12)</p>
             </NameWrap>
           </BoxWrap>
           <BoxWrap>
             <NameWrap>
-              버니즈(2023.01.01 ~ 12.12)
+              <p>버니즈(2023.01.01 ~ 12.12)</p>
             </NameWrap>
           </BoxWrap>
         </MainBoxWrap>
@@ -157,7 +159,7 @@ const BoxWrap = styled.div`
 
 const NameWrap = styled.div`
   width: auto;
-  max-width: 300px;  // 최대 너비 설정
+  max-width: 300px;  // 최대 너비 설정 
   height: 42px;
   border-radius: 12px;
   margin : 8px;
