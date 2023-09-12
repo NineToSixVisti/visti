@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,33 +10,45 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +60,9 @@ import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.StoryBoxItem
 import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
-import com.ssafy.presentation.ui.profile.component.ToolbarWithProfile
 import com.ssafy.presentation.ui.theme.Black
+import com.ssafy.presentation.ui.theme.DarkBackgroundColor
+import com.ssafy.presentation.ui.theme.LightBackgroundColor
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
 import com.ssafy.presentation.ui.theme.White
 
@@ -56,6 +70,10 @@ import com.ssafy.presentation.ui.theme.White
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     val state = viewModel.state.value
+
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     var selectedTabIndex by remember {
         mutableIntStateOf(0)
@@ -83,7 +101,53 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
         else -> {
             Scaffold(
                 topBar = {
-                    ToolbarWithProfile()
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "noion0511@gmail.com",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        },
+                        actions = {
+                            val iconColor = if (isSystemInDarkTheme()) {
+                                LightBackgroundColor
+                            } else {
+                                DarkBackgroundColor
+                            }
+                            val contextForToast = LocalContext.current.applicationContext
+
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        Toast.makeText(contextForToast, "User!", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_rocket),
+                                        contentDescription = LikeSortType.UP.name,
+                                        tint = iconColor,
+                                    )
+                                }
+
+                                IconButton(
+                                    onClick = {
+                                        showBottomSheet = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = LikeSortType.UP.name,
+                                        tint = iconColor,
+                                    )
+                                }
+                            }
+                        }
+                    )
                 }
             ) { innerPadding ->
                 Column(
@@ -108,10 +172,10 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
                                 text = "NFT"
                             )
                         )
-                    ){
+                    ) {
                         selectedTabIndex = it
                     }
-                    when(selectedTabIndex){
+                    when (selectedTabIndex) {
                         0 -> StoryLazyVerticalGrid(state.stories)
                         1 -> LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -120,6 +184,22 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
                                 StoryBoxItem(image)
                             }
                         }
+                    }
+                }
+
+                if (showBottomSheet) {
+                    ModalBottomSheet(
+                        onDismissRequest = {
+                            showBottomSheet = false
+                        },
+                        sheetState = sheetState
+                    ) {
+                        SettingSection()
+                        Spacer(
+                            Modifier.windowInsetsBottomHeight(
+                                WindowInsets.navigationBars
+                            )
+                        )
                     }
                 }
             }
@@ -187,6 +267,19 @@ fun StatSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun SettingSection(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.padding(start = 16.dp, end = 16.dp)
+    ) {
+        SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정")
+        SettingButton(imageId = R.drawable.ic_info, text = "정보")
+        SettingButton(imageId = R.drawable.ic_person, text = "계정")
+    }
+}
+
+@Composable
 fun ProfileDescription(
     displayName: String
 ) {
@@ -233,12 +326,32 @@ fun ProfileStat(
     }
 }
 
+
+@Composable
+fun SettingButton(
+    imageId: Int,
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.padding(5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = imageId),
+            contentDescription = text
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = text)
+    }
+}
+
 @Composable
 fun PostTabView(
     modifier: Modifier = Modifier,
     imageWithText: List<ImageWithText>,
     onTabSelected: (selectedIndex: Int) -> Unit
-){
+) {
     var selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
