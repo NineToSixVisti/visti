@@ -93,6 +93,11 @@ public class SecurityConfig {
             // Send Mail
             "/api/member/sendmail",
 
+//            // url validate
+//            "/short/*",
+            // Story-Box validate
+            "/api/story-box/validate",
+
             // Login
             "/api/member/signin",
             "/api/member/signup",

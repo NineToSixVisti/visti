@@ -16,7 +16,6 @@ import org.springframework.test.context.TestPropertySource;
 
 @RequiredArgsConstructor
 @Slf4j
-@SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource
 class VistiApplicationTests {
