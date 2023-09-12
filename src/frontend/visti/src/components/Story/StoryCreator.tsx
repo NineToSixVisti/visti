@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useSelectedImage } from './SelectImageContext';
+import { useSelector } from 'react-redux';
 import TextEditor from './TextEditor';
-// import NewStoryBar from './NewStoryBar';
+import { RootState } from '../../store/store';
+
 function StoryCreator() {
-    const { selectedImage } = useSelectedImage();
+    const selectedImage = useSelector((state: RootState) => state.image.selectedImage);
 
     const containerStyle: React.CSSProperties = {
         position: 'relative',
