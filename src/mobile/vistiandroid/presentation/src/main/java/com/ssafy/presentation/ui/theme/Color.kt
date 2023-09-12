@@ -16,6 +16,7 @@ val SecondaryColor = Color(0xFFD98F8F)
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
+val Black20 = Color(0x66000000)
 
 val LightBackgroundColor = Color(0xFFFFFBFE)
 val DarkBackgroundColor = Color(0xFF1C1B1F)
