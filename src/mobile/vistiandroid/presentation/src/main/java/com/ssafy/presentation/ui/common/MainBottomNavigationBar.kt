@@ -1,7 +1,7 @@
 package com.ssafy.presentation.ui.common
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -17,14 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ssafy.presentation.MainNav
-import com.ssafy.presentation.ui.home.HomeScreen
-import com.ssafy.presentation.ui.like.LikeListScreen
-import com.ssafy.presentation.ui.mypage.MyPageScreen
-import com.ssafy.presentation.ui.story.StoryScreen
 import com.ssafy.presentation.ui.theme.NavigationBackgroundColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
 import com.ssafy.presentation.ui.theme.White
@@ -45,6 +39,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
         tonalElevation = 0.dp,
         modifier = Modifier
             .padding(15.dp)
+            .systemBarsPadding()
             .graphicsLayer {
                 shape = RoundedCornerShape(
                     40.dp

@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import android.view.Window
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -16,7 +17,8 @@ import com.ssafy.presentation.ui.story.StoryScreen
 @Composable
 fun MainNavigationScreen(
     innerPaddings: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    window: Window
 ) {
     NavHost(
         modifier = Modifier.padding(innerPaddings),
@@ -24,7 +26,7 @@ fun MainNavigationScreen(
         startDestination = MainNav.Home.route,
     ) {
         composable(MainNav.Home.route) {
-            HomeScreen()
+            HomeScreen(window)
         }
         composable(MainNav.Memory.route) {
             StoryScreen()

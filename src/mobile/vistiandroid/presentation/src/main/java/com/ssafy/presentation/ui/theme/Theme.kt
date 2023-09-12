@@ -55,11 +55,6 @@ fun VistiAndroidTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
-            if (darkTheme) {
-                window.statusBarColor = DarkBackgroundColor.toArgb()
-            } else {
-                window.statusBarColor = LightBackgroundColor.toArgb()
-            }
 
             WindowCompat.getInsetsController(window, view)
                 .isAppearanceLightStatusBars = !darkTheme
