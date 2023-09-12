@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
+import React, { forwardRef } from 'react';
 
-function PhotoUploader() {
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+type PhotoUploaderProps = {
+  onImageUpload: (image: File) => void;
+};
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setSelectedImage(e.target.files[0]);
-        }
-    };
+const PhotoUploader = forwardRef<HTMLInputElement, PhotoUploaderProps>((props, ref) => {
+  const { onImageUpload } = props;
 
-    return (
-        <div>
-            <input type="file" onChange={handleImageUpload} accept="image/*" />
-            {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt="Selected" width="100%" />}
-        </div>
-    );
-}
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const image = e.target.files[0];
+      onImageUpload(image); 
+    }
+  };
+
+  return (
+    <div>
+      <input 
+        type="file" 
+        onChange={handleImageUpload} 
+        accept="image/*" 
+        ref={ref} 
+        style={{ display: 'none' }} 
+      />
+  
+    </div>
+  );
+});
 
 export default PhotoUploader;
