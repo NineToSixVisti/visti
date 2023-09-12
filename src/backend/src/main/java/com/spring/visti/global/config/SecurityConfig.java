@@ -35,7 +35,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> {
             web.ignoring()
-                    .requestMatchers(toH2Console())
+//                    .requestMatchers(toH2Console())
                     .requestMatchers(Arrays.stream(WHITELIST)
                             .map(AntPathRequestMatcher::new)
                             .toArray(RequestMatcher[]::new));
