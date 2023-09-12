@@ -1,16 +1,24 @@
 package com.ssafy.presentation
 
 import androidx.annotation.DrawableRes
+import androidx.navigation.NavDeepLink
+import androidx.navigation.navDeepLink
 import com.ssafy.presentation.NavigationRouteName.MAIN_HOME
 import com.ssafy.presentation.NavigationRouteName.MAIN_LIKE
 import com.ssafy.presentation.NavigationRouteName.MAIN_MEMORY
 import com.ssafy.presentation.NavigationRouteName.MAIN_PROFILE
+import com.ssafy.presentation.NavigationRouteName.SETTING_INFORMATION
+import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
+import com.ssafy.presentation.NavigationRouteName.SETTING_USER
 
 object NavigationRouteName {
     const val MAIN_HOME = "홈"
     const val MAIN_MEMORY = "추억"
     const val MAIN_LIKE = "좋아요"
     const val MAIN_PROFILE = "프로필"
+    const val SETTING_NOTIFICATION = "알림 설정"
+    const val SETTING_INFORMATION = "정보"
+    const val SETTING_USER = "계정"
 }
 
 interface Destination {
@@ -38,4 +46,14 @@ sealed class MainNav(
             }
         }
     }
+}
+
+sealed class SettingNav(
+    override val route: String,
+    override val title: String
+) : Destination {
+    object Notification : SettingNav(SETTING_NOTIFICATION, SETTING_NOTIFICATION)
+    object Information : SettingNav(SETTING_INFORMATION, SETTING_INFORMATION)
+    object User :
+        SettingNav(SETTING_USER, SETTING_USER)
 }

@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -34,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -41,7 +40,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,29 +49,29 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
+import com.ssafy.presentation.NavigationRouteName
 import com.ssafy.presentation.R
-import com.ssafy.presentation.ui.common.StoryBoxItem
 import com.ssafy.presentation.ui.profile.component.StoryBoxLazyColumn
 import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.Black
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.LightBackgroundColor
-import com.ssafy.presentation.ui.theme.VistiAndroidTheme
 import com.ssafy.presentation.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
+fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
     val state = viewModel.state.value
 
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
     var selectedTabIndex by remember {
@@ -189,7 +187,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
                         },
                         sheetState = sheetState
                     ) {
-                        SettingSection()
+                        SettingSection(navController = navController)
                         Spacer(
                             Modifier.windowInsetsBottomHeight(
                                 WindowInsets.navigationBars
@@ -262,15 +260,21 @@ fun StatSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SettingSection(modifier: Modifier = Modifier) {
+fun SettingSection(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.padding(start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
-        SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정")
-        SettingButton(imageId = R.drawable.ic_info, text = "정보")
-        SettingButton(imageId = R.drawable.ic_person, text = "계정")
+        SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정") {
+            navController.navigate(route = NavigationRouteName.SETTING_NOTIFICATION)
+        }
+        SettingButton(imageId = R.drawable.ic_info, text = "정보") {
+
+        }
+        SettingButton(imageId = R.drawable.ic_person, text = "계정") {
+
+        }
     }
 }
 
@@ -326,18 +330,27 @@ fun ProfileStat(
 fun SettingButton(
     imageId: Int,
     text: String,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit
 ) {
-    Row(
-        modifier = modifier.padding(5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = imageId),
-            contentDescription = text
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(text = text)
+    val iconColor = if (isSystemInDarkTheme()) {
+        White
+    } else {
+        Black
+    }
+
+    TextButton(onClick = onClick ){
+        Row(
+            modifier = Modifier.padding(5.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = imageId),
+                contentDescription = text,
+                tint = iconColor
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(text = text, color = iconColor)
+        }
     }
 }
 
