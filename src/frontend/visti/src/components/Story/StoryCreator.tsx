@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelectedImage } from './SelectImageContext';
 import TextEditor from './TextEditor';
-
+// import NewStoryBar from './NewStoryBar';
 function StoryCreator() {
     const { selectedImage } = useSelectedImage();
 
@@ -26,7 +26,8 @@ function StoryCreator() {
     return (
         <div style={containerStyle}>
             <div style={editorStyle}>
-                <TextEditor />
+                {/* <NewStoryBar/> */}
+                <TextEditor /> 
             </div>
         </div>
     );
