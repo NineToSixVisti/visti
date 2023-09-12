@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -92,7 +92,8 @@ fun HomeScreen(
 
             Image(
                 modifier = Modifier
-                    .padding(0.dp, 16.dp, 0.dp, 16.dp)
+                    .statusBarsPadding()
+                    .padding(top = 10.dp, bottom = 15.dp)
                     .road(Alignment.Center, Alignment.BottomEnd)
                     .size(20.dp)
                     .alpha(1 - state.toolbarState.progress),
@@ -188,7 +189,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()
-            .systemBarsPadding()
+            .statusBarsPadding()
             .alpha(progress.toolbarState.progress)
     ) {
         Row(
