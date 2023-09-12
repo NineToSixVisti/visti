@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,7 +40,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
         tonalElevation = 0.dp,
         modifier = Modifier
             .padding(15.dp)
-            .systemBarsPadding()
+            .navigationBarsPadding()
             .graphicsLayer {
                 shape = RoundedCornerShape(
                     40.dp

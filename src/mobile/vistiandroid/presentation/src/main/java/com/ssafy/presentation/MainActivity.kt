@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavigationScreen
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(window: Window) {
     val navController = rememberNavController()
+    WindowCompat.setDecorFitsSystemWindows(window, false)
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         bottomBar = {

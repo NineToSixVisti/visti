@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,8 +21,9 @@ fun MainNavigationScreen(
     navController: NavHostController,
     window: Window
 ) {
+    WindowCompat.setDecorFitsSystemWindows(window, false)
     NavHost(
-        modifier = Modifier.padding(innerPaddings),
+        modifier = Modifier,
         navController = navController,
         startDestination = MainNav.Home.route,
     ) {
@@ -29,13 +31,13 @@ fun MainNavigationScreen(
             HomeScreen(window)
         }
         composable(MainNav.Memory.route) {
-            StoryScreen()
+            StoryScreen(window)
         }
         composable(MainNav.Like.route) {
-            LikeListScreen()
+            LikeListScreen(window)
         }
         composable(MainNav.Profile.route) {
-            MyPageScreen()
+            MyPageScreen(window)
         }
     }
 }
