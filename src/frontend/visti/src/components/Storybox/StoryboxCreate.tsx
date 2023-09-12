@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../assets/images/plus_button_red.svg"
@@ -10,12 +10,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate } from 'react-router-dom';
+import CheckModal from './CheckModal';
 
 const StoryboxCreate = () => { 
   const [groupImage, setGroupImage] = useState<string | null>(null);
   const [disclosure, setDisclosure] = useState<boolean>(false);
   const [value, setValue] = React.useState<Dayjs | null>(null);
  
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const ImageClick = () => {
@@ -35,15 +37,28 @@ const StoryboxCreate = () => {
     }
   };
 
+  const OpenModal = () => {
+    setIsModalOpen(true)  
+  }
+
+  const CloseModal = () => {
+    setIsModalOpen(false)
+  } 
+
+  useEffect(()=>{
+    console.log(isModalOpen);
+  },[isModalOpen])
+
   return (
     <Wrap>
+      <CheckModal isModalOpen={isModalOpen} CloseModal={CloseModal}></CheckModal>
       <LogoWrap>
         <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
         <img src={process.env.PUBLIC_URL + '/assets/Visti-red.svg'} alt="Visti Logo"/> 
       </LogoWrap>
 
       <MainWrap>
-        <Title>그룹이미지</Title> 
+        <Title style={{ margin: "0 0 10px 10px" }}>그룹이미지</Title>
         <BoxImage onClick={ImageClick} backgroundImage={groupImage || process.env.PUBLIC_URL + '/assets/box_Image_input.svg'}>
           <PlusSvg onClick={ImageClick}/>
         </BoxImage>
@@ -66,42 +81,47 @@ const StoryboxCreate = () => {
         <Title>선택사항</Title>
         <Label><input onChange={()=>setDisclosure(!disclosure)} checked={disclosure} type="checkbox"/><div>끝나는 기간까지 스토리 비공개 하기</div></Label>
 
-        <RequestBtn onClick={()=>{navigate("/storybox")}}>완료</RequestBtn>
+        <RequestBtn onClick={OpenModal}>완료</RequestBtn>
       </MainWrap>
     </Wrap>
   )
 }
 
 const Wrap  = styled.div`
-  min-width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
 ` 
 
 const LogoWrap = styled.div`
   width: 100%;
-  margin: 10px 0;
+  padding: 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 
 >img {
-  width: 75px;
-  height: 33px;
+  width: 70px;
+  height: 28px;
   margin: auto;
 }
 `
 
 const GoBackSvg = styled(GoBack)`
   position: absolute;
-  top: 6.5px;
+  top: 15px;
   left: 20px;
 `
 
 const MainWrap = styled.div`
   height: calc(100vh - 30px);
-  /* background-color: red; */
   margin : 10px 20px;
+
+  overflow-y: auto; 
+  scrollbar-width: none; // 파이어폭스
+  &::-webkit-scrollbar { // 크롬, 사파리
+    display: none;
+  }
 `
 
 const Title = styled.div`
@@ -129,7 +149,6 @@ const PlusSvg = styled(Plus)`
 `
 
 const Label = styled.label`
-  /* margin-left: 16px; */
   display: flex;
   cursor: pointer;
   & > input{
@@ -141,7 +160,6 @@ const Label = styled.label`
 
   & > div{
     margin-left: 8px;
-    /* line-height: 3rem; */
   }
 `
 
@@ -159,7 +177,7 @@ const GroupDescription = styled.textarea`
   padding: 16px;
   font-size: 14px;
   width: calc(100% - 40px);
-  resize: none; // 사용자가 세로 크기만 조절할 수 있게 함
+  resize: none; 
 `;
 
 const RequestBtn = styled.button`

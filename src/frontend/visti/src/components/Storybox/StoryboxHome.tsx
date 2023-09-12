@@ -47,7 +47,7 @@ const StoryboxHome = () => {
   return (
     <StoryboxWWrap>
       <LogoWrap>
-        <img src={process.env.PUBLIC_URL +"/assets/Visti-red.svg"} alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
+        <img src={process.env.PUBLIC_URL +"/assets/Visti-red.png"} alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
       </LogoWrap>
       <TopWrap>
         <img src={process.env.PUBLIC_URL +"/assets/storybox-create.svg"} alt="create" onClick={()=>{navigate("/storybox/join")}}/>
@@ -90,13 +90,13 @@ const StoryboxHome = () => {
 }
 
 const StoryboxWWrap = styled.div`
-  min-width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
 `
 
 const LogoWrap = styled.div`
   width: 100%;
-  margin: 20px 0;
+  padding: 20px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,7 +111,7 @@ const TopWrap = styled.div`
   display: flex;
   justify-content: space-between; 
   align-items: center; 
-  margin: 10px 25px 20px 22px;
+  margin: 0 25px 20px 22px;
   padding: 0 10px; 
 
   >img {
@@ -145,11 +145,13 @@ const SearchWrap = styled.div`
 
 const MainWrap = styled.div`
   width: 100%;
-  height: calc(100vh - 200px);
+  /* height: calc(100% - 200px); */
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
 
 >img {
   width: 103px;
@@ -192,7 +194,7 @@ const BoxWrap = styled.div`
 
 const NameWrap = styled.div`
   width: auto;
-  max-width: 300px;  // 최대 너비 설정 
+  max-width: 300px;  
   height: 42px;
   border-radius: 12px;
   margin : 8px;
