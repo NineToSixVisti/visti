@@ -74,9 +74,9 @@ fun HomeScreen(
                     .height(540.dp),
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.image_backgroud_sky),
+                    painter = painterResource(id = R.drawable.temp_image),
                     contentDescription = "toolbar background",
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .alpha(state.toolbarState.progress)

@@ -31,8 +31,8 @@ fun HomeStoryItem() {
     ) {
         Box(modifier = Modifier.size(200.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.image_backgroud_sky),
-                contentScale = ContentScale.FillBounds,
+                painter = painterResource(id = R.drawable.temp_image),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(), contentDescription = "과거의 기록"
             )
             Column(

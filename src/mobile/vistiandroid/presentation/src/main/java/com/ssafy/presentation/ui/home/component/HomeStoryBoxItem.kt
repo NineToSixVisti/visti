@@ -33,7 +33,7 @@ fun HomeStoryBoxItem() {
         Box(modifier = Modifier.size(200.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.temp_image),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(), contentDescription = "진행중인 기록"
             )
             Column(
