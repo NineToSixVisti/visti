@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.like
 
-import android.view.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.presentation.ui.common.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.like.component.ToolbarWithLikeList
@@ -23,9 +21,8 @@ import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LikeListScreen(window: Window, viewModel: ImageListViewModel = hiltViewModel()) {
+fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
     val state = viewModel.state.value
-    WindowCompat.setDecorFitsSystemWindows(window, false)
     when {
         state.error.isNotBlank() -> {
             Box(

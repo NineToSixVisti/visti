@@ -2,7 +2,6 @@ package com.ssafy.presentation.ui.common
 
 import android.view.Window
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -31,13 +30,13 @@ fun MainNavigationScreen(
             HomeScreen(window)
         }
         composable(MainNav.Memory.route) {
-            StoryScreen(window)
+            StoryScreen()
         }
         composable(MainNav.Like.route) {
-            LikeListScreen(window)
+            LikeListScreen()
         }
         composable(MainNav.Profile.route) {
-            MyPageScreen(window)
+            MyPageScreen()
         }
     }
 }
