@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../assets/images/plus_button_red.svg"
@@ -45,10 +45,6 @@ const StoryboxCreate = () => {
     setIsModalOpen(false)
   } 
 
-  useEffect(()=>{
-    console.log(isModalOpen);
-  },[isModalOpen])
-
   return (
     <Wrap>
       <CheckModal isModalOpen={isModalOpen} CloseModal={CloseModal}></CheckModal>
@@ -60,7 +56,7 @@ const StoryboxCreate = () => {
       <MainWrap>
         <Title style={{ margin: "0 0 10px 10px" }}>그룹이미지</Title>
         <BoxImage onClick={ImageClick} backgroundImage={groupImage || process.env.PUBLIC_URL + '/assets/box_Image_input.svg'}>
-          <PlusSvg onClick={ImageClick}/>
+          <PlusSvg/>
         </BoxImage>
         <input id="ImageInput" type='file' accept='image/*' onChange={ImageChange} style={{display: 'none'}} />
 
@@ -134,7 +130,7 @@ const BoxImage = styled.div<{ backgroundImage: string }>`
   width: calc(100vw - 40px);
   height : 200px;
   border-radius: 18px;
-  background-image: url(${props => props.backgroundImage || process.env.PUBLIC_URL + '/assets/box_Image_input.svg'});
+  background-image: url(${props => props.backgroundImage});
   background-size: cover;
   background-repeat:no-repeat;
   background-position: center;
