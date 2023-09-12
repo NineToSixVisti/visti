@@ -1,0 +1,11 @@
+FROM openjdk:11-jre
+
+COPY ngrinder-agent-3.5.8-localhost.tar /app/
+
+WORKDIR /app
+
+RUN tar -xvf ngrinder-agent-3.5.8-localhost.tar
+
+WORKDIR /app/ngrinder-agent
+
+CMD ["./run_agent.sh"]
