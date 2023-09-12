@@ -43,14 +43,20 @@ public class MemberTest extends AcceptanceTest {
 
         // 2. 회원 가입 요청
         ExtractableResponse<Response> response = Member.회원가입요청(request);
+
+        response.statusCode();
+
+        log.info("회원가입_성공_테스트");
     }
 
     @Test
     public void 이메일_중복확인_중복이_없는경우(){
+        // 1. 이메일 중복 확인
         MemberInformDTO request = MemberInformDTO.builder()
                 .email("tncks007@naver.com")
                 .build();
 
+        // 2. 이메일 중복 확인 요청
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
@@ -62,11 +68,11 @@ public class MemberTest extends AcceptanceTest {
 
     @Test
     public void 이메일_중복확인_정상적인_이메일이_아닐경우(){
-
+        // 1. 이메일 중복 확인
         MemberInformDTO request = MemberInformDTO.builder()
                 .email("tncks007naver.com")
                 .build();
-
+        // 2. 이메일 중복 확인
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -96,9 +102,9 @@ public class MemberTest extends AcceptanceTest {
     }
 
     @Test
-    public void 회원가입_인증번호_전송_및_인증_진행() throws JSONException {
+    public void 회원가입_인증번호_전송_및_인증_성공() throws JSONException {
         // 이메일 인증번호 전송
-        ExtractableResponse<Response> response1 = RestAssured.given().log().all()
+        ExtractableResponse<Response> response1 = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .param("email", "tncks097@naver.com")
                     .param("type", "certification")
@@ -121,7 +127,7 @@ public class MemberTest extends AcceptanceTest {
                 .build();
 
         // 이메일 인증번호 전송
-        ExtractableResponse<Response> response2 = RestAssured.given().log().all()
+        ExtractableResponse<Response> response2 = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(authData)
                 .when()
@@ -130,6 +136,40 @@ public class MemberTest extends AcceptanceTest {
                 .log().all().extract();
     }
 
+    @Test
+    public void 회원가입_인증번호_전송_및_인증_실패() throws JSONException {
+        // 이메일 인증번호 전송
+        ExtractableResponse<Response> response1 = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("email", "tncks097@naver.com")
+                .param("type", "certification")
+                .when()
+                .get("/api/member/sendmail")
+                .then()
+                .log().all().extract();
+
+        // 이메일로 데이터 받아오기
+        JSONObject firstMessage = 메시지_받아오기();
+
+        // 인증번호 가져오기
+        String authCode = 인증번호_가져오기(firstMessage);
+
+        // 인증번호를 통해 인증 진행
+        AuthDTO authData = AuthDTO.builder()
+                .email("tncks097@naver.com")
+                .authNum("authCode")
+                .type("certification")
+                .build();
+
+        // 이메일 인증번호 전송
+        ExtractableResponse<Response> response2 = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(authData)
+                .when()
+                .post("/api/member/verify-authnum")
+                .then()
+                .log().all().extract();
+    }
 
     @Test
     public void 회원가입_실패_테스트_이메일중복() {
