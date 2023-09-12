@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -70,7 +71,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .height(520.dp),
+                    .height(540.dp),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.image_backgroud_sky),
@@ -187,6 +188,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()
+            .systemBarsPadding()
             .alpha(progress.toolbarState.progress)
     ) {
         Row(
