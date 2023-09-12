@@ -14,6 +14,8 @@ object Versions {
     const val OKHTTP_VERSION = "4.9.0"
     const val COMPOSE_VERSION = "1.7.2"
     const val COIL_VERSION = "2.4.0"
+    const val ROTTIE_VERISON = "6.1.0"
+
 }
 
 object Dependencies {
@@ -68,4 +70,8 @@ object Dependencies {
     const val MATERIAL = "com.google.android.material:material:1.9.0"
 
     const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
+
+    const val TOOLBAR = "me.onebone:toolbar-compose:2.3.5"
+
+    const val LOTTIE = "com.airbnb.android:lottie-compose:${Versions.ROTTIE_VERISON}"
 }

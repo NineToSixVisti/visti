@@ -54,7 +54,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation(Dependencies.MATERIAL)
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.Test.TEST_EXT)
     androidTestImplementation(Dependencies.Test.ESPRESSO_CORE)
@@ -89,4 +90,13 @@ dependencies {
     implementation(Dependencies.RETROFIT.RETROFIT_CONVERTER)
     implementation(Dependencies.OKHTTP.OKHTTP_CORE)
     implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
+
+    //toolbar
+    implementation(Dependencies.TOOLBAR)
+
+    //lottie
+    implementation(Dependencies.LOTTIE)
+
+    //시스템 화면 접근
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 }
