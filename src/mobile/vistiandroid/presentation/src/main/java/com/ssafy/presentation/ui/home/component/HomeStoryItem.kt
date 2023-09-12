@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,12 +15,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.presentation.R
+import com.ssafy.presentation.ui.theme.Black20
 
 @Composable
 fun HomeStoryItem() {
@@ -38,25 +40,26 @@ fun HomeStoryItem() {
                     .align(Alignment.TopEnd)
                     .padding(10.dp)
             ) {
-                Card(
+                Row(
                     modifier = Modifier
-                        .alpha(0.2f), shape = RoundedCornerShape(12.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .background(Color.Black)
-                            .padding(all = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        .graphicsLayer {
+                            shape = RoundedCornerShape(
+                                12.dp
+                            )
+                            clip = true
+                        }
+                        .background(Black20)
+                        .padding(all = 5.dp)
+,
+                    verticalAlignment = Alignment.CenterVertically,
 
-                        ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_like),
-                            contentDescription = "홈화면 좋아요"
-                        )
-                    }
+                    ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_like),
+                        contentDescription = "홈화면 좋아요"
+                    )
                 }
             }
         }
     }
-
 }

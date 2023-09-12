@@ -14,14 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.presentation.R
+import com.ssafy.presentation.ui.theme.Black20
 
 @Composable
 fun HomeStoryBoxItem() {
@@ -31,47 +32,43 @@ fun HomeStoryBoxItem() {
     ) {
         Box(modifier = Modifier.size(200.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.image_backgroud_sky),
+                painter = painterResource(id = R.drawable.temp_image),
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize(), contentDescription = "진행중인 기록"
             )
             Column(
-                modifier = Modifier.align(Alignment.BottomStart)
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(10.dp)
             ) {
                 Text(
                     text = "버니즈 9기",
                     fontWeight = FontWeight.Bold,
+                    color = Color.White,
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 20.dp, bottom = 5.dp)
+                    modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
                 )
-                Card(
+
+                Row(
                     modifier = Modifier
-                        .alpha(0.2f)
-                        .padding(horizontal = 10.dp), shape = RoundedCornerShape(12.dp)
+                        .graphicsLayer {
+                            shape = RoundedCornerShape(
+                                12.dp
+                            )
+                            clip = true
+                        }
+                        .background(Black20),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .background(Color.Black),
-                        verticalAlignment = Alignment.CenterVertically,
-
-                        ) {
-                        Text(
-                            text = "2023.09.01 ~ 09.30",
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp)
-                        )
-                    }
-
+                    Text(
+                        text = "2023.09.01 ~ 09.30",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp)
+                    )
                 }
-                Box(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                }
-
-
             }
         }
     }
-
 }

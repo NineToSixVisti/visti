@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +41,7 @@ import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
 import com.ssafy.presentation.ui.home.component.HomeStoryBoxItem
 import com.ssafy.presentation.ui.home.component.HomeStoryItem
+import com.ssafy.presentation.ui.theme.Black20
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.CollapsingToolbarScaffoldState
@@ -234,36 +235,38 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
             composition = composition,
             iterations = LottieConstants.IterateForever // animate forever
         )
-        Card(
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .alpha(0.2f)
-                .padding(horizontal = 10.dp), shape = RoundedCornerShape(60.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .background(Color.Black)
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                .padding(horizontal = 10.dp)
+                .graphicsLayer {
+                    shape = RoundedCornerShape(
+                        40.dp
+                    )
+                    clip = true
+                    shadowElevation = 10f
+                }
+                .background(Black20),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
 
-                ) {
-                Image(
-                    modifier = Modifier
-                        .padding(0.dp, 16.dp, 0.dp, 16.dp)
-                        .size(20.dp),
-                    painter = painterResource(id = R.drawable.image_39),
-                    contentDescription = "home_logo"
-                )
-                Text(
-                    text = "싸피 9기 1반",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(text = "")
-            }
+            ) {
+            Image(
+                modifier = Modifier
+                    .alpha(1f)
+                    .padding(20.dp, 16.dp, 0.dp, 16.dp)
+                    .size(20.dp),
+                painter = painterResource(id = R.drawable.image_39),
+                contentDescription = "home_logo"
+            )
+            Text(
+                text = "싸피 9기 1반",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(text = "")
         }
     }
 }

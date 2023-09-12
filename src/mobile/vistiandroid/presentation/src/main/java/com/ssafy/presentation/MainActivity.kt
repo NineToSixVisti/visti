@@ -42,7 +42,6 @@ fun MainScreen() {
             MainBottomNavigationBar(navController = navController)
         }
     ) {
-
         MainNavigationScreen(it, navController = navController)
     }
 }

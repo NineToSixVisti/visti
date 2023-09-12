@@ -74,28 +74,3 @@ fun MainBottomNavigationBar(navController: NavHostController) {
         }
     }
 }
-
-@Composable
-fun MainNavigationScreen(
-    innerPaddings: PaddingValues,
-    navController: NavHostController
-) {
-    NavHost(
-        modifier = Modifier.padding(innerPaddings),
-        navController = navController,
-        startDestination = MainNav.Home.route,
-    ) {
-        composable(MainNav.Home.route) {
-            HomeScreen()
-        }
-        composable(MainNav.Memory.route) {
-            StoryScreen()
-        }
-        composable(MainNav.Like.route) {
-            LikeListScreen()
-        }
-        composable(MainNav.Profile.route) {
-            MyPageScreen()
-        }
-    }
-}
