@@ -59,6 +59,7 @@ import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.StoryBoxItem
+import com.ssafy.presentation.ui.profile.component.StoryBoxLazyColumn
 import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.Black
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
@@ -177,13 +178,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
                     }
                     when (selectedTabIndex) {
                         0 -> StoryLazyVerticalGrid(state.stories)
-                        1 -> LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            items(state.stories) { image ->
-                                StoryBoxItem(image)
-                            }
-                        }
+                        1 -> StoryBoxLazyColumn(state.stories)
                     }
                 }
 
@@ -388,13 +383,5 @@ fun PostTabView(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-internal fun PreviewMainContainer() {
-    VistiAndroidTheme {
-        ProfileScreen()
     }
 }

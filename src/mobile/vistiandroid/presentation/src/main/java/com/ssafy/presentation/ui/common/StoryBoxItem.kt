@@ -2,6 +2,7 @@ package com.ssafy.presentation.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,13 +29,19 @@ import com.ssafy.presentation.ui.theme.White
 @Composable
 fun StoryBoxItem(story: Story) {
     Card(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
         Box {
+            val placedHolder = if (!isSystemInDarkTheme()) {
+                R.drawable.placeholder_wide
+            } else {
+                R.drawable.placeholder_wide_dark
+            }
+
             val painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current).data(data = story.downloadUrl)
                     .apply(block = fun ImageRequest.Builder.() {
-                        placeholder(drawableResId = R.drawable.placeholder)
+                        placeholder(placedHolder)
                         crossfade(true)
                     }).build()
             )
@@ -44,8 +51,7 @@ fun StoryBoxItem(story: Story) {
                 contentDescription = "StoryBox",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .aspectRatio(4f / 3f)
-                    .size(200.dp)
+                    .aspectRatio(3f / 2f)
                     .fillMaxSize()
             )
             Box(
