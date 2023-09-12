@@ -17,8 +17,8 @@ import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
+import com.spring.visti.global.redis.service.UrlExpiryService;
 import com.spring.visti.utils.exception.ApiException;
-import com.spring.visti.utils.urlshortener.UrlShortener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,8 +30,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -45,6 +45,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final StoryBoxMemberRepository storyBoxMemberRepository;
     private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRePository;
+
+    private final UrlExpiryService urlExpiryService;
 
     @Override
     @Transactional
@@ -149,28 +151,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
                 200, storiesInStoryBox);
     }
 
-    /*
-    @Override
-    @Transactional
-    public BaseResponseDTO<List<StoryExposedDTO>> readStoriesInStoryBox(Long id, String email) {
-
-        StoryBox storyBox = getStoryBox(id, storyBoxRepository);
-        List<Story> readStoriesInStoryBox = storyBox.getStories();
-
-        Member member = getMember(email, memberRepository);
-        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
-        List<Long> likedStoryIds = _memberLikeStory.stream()
-                .map(like -> like.getStory().getId())
-                .toList();
-
-        List<StoryExposedDTO> storiesInStoryBox = readStoriesInStoryBox.stream()
-                .map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())))
-                .toList();
-
-        return new BaseResponseDTO<List<StoryExposedDTO>>("스토리-박스 안의 스토리 조회가 완료되었습니다.", 200, storiesInStoryBox);
-    }
-    */
-
     @Override
     @Transactional
     public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
@@ -207,9 +187,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     public BaseResponseDTO<String> generateStoryBoxLink(Long id, String email) {
         Member member = getMember(email, memberRepository);
-        StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
-        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxAndMember(storyBox, member);
+        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(id, member);
 
         if (storyBoxMember.isEmpty()){
             throw new ApiException(NO_MEMBER_ERROR);
@@ -219,16 +198,22 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_AUTHORIZE_ERROR);
         }
 
-        String token = UUID.randomUUID().toString();
+        StoryBox storyBox = getStoryBox(id, storyBoxRepository);
+
+        String preUrlPath = "StoryBoxTokenInfo="+storyBox.getToken();
+        urlExpiryService.removePreviousUrl(preUrlPath);
+
+        // 새로운 StoryBOx URL 발급
+        String token = NanoIdUtils.randomNanoId();
         LocalDateTime expiryDate = LocalDateTime.now().plusHours(24);
 
         storyBox.updateToken(token, expiryDate);
         storyBoxRepository.save(storyBox);
 
-        String urlPath = "validate?token="+token;
-        String shortenedUrl = UrlShortener.shorten(urlPath);
+        String urlPath = "StoryBoxTokenInfo="+token;
+        String shortenedUrl = urlExpiryService.shorten(urlPath);
 
-        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, shortenedUrl);
+        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, "/short/"+shortenedUrl);
     }
 
     @Override
@@ -239,17 +224,11 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_ERROR);
         }
 
-        StoryBox storyBox = _storyBox.get();
-        LocalDateTime expiryDate = storyBox.getExpireTime();
-
-        if (LocalDateTime.now().isAfter(expiryDate)){
-            throw new ApiException(NO_INVITATION_LINK);
-        }
-
         if (email == null){
             return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
         }
 
+        StoryBox storyBox = _storyBox.get();
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
 
         boolean isMemberAlreadyJoin = _storyBoxMembers.stream()

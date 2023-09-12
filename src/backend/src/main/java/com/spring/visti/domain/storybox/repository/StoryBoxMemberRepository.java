@@ -14,6 +14,6 @@ public interface StoryBoxMemberRepository extends JpaRepository<StoryBoxMember, 
 
     Page<StoryBoxMember> findByMember(Member member, Pageable pageable);
 
-    Optional<StoryBoxMember> findByStoryBoxAndMember(StoryBox storyBox, Member member);
+    Optional<StoryBoxMember> findByStoryBoxIdAndMember(Long storyBoxId, Member member);
 
 }
