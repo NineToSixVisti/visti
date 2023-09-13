@@ -94,18 +94,20 @@ public class TokenProvider  {
 
         long now = (new Date()).getTime();
 
+        long expiryTimeRefresh = now + REFRESH_TIME;
+        long expiryTimeAccess = now + ACCESS_TIME;
+        if (Role.ADMIN.equals(role)){
+            expiryTimeRefresh = expiryTimeRefresh + REFRESH_TIME * 30;
+            expiryTimeAccess = expiryTimeAccess + REFRESH_TIME;
+        }
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TIME);
+        Date accessTokenExpiresIn = new Date(expiryTimeAccess);
         String accessToken = createAccessToken(authorities, email, accessTokenExpiresIn);
 //        TokenProvider.setHeaderAccessToken(response, accessToken);
 //        TokenProvider.setHeaderRefreshToken(response, refreshToken);
         // Refresh Token 생성
 
-        long expiryTime = now + REFRESH_TIME;
-        if (Role.ADMIN.equals(role)){
-            expiryTime = expiryTime + REFRESH_TIME * 30;
-        }
-        Date refreshTokenExpiresIn = new Date(expiryTime);
+        Date refreshTokenExpiresIn = new Date(expiryTimeRefresh);
         String refreshToken = createRefreshToken(refreshTokenExpiresIn);
 
         return TokenDTO.builder()
