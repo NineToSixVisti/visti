@@ -65,8 +65,8 @@ public class SecurityConfig {
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable) // csrf disable
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/api/member/signin").permitAll()
-                .requestMatchers("/api/member/inform").permitAll()
+                .requestMatchers(antMatcher("/api/member/signin")).permitAll()
+                .requestMatchers(antMatcher("/api/member/inform")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new TokenAuthFilter(tokenProvider, jwtProvideService), UsernamePasswordAuthenticationFilter.class);

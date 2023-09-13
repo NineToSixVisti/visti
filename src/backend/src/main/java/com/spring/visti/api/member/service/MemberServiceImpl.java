@@ -158,7 +158,6 @@ public class MemberServiceImpl implements MemberService{
 
             // 8. 토큰 정보를 Header 로 등록
             tokenProvider.setHeaderAccessToken(httpResponse, accessToken);
-            tokenProvider.setHeaderRefreshToken(httpResponse, refreshToken);
 
             return new BaseResponseDTO<TokenDTO>("로그인이 완료되었습니다.", 200, tokenDTO);
         }catch (Exception e){

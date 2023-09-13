@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import static com.spring.visti.utils.exception.ErrorCode.NOT_VALID_TYPE4SEND_MAIL;
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 
 @RestController
@@ -50,6 +51,7 @@ public class MemberController {
             @RequestParam String type
     )
             throws MessagingException {
+        if (!"find".equals(type) && !"certification".equals(type)) { throw new ApiException(NOT_VALID_TYPE4SEND_MAIL);}
         BaseResponseDTO<String> _response = memberService.verifyMember(email, type);
         BaseResponseDTO<String> response = emailService.sendMail(email, type);
         return ResponseEntity.status(response.getStatusCode()).body(response);
