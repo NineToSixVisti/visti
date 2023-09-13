@@ -53,8 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.rememberNavController
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.NavigationRouteName
@@ -270,10 +268,10 @@ fun SettingSection(navController: NavController) {
             navController.navigate(route = NavigationRouteName.SETTING_NOTIFICATION)
         }
         SettingButton(imageId = R.drawable.ic_info, text = "정보") {
-
+            navController.navigate(route = NavigationRouteName.SETTING_INFORMATION)
         }
         SettingButton(imageId = R.drawable.ic_person, text = "계정") {
-
+            navController.navigate(route = NavigationRouteName.SETTING_USER_ACCOUNT)
         }
     }
 }
