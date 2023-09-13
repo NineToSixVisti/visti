@@ -3,7 +3,9 @@ HELP.md
 .gradle
 application.properties
 application-oauth.properties
-*.properties
+application.properties
+application-test.properties
+/*.properties
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
