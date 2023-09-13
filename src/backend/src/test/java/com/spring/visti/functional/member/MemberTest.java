@@ -5,6 +5,7 @@ import com.spring.visti.common.AcceptanceTest;
 import com.spring.visti.common.items.Member;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
@@ -32,6 +33,7 @@ import java.util.Objects;
 public class MemberTest extends AcceptanceTest {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MemberTest.class);
+    private String accessToken;
 
     @Autowired
     private MemberService memberService;
@@ -211,6 +213,34 @@ public class MemberTest extends AcceptanceTest {
         ExtractableResponse<Response> response3 = Member.회원가입요청(NoExclamation);
     }
 
+    @Test
+    public void 로그인후_ACCESS_TOKEN_만료_뒤_재접속(){
+        System.out.println("== Set Up == 로그인 기본정보 작성");
+        MemberJoinDTO requestSignUp = Member.회원가입_정보작성();
+        ExtractableResponse<Response> responseSignUp = Member.회원가입요청(requestSignUp);
+
+        MemberLoginDTO requestSignIn = Member.로그인_정보_작성();
+        ExtractableResponse<Response> responseSignIn = Member.로그인(requestSignIn);
+
+        accessToken = responseSignIn.jsonPath().getString("detail.accessToken");
+
+        try {
+            System.out.println("Waiting for the token to expire...");
+            Thread.sleep((30 * 60 + 10) * 1000); // 30분 1초 대기 (단위: 밀리초)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Access_Token", accessToken)  // 토큰 정보를 헤더에 추가
+                .when()
+                .get("/api/member/mypage")
+                .then()
+                .log().all().extract();
+
+    }
 
     private JSONObject 메시지_받아오기() throws JSONException {
         // 이메일로 데이터 받아오기
@@ -249,4 +279,7 @@ public class MemberTest extends AcceptanceTest {
             return "null";  // JSON 파싱 오류
         }
     }
+
+
+
 }
