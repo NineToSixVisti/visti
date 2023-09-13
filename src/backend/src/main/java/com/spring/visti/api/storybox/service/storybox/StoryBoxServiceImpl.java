@@ -51,6 +51,12 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email){
+
+        String storyBoxName = storyBoxBuildDTO.getName();
+        if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
+            throw new ApiException(NO_STORY_BOX_NAME_ERROR);
+        }
+
         Member member = getMember(email, memberRepository);
 
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member);
@@ -84,6 +90,11 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email){
+        String storyBoxName = storyBoxSetDTO.getName();
+        if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
+            throw new ApiException(NO_STORY_BOX_NAME_ERROR);
+        }
+
         Member member = getMember(email, memberRepository);
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -175,7 +186,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
-
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 

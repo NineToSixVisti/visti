@@ -16,4 +16,6 @@ public interface StoryBoxMemberRepository extends JpaRepository<StoryBoxMember, 
 
     Optional<StoryBoxMember> findByStoryBoxIdAndMember(Long storyBoxId, Member member);
 
+    Optional<StoryBoxMember> findByStoryBoxIdAndMember(Long storyBoxId, Member member);
+
 }

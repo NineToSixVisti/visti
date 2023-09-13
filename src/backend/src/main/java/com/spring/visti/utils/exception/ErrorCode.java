@@ -44,9 +44,11 @@ public enum ErrorCode {
     NO_STORY_BOX_ERROR(HttpStatus.NOT_FOUND, "SBOX001", "스토리 박스 정보가 없습니다."),
     UNAUTHORIZED_STORY_BOX_ERROR(HttpStatus.FORBIDDEN, "SBOX002", "스토리 박스를 삭제할 권한이 없습니다."),
     ALREADY_JOIN_ERROR(HttpStatus.CONFLICT, "SBOX003", "이미 들어가있는 스토리 박스 입니다."),
-    NO_INVITATION_STORY_BOX(HttpStatus.BAD_REQUEST, "SBOX003", "들어갈 수 있는 기간이 지났습니다."),
-    UNAUTHORIZED_MEMBER_ERROR(HttpStatus.CONFLICT, "SBOX003", "들어갈 수 없는 스토리 박스 입니다."),
-    NO_MATCH_STORY_BOX_ERROR(HttpStatus.BAD_REQUEST, "SBOX003", "옳지 않은 스토리 박스 정보 입니다."),
+    UNAUTHORIZED_MEMBER_ERROR(HttpStatus.CONFLICT, "SBOX004", "들어가 있지 않는 스토리 박스 입니다."),
+    NO_STORY_BOX_NAME_ERROR(HttpStatus.BAD_REQUEST, "SBOX005", "스토리 박스의 이름을 길이를 맞춰주세요."),
+    NO_INVITATION_STORY_BOX(HttpStatus.BAD_REQUEST, "SBOX006", "들어갈 수 있는 기간이 지났습니다."),
+    NO_MATCH_STORY_BOX_ERROR(HttpStatus.BAD_REQUEST, "SBOX007", "옳지 않은 스토리 박스 정보 입니다."),
+
 
     // Report Part
     ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다."),
