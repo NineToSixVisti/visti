@@ -97,7 +97,7 @@ fun HomeScreen(
                     .road(Alignment.Center, Alignment.BottomEnd)
                     .size(20.dp)
                     .alpha(1 - state.toolbarState.progress),
-                painter = painterResource(id = R.drawable.image_39),
+                painter = painterResource(id = R.drawable.logo_white),
                 contentDescription = "home_logo"
             )
         },
@@ -264,7 +264,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
                     .alpha(1f)
                     .padding(20.dp, 16.dp, 0.dp, 16.dp)
                     .size(20.dp),
-                painter = painterResource(id = R.drawable.image_39),
+                painter = painterResource(id = R.drawable.logo_white),
                 contentDescription = "home_logo"
             )
             Text(

@@ -1,4 +1,4 @@
-package com.ssafy.presentation.ui.common
+package com.ssafy.presentation.ui.like.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,10 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ssafy.domain.model.Image
+import com.ssafy.domain.model.Story
+import com.ssafy.presentation.ui.common.StoryItem
 
 @Composable
-fun StoryLazyVerticalGrid(grouped: Map<String, List<Image>>) {
+fun LikeLazyVerticalGrid(grouped: Map<String, List<Story>>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3)
     ) {

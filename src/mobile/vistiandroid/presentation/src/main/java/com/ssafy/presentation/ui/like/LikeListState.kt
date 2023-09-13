@@ -1,10 +1,9 @@
 package com.ssafy.presentation.ui.like
 
-import com.ssafy.domain.model.Image
-
+import com.ssafy.domain.model.Story
 
 data class LikeListState(
     val isLoading: Boolean = false,
-    val images: List<Image> = emptyList(),
+    val stories: List<Story> = emptyList(),
     val error: String = ""
 )
