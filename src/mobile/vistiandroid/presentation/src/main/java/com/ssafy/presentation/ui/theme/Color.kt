@@ -22,3 +22,6 @@ val LightBackgroundColor = Color(0xFFFFFBFE)
 val DarkBackgroundColor = Color(0xFF1C1B1F)
 val NavigationBackgroundColor = Color(0xDD1C1B1F)
 val IndicatorBackgroundColor = Color(0x00000000)
+
+val Grey = Color(0xFF9796A1)
+val GreyLight = Color(0xFFC4C4C4)
