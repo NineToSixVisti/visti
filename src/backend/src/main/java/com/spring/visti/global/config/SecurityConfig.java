@@ -2,6 +2,7 @@ package com.spring.visti.global.config;
 
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.service.TokenAuthFilter;
+import com.spring.visti.global.redis.service.JwtProvideService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvideService jwtProvideService;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
@@ -33,10 +35,13 @@ public class SecurityConfig {
     }
 
 
-    public SecurityConfig(TokenProvider tokenProvider, CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(
+            TokenProvider tokenProvider, JwtProvideService jwtProvideService,
+            CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.tokenProvider = tokenProvider;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtProvideService = jwtProvideService;
     }
 
     @Bean
@@ -50,7 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/member/inform").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(new TokenAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(new TokenAuthFilter(tokenProvider, jwtProvideService), UsernamePasswordAuthenticationFilter.class);
 
 
 //        // 기본 제거

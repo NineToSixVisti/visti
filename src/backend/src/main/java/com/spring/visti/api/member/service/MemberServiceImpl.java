@@ -9,6 +9,7 @@ import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.domain.member.entity.Member;
+import com.spring.visti.global.redis.service.JwtProvideService;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.jwt.dto.TokenDTO;
@@ -39,13 +40,14 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-    private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final AuthService authService;
 
+    private final JwtProvideService jwtProvideService;
+    private final AuthService authService;
+    private final MemberRepository memberRepository;
     @Override
     @Transactional
     public BaseResponseDTO<String> signUp(MemberJoinDTO memberJoinDTO)
@@ -134,20 +136,16 @@ public class MemberServiceImpl implements MemberService{
             String email = authentication.getName();
 
             // 5. email 을 사용하여 DB 에서 Member 객체를 검색합니다.
-            Optional<Member> optionalMember = memberRepository.findByEmail(email);
-            if (optionalMember.isPresent()) {
-                Member member = optionalMember.get();
+            Member member = getMember(email, memberRepository);
+            
+            // 6. redis 에 refresh token 저장
+            jwtProvideService.saveRefreshToken(email, refreshToken, tokenDTO.getRefreshTokenExpireTime());
 
-                // refreshToken 을 업데이트하고 데이터베이스에 저장합니다.
-                member.updateMemberToken(refreshToken);
-                memberRepository.save(member);
-            } else {
-                // DB에 해당 이메일을 가진 Member 가 없는 경우의 처리
-                throw new ApiException(NO_MEMBER_ERROR);
+            // 7. refreshToken 을 업데이트하고 데이터베이스에 저장합니다.
+            member.updateMemberToken(refreshToken);
+            memberRepository.save(member);
 
-            }
-
-            // 6. 토큰 정보를 Header 로 등록
+            // 8. 토큰 정보를 Header 로 등록
             tokenProvider.setHeaderAccessToken(httpResponse, accessToken);
             tokenProvider.setHeaderRefreshToken(httpResponse, refreshToken);
 
@@ -162,7 +160,7 @@ public class MemberServiceImpl implements MemberService{
     public BaseResponseDTO<?> signOut(HttpServletRequest httpRequest) {
         // 토큰 탐색
         String accessToken = tokenProvider.getHeaderToken(httpRequest, "Access");
-        String refreshToken = tokenProvider.getHeaderToken(httpRequest, "Refresh");
+//        String refreshToken = tokenProvider.getHeaderToken(httpRequest, "Refresh");
 
         String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
