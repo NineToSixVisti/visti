@@ -65,9 +65,9 @@ fun LogInScreen() {
         }
 
         Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
-        var loginPassWordTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField("비밀번호를 입력하세요", loginPassWordTextFieldState) {
-            loginPassWordTextFieldState = it
+        var loginPasswordTextFieldState by remember { mutableStateOf("") }
+        UserOutLinedTextField("비밀번호를 입력하세요", loginPasswordTextFieldState) {
+            loginPasswordTextFieldState = it
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +87,7 @@ fun LogInScreen() {
                     textDecoration = TextDecoration.Underline
                 )
                 Text(
-                    text = "비밀번호 찾기",
+                    text = "회원가입",
                     color = PrimaryColor, fontSize = 12.sp,
                     textDecoration = TextDecoration.Underline
                 )

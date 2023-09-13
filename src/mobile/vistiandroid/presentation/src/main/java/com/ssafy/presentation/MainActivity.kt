@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavigationScreen
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
+import com.ssafy.presentation.ui.user.JoinAgreeScreen
 import com.ssafy.presentation.ui.user.LogInScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LogInScreen()
+                    JoinAgreeScreen()
 //                    MainScreen(window)
                 }
             }
