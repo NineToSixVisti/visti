@@ -7,6 +7,7 @@ import com.ssafy.presentation.NavigationRouteName.MAIN_MEMORY
 import com.ssafy.presentation.NavigationRouteName.MAIN_PROFILE
 import com.ssafy.presentation.NavigationRouteName.SETTING_INFORMATION
 import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
+import com.ssafy.presentation.NavigationRouteName.SETTING_SUBSCRIPTION
 import com.ssafy.presentation.NavigationRouteName.SETTING_USER_ACCOUNT
 
 object NavigationRouteName {
@@ -17,6 +18,7 @@ object NavigationRouteName {
     const val SETTING_NOTIFICATION = "알림 설정"
     const val SETTING_INFORMATION = "정보"
     const val SETTING_USER_ACCOUNT = "계정"
+    const val SETTING_SUBSCRIPTION = "구독"
 }
 
 interface Destination {
@@ -54,4 +56,6 @@ sealed class SettingNav(
     object Information : SettingNav(SETTING_INFORMATION, SETTING_INFORMATION)
     object UserAccount :
         SettingNav(SETTING_USER_ACCOUNT, SETTING_USER_ACCOUNT)
+    object Subscription :
+        SettingNav(SETTING_SUBSCRIPTION, SETTING_SUBSCRIPTION)
 }

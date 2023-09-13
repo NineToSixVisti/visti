@@ -2,7 +2,6 @@ package com.ssafy.presentation.ui.setting.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +23,6 @@ fun BackToolbar(text: String, onClick: () -> Unit) {
                 )
             }
         },
-        title = { Text(text, fontSize = 16.sp, fontWeight = FontWeight.Medium) },
+        title = { Text(text, fontSize = 20.sp, fontWeight = FontWeight.Medium) },
     )
 }

@@ -56,7 +56,9 @@ import androidx.navigation.NavController
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.NavigationRouteName
+import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.profile.component.StoryBoxLazyColumn
 import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.Black
@@ -112,7 +114,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                             } else {
                                 DarkBackgroundColor
                             }
-                            val contextForToast = LocalContext.current.applicationContext
 
                             Row(
                                 horizontalArrangement = Arrangement.End,
@@ -120,8 +121,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                             ) {
                                 IconButton(
                                     onClick = {
-                                        Toast.makeText(contextForToast, "User!", Toast.LENGTH_SHORT)
-                                            .show()
+                                        navController.navigate(route = SettingNav.Subscription.route)
                                     }
                                 ) {
                                     Icon(
@@ -265,13 +265,13 @@ fun SettingSection(navController: NavController) {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
         SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정") {
-            navController.navigate(route = NavigationRouteName.SETTING_NOTIFICATION)
+            navController.navigate(route = SettingNav.Notification.route)
         }
         SettingButton(imageId = R.drawable.ic_info, text = "정보") {
-            navController.navigate(route = NavigationRouteName.SETTING_INFORMATION)
+            navController.navigate(route = SettingNav.Information.route)
         }
         SettingButton(imageId = R.drawable.ic_person, text = "계정") {
-            navController.navigate(route = NavigationRouteName.SETTING_USER_ACCOUNT)
+            navController.navigate(route = SettingNav.UserAccount.route)
         }
     }
 }

@@ -10,14 +10,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ssafy.presentation.MainNav
-import com.ssafy.presentation.NavigationRouteName
-import com.ssafy.presentation.NavigationRouteName.SETTING_USER_ACCOUNT
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.home.HomeScreen
 import com.ssafy.presentation.ui.like.LikeListScreen
 import com.ssafy.presentation.ui.profile.ProfileScreen
 import com.ssafy.presentation.ui.setting.InformationScreen
 import com.ssafy.presentation.ui.setting.NotificationSettingScreen
+import com.ssafy.presentation.ui.setting.SubscriptionScreen
 import com.ssafy.presentation.ui.setting.UserAccountScreen
 import com.ssafy.presentation.ui.story.StoryScreen
 
@@ -58,10 +57,14 @@ fun NavGraphBuilder.settingsGraph(
     }
 
     composable(route = SettingNav.Information.route) {
-            InformationScreen(navController = navController)
+        InformationScreen(navController = navController)
     }
 
     composable(route = SettingNav.UserAccount.route) {
-            UserAccountScreen(navController = navController)
+        UserAccountScreen(navController = navController)
+    }
+
+    composable(route = SettingNav.Subscription.route) {
+        SubscriptionScreen(navController = navController)
     }
 }

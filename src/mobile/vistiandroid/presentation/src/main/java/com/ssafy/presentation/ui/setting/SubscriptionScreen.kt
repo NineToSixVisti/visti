@@ -15,13 +15,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.setting.component.BackToolbar
-import com.ssafy.presentation.ui.setting.component.DetailSettingButton
+import com.ssafy.presentation.ui.setting.component.SubscriptionRadioGroup
 import com.ssafy.presentation.ui.theme.Black
 import com.ssafy.presentation.ui.theme.White
 
-
 @Composable
-fun InformationScreen(
+fun SubscriptionScreen(
     navController: NavController,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -49,7 +48,7 @@ fun InformationScreen(
         else -> {
             Scaffold(
                 topBar = {
-                    BackToolbar(text = "정보") {
+                    BackToolbar(text = "구독") {
                         navController.popBackStack()
                     }
                 }
@@ -65,12 +64,7 @@ fun InformationScreen(
                         Black
                     }
 
-                    DetailSettingButton("개인정보처리방침", colorState) {
-
-                    }
-                    DetailSettingButton("오픈소스 라이브러리", colorState) {
-
-                    }
+                    SubscriptionRadioGroup()
                 }
             }
         }
