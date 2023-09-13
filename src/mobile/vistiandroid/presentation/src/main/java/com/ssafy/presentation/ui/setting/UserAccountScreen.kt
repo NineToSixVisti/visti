@@ -83,7 +83,7 @@ fun UserAccountScreen(
                     if (logOutState.value) {
                         VistiDialog(onDismissRequest = { logOutState.value = false },
                             onConfirmation = { logOutState.value = false },
-                            "회원 탈퇴하시겠습니까?",
+                            "로그아웃하시겠습니까?",
                             isDarkTheme
                         )
                     }
