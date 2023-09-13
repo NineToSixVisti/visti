@@ -50,7 +50,9 @@ fun InformationScreen(
         else -> {
             Scaffold(
                 topBar = {
-                    BackToolbar(text = "정보")
+                    BackToolbar(text = "정보") {
+                        navController.popBackStack()
+                    }
                 }
             ) { innerPadding ->
                 Column(
