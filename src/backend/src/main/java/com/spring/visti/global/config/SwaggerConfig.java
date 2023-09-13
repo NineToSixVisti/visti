@@ -34,12 +34,14 @@ public class SwaggerConfig {
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .name("access_token"))
+                                .name("access_token")
+                                .description("토큰 앞에 : 'Bearer '를 작성해주세요"))
                 .addSecuritySchemes("Refresh_Token",
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .name("refresh_token"));
+                                .name("refresh_token")
+                                .description("토큰 앞에 : 'Bearer '를 작성해주세요"));
 
         return new OpenAPI()
                 .components(components)
