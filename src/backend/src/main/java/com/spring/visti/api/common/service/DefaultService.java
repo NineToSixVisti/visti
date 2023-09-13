@@ -9,6 +9,9 @@ import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.utils.exception.ApiException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
@@ -34,4 +37,5 @@ public interface DefaultService {
         if (optionalStoryBox.isEmpty()) { throw new ApiException(NO_STORY_BOX_ERROR); }
         return optionalStoryBox.get();
     }
+
 }
