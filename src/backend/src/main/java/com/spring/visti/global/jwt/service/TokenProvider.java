@@ -1,5 +1,6 @@
 package com.spring.visti.global.jwt.service;
 
+import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.constant.GrantType;
@@ -83,7 +84,7 @@ public class TokenProvider  {
                 .compact();
     }
 
-    public TokenDTO generateTokenDTO(Authentication authentication){
+    public TokenDTO generateTokenDTO(Authentication authentication, Role role){
         //권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -99,7 +100,12 @@ public class TokenProvider  {
 //        TokenProvider.setHeaderAccessToken(response, accessToken);
 //        TokenProvider.setHeaderRefreshToken(response, refreshToken);
         // Refresh Token 생성
-        Date refreshTokenExpiresIn = new Date(now + REFRESH_TIME);
+
+        long expiryTime = now + REFRESH_TIME;
+        if (Role.ADMIN.equals(role)){
+            expiryTime = expiryTime + REFRESH_TIME * 30;
+        }
+        Date refreshTokenExpiresIn = new Date(expiryTime);
         String refreshToken = createRefreshToken(refreshTokenExpiresIn);
 
         return TokenDTO.builder()
