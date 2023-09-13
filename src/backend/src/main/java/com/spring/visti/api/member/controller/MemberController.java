@@ -3,7 +3,6 @@ package com.spring.visti.api.member.controller;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.member.service.EmailService;
 import com.spring.visti.api.member.service.MemberService;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,6 +26,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
+@CrossOrigin(origins="*")
 @Tag(name = "Member 컨트롤러", description = "Member Controller API Document")
 public class MemberController {
 

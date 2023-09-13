@@ -13,13 +13,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
 
 import java.util.List;
 
@@ -28,6 +27,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @RestController
 @RequestMapping("/api/story-box")
 @RequiredArgsConstructor
+@CrossOrigin(origins="*")
 @Tag(name = "Story Box 컨트롤러", description = "Story Box Controller API Document")
 public class StoryBoxController {
     private final StoryBoxService storyBoxService;

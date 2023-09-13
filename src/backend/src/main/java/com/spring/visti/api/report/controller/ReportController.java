@@ -21,6 +21,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @RestController
 @RequestMapping("/api/report")
 @RequiredArgsConstructor
+@CrossOrigin(origins="*")
 @Tag(name = "Report 컨트롤러", description = "신고와 관련된 API 입니다.")
 public class ReportController {
 

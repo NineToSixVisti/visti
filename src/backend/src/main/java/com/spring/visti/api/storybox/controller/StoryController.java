@@ -2,8 +2,6 @@ package com.spring.visti.api.storybox.controller;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.story.StoryService;
-import com.spring.visti.domain.member.entity.Member;
-import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 
@@ -20,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +26,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @RestController
 @RequestMapping("/api/story")
 @RequiredArgsConstructor
+@CrossOrigin(origins="*")
 @Tag(name = "Story 컨트롤러", description = "Story Controller API Document")
 public class StoryController {
     private final StoryService storyService;
