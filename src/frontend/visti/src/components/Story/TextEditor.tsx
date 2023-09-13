@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import FontSize from './FontSizeEditor';
 import ColorEditor from './ColorEditor';
-import Draggable from 'react-draggable'; 
+import Draggable from 'react-draggable';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store'; 
+import { setText, setFontSize, setColor, setPosition } from '../../store/slices/TextSlices';
 
 const EditorContainer = styled.div`
   position: relative;
@@ -23,13 +26,15 @@ const FinalText = styled.div<{ fontSize: number, color: string }>`
 `;
 
 const TextEditor: React.FC = () => {
-  const [editorText, setEditorText] = useState('');
+  const dispatch = useDispatch();
+  const { text, fontSize, color, position } = useSelector((state: RootState) => state.text);
+
+  const [editorText, setEditorText] = useState(text);
   const [finalText, setFinalText] = useState('');
-  const [fontSize, setFontSize] = useState(14);
-  const [color, setColor] = useState('#000000');
   const [editorVisible, setEditorVisible] = useState(false);
 
   const handleComplete = () => {
+    dispatch(setText(editorText));
     setFinalText(editorText);
     setEditorVisible(false);
   };
@@ -39,12 +44,21 @@ const TextEditor: React.FC = () => {
         <button onClick={() => setEditorVisible(!editorVisible)}>T</button>
         {editorVisible && (
             <>
-                <ColorEditor setColor={setColor} currentColor={color} />
-                <FontSize setFontSize={setFontSize} />
+                <ColorEditor setColor={(color: string) => {
+                  setColor(color);
+                  dispatch(setColor(color));
+                }} currentColor={color} />
+                <FontSize setFontSize={(size: number) => {
+                  setFontSize(size);
+                  dispatch(setFontSize(size));
+                }} />
                 <button onClick={handleComplete}>완료</button>
                 <StyledTextarea 
                     value={editorText} 
-                    onChange={(e) => setEditorText(e.target.value)} 
+                    onChange={(e) => {
+                      setEditorText(e.target.value);
+                      dispatch(setText(e.target.value));
+                    }} 
                     fontSize={fontSize}
                     color={color}
                 />
@@ -52,7 +66,13 @@ const TextEditor: React.FC = () => {
         )}
      
         {!editorVisible && (
-            <Draggable>
+            <Draggable 
+             
+              onStop={(e, data) => {
+                console.log(`X: ${data.x}, Y: ${data.y}`);
+                dispatch(setPosition({ x: data.x, y: data.y }));
+              }}
+            >
                 <FinalText fontSize={fontSize} color={color}>
                     {finalText}
                 </FinalText>

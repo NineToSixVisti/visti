@@ -22,15 +22,16 @@ function CreatePostButton() {
     };
 
     const handleTextClick = () => {
-        console.log('Text clicked');
+       
         setIsMenuOpen(false);
     };
 
     const handleImageUpload = (image: File) => {
-        dispatch(setSelectedImage(image));
+        const imageUrl = URL.createObjectURL(image);
+        dispatch(setSelectedImage(imageUrl));
         navigate('/storyCreator'); 
     };
-
+    
     return (
         <div style={{ position: 'relative' }}>
             <Fab style={{ backgroundColor: '#F09E98' }} aria-label="add" onClick={handleMenuToggle}>

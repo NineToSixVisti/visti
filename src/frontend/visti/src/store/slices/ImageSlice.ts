@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type ImageState = {
-  selectedImage: File | null;
+  selectedImage: string | null;  
 };
 
 const initialState: ImageState = {
@@ -12,7 +12,7 @@ const imageSlice = createSlice({
   name: 'image',
   initialState,
   reducers: {
-    setSelectedImage: (state, action: PayloadAction<File | null>) => {
+    setSelectedImage: (state, action: PayloadAction<string | null>) => {  
       state.selectedImage = action.payload;
     },
   },
