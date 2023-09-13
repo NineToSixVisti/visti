@@ -3,6 +3,7 @@ package com.spring.visti.global.config;
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.service.TokenAuthFilter;
 import com.spring.visti.global.redis.service.JwtProvideService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,10 +23,12 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.Arrays;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
@@ -56,9 +59,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("========================== 우선순위 확인 1======================");
+       log.info("========================== 우선순위 확인 1======================");
         // Filter
         http
+            .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable) // csrf disable
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/api/member/signin").permitAll()
