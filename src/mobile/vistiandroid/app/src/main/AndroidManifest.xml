@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vistiandroid"
         tools:targetApi="31">
+
         <activity
             android:name="com.ssafy.presentation.MainActivity"
             android:exported="true"

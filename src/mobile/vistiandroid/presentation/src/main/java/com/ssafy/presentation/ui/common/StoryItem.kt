@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,17 +17,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.ssafy.domain.model.Image
+import com.ssafy.domain.model.Story
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun StoryItem(
-    image: Image
+    story: Story
 ) {
     Box {
-        val isFavorite = true
-        val placedHolder = if(!isSystemInDarkTheme()) {
+        val placedHolder = if (!isSystemInDarkTheme()) {
             R.drawable.placeholder
         } else {
             R.drawable.placeholder_dark
@@ -36,27 +34,27 @@ fun StoryItem(
 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(image.downloadUrl)
+                .data(story.downloadUrl)
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(placedHolder),
-            contentDescription = image.author,
+            contentDescription = story.author,
             modifier = Modifier
                 .aspectRatio(1f / 1f)
                 .fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-        Icon(
-            tint = PrimaryColor,
-            imageVector = if (isFavorite) {
-                Icons.Filled.Favorite
-            } else {
-                Icons.Default.FavoriteBorder
-            },
-            contentDescription = null,
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.TopEnd)
-        )
+
+        if (story.isFavorite) {
+            Icon(
+                tint = PrimaryColor,
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopEnd)
+            )
+        }
+
     }
 }
