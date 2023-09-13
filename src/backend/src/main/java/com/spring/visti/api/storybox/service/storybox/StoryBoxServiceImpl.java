@@ -183,6 +183,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
         Member member = getMember(email, memberRepository);
+
+        if (!storyBoxMemberRepository.existsByStoryBoxIdAndMember(id, member)){
+            throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
+        }
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();

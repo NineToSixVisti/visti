@@ -24,7 +24,7 @@ public class StoryBox extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member creator;
 
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String box_img_path;
 
     @Column(length = 32)
