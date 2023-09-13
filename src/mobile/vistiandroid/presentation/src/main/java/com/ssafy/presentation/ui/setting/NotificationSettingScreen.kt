@@ -1,7 +1,5 @@
 package com.ssafy.presentation.ui.setting
 
-import android.widget.ToggleButton
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -71,9 +69,15 @@ fun NotificationSettingScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                 ) {
-                    allNotification = NotificationSwitch("모든 알림", "모든 알림이 전송됩니다.", allNotification)
-                    storyNotification = NotificationSwitch("스토리 알림", "스토리 알림이 전송됩니다.",storyNotification)
-                    storyBoxNotification = NotificationSwitch("스토리 박스 알림", "스토리 박스 알림이 전송됩니다.",storyBoxNotification)
+                    NotificationSwitch("모든 알림", "모든 알림이 전송됩니다.", allNotification) {
+                        allNotification = it
+                    }
+                    NotificationSwitch("스토리 알림", "스토리 알림이 전송됩니다.", storyNotification) {
+                        storyNotification = it
+                    }
+                    NotificationSwitch("스토리 박스 알림", "스토리 박스 알림이 전송됩니다.", storyBoxNotification) {
+                        storyBoxNotification = it
+                    }
                 }
             }
         }
@@ -81,12 +85,12 @@ fun NotificationSettingScreen(
 }
 
 @Composable
-private fun NotificationSwitch(
+fun NotificationSwitch(
     title: String,
     content: String,
-    notificationSetting: Boolean
-): Boolean {
-    var setting = notificationSetting
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
 
     Row(modifier = Modifier.padding(16.dp)) {
         Column(modifier = Modifier.weight(1f)) {
@@ -94,13 +98,10 @@ private fun NotificationSwitch(
             Text(text = content, fontSize = 10.sp, fontWeight = FontWeight.Thin)
         }
         Switch(
-            checked = notificationSetting,
-            onCheckedChange = {
-                setting = it
-            },
+            checked = checked,
+            onCheckedChange =
+            onCheckedChange,
             colors = SwitchDefaults.colors(checkedTrackColor = PrimaryColor)
         )
     }
-
-    return setting
 }
