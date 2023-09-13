@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,15 +10,10 @@ import Story from './Story';
 import Member from './Member';
 import Detail from './Detail';
 
-
 const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   
   const [tap, setTap] = useState<string>('story');
-
-  useEffect(()=>{
-    console.log(tap)
-  },[tap])
 
   return (
     <>
@@ -47,7 +42,6 @@ const StoryboxDetail: React.FC = () => {
         {tap === 'member' && <Member />}
         {tap === 'detail' && <Detail />}
       </MainWrap>
-
     </>
   )
 }

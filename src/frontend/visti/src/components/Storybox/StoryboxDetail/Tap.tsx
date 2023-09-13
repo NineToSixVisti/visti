@@ -16,14 +16,14 @@ type TapProps = {
 const Tap: React.FC<TapProps> = ({ tap, setStory, setMember, setDetail }) => {
   return (
     <TapWrap>
-      <Box mode={tap==='story'} onClick={setStory}>
-        <ArticleSvg active={tap === 'story'}/>
+      <Box isMode={tap === 'story'} onClick={setStory}>
+        <ArticleSvg isActive={tap === 'story'}/>
       </Box>
-      <Box mode={tap === 'member'} onClick={setMember}>
-        <MemberSvg active={tap === 'member'}/>
+      <Box isMode={tap === 'member'} onClick={setMember}>
+        <MemberSvg isActive={tap === 'member'}/>
       </Box>
-      <Box mode={tap === 'detail'} onClick={setDetail}>
-        <DetailSvg active={tap === 'detail'}/>
+      <Box isMode={tap === 'detail'} onClick={setDetail}>
+        <DetailSvg isActive={tap === 'detail'}/>
       </Box>
     </TapWrap>
   )
@@ -36,29 +36,32 @@ const TapWrap = styled.div`
   /* background-color: lightcoral; */
 `
 
-const Box = styled.div<{ mode?: boolean }>`
+const Box = styled.div<{ isMode: boolean }>`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: ${props => props.mode ? '3px solid #000' : 'none'};
+  border-bottom: ${props => props.isMode ? '3px solid #000' : 'none'};
 `
 
-const ArticleSvg = styled(Article)<{ active: boolean }>`
-  stroke: ${props => props.active ? '#000000' : '#C2C2C2'};
-`
+type ArticleSvgProps = {
+  isActive: boolean;
+};
 
-const MemberSvg = styled(Member)<{ active: boolean }>`
-  fill: ${props => props.active ? '#000000' : '#C2C2C2'};
-`
+const ArticleSvg: React.FC<ArticleSvgProps> = ({ isActive }) => {
+  const strokeColor = isActive ? '#000000' : '#C2C2C2';
+  return <Article stroke={strokeColor} />;
+};
 
-const DetailSvg = styled(Detail)<{ active: boolean }>`
-  fill: ${props => props.active ? '#000000' : '#C2C2C2'};
-`
+const MemberSvg: React.FC<ArticleSvgProps> = ({ isActive }) => {
+  const fillColor = isActive ? '#000000' : '#C2C2C2';
+  return <Member fill={fillColor} />;
+};
 
-
-
-
+const DetailSvg: React.FC<ArticleSvgProps> = ({ isActive }) => {
+  const fillColor = isActive ? '#000000' : '#C2C2C2';
+  return <Detail fill={fillColor} />;
+};
 
 export default Tap
