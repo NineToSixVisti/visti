@@ -2,13 +2,14 @@ import React, { useState, useRef } from 'react';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import PhotoUploader from './PhotoUploader';
-import { useSelectedImage } from './SelectImageContext';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setSelectedImage } from '../../store/slices/ImageSlice';
 
 function CreatePostButton() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { setSelectedImage } = useSelectedImage();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleMenuToggle = () => {
@@ -21,15 +22,16 @@ function CreatePostButton() {
     };
 
     const handleTextClick = () => {
-        console.log('Text clicked');
+       
         setIsMenuOpen(false);
     };
 
     const handleImageUpload = (image: File) => {
-        setSelectedImage(image);
+        const imageUrl = URL.createObjectURL(image);
+        dispatch(setSelectedImage(imageUrl));
         navigate('/storyCreator'); 
     };
-
+    
     return (
         <div style={{ position: 'relative' }}>
             <Fab style={{ backgroundColor: '#F09E98' }} aria-label="add" onClick={handleMenuToggle}>

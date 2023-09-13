@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { useSelectedImage } from './SelectImageContext';
+import { useSelector } from 'react-redux';
 import TextEditor from './TextEditor';
+import { RootState } from '../../store';
+import CreateImageComponent from './CreateImageButton';
 
 function StoryCreator() {
-    const { selectedImage } = useSelectedImage();
+    const selectedImage = useSelector((state: RootState) => state.image.selectedImage);
 
     const containerStyle: React.CSSProperties = {
         position: 'relative',
         width: '100%', 
         height: '500px', 
-        backgroundImage: selectedImage ? `url(${URL.createObjectURL(selectedImage)})` : undefined,
+        backgroundImage: selectedImage ? `url(${selectedImage})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
     };
@@ -26,7 +28,9 @@ function StoryCreator() {
     return (
         <div style={containerStyle}>
             <div style={editorStyle}>
+                {/* <NewStoryBar/> */}
                 <TextEditor />
+                <CreateImageComponent/>
             </div>
         </div>
     );
