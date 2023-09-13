@@ -27,7 +27,6 @@ public class SwaggerConfig {
 
         List<SecurityRequirement> securityRequirements = new ArrayList<>();
         securityRequirements.add(new SecurityRequirement().addList("Access_Token"));
-        securityRequirements.add(new SecurityRequirement().addList("Refresh_Token"));
 
         Components components = new Components()
                 .addSecuritySchemes("Access_Token",
@@ -35,13 +34,8 @@ public class SwaggerConfig {
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
                                 .name("access_token")
-                                .description("토큰 앞에 : 'Bearer '를 작성해주세요"))
-                .addSecuritySchemes("Refresh_Token",
-                        new SecurityScheme()
-                                .type(SecurityScheme.Type.APIKEY)
-                                .in(SecurityScheme.In.HEADER)
-                                .name("refresh_token")
                                 .description("토큰 앞에 : 'Bearer '를 작성해주세요"));
+
 
         return new OpenAPI()
                 .components(components)
