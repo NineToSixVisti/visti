@@ -4,17 +4,17 @@ import com.ssafy.data.dto.PageableDto
 import com.ssafy.data.dto.SortDto
 import com.ssafy.data.dto.StoryBoxDto
 import com.ssafy.data.dto.StoryBoxListDto
+import com.ssafy.data.dto.StoryDto
+import com.ssafy.data.dto.StoryListDto
 import com.ssafy.domain.model.Pageable
 import com.ssafy.domain.model.Sort
+import com.ssafy.domain.model.Story
 import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.ssafy.domain.model.StoryList
 
 fun StoryBoxDto.toDomain(): StoryBox {
-    val createdAtDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault()).parse(createdAt)
-    val finishedAtDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault()).parse(finishedAt)
-    return StoryBox(id, boxImgPath, name, createdAtDate, finishedAtDate, blind)
+    return StoryBox(id, boxImgPath, name, createdAt, finishedAt, blind)
 }
 
 fun StoryBoxListDto.toDomain(): StoryBoxList {
@@ -40,4 +40,25 @@ fun SortDto.toDomain(): Sort {
 
 fun PageableDto.toDomain(): Pageable {
     return Pageable(sort.toDomain(), offset, pageNumber, pageSize, paged, unpaged)
+}
+
+fun StoryDto.toDomain(): Story {
+    return Story(id, storyBoxId, fileType, filePath, blind, createdAt, finishAt, like)
+}
+
+fun StoryListDto.toDomain(): StoryList {
+    val contentList = content.map { it.toDomain() }
+    return StoryList(
+        contentList,
+        pageable.toDomain(),
+        last,
+        totalPages,
+        totalElements,
+        size,
+        number,
+        sort.toDomain(),
+        first,
+        numberOfElements,
+        empty
+    )
 }

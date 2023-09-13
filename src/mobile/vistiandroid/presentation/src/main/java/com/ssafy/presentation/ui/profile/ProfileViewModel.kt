@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.StoryBoxList
-import com.ssafy.domain.usecase.GetImagesUseCase
 import com.ssafy.domain.usecase.GetMemberInformUseCase
 import com.ssafy.domain.usecase.GetMyStoryBoxUseCase
+import com.ssafy.domain.usecase.GetMyStoryUseCase
 import com.ssafy.presentation.ui.like.LikeListState
 import com.ssafy.presentation.ui.like.MemberState
 import com.ssafy.presentation.ui.like.MyStoryBoxState
@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val getImagesUseCase: GetImagesUseCase,
     private val getMemberInformUseCase: GetMemberInformUseCase,
+    private val getMyStoryUseCase: GetMyStoryUseCase,
     private val getMyStoryBoxUseCase: GetMyStoryBoxUseCase
 ) : ViewModel() {
 
@@ -41,10 +41,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getImages() {
-        getImagesUseCase().onEach { result ->
+        getMyStoryUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _state.value = LikeListState(stories = result.data ?: emptyList())
+                    _state.value = LikeListState(stories = result.data?.content ?: emptyList())
                 }
 
                 is Resource.Error -> {

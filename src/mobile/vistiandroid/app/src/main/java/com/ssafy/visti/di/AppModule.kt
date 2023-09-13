@@ -1,6 +1,5 @@
 package com.ssafy.visti.di
 
-import com.ssafy.data.remote.PicsumApi
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.domain.model.Constants
 import dagger.Module
@@ -34,16 +33,6 @@ object AppModule {
                         "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiZXhwIjoxNzEzMzYxNDI5fQ.CKFlc_l12RO3dUCBWFoZgkcAYAqWSc1hOPo7yhCTkmFwn8lZnksnIYlwgSPdPliY6_OR0ekrG25_kqinZpWiUA")
                 }.build())
             }.build()
-    }
-
-    @Provides
-    @Singleton
-    fun providePicsumApi(): PicsumApi {
-        return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(PicsumApi::class.java)
     }
 
     @Provides

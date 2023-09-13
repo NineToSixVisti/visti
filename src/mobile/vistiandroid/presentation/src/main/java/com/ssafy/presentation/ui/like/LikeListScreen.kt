@@ -51,7 +51,7 @@ fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
                         .padding(innerPadding),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    val grouped = state.stories.groupBy { it.author }
+                    val grouped = state.stories.groupBy { it.createdAt }
                     LikeLazyVerticalGrid(grouped)
                 }
             }

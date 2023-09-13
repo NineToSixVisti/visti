@@ -34,18 +34,18 @@ fun StoryItem(
 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(story.downloadUrl)
+                .data(story.filePath)
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(placedHolder),
-            contentDescription = story.author,
+            contentDescription = story.createdAt,
             modifier = Modifier
                 .aspectRatio(1f / 1f)
                 .fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        if (story.isFavorite) {
+        if (story.like) {
             Icon(
                 tint = PrimaryColor,
                 imageVector = Icons.Filled.Favorite,
