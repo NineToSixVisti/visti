@@ -23,7 +23,7 @@ fun DetailSettingButton(
 ) {
     TextButton(onClick = onClick ){
         Row(
-            modifier = Modifier.padding(5.dp).fillMaxWidth(),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = text, color = iconColor)
