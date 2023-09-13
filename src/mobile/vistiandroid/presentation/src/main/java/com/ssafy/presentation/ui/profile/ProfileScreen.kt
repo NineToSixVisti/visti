@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.profile
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,10 +53,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
-import com.ssafy.presentation.NavigationRouteName
-import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
+import com.ssafy.presentation.ui.profile.component.PostTabView
+import com.ssafy.presentation.ui.profile.component.ProfileSection
+import com.ssafy.presentation.ui.profile.component.SettingButton
+import com.ssafy.presentation.ui.profile.component.SettingSection
 import com.ssafy.presentation.ui.profile.component.StoryBoxLazyColumn
 import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.Black
@@ -193,205 +193,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProfileSection() {
-    Column(Modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        ) {
-            ImageSection(
-                image = painterResource(id = R.drawable.ic_profile),
-                modifier = Modifier
-                    .size(100.dp)
-                    .weight(3f)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            StatSection(modifier = Modifier.weight(7f))
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        ProfileDescription(
-            displayName = "ohhuiju"
-        )
-    }
-}
-
-@Composable
-fun ImageSection(
-    image: Painter,
-    modifier: Modifier = Modifier
-) {
-    Image(
-        painter = image,
-        contentDescription = null,
-        modifier = modifier
-            .aspectRatio(1f, matchHeightConstraintsFirst = true)
-            .border(
-                width = 1.dp,
-                color = Color.LightGray,
-                shape = CircleShape
-            )
-            .clip(CircleShape)
-            .background(Color.LightGray)
-            .padding(10.dp)
-
-    )
-}
-
-@Composable
-fun StatSection(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier
-    ) {
-        ProfileStat(numberText = "1,000", text = "스토리")
-        ProfileStat(numberText = "34", text = "스토리 상자")
-    }
-}
-
-@Composable
-fun SettingSection(navController: NavController) {
-    Column(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-    ) {
-        SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정") {
-            navController.navigate(route = SettingNav.Notification.route)
-        }
-        SettingButton(imageId = R.drawable.ic_info, text = "정보") {
-            navController.navigate(route = SettingNav.Information.route)
-        }
-        SettingButton(imageId = R.drawable.ic_person, text = "계정") {
-            navController.navigate(route = SettingNav.UserAccount.route)
-        }
-    }
-}
-
-@Composable
-fun ProfileDescription(
-    displayName: String
-) {
-    val letterSpacing = 0.5.sp
-    val lineHeight = 20.sp
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = displayName,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = letterSpacing,
-            lineHeight = lineHeight
-        )
-        Image(
-            painter = painterResource(id = R.drawable.ic_check),
-            contentDescription = LikeSortType.UP.name,
-            modifier = Modifier.padding(start = 3.dp)
-        )
-    }
-}
-
-@Composable
-fun ProfileStat(
-    numberText: String,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Text(
-            text = numberText,
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = text)
-    }
-}
-
-
-@Composable
-fun SettingButton(
-    imageId: Int,
-    text: String,
-    onClick: () -> Unit
-) {
-    val iconColor = if (isSystemInDarkTheme()) {
-        White
-    } else {
-        Black
-    }
-
-    TextButton(onClick = onClick ){
-        Row(
-            modifier = Modifier.padding(5.dp).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                painter = painterResource(id = imageId),
-                contentDescription = text,
-                tint = iconColor
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(text = text, color = iconColor)
-        }
-    }
-}
-
-@Composable
-fun PostTabView(
-    modifier: Modifier = Modifier,
-    imageWithText: List<ImageWithText>,
-    onTabSelected: (selectedIndex: Int) -> Unit
-) {
-    var selectedTabIndex by remember {
-        mutableIntStateOf(0)
-    }
-    val iconColor = if (isSystemInDarkTheme()) {
-        White
-    } else {
-        Black
-    }
-
-    val inactiveColor = Color(0xFF777777)
-
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
-        contentColor = iconColor,
-        modifier = modifier
-    ) {
-        imageWithText.forEachIndexed { index, item ->
-            Tab(
-                selected = selectedTabIndex == index,
-                selectedContentColor = iconColor,
-                unselectedContentColor = inactiveColor,
-                onClick = {
-                    selectedTabIndex = index
-                    onTabSelected(index)
-                }
-            ) {
-                Icon(
-                    painter = item.image,
-                    contentDescription = item.text,
-                    tint = if (selectedTabIndex == index) iconColor else inactiveColor,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(20.dp)
-                )
             }
         }
     }

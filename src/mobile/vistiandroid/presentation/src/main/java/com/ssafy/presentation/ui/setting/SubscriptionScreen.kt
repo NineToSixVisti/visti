@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.setting
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +15,6 @@ import androidx.navigation.NavController
 import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.SubscriptionRadioGroup
-import com.ssafy.presentation.ui.theme.Black
-import com.ssafy.presentation.ui.theme.White
 
 @Composable
 fun SubscriptionScreen(
@@ -57,13 +54,6 @@ fun SubscriptionScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                 ) {
-
-                    val colorState = if (isSystemInDarkTheme()) {
-                        White
-                    } else {
-                        Black
-                    }
-
                     SubscriptionRadioGroup()
                 }
             }

@@ -29,9 +29,11 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.value = LikeListState(stories = result.data ?: emptyList())
                 }
+
                 is Resource.Error -> {
                     _state.value = LikeListState(error = result.message ?: "An error occurred")
                 }
+
                 is Resource.Loading -> {
                     _state.value = LikeListState(isLoading = true)
                 }

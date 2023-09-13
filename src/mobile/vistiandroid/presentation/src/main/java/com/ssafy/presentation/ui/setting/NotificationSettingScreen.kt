@@ -23,7 +23,6 @@ import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.NotificationSwitch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSettingScreen(
     navController: NavController,

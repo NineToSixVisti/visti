@@ -101,7 +101,12 @@ fun SubscriptionRadioGroup() {
 
 @Composable
 fun SubscriptionTypeItem(
-    title: String, content: String, price: String, modifier: Modifier, backgroundColor: Color, textColor : Color
+    title: String,
+    content: String,
+    price: String,
+    modifier: Modifier,
+    backgroundColor: Color,
+    textColor: Color
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
