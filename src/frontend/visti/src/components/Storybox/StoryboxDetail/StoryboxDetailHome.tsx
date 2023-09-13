@@ -1,16 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import Tap from './Tap'
 import { ReactComponent as GoBack } from '../../../assets/images/back_button.svg'
 import { ReactComponent as Modify } from '../../../assets/images/modify_button(pen).svg'
 
-const StoryboxDetail = () => {
+import Tap from './Tap'
+import Story from './Story';
+import Member from './Member';
+import Detail from './Detail';
+
+
+const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   
-  const [tap, setTap] = useState('story');
-  
+  const [tap, setTap] = useState<string>('story');
+
+  useEffect(()=>{
+    console.log(tap)
+  },[tap])
 
   return (
     <>
@@ -30,7 +38,14 @@ const StoryboxDetail = () => {
         </TopMian>
       </TopWrap>
       <MainWrap>
-        <Tap ></Tap>
+        <Tap 
+          tap={tap}
+          setStory={() => { setTap('story'); }} 
+          setMember={() => { setTap('member'); }} 
+          setDetail={() => { setTap('detail'); }}/>
+        {tap === 'story' && <Story />}
+        {tap === 'member' && <Member />}
+        {tap === 'detail' && <Detail />}
       </MainWrap>
 
     </>
@@ -93,7 +108,7 @@ const TopMian = styled.div`
 const MainWrap = styled.div`
   width: 100%;
   height: calc(100vh - 191px);
-  background-color: lightsalmon;
+  /* background-color: lightsalmon; */
 `
 
 const GoBackSvg = styled(GoBack)`
