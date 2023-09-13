@@ -4,6 +4,7 @@ import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.redis.service.AuthService;
+import com.spring.visti.utils.exception.ApiException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Pattern;
 
+import static com.spring.visti.utils.exception.ErrorCode.INVALID_EMAIL_FORMAT;
 
 
 @Slf4j
@@ -28,10 +31,10 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
-    private final AuthService authService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final AuthService authService;
     @Transactional
     public BaseResponseDTO<String> sendMail(String email, String type) throws MessagingException {
 
@@ -41,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
         String subject = "";
         if(type.equals("find")) {
             // 임시 비밀번호는 생성 후 DB에 저장
-            subject = "[팀명] 임시 비밀번호 입니다.";
+            subject = "[Visti] 임시 비밀번호 입니다.";
 
             // 임시 비밀번호로 Update
             boolean isEmailChanged = changePassword(email, authNum);
@@ -49,8 +52,13 @@ public class EmailServiceImpl implements EmailService {
                 return new BaseResponseDTO<>("Email을 정확히 입력해주세요.", 200);
             }
         }else if(type.equals("certification")){
+
+            if (!isValidEmail(email)) {
+                throw new ApiException(INVALID_EMAIL_FORMAT);
+            }
+
             // 인증 작업은 Redis에 저장한 다음 진행
-            subject = "[팀명] 회원가입 인증번호입니다.";
+            subject = "[Visti] 회원가입 인증번호입니다.";
 
             // 인증 코드 Redis에 저장
             authService.saveAuthCode(email, authNum);
@@ -105,4 +113,11 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("code", code);
         return templateEngine.process(type, context);
     }
+
+    public static boolean isValidEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(email).matches();
+    }
+
 }

@@ -11,11 +11,15 @@ import com.spring.visti.utils.exception.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -60,7 +64,7 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/{storyBoxId}")
+    @DeleteMapping("/{storyBoxId}/delete")
     @Operation(summary = "스토리-박스 나가기", description = "스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
             @PathVariable Long storyBoxId
@@ -70,16 +74,20 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    private static final String perPageBox = "5";
     @GetMapping("/mystorybox")
     @Operation(summary = "내가 들어간 스토리 박스 조회", description = "스토리 박스를 리스트업 합니다.", tags={"스토리-박스 페이지", "Nav 바", "마이 페이지"})
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxListDTO>>> readMyStoryBoxes() {
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryBoxExposedDTO>>> readMyStoryBoxes(
+            @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
+    ) {
         String email = getEmail();
-        BaseResponseDTO<List<StoryBoxListDTO>> response = storyBoxService.readMyStoryBoxes(email);
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(PageRequest.of(page, size), email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
 
-    @GetMapping("/{storyBoxId}")
+    @GetMapping("/{storyBoxId}/info")
     @Operation(summary = "스토리 박스 기본정보 제공", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxInfoDTO>> readStoryBoxInfo(
             @PathVariable Long storyBoxId
@@ -89,13 +97,16 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    private static final String perPageStory = "3";
     @GetMapping("/{storyBoxId}/story-list")
     @Operation(summary = "스토리 박스의 스토리 리스트업", description = "스토리박스 내의 스토리를 모두 리스트업 합니다.", tags={"스토리-박스 내부"})
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryExposedDTO>>> readStoryInStoryBox(
-            @PathVariable Long storyBoxId
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryExposedDTO>>> readStoryInStoryBox(
+            @PathVariable Long storyBoxId,
+            @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name= "size", required = false, defaultValue = perPageStory ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<List<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(storyBoxId, email);
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(PageRequest.of(page, size), storyBoxId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -120,7 +131,7 @@ public class StoryBoxController {
     }
 
     @GetMapping("/{storyBoxId}/generate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 제공해줍니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
             @PathVariable Long storyBoxId
     ) {
@@ -129,14 +140,16 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+/*
     @GetMapping("/validate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"서버에서 리다이랙트 접근"})
     public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
             @RequestParam String token
     ) {
+        String email;
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String email;
         if (authentication != null && authentication.getPrincipal() != null) {
             email = ((UserDetails) authentication.getPrincipal()).getUsername();
         }else{
@@ -146,7 +159,7 @@ public class StoryBoxController {
         BaseResponseDTO<String> response = storyBoxService.validateStoryBoxLink(token, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
+*/
     private String getEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null) {

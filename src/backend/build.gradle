@@ -45,8 +45,9 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	// db
+	implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
 	compileOnly 'org.projectlombok:lombok'
-//	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 
@@ -58,9 +59,12 @@ dependencies {
 	// tester
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.projectlombok:lombok:1.18.26'
-	testImplementation 'org.projectlombok:lombok:1.18.26'
-	testImplementation 'org.projectlombok:lombok:1.18.26'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'io.rest-assured:rest-assured:5.3.0'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured:2.0.6.RELEASE'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.rest-assured:spring-mock-mvc'
+	implementation 'org.jsoup:jsoup:1.15.3'
 }
 
 tasks.named('test') {
