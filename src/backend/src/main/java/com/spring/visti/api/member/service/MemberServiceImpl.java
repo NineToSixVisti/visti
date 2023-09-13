@@ -144,9 +144,15 @@ public class MemberServiceImpl implements MemberService{
             // 3. User 객체에서 username 을 가져옵니다.
             String email = authentication.getName();
 
-            // 5. email 을 사용하여 DB 에서 Member 객체를 검색합니다.
+            // 4. email 을 사용하여 DB 에서 Member 객체를 검색합니다.
             Member member = getMember(email, memberRepository);
-            
+
+            // 5. 인증 정보를 기반으로 JWT 토큰 생성
+            TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication, member.getRole());
+
+            String accessToken = tokenDTO.getAccessToken();
+            String refreshToken = tokenDTO.getRefreshToken();
+
             // 6. redis 에 refresh token 저장
             jwtProvideService.saveRefreshToken(email, refreshToken, tokenDTO.getRefreshTokenExpireTime());
 
