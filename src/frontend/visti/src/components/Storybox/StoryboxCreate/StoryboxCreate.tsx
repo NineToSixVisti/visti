@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
-import { ReactComponent as GoBack } from "../../assets/images/back_button.svg"
-import { ReactComponent as Plus } from "../../assets/images/plus_button_red.svg"
+import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
+import { ReactComponent as Plus } from "../../../assets/images/plus_button_red.svg"
 
 // import TextField from '@mui/material/TextField';
 import { Dayjs } from 'dayjs';
@@ -44,6 +44,7 @@ const StoryboxCreate = () => {
   const CloseModal = () => {
     setIsModalOpen(false)
   } 
+
 
   return (
     <Wrap>

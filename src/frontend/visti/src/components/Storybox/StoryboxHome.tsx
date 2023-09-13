@@ -63,7 +63,7 @@ const StoryboxHome = () => {
           <p>스토리박스가<br/>하나도 없어요.</p>
         </MainWrap> :
         <MainBoxWrap>
-          <BoxWrap>
+          <BoxWrap onClick={()=>{navigate("/storybox/detail")}}>
             <NameWrap>
               <p>버니즈(2023.01.01 ~ 12.12)<LockSVG></LockSVG></p>
             </NameWrap>

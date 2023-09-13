@@ -1,5 +1,7 @@
 import StoryboxHome from "../components/Storybox/StoryboxHome"
-import StoryboxCreate from "../components/Storybox/StoryboxCreate";
+import StoryboxCreate from "../components/Storybox/StoryboxCreate/StoryboxCreate";
+import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetailHome";
+
 
 import StoryHome from "../components/Story/StoryHome"
 import StoryCreator from "../components/Story/StoryCreator";
@@ -20,8 +22,11 @@ const routes = [
   {
     path : "/storyCreator",
     Component : StoryCreator
+  },
+  {
+    path : "/storybox/detail",
+    Component : StoryboxDetail 
   }
-
 ]
 
 export default routes;
