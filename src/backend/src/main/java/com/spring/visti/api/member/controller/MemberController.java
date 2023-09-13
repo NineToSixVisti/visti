@@ -43,22 +43,15 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/verify-member")
-    @Operation(summary = "이메일 중복확인", description = "이메일이 중복이 되는지 확인합니다.", tags = {"회원 가입"})
-    public ResponseEntity<? extends BaseResponseDTO<String>> verifyMember(
-            @RequestBody MemberInformDTO memberInfo
-    ){
-        BaseResponseDTO<String> response = memberService.verifyMember(memberInfo);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
 
     @GetMapping("/sendmail")
-    @Operation(summary = "이메일[이메일 전송]", description = " 메일 전송을 진행합니다.. type : 1. certification [회원 가입] \n 2. find [임시 비밀번호 발급]", tags = {"이메일 전송", "회원 가입", "임시 비밀번호 발급"})
+    @Operation(summary = "이메일 중복확인 + 이메일[이메일 전송]", description = " 이메일 확인 후, 메일 전송을 진행합니다.. type : 1. certification [회원 가입] \n 2. find [임시 비밀번호 발급]", tags = {"이메일 전송", "회원 가입", "임시 비밀번호 발급"})
     public ResponseEntity<? extends BaseResponseDTO<String>> sendMail(
             @RequestParam String email,
             @RequestParam String type
     )
             throws MessagingException {
+        BaseResponseDTO<String> _response = memberService.verifyMember(email, type);
         BaseResponseDTO<String> response = emailService.sendMail(email, type);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -93,7 +86,7 @@ public class MemberController {
 
 
     @GetMapping("/inform")
-    @Operation(summary = "사용자 정보", description = "Access을 통해 Email 정보를 받아옴", tags = {"메인 페이지"})
+    @Operation(summary = "사용자 정보", description = "[프로필용]Access Token 을 통해 사용자의 간략한 정보를 받아옴", tags = {"메인 페이지"})
     public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoDTO>> getInfo(){
 
         String email = getEmail();
@@ -103,7 +96,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    @Operation(summary = "사용자 정보", description = "Access을 통해 Email 정보를 받아옴", tags = {"마이 페이지"})
+    @Operation(summary = "사용자 정보", description = "[마이페이지용]Access Token 을 통해 사용자의 상세한 정보를 받아옴", tags = {"마이 페이지"})
     public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoProfileDTO>> getMyData(){
 
         String email = getEmail();

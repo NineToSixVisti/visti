@@ -20,6 +20,8 @@ public interface StoryBoxService extends DefaultService {
 
     BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email);
 
+    BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email);
+
     BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email);
 
     BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email);

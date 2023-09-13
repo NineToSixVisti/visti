@@ -28,7 +28,7 @@ public class ReportController {
 
 
     @PostMapping("/storyid/{storyId}")
-    @Operation(summary = "신고 진행", description = "신고를 진행합니다.", tags={"스토리 내부"})
+    @Operation(summary = "신고 진행", description = "사용자가 신고를 진행합니다.", tags={"스토리 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> createReport(
             @PathVariable Long storyId,
             @RequestBody ReportBuildDTO reportInfo

@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface MemberService extends DefaultService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
 
-    BaseResponseDTO<String> verifyMember(MemberInformDTO memberInfo);
+    BaseResponseDTO<String> verifyMember(String email, String type);
     BaseResponseDTO<String> verifyAuthNum(AuthDTO memberInfo);
 
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);

@@ -42,7 +42,7 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{storyBoxId}/join")
+    @PostMapping("/{storyBoxId}/enter")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
             @PathVariable Long storyBoxId
@@ -65,7 +65,7 @@ public class StoryBoxController {
     }
 
     @DeleteMapping("/{storyBoxId}/delete")
-    @Operation(summary = "스토리-박스 나가기", description = "스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리-박스 나가기", description = "해당 스토리-박스를 나갑니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
             @PathVariable Long storyBoxId
     ) {
@@ -76,7 +76,7 @@ public class StoryBoxController {
 
     private static final String perPageBox = "5";
     @GetMapping("/mystorybox")
-    @Operation(summary = "내가 들어간 스토리 박스 조회", description = "스토리 박스를 리스트업 합니다.", tags={"스토리-박스 페이지", "Nav 바", "마이 페이지"})
+    @Operation(summary = "내가 작성한 스토리 박스 조회", description = "내가 작성한 스토리 박스를 리스트업 합니다.", tags={"마이 페이지"})
     public ResponseEntity<? extends BaseResponseDTO<Page<StoryBoxExposedDTO>>> readMyStoryBoxes(
             @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
@@ -86,9 +86,20 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/storybox")
+    @Operation(summary = "내가 들어간 스토리 박스 조회", description = "내가 들어가 있는 스토리 박스를 리스트업 합니다.", tags={"스토리-박스 페이지", "Nav 바"})
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryBoxExposedDTO>>> readStoryBoxes(
+            @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
+    ) {
+        String email = getEmail();
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readStoryBoxes(PageRequest.of(page, size), email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 
     @GetMapping("/{storyBoxId}/info")
-    @Operation(summary = "스토리 박스 기본정보 제공", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리 박스 기본정보 제공 - 스토 박스 최상단 부분", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxInfoDTO>> readStoryBoxInfo(
             @PathVariable Long storyBoxId
     ) {
@@ -97,7 +108,7 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    private static final String perPageStory = "3";
+    private static final String perPageStory = "24";
     @GetMapping("/{storyBoxId}/story-list")
     @Operation(summary = "스토리 박스의 스토리 리스트업", description = "스토리박스 내의 스토리를 모두 리스트업 합니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<Page<StoryExposedDTO>>> readStoryInStoryBox(
