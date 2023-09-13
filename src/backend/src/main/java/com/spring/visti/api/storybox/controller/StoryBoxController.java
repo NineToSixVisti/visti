@@ -140,7 +140,7 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-
+/*
     @GetMapping("/validate")
     @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.", tags={"서버에서 리다이랙트 접근"})
     public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
@@ -159,7 +159,7 @@ public class StoryBoxController {
         BaseResponseDTO<String> response = storyBoxService.validateStoryBoxLink(token, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
+*/
     private String getEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null) {

@@ -30,7 +30,7 @@ public class LoginService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // JWT 토큰 생성
-        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
+        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication, member.getRole());
 
         // refreshToken을 DB에 저장
         member.updateMemberToken(tokenDTO.getRefreshToken());
