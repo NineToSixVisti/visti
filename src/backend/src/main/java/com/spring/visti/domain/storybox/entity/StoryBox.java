@@ -27,7 +27,7 @@ public class StoryBox extends BaseEntity {
     @Column
     private String box_img_path;
 
-    @Column
+    @Column(length = 32)
     private String name;
 
     @Column
@@ -41,6 +41,8 @@ public class StoryBox extends BaseEntity {
 
     @Column
     private String token;
+
+    @Column
     private LocalDateTime expireTime;
 
     @OneToMany(mappedBy = "storyBox")

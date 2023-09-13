@@ -31,10 +31,10 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
-    private final AuthService authService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final AuthService authService;
     @Transactional
     public BaseResponseDTO<String> sendMail(String email, String type) throws MessagingException {
 

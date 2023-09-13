@@ -2,6 +2,7 @@ package com.spring.visti.global.config;
 
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.service.TokenAuthFilter;
+import com.spring.visti.global.redis.service.JwtProvideService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,12 +31,13 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvideService jwtProvideService;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> {
             web.ignoring()
-                    .requestMatchers(toH2Console())
+//                    .requestMatchers(toH2Console())
                     .requestMatchers(Arrays.stream(WHITELIST)
                             .map(AntPathRequestMatcher::new)
                             .toArray(RequestMatcher[]::new));
@@ -43,10 +45,13 @@ public class SecurityConfig {
     }
 
 
-    public SecurityConfig(TokenProvider tokenProvider, CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(
+            TokenProvider tokenProvider, JwtProvideService jwtProvideService,
+            CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.tokenProvider = tokenProvider;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtProvideService = jwtProvideService;
     }
 
     @Bean
@@ -54,13 +59,20 @@ public class SecurityConfig {
         System.out.println("========================== 우선순위 확인 1======================");
         // Filter
         http
-                .csrf(AbstractHttpConfigurer::disable) // csrf disable
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(new AntPathRequestMatcher("/api/member/signin")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/member/inform")).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(new TokenAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+            .csrf(AbstractHttpConfigurer::disable) // csrf disable
+            .authorizeHttpRequests((authz) -> authz
+                .requestMatchers("/api/member/signin").permitAll()
+                .requestMatchers("/api/member/inform").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(new TokenAuthFilter(tokenProvider, jwtProvideService), UsernamePasswordAuthenticationFilter.class);
+
+
+//        // 기본 제거
+//        http.httpBasic(withDefaults());
+
+//         cors header access
+//        http.cors().configurationSource(corsConfigurationSource());
 
 
         // STATELESS
@@ -92,6 +104,11 @@ public class SecurityConfig {
 
             // Send Mail
             "/api/member/sendmail",
+
+//            // url validate
+//            "/short/*",
+            // Story-Box validate
+            "/api/story-box/validate",
 
             // Login
             "/api/member/signin",

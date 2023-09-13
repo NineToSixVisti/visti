@@ -9,6 +9,8 @@ import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
+import com.spring.visti.domain.storybox.entity.StoryBoxMember;
+import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 
@@ -38,14 +40,20 @@ public class StoryServiceImpl implements StoryService{
     private final MemberLikeStoryRepository memberLikeStoryRepository;
     private final StoryRepository storyRepository;
     private final StoryBoxRepository storyBoxRepository;
+    private final StoryBoxMemberRepository storyBoxMemberRepository;
 
     @Override
     @Transactional
     public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
         Member member = getMember(email, memberRepository);
 
+
         boolean canWriteStory = member.dailyStoryCount();
         if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
+
+        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(storyBuildDTO.getStoryBoxId(), member);
+
+        if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
 
         StoryBox storyBox = getStoryBox(storyBuildDTO.getStoryBoxId(), storyBoxRepository);
 
