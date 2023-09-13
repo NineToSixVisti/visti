@@ -18,16 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.ssafy.domain.model.Story
+import com.ssafy.domain.model.StoryBox
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.White
 
 @Composable
-fun StoryBoxItem(story: Story) {
+fun StoryBoxItem(storyBox: StoryBox) {
     Card(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
@@ -38,13 +41,17 @@ fun StoryBoxItem(story: Story) {
                 R.drawable.placeholder_wide_dark
             }
 
-            val painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = story.downloadUrl)
-                    .apply(block = fun ImageRequest.Builder.() {
-                        placeholder(placedHolder)
-                        crossfade(true)
-                    }).build()
-            )
+            val painter = if (storyBox.boxImgPath.isNotBlank()) {
+                rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = storyBox.boxImgPath)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            placeholder(placedHolder)
+                            crossfade(true)
+                        }).build()
+                )
+            } else {
+                painterResource(id = placedHolder)
+            }
 
             Image(
                 painter = painter,
@@ -60,7 +67,7 @@ fun StoryBoxItem(story: Story) {
                     .align(Alignment.BottomStart)
             ) {
                 Text(
-                    text = story.author.uppercase(),
+                    text = storyBox.name,
                     color = White,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier

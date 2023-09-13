@@ -54,6 +54,10 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
     val state = viewModel.state.value
     val memberInformationState = viewModel.memberInformation.value
+    val myStoryBoxState = viewModel.myStoryBoxes.value
+
+    val memberInformation = memberInformationState.memberInformation
+    val myStoryBoxes = myStoryBoxState.boxes
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -63,7 +67,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
     }
 
     when {
-        state.error.isNotBlank() || memberInformationState.error.isNotBlank() -> {
+        state.error.isNotBlank() || memberInformationState.error.isNotBlank() || myStoryBoxState.error.isNotBlank() -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -72,7 +76,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
             }
         }
 
-        state.isLoading || memberInformationState.isLoading -> {
+        state.isLoading || memberInformationState.isLoading || myStoryBoxState.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -87,7 +91,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                     TopAppBar(
                         title = {
                             Text(
-                                memberInformationState.memberSimpleInformation.email,
+                                memberInformation.email,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -136,7 +140,11 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         .padding(innerPadding)
                 ) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    ProfileSection()
+                    ProfileSection(
+                        memberInformation.nickname,
+                        memberInformation.profilePath,
+                        memberInformation.stories,
+                        memberInformation.storyBoxes)
                     Spacer(modifier = Modifier.height(15.dp))
                     PostTabView(
                         imageWithText = listOf(
@@ -158,7 +166,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                     }
                     when (selectedTabIndex) {
                         0 -> StoryLazyVerticalGrid(state.stories)
-                        1 -> StoryBoxLazyColumn(state.stories)
+                        1 -> StoryBoxLazyColumn(myStoryBoxes.content)
                     }
                 }
 

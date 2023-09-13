@@ -7,13 +7,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun StatSection(modifier: Modifier = Modifier) {
+fun StatSection(modifier: Modifier = Modifier, storyCount : String, storyBoxCount : String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier
     ) {
-        ProfileStat(numberText = "1,000", text = "스토리")
-        ProfileStat(numberText = "34", text = "스토리 상자")
+        ProfileStat(numberText = storyCount, text = "스토리")
+        ProfileStat(numberText = storyBoxCount, text = "스토리 상자")
     }
 }

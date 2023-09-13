@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
-import com.ssafy.domain.model.MemberSimple
 import com.ssafy.domain.model.Resource
+import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.usecase.GetImagesUseCase
 import com.ssafy.domain.usecase.GetMemberInformUseCase
+import com.ssafy.domain.usecase.GetMyStoryBoxUseCase
 import com.ssafy.presentation.ui.like.LikeListState
 import com.ssafy.presentation.ui.like.MemberState
+import com.ssafy.presentation.ui.like.MyStoryBoxState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
-    private val getMemberInformUseCase: GetMemberInformUseCase
+    private val getMemberInformUseCase: GetMemberInformUseCase,
+    private val getMyStoryBoxUseCase: GetMyStoryBoxUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(LikeListState())
@@ -28,9 +31,13 @@ class ProfileViewModel @Inject constructor(
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
+    private val _myStoryBoxes = mutableStateOf(MyStoryBoxState())
+    val myStoryBoxes: State<MyStoryBoxState> = _myStoryBoxes
+
     init {
         getImages()
         getMemberInformation()
+        getMyStoryBoxes()
     }
 
     private fun getImages() {
@@ -56,7 +63,8 @@ class ProfileViewModel @Inject constructor(
         getMemberInformUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _memberInformation.value = MemberState(memberSimpleInformation = result.data ?: Member())
+                    _memberInformation.value = MemberState(memberInformation = result.data
+                        ?: Member())
                 }
 
                 is Resource.Error -> {
@@ -65,6 +73,25 @@ class ProfileViewModel @Inject constructor(
 
                 is Resource.Loading -> {
                     _memberInformation.value = MemberState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+
+    private fun getMyStoryBoxes() {
+        getMyStoryBoxUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _myStoryBoxes.value = MyStoryBoxState(boxes = result.data?: StoryBoxList())
+                }
+
+                is Resource.Error -> {
+                    _myStoryBoxes.value = MyStoryBoxState(error = result.message ?: "An error occurred")
+                }
+
+                is Resource.Loading -> {
+                    _myStoryBoxes.value = MyStoryBoxState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

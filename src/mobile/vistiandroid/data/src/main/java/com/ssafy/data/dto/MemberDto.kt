@@ -1,22 +1,25 @@
 package com.ssafy.data.dto
 
+data class MemberResponse(
+    val message: String, val status : String, val detail : MemberDto
+)
 data class MemberSimpleDto(
     val nickname: String,
     val profilePath: String?,
     val role: String,
     val memberType: String,
-    val dailyStory: Int,
+    val dailyStory: String,
     val status: Boolean
 )
 
 data class MemberDto(
-    val email: String = "",
-    val nickname: String = "",
-    val profilePath: String? = null,
-    val role: String = "",
-    val memberType: String = "",
-    val dailyStory: Int = 0,
-    val status: Boolean = true,
-    val storyBoxes: Int = 0,
-    val stories: Int = 0
+    val email: String,
+    val nickname: String,
+    val profilePath: String?,
+    val role: String,
+    val memberType: String,
+    val dailyStory: String,
+    val status: Boolean,
+    val storyBoxes: String,
+    val stories: String
 )

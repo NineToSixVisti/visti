@@ -5,7 +5,7 @@ data class MemberSimple(
     val profilePath: String? = null,
     val role: String = "",
     val memberType: String = "",
-    val dailyStory: Int = 0,
+    val dailyStory: String = "",
     val status: Boolean = true
 )
 
@@ -15,8 +15,8 @@ data class Member(
     val profilePath: String? = null,
     val role: String = "",
     val memberType: String = "",
-    val dailyStory: Int = 0,
+    val dailyStory: String = "",
     val status: Boolean = true,
-    val storyBoxes: Int = 0,
-    val stories: Int = 0
+    val storyBoxes: String = "",
+    val stories: String = ""
 )
