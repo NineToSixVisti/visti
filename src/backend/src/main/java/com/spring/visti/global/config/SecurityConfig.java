@@ -16,6 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.spring.visti.global.jwt.service.TokenProvider;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.Arrays;
+
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +37,10 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> {
             web.ignoring()
-                    .requestMatchers(WHITELIST);
+//                    .requestMatchers(toH2Console())
+                    .requestMatchers(Arrays.stream(WHITELIST)
+                            .map(AntPathRequestMatcher::new)
+                            .toArray(RequestMatcher[]::new));
         };
     }
 
@@ -65,21 +75,11 @@ public class SecurityConfig {
 //        http.cors().configurationSource(corsConfigurationSource());
 
 
-        // cors disable
-//        http.cors(cors -> cors.disable());
-
         // STATELESS
         http.sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        // 권한설정
-//        http.authorizeRequests(request -> {
-//            request
-//                    .requestMatchers(new AntPathRequestMatcher("/api/controller/**")).permitAll()
-//                    .anyRequest().permitAll();
-//
-//        });
         return http.build();
     }
 
@@ -99,8 +99,16 @@ public class SecurityConfig {
     }
 
     private static final String[] WHITELIST = {
+            // for test h2
+            "/h2-console/**",
+
             // Send Mail
             "/api/member/sendmail",
+
+//            // url validate
+//            "/short/*",
+            // Story-Box validate
+            "/api/story-box/validate",
 
             // Login
             "/api/member/signin",
@@ -108,9 +116,6 @@ public class SecurityConfig {
             "/api/member/verify-member",
             "/api/member/verify-authnum",
             "/oauth/**",
-
-            // favicon
-            "/favicon.ico",
 
             // Swagger
             "/api/v3/auth/**",
