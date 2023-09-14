@@ -45,13 +45,12 @@ const StoryboxCreate = () => {
     setIsModalOpen(false)
   } 
 
-
   return (
     <Wrap>
       <CheckModal isModalOpen={isModalOpen} CloseModal={CloseModal}></CheckModal>
       <LogoWrap>
         <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
-        <img src={process.env.PUBLIC_URL + '/assets/Visti-red.svg'} alt="Visti Logo"/> 
+        <img src={process.env.PUBLIC_URL + '/assets/Visti-red.png'} alt="Visti Logo"/> 
       </LogoWrap>
 
       <MainWrap>

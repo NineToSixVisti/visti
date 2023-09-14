@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Member = () => {
 
-  const [memberList, setMemberList] = useState([1,1,1,1,1])
+  const [memberList, setMemberList] = useState([1,1,1,1,1,1])
  
   return (
     <MemberWrap>
@@ -33,6 +33,7 @@ const MemberDiv = styled.div`
   display: flex;
   align-items: center;
   padding: 0 35px;
+  border-bottom: 2px solid #DFDFE8;
 
   >p {
     margin-left: 35px;
