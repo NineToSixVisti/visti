@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberMyInfoDTO {
 
-
     private String nickname;
     private String profile_path;
 
@@ -20,13 +19,15 @@ public class MemberMyInfoDTO {
     private MemberType memberType;
 
     private Integer dailyStory;
+    private Integer stories;
 
     private Boolean status;
 
 //    private Integer reportedCount;
 
     @Builder
-    public MemberMyInfoDTO(String nickname, String profile_path, Role role, MemberType memberType, Integer dailyStory, Boolean status){
+    public MemberMyInfoDTO(String nickname, String profile_path, Role role, MemberType memberType,
+                           Integer stories, Integer dailyStory, Boolean status){
 
 
         this.nickname = nickname;
@@ -36,6 +37,7 @@ public class MemberMyInfoDTO {
         this.memberType = memberType;
 
         this.dailyStory = dailyStory;
+        this.stories = stories;
         this.status = status;
     }
 
@@ -46,6 +48,7 @@ public class MemberMyInfoDTO {
                 .role(member.getRole())
                 .memberType(member.getMemberType())
                 .dailyStory(member.getDailyStory())
+                .stories(member.getMemberStories().size())
                 .status(member.getStatus())
                 .build();
     }
