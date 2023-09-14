@@ -65,11 +65,12 @@ const StoryWrap = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 0.2%; // gap의 거리 차이를 두기 위해
 `
 
 const StoryDiv = styled.div<{ isPrivate : boolean, index : number }>`
-    height: 124px;
-    width: 124px;
+    height: 33vw;
+    width: 100%;
     background-image: ${props => props.isPrivate ? null : `url("https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202308/03/9f2025fe-1819-42a3-b5c1-13032da70bc8.jpg")`};
     background-color: ${props => (props.index % 6 >= 3 && props.isPrivate) ? '#FFF2F2' : '#fff'};
     background-size: cover;
