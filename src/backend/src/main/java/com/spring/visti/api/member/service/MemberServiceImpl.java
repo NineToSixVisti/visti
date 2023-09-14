@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService{
             password : password
          }
         */
-
+        log.info("===== member SignUP 진행 =============");
         if (!isValidEmail(memberJoinDTO.getEmail())) {
             throw new ApiException(INVALID_EMAIL_FORMAT);
         }
@@ -80,13 +80,13 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberJoinDTO.toEntity(encryptedPassword, MemberType.SOCIAL);
 
         memberRepository.save(member);
-
+        log.info("===== Sign UP 완료 =============");
         return new BaseResponseDTO<>("회원가입이 완료되었습니다.", 200);
     }
 
     @Override
     public BaseResponseDTO<String> verifyMember(String email, String type) {
-
+        log.info("===== 사용자 인증 진행 =============");
         if (!isValidEmail(email)) {
             throw new ApiException(INVALID_EMAIL_FORMAT);
         }
@@ -94,7 +94,7 @@ public class MemberServiceImpl implements MemberService{
         if(Objects.equals(type, "certification") && memberRepository.findByEmail(email).isPresent()){
             throw new ApiException(REGISTER_DUPLICATED_EMAIL);
         }
-
+        log.info("===== 사용자 인증 완료 =============");
         return new BaseResponseDTO<>("사용 가능한 Email 입니다.", 200);
     }
 
@@ -108,6 +108,7 @@ public class MemberServiceImpl implements MemberService{
             type : "certification";
          }
         */
+        log.info("===== 로그인 인증번호 조회 시작 =============");
         String email = authInfo.getEmail();
         // 인증 코드 조회
         String authCode = authService.getAuthCode(email);
@@ -116,7 +117,7 @@ public class MemberServiceImpl implements MemberService{
             throw new ApiException(EMAIL_INPUT_ERROR);
         }
 
-        log.info("이메일 인증 완료.");
+        log.info("===== 이메일 인증 완료. =============");
         return new BaseResponseDTO<>("이메일 인증이 완료되었습니다.", 200);
     }
 
@@ -130,7 +131,7 @@ public class MemberServiceImpl implements MemberService{
             password : password
          }
         */
-
+        log.info("===== 로그인 시작 =============");
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberLoginDTO.toAuthentication();
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
@@ -159,6 +160,7 @@ public class MemberServiceImpl implements MemberService{
             // 8. 토큰 정보를 Header 로 등록
             tokenProvider.setHeaderAccessToken(httpResponse, accessToken);
 
+            log.info("===== "+ email+ " 로그인 완료 =============");
             return new BaseResponseDTO<TokenDTO>("로그인이 완료되었습니다.", 200, tokenDTO);
         }catch (Exception e){
             throw new ApiException(LOGIN_INFO_ERROR);
@@ -171,18 +173,17 @@ public class MemberServiceImpl implements MemberService{
         // 토큰 탐색
         String accessToken = tokenProvider.getHeaderToken(httpRequest, "Access");
 //        String refreshToken = tokenProvider.getHeaderToken(httpRequest, "Refresh");
-
         String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
-        if (optionalMember.isPresent()){
-            Member member = optionalMember.get();
-            member.updateMemberToken(null);
-            memberRepository.save(member);
-            return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
-        }
+        log.info("===== " +email+ " 로그아웃 진행 =============");
+        Member member = getMember(email, memberRepository);
 
-        throw new ApiException(NO_MEMBER_ERROR);
+        jwtProvideService.expireRefreshToekn(email);
+
+        member.updateMemberToken(null);
+        memberRepository.save(member);
+        return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
+
     }
 
 
