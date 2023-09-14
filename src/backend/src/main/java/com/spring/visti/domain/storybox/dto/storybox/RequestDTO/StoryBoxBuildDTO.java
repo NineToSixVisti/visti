@@ -12,30 +12,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxBuildDTO {
 
-    private String box_img_path;
+    private String boxImgPath;
     private String name;
     private String detail;
     private Boolean blind;
-    private LocalDateTime finish_at;
+    private LocalDateTime finishedAt;
 
     @Builder
-    public StoryBoxBuildDTO(String box_img_path, String name, String detail, Boolean blind, LocalDateTime finish_at){
-        this.box_img_path = box_img_path;
+    public StoryBoxBuildDTO(String boxImgPath, String name, String detail, Boolean blind, LocalDateTime finishedAt){
+        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
         this.blind = blind;
-        this.finish_at = finish_at;
+        this.finishedAt = finishedAt;
     }
 
     public StoryBox toEntity(Member member){
 
         return  StoryBox.builder()
                 .creator(member)
-                .box_img_path(box_img_path)
+                .boxImgPath(boxImgPath)
                 .name(name)
                 .detail(detail)
                 .blind(blind)
-                .finish_at(finish_at)
+                .finishedAt(finishedAt)
                 .build();
     }
 }

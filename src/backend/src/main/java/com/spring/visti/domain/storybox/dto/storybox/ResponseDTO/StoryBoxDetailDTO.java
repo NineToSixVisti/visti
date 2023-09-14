@@ -12,36 +12,36 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxDetailDTO {
 
-    private String box_img_path;
+    private String boxImgPath;
     private String name;
     private MemberExposedDTO creator;
     private String detail;
 
-    private LocalDateTime create_at;
-    private LocalDateTime finish_at;
+    private LocalDateTime createdAt;
+    private LocalDateTime finishedAt;
 
-    private Integer member_num;
-    private Integer story_num;
+    private Integer memberNum;
+    private Integer storyNum;
 
     private Boolean blind;
 
     @Builder
     public StoryBoxDetailDTO(
-            String box_img_path, String name, String detail, MemberExposedDTO creator,
-            Boolean blind, Integer member_num, Integer story_num,
-            LocalDateTime create_at, LocalDateTime finish_at
+            String boxImgPath, String name, String detail, MemberExposedDTO creator,
+            Boolean blind, Integer memberNum, Integer storyNum,
+            LocalDateTime createdAt, LocalDateTime finishedAt
                             ){
-        this.box_img_path = box_img_path;
+        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
         this.creator = creator;
 
         this.blind = blind;
-        this.member_num = member_num;
-        this.story_num = story_num;
+        this.memberNum = memberNum;
+        this.storyNum = storyNum;
 
-        this.create_at = create_at;
-        this.finish_at = finish_at;
+        this.createdAt = createdAt;
+        this.finishedAt = finishedAt;
     }
 
     public static StoryBoxDetailDTO toDetailDTO(StoryBox storyBox){
@@ -51,15 +51,15 @@ public class StoryBoxDetailDTO {
         Integer story_num = storyBox.getStories().size();
 
         return StoryBoxDetailDTO.builder()
-                .box_img_path(storyBox.getBox_img_path())
+                .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
                 .detail(storyBox.getDetail())
                 .creator(creatorInfo)
                 .blind(storyBox.getBlind())
-                .member_num(member_num)
-                .story_num(story_num)
-                .create_at(storyBox.getCreateAt())
-                .finish_at(storyBox.getFinish_at())
+                .memberNum(member_num)
+                .storyNum(story_num)
+                .createdAt(storyBox.getCreatedAt())
+                .finishedAt(storyBox.getFinishedAt())
                 .build();
     }
 }

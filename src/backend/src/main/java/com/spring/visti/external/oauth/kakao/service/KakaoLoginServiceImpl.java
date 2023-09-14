@@ -103,7 +103,7 @@ public class KakaoLoginServiceImpl implements OAuthService {
                             .email(MemberType.KAKAO + kakaoUserInfo.getId())
                             .password(encryptedPassword)
                             .nickname(kakaoUserInfo.getProperties().getNickname())
-                            .profile_path(kakaoUserInfo.getProperties().getProfileImageUrl())
+                            .profilePath(kakaoUserInfo.getProperties().getProfileImageUrl())
                             .role(Role.USER)
                             .memberType(MemberType.KAKAO)
                             .build();

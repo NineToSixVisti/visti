@@ -25,7 +25,7 @@ public class StoryBox extends BaseEntity {
     private Member creator;
 
     @Column(columnDefinition = "LONGTEXT")
-    private String box_img_path;
+    private String boxImgPath;
 
     @Column(length = 32)
     private String name;
@@ -36,8 +36,8 @@ public class StoryBox extends BaseEntity {
     @Column(updatable = false)
     private Boolean blind;
 
-    @Column(updatable = false)
-    private LocalDateTime finish_at;
+    @Column(updatable = false, name="finished_at")
+    private LocalDateTime finishedAt;
 
     @Column
     private String token;
@@ -52,18 +52,18 @@ public class StoryBox extends BaseEntity {
     private List<StoryBoxMember> storyBoxMembers = new ArrayList<>();
 
     @Builder
-    public StoryBox(Member creator, String box_img_path, String name, String detail, Boolean blind, LocalDateTime finish_at){
+    public StoryBox(Member creator, String boxImgPath, String name, String detail, Boolean blind, LocalDateTime finishedAt){
         this.creator = creator;
-        this.box_img_path = box_img_path;
+        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
         this.blind = blind;
-        this.finish_at = finish_at;
+        this.finishedAt = finishedAt;
     }
 
     public void updateStoryBox(StoryBoxSetDTO storyBoxSetDTO) {
-        if(storyBoxSetDTO.getBox_img_path() != null) {
-            this.box_img_path = storyBoxSetDTO.getBox_img_path();
+        if(storyBoxSetDTO.getBoxImgPath() != null) {
+            this.boxImgPath = storyBoxSetDTO.getBoxImgPath();
         }
         if(storyBoxSetDTO.getName() != null) {
             this.name = storyBoxSetDTO.getName();

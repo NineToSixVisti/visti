@@ -34,8 +34,8 @@ public class Member extends BaseEntity{
     @Column
     private String nickname;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String profile_path;
+    @Column(columnDefinition = "LONGTEXT", name="profile_path")
+    private String profilePath;
 
     @Column
     private String refreshToken;
@@ -69,11 +69,11 @@ public class Member extends BaseEntity{
     private List<StoryBoxMember> storyBoxes = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String nickname, String profile_path, Role role, MemberType memberType){
+    public Member(String email, String password, String nickname, String profilePath, Role role, MemberType memberType){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.profile_path = profile_path;
+        this.profilePath = profilePath;
         this.role = role;
         this.memberType = memberType;
         this.status = true;
@@ -115,7 +115,7 @@ public class Member extends BaseEntity{
     public void expireMember(){
         this.email = null;
         this.name = null;
-        this.profile_path = null;
+        this.profilePath = null;
         this.role = null;
         this.status = false;
     }
