@@ -195,7 +195,7 @@ public class TokenProvider  {
         return createAccessToken(authorities, email, accessTokenExpiresIn);
     }
     
-// 이후 레디스 추가시 수행하는 것이 적절할 듯
+// 이후 레디스 추가시 수행하는 것이 적절할 듯z
 //    public void expireToken(String token){
 //        Claims claims = parseClaims(token);
 //

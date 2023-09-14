@@ -37,10 +37,10 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
 
         log.info("JWT Filtering Started! =======================================");
-        String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
-        String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
 
         try {
+            String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
+            String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
             // 액세스 토큰의 유효성 검사
             tokenProvider.validateToken(accessToken);
 
@@ -50,8 +50,10 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         } catch (ApiException e) {
             if (e.getCode().equals(JWT_EXPIRED)) {
                 // 액세스 토큰이 만료되었을 경우 리프레시 토큰 검증
-
+                String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
+                String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
                 // String refreshToken = tokenProvider.getHeaderToken(request, "Refresh");
+
                 String refreshToken = jwtProvideService.getRefreshToken(email);
 
                 try {
@@ -93,11 +95,15 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     public String extractTokenFromHeader(String headerValue) {
-        if (headerValue == null || !headerValue.trim().toLowerCase().startsWith(BEARER_PREFIX.toLowerCase())) {
-            return null;
+        if (headerValue == null) {
+            throw new ApiException(NO_TOKEN_HEADER);
         }
 
-        return headerValue.trim().substring(BEARER_PREFIX.length());
+        if (headerValue.trim().toLowerCase().startsWith(BEARER_PREFIX.toLowerCase())) {
+            return headerValue.trim().substring(BEARER_PREFIX.length()).trim();
+        }
+
+        return headerValue.trim();
     }
 
 
