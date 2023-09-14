@@ -111,6 +111,24 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
+
+        Member member = getMember(email, memberRepository);
+
+        List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
+        int forMainPage = 10;
+
+        List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
+                .map(StoryBoxMember::getStoryBox)
+                .sorted((sb1, sb2) -> sb2.getCreateAt().compareTo(sb1.getCreateAt())) // 내림차순 정렬
+                .limit(forMainPage)
+                .map(StoryBoxExposedDTO::of)
+                .toList();
+
+        return new BaseResponseDTO<List<StoryBoxExposedDTO>>("메인페이지 용 스토리박스 제공되었습니다.", 200, responseStoryBox) ;
+    }
+
+    @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);

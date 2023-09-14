@@ -7,6 +7,7 @@ import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
+import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.StoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
@@ -16,6 +17,7 @@ import com.spring.visti.domain.storybox.repository.StoryRepository;
 
 import com.spring.visti.utils.exception.ApiException;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,10 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -98,6 +97,29 @@ public class StoryServiceImpl implements StoryService{
         Page<StoryExposedDTO> pagedMyStories = pagedStories.map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())));
 
         return new BaseResponseDTO<Page<StoryExposedDTO>>( pageable.getPageNumber() + "페이지 조회가 완료되었습니다.", 200, pagedMyStories);
+    }
+
+    @Override
+    public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
+        Member member = getMember(email, memberRepository);
+
+        List<Story> stories = member.getMemberStories();
+        int storiesSize = stories.size();
+        int forMainPage = 10;
+
+        List<StoryExposedDTO> responseStories = new ArrayList<>();
+
+        if (storiesSize <= forMainPage){
+            Collections.shuffle(stories);
+
+            responseStories = stories.stream()
+                    .map(story -> StoryExposedDTO.of(story, true))
+                    .toList();
+        }else{
+            responseStories = sortList4MainPage(stories, storiesSize, forMainPage);
+        }
+
+        return new BaseResponseDTO<List<StoryExposedDTO>>("메인페이지 용 셔플 스토리 제공되었습니다.", 200, responseStories);
     }
 
     @Override
@@ -175,6 +197,36 @@ public class StoryServiceImpl implements StoryService{
             default -> throw new IllegalArgumentException("Invalid sorting option: " + sorting_option);
         }
         return stories;
+    }
+
+    private List<StoryExposedDTO> sortList4MainPage(List<Story> stories, Integer storiesSize, Integer forMainPage) {
+            if (storiesSize < 50){
+                Collections.shuffle(stories);
+                List<Story> selectedIndices = stories.subList(0, forMainPage);
+
+                return selectedIndices.stream()
+                        .map(story -> {
+                            return StoryExposedDTO.of(story, false);
+                        })
+                        .toList();
+
+            }else{
+
+                Set<Story> selectedIndices = new HashSet<>();
+                Random rand = new Random();
+
+                while (selectedIndices.size() < forMainPage) {
+                    int randomIndex = rand.nextInt(storiesSize); // 0 (inclusive) to storiesSize (exclusive)
+                    selectedIndices.add(stories.get(randomIndex));
+                }
+
+                return selectedIndices.stream()
+                        .map(story -> {
+                            return StoryExposedDTO.of(story, false);
+                        })
+                        .toList();
+
+            }
     }
 
 }

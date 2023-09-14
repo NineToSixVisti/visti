@@ -1,5 +1,6 @@
 package com.spring.visti.domain.member.entity;
 
+import com.spring.visti.domain.common.entity.BaseEntity;
 import com.spring.visti.domain.storybox.entity.Story;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class MemberLikeStory {
+public class MemberLikeStory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
