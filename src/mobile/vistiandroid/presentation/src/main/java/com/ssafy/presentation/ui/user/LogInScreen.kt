@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,14 +49,14 @@ fun LogInScreen(navController: NavHostController) {
 
     Column(
         modifier = Modifier
-            .verticalScroll(loginScrollState)
             .fillMaxSize()
+            .verticalScroll(loginScrollState)
             .padding(20.dp),
     ) {
         Image(
             modifier = Modifier
-                .padding(top = 30.dp, bottom = 65.dp)
-                .height(100.dp)
+                .padding(top = 60.dp, bottom = 65.dp)
+                .height(70.dp)
                 .fillMaxWidth(),
             alignment = Alignment.Center,
             painter = painterResource(id = R.drawable.logo),
@@ -117,6 +116,7 @@ fun LogInScreen(navController: NavHostController) {
                 }
             }
         }
+        Box(modifier = Modifier.padding(5.dp))
         LogInButton("카카오 로그인", Color(0xFFFEE500), Color.Black, R.drawable.kakao) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
@@ -124,6 +124,7 @@ fun LogInScreen(navController: NavHostController) {
                 }
             }
         }
+        Box(modifier = Modifier.padding(5.dp))
         LogInButton("비스티 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
@@ -137,37 +138,39 @@ fun LogInScreen(navController: NavHostController) {
 
 @Composable
 fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onClick: () -> Unit) {
-    TextButton(onClick = onClick) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .graphicsLayer {
-                    shape = RoundedCornerShape(
-                        40.dp
-                    )
-                    clip = true
-                }
-                .background(color)
-                .padding(vertical = 5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                shape = RoundedCornerShape(
+                    40.dp
+                )
+                clip = true
+            }
+            .background(color)
+            .clickable {
+                onClick()
+            }
+            .padding(vertical = 5.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
 
-            ) {
-            Image(
-                modifier = Modifier
-                    .alpha(1f)
-                    .padding(20.dp, 16.dp, 0.dp, 16.dp)
-                    .size(20.dp),
-                painter = painterResource(id = imageId),
-                contentDescription = "home_logo"
-            )
-            Text(
-                text = text,
-                color = textColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            Text(text = "")
-        }
+        ) {
+        Image(
+            modifier = Modifier
+                .alpha(1f)
+                .padding(20.dp, 16.dp, 0.dp, 16.dp)
+                .size(20.dp),
+            painter = painterResource(id = imageId),
+            contentDescription = "home_logo"
+        )
+        Text(
+            text = text,
+            color = textColor,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(text = "")
     }
+
 }

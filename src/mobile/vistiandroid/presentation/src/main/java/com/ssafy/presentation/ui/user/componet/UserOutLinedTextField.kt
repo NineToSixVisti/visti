@@ -1,7 +1,7 @@
 package com.ssafy.presentation.ui.user.componet
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.material3.OutlinedTextField
@@ -18,14 +18,15 @@ import com.ssafy.presentation.ui.theme.PrimaryColor
 fun UserOutLinedTextField(hint: String, text: String, textState: (String) -> Unit) {
     OutlinedTextField(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(65.dp),
         value = text,
         onValueChange = textState,
         placeholder = {
             Text(
                 text = hint,
                 modifier = Modifier
-                    .alpha(0.2f)
+                    .alpha(0.2f),
             )
         },
         singleLine = true,

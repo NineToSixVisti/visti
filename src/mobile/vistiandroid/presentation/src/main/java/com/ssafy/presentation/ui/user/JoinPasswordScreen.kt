@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 
 @Composable
@@ -56,8 +56,9 @@ fun JoinPasswordScreen(navController: NavHostController) {
             fontSize = 16.sp,
             color = Grey
         )
+
         var joinPasswordTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField(hint = "비밀번호를 입력해주세요", text = joinPasswordTextFieldState) {
+        PasswordOutLinedTextField(hint = "비밀번호를 입력해주세요", password = joinPasswordTextFieldState) {
             joinPasswordTextFieldState = it
         }
         Text(
@@ -69,7 +70,10 @@ fun JoinPasswordScreen(navController: NavHostController) {
             color = Grey
         )
         var joinCheckPasswordTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField(hint = "비밀번호를 다시 입력해주세요", text = joinCheckPasswordTextFieldState) {
+        PasswordOutLinedTextField(
+            hint = "비밀번호를 다시 입력해주세요",
+            password = joinCheckPasswordTextFieldState
+        ) {
             joinCheckPasswordTextFieldState = it
         }
 

@@ -3,10 +3,10 @@ package com.ssafy.presentation.ui.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -46,14 +46,16 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
 
         OutlinedTextField(
             modifier = Modifier
-                .padding(vertical = 4.dp)
+                .height(65.dp)
                 .fillMaxWidth(),
+            singleLine = true,
             value = password,
             onValueChange = passwordState,
             placeholder = {
                 Text(
-                    text = hint, modifier = Modifier
-                        .alpha(0.2f)
+                    text = hint,
+                    modifier = Modifier
+                        .alpha(0.2f),
                 )
             },
             trailingIcon = {
@@ -62,6 +64,7 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
                 }) {
                     Icon(
                         painter = icon,
+
                         contentDescription = "Visibility Icon"
                     )
                 }
@@ -69,7 +72,7 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+            colors = outlinedTextFieldColors(
                 focusedBorderColor = PrimaryColor, unfocusedBorderColor = Color(0xFFEEEEEE)
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None
