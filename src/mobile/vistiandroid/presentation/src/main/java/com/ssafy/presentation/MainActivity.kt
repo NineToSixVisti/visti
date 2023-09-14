@@ -12,12 +12,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavigationScreen
+import com.ssafy.presentation.ui.common.NavGraph
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
-import com.ssafy.presentation.ui.user.JoinAgreeScreen
-import com.ssafy.presentation.ui.user.LogInScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,11 +26,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val navController = rememberNavController()
             VistiAndroidTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    JoinAgreeScreen()
+                    NavGraph(navController = navController, window)
 //                    MainScreen(window)
                 }
             }
@@ -41,15 +42,15 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(window: Window) {
-    val navController = rememberNavController()
+    val mainNavController = rememberNavController()
     WindowCompat.setDecorFitsSystemWindows(window, false)
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         bottomBar = {
-            MainBottomNavigationBar(navController = navController)
+            MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavigationScreen(it, navController = navController, window)
+        MainNavigationScreen(it, navController = mainNavController, window)
     }
 }
 

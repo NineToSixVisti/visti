@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,10 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
@@ -39,15 +43,15 @@ import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogInScreen() {
+fun LogInScreen(navController: NavHostController) {
     val loginScrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .verticalScroll(loginScrollState)
             .fillMaxSize()
             .padding(20.dp),
-
-        ) {
+    ) {
         Image(
             modifier = Modifier
                 .padding(top = 30.dp, bottom = 65.dp)
@@ -55,10 +59,10 @@ fun LogInScreen() {
                 .fillMaxWidth(),
             alignment = Alignment.Center,
             painter = painterResource(id = R.drawable.logo),
-            contentDescription = "로그인 로고",
+            contentDescription = stringResource(R.string.log_in_logo_description),
             contentScale = ContentScale.FillHeight,
         )
-        Text(text = "이메일", modifier = Modifier.padding(bottom = 5.dp))
+        Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
         var loginEmailTextFieldState by remember { mutableStateOf("") }
         UserOutLinedTextField("이메일을 입력하세요", loginEmailTextFieldState) {
             loginEmailTextFieldState = it
@@ -94,7 +98,13 @@ fun LogInScreen() {
             }
         }
         Box(modifier = Modifier.padding(15.dp))
-        LogInVisti()
+        LogInVisti {
+            navController.navigate(route = LogInNav.Main.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
         Box(modifier = Modifier.padding(5.dp))
         LogInKaKao()
         Box(modifier = Modifier.padding(5.dp))
@@ -104,42 +114,45 @@ fun LogInScreen() {
 }
 
 @Composable
-fun LogInVisti(){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                shape = RoundedCornerShape(
-                    40.dp
-                )
-                clip = true
-            }
-            .background(PrimaryColor)
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-
-        ) {
-        Image(
+fun LogInVisti(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        Row(
             modifier = Modifier
-                .alpha(1f)
-                .padding(20.dp, 16.dp, 0.dp, 16.dp)
-                .size(20.dp),
-            painter = painterResource(id = R.drawable.image_39),
-            contentDescription = "home_logo"
-        )
-        Text(
-            text = "비스티 로그인",
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(text = "")
+                .fillMaxWidth()
+                .graphicsLayer {
+                    shape = RoundedCornerShape(
+                        40.dp
+                    )
+                    clip = true
+                }
+                .background(PrimaryColor)
+                .padding(vertical = 5.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            Image(
+                modifier = Modifier
+                    .alpha(1f)
+                    .padding(20.dp, 16.dp, 0.dp, 16.dp)
+                    .size(20.dp),
+                painter = painterResource(id = R.drawable.logo_white),
+                contentDescription = "home_logo"
+            )
+            Text(
+                text = "비스티 로그인",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(text = "")
+        }
     }
+
 }
 
 @Composable
-fun LogInKaKao(){
+fun LogInKaKao() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,7 +187,7 @@ fun LogInKaKao(){
 }
 
 @Composable
-fun LogInNaver(){
+fun LogInNaver() {
     Row(
         modifier = Modifier
             .fillMaxWidth()

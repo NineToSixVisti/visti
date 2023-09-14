@@ -12,20 +12,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.theme.SecondaryColor
 import com.ssafy.presentation.ui.user.componet.LogInButton
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 
 @Composable
-fun JoinPasswordScreen() {
+fun JoinPasswordScreen(navController: NavHostController) {
 
     Column(
         modifier = Modifier

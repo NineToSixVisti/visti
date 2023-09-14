@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">presentation</string>
+    <string name="log_in_logo_description">로그인 로고</string>
+    <string name="email">이메일</string>
 </resources>
