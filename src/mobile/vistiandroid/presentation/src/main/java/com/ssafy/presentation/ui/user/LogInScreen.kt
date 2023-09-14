@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.R
+import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
@@ -71,7 +72,7 @@ fun LogInScreen(navController: NavHostController) {
 
         Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
         var loginPasswordTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField("비밀번호를 입력하세요", loginPasswordTextFieldState) {
+        PasswordOutLinedTextField("비밀번호를 입력하세요", loginPasswordTextFieldState) {
             loginPasswordTextFieldState = it
         }
         Row(
@@ -109,21 +110,21 @@ fun LogInScreen(navController: NavHostController) {
             }
         }
         Box(modifier = Modifier.padding(15.dp))
-        LogInButton("비스티 로그인", PrimaryColor, R.drawable.logo_white) {
+        LogInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
             }
         }
-        LogInButton("카카오 로그인", Color(0xFFFEE500), R.drawable.kakao) {
+        LogInButton("카카오 로그인", Color(0xFFFEE500), Color.Black, R.drawable.kakao) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
             }
         }
-        LogInButton("비스티 로그인", Color(0xFF03C75A), R.drawable.naver) {
+        LogInButton("비스티 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
@@ -135,7 +136,7 @@ fun LogInScreen(navController: NavHostController) {
 }
 
 @Composable
-fun LogInButton(text: String, color: Color, imageId: Int, onClick: () -> Unit) {
+fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         Row(
             modifier = Modifier
@@ -162,7 +163,7 @@ fun LogInButton(text: String, color: Color, imageId: Int, onClick: () -> Unit) {
             )
             Text(
                 text = text,
-                color = Color.White,
+                color = textColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
             )

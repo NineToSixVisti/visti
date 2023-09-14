@@ -2,6 +2,7 @@ package com.ssafy.presentation
 
 import androidx.annotation.DrawableRes
 import com.ssafy.presentation.NavigationRouteName.FIND_PASSWORD
+import com.ssafy.presentation.NavigationRouteName.JOIN_AGREE
 import com.ssafy.presentation.NavigationRouteName.JOIN_EMAIL
 import com.ssafy.presentation.NavigationRouteName.JOIN_NICKNAME
 import com.ssafy.presentation.NavigationRouteName.JOIN_PASSWORD
@@ -32,6 +33,7 @@ object NavigationRouteName {
     const val JOIN_EMAIL = "회원가입 이메일"
     const val JOIN_PASSWORD = "회원가입 비밀번호"
     const val JOIN_NICKNAME = "회원가입 닉네임"
+    const val JOIN_AGREE = "회원가입 이용동의"
 }
 
 interface Destination {
@@ -83,6 +85,9 @@ sealed class LogInNav(
     object FindPassword : LogInNav(FIND_PASSWORD, FIND_PASSWORD)
     object JoinEmail :
         LogInNav(JOIN_EMAIL, JOIN_EMAIL)
+
+    object JoinAgree :
+        LogInNav(JOIN_AGREE, JOIN_AGREE)
 
     object JoinPassword : LogInNav(JOIN_PASSWORD, JOIN_PASSWORD)
     object JoinNickName : LogInNav(JOIN_NICKNAME, JOIN_NICKNAME)

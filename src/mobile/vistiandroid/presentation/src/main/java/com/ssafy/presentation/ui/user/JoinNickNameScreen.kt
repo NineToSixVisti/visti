@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
+import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.common.VistiButton
@@ -66,7 +68,9 @@ fun JoinNickNameScreen(navController: NavHostController) {
         )
 
 
-//        VistiButton("다음", PrimaryColor)
+        VistiButton("다음", PrimaryColor){
+            navController.navigate(route = LogInNav.JoinAgree.route)
+        }
         Box(modifier = Modifier.padding(5.dp))
 
     }

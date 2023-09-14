@@ -23,12 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.R
-import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.common.VistiButton
+import com.ssafy.presentation.ui.theme.PrimaryColor
 
 @Composable
-fun JoinAgreeScreen() {
+fun JoinAgreeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,7 +114,13 @@ fun JoinAgreeScreen() {
             modifier = Modifier
                 .padding(vertical = 15.dp)
         )
-//        VistiButton("회원가입", PrimaryColor)
+        VistiButton("회원가입", PrimaryColor) {
+            navController.navigate(route = LogInNav.LogIn.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
     }
 }
 

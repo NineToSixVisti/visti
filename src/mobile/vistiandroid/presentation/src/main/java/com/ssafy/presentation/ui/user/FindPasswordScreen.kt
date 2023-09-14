@@ -13,13 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @Composable
@@ -61,7 +61,12 @@ fun FindPasswordScreen(navController: NavHostController) {
             joinEmailTextFieldState = it
         }
         Box(modifier = Modifier.padding(5.dp))
-       // VistiButton("인증하기", PrimaryColor)
+        VistiButton("인증하기", PrimaryColor) {
+            navController.navigate(route = LogInNav.LogIn.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
     }
-
 }

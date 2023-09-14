@@ -16,9 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 
@@ -77,7 +78,9 @@ fun JoinPasswordScreen(navController: NavHostController) {
                 .padding(vertical = 15.dp)
         )
 
-//        VistiButton("다음", PrimaryColorc)
+        VistiButton("다음", PrimaryColor) {
+            navController.navigate(route = LogInNav.JoinNickName.route)
+        }
         Box(modifier = Modifier.padding(5.dp))
 
     }

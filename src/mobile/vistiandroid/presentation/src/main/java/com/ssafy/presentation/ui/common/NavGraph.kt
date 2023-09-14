@@ -8,7 +8,10 @@ import androidx.navigation.compose.composable
 import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.MainScreen
 import com.ssafy.presentation.ui.user.FindPasswordScreen
+import com.ssafy.presentation.ui.user.JoinAgreeScreen
 import com.ssafy.presentation.ui.user.JoinEmailScreen
+import com.ssafy.presentation.ui.user.JoinNickNameScreen
+import com.ssafy.presentation.ui.user.JoinPasswordScreen
 import com.ssafy.presentation.ui.user.LogInScreen
 
 @Composable
@@ -29,8 +32,20 @@ fun NavGraph(navController: NavHostController, window: Window) {
             FindPasswordScreen(navController = navController)
         }
 
+        composable(route = LogInNav.JoinPassword.route) {
+            JoinPasswordScreen(navController = navController)
+        }
+
         composable(route = LogInNav.JoinEmail.route) {
             JoinEmailScreen(navController = navController)
+        }
+
+        composable(route = LogInNav.JoinAgree.route) {
+            JoinAgreeScreen(navController = navController)
+        }
+
+        composable(route = LogInNav.JoinNickName.route) {
+            JoinNickNameScreen(navController = navController)
         }
     }
 }
