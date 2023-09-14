@@ -101,7 +101,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email, String sorting_option) {
+    public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 
         Page<MemberLikeStory> _memberLikedStories = memberLikeStoryRepository.findByMember(member, pageable);

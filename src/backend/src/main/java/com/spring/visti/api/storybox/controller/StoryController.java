@@ -59,7 +59,8 @@ public class StoryController {
             @RequestParam(required = false, defaultValue = perPage ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<Page<StoryExposedDTO>> response = storyService.readMyStories(PageRequest.of(page, size), email);
+        PageRequest pageRequest = PageRequest.of(page, size, getSortOption("descend"));
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyService.readMyStories(pageRequest, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -73,7 +74,7 @@ public class StoryController {
         String email = getEmail();
 
         PageRequest pageRequest = PageRequest.of(page, size, getSortOption(sorting_option));
-        BaseResponseDTO<Page<StoryExposedDTO>> response = storyService.readLikedStories(pageRequest, email, sorting_option);
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyService.readLikedStories(pageRequest, email);
 
         if (sorting_option.equals("shuffle")){
             List<StoryExposedDTO> shuffledList = new ArrayList<>(response.getDetail().getContent());
