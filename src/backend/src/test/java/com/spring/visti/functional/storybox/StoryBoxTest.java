@@ -28,7 +28,6 @@ public class StoryBoxTest extends AcceptanceTest {
 
     // 토큰 관련 전역 변수 추가
     private String accessToken;
-    private String refreshToken;
 
     @BeforeEach
     void setUpInfo() {
@@ -42,7 +41,6 @@ public class StoryBoxTest extends AcceptanceTest {
         ExtractableResponse<Response> responseSignIn = Member.로그인(requestSignIn);
 
         accessToken = responseSignIn.jsonPath().getString("detail.accessToken");
-        refreshToken = responseSignIn.jsonPath().getString("detail.refreshToken");
     }
 
     @Test

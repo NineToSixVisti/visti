@@ -52,7 +52,6 @@ public class StoryServiceImpl implements StoryService{
         if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
 
         Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(storyBuildDTO.getStoryBoxId(), member);
-
         if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
 
         StoryBox storyBox = getStoryBox(storyBuildDTO.getStoryBoxId(), storyBoxRepository);
@@ -69,8 +68,25 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
+
+        Member member = getMember(email, memberRepository);
+        Story _story = getStory(storyId, storyRepository);
+
+        List<MemberLikeStory> memberLikeStories = _story.getMembersLiked();
+        boolean isMemberLikeStory = memberLikeStories.stream()
+                .anyMatch(ml -> ml.getMember().getId().equals(member.getId()));
+
+        StoryExposedDTO story = StoryExposedDTO.of(_story, isMemberLikeStory);
+
+        return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
+    }
+
+
+    @Override
     public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
+
         List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
 
         List<Long> likedStoryIds = _memberLikeStory.stream()
@@ -107,31 +123,16 @@ public class StoryServiceImpl implements StoryService{
         );
     }
 
-    @Override
-    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
-
-        Member member = getMember(email, memberRepository);
-        Story _story = getStory(storyId, storyRepository);
-
-        List<MemberLikeStory> mls = _story.getMembersLiked();
-        boolean isMemberLikeStory = mls.stream()
-                .anyMatch(ml -> ml.getMember().getId().equals(member.getId()));
-
-        StoryExposedDTO story = StoryExposedDTO.of(_story, isMemberLikeStory);
-
-        return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
-    }
-
 
     @Override
     @Transactional
     public BaseResponseDTO<String> likeStory(Long storyId, String email) {
         Member member = getMember(email, memberRepository);
         Story story = getStory(storyId, storyRepository);
-        Optional<MemberLikeStory> isMemberLike = memberLikeStoryRepository.findByMemberAndStory(member, story);
+        boolean isMemberLike = memberLikeStoryRepository.existsByMemberIdAndStoryId(member.getId(), storyId);
 
-        if(isMemberLike.isPresent()){
-            memberLikeStoryRepository.delete(isMemberLike.get());
+        if(isMemberLike){
+            memberLikeStoryRepository.deleteByMemberIdAndStoryId(member.getId(), storyId);
             return new BaseResponseDTO<>("스토리를 '좋아요 취소' 했습니다", 200);
         }
 

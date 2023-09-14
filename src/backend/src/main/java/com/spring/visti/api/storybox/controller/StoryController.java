@@ -2,8 +2,6 @@ package com.spring.visti.api.storybox.controller;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.story.StoryService;
-import com.spring.visti.domain.member.entity.Member;
-import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 
@@ -20,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,12 +26,13 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @RestController
 @RequestMapping("/api/story")
 @RequiredArgsConstructor
+@CrossOrigin(origins="*")
 @Tag(name = "Story 컨트롤러", description = "Story Controller API Document")
 public class StoryController {
     private final StoryService storyService;
 
     @PostMapping("/create")
-    @Operation(summary = "스토리 만들기", description = "스토리를 만듭니다.", tags={"스토리-박스 내부"})
+    @Operation(summary = "스토리 만들기", description = "스토리를 만듭니다. 스토리 작성 수 | 해당 스토리박스의 일원이 아닐경우 에러가 발생합니다.", tags={"스토리-박스 내부"})
     public ResponseEntity<? extends BaseResponseDTO<String>> createStory(
             @RequestBody StoryBuildDTO storyInfo
     ) {
@@ -44,7 +42,7 @@ public class StoryController {
     }
 
     @GetMapping("/{storyId}")
-    @Operation(summary = "스토리 조회", description = "스토리를 조회합니다.", tags={"스토리 내부"})
+    @Operation(summary = "스토리 조회", description = "스토리를 조회합니다. 유저정보가 맞지 않거나 | 해당 스토리가 없을 경우 에러가 발생합니다.", tags={"스토리 내부"})
     public ResponseEntity<? extends BaseResponseDTO<StoryExposedDTO>> readStory(
             @PathVariable Long storyId
     ) {

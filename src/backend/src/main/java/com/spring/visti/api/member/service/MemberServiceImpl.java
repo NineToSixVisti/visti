@@ -85,20 +85,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public BaseResponseDTO<String> verifyMember(MemberInformDTO memberInfo) {
-        /*
-        example
-         memberInfo = {
-            email : example@example.com
-         }
-        */
-        if (!isValidEmail(memberInfo.getEmail())) {
+    public BaseResponseDTO<String> verifyMember(String email, String type) {
+
+        if (!isValidEmail(email)) {
             throw new ApiException(INVALID_EMAIL_FORMAT);
         }
 
-        if(memberRepository.findByEmail(memberInfo.getEmail()).isPresent()){
+        if(Objects.equals(type, "certification") && memberRepository.findByEmail(email).isPresent()){
             throw new ApiException(REGISTER_DUPLICATED_EMAIL);
         }
+
         return new BaseResponseDTO<>("사용 가능한 Email 입니다.", 200);
     }
 
@@ -162,7 +158,6 @@ public class MemberServiceImpl implements MemberService{
 
             // 8. 토큰 정보를 Header 로 등록
             tokenProvider.setHeaderAccessToken(httpResponse, accessToken);
-            tokenProvider.setHeaderRefreshToken(httpResponse, refreshToken);
 
             return new BaseResponseDTO<TokenDTO>("로그인이 완료되었습니다.", 200, tokenDTO);
         }catch (Exception e){

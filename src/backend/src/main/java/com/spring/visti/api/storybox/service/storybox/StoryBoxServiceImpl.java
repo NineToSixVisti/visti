@@ -115,6 +115,22 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 
+        Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST,pageable);
+
+        Page<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes
+                .map(myStoryBox -> StoryBoxExposedDTO.of(myStoryBox.getStoryBox()));
+
+
+        return new BaseResponseDTO<Page<StoryBoxExposedDTO>>(
+                pageable.getPageNumber() +" 페이지의 내가 작성한 스토리-박스 조회가 완료되었습니다.",
+                200, myStoryBoxes);
+    }
+
+    @Override
+    @Transactional
+    public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
+        Member member = getMember(email, memberRepository);
+
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMember(member, pageable);
 
         Page<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes
@@ -122,9 +138,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
         return new BaseResponseDTO<Page<StoryBoxExposedDTO>>(
-                pageable.getPageNumber() +" 페이지의 스토리-박스 조회가 완료되었습니다.",
+                pageable.getPageNumber() +" 페이지의 내가 들어간 스토리-박스 조회가 완료되었습니다.",
                 200, myStoryBoxes);
     }
+
 
     @Override
     @Transactional
@@ -166,6 +183,10 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
         Member member = getMember(email, memberRepository);
+
+        if (!storyBoxMemberRepository.existsByStoryBoxIdAndMember(id, member)){
+            throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
+        }
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
@@ -249,7 +270,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(ALREADY_JOIN_ERROR);
         }
 
-        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(getMember(email, memberRepository), storyBox, Position.HOST);
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(getMember(email, memberRepository), storyBox, Position.GUEST);
         storyBoxMemberRepository.save(newStoryBoxMember);
 
         return new BaseResponseDTO<>("새로운 스토리-박스에 참가하셨습니다.", 200);

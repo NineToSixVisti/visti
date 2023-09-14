@@ -18,11 +18,12 @@ public class MemberMyInfoDTO {
 
     private Role role;
     private MemberType memberType;
-//    private Integer reportedCount;
 
     private Integer dailyStory;
 
     private Boolean status;
+
+//    private Integer reportedCount;
 
     @Builder
     public MemberMyInfoDTO(String nickname, String profile_path, Role role, MemberType memberType, Integer dailyStory, Boolean status){

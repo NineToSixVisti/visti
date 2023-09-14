@@ -34,7 +34,7 @@ public class Member extends BaseEntity{
     @Column
     private String nickname;
 
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String profile_path;
 
     @Column

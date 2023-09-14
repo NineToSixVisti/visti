@@ -16,6 +16,7 @@ public enum ErrorCode {
     NO_MEMBER_ERROR(HttpStatus.NOT_FOUND, "AUTH005", "유저 정보가 없습니다."),
     NO_AUTHORIZE_ERROR(HttpStatus.NOT_FOUND, "AUTH005", "접근 권한이 없습니다."),
     INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "AUTH006", "이메일 형식이 잘못되었습니다."),
+    NOT_VALID_TYPE4SEND_MAIL(HttpStatus.BAD_REQUEST, "AUTH006", "이메일 보내기에 적절한 타입이 값이 아닙니다."),
 
     // JWT Notification Part
     NO_TOKEN_HEADER(HttpStatus.UNAUTHORIZED, "AUTH010", "토큰이 존재하지 않습니다."),

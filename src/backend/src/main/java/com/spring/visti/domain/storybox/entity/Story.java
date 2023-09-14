@@ -28,13 +28,13 @@ public class Story extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StoryType main_file_type;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String main_file_path;
 
     @Enumerated(EnumType.STRING)
     @Column
     private StoryType sub_file_type;
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String sub_file_path;
 
 
