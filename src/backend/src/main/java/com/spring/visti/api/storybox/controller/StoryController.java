@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.spring.visti.utils.exception.ErrorCode.NOT_DEFINED_SORTING_ACTION;
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 
 @RestController
@@ -65,13 +66,17 @@ public class StoryController {
     }
 
     @GetMapping("/likedstory")
-    @Operation(summary = "내가 좋아요한 스토리 조회", description = "좋아요한 스토리를 조회합니다.", tags={"Nav 바"})
+    @Operation(summary = "내가 좋아요한 스토리 조회", description = "좋아요한 스토리를 조회합니다. \n 셔플 종류는 1. ascend \n 2. descend \n 3.shuffle", tags={"Nav 바"})
     public ResponseEntity<? extends BaseResponseDTO<Page<StoryExposedDTO>>> readLikedStories(
             @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name= "size", required = false, defaultValue = perPage ) Integer size,
             @RequestParam(name = "sorting_option", defaultValue = "descend") String sorting_option
     ) {
         String email = getEmail();
+
+        if( !sorting_option.equals("ascend") && !sorting_option.equals("descend") && !sorting_option.equals("shuffle")){
+            throw new ApiException(NOT_DEFINED_SORTING_ACTION);
+        }
 
         PageRequest pageRequest = PageRequest.of(page, size, getSortOption(sorting_option));
         BaseResponseDTO<Page<StoryExposedDTO>> response = storyService.readLikedStories(pageRequest, email);
@@ -87,6 +92,13 @@ public class StoryController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/mainpage")
+    @Operation(summary = "메인페이지에 제공 될 랜덤한 스토리들", description = "셔플 된 랜텀 스토리를 제공합니다.", tags={"메인 페이지"})
+    public ResponseEntity<? extends BaseResponseDTO<List<StoryExposedDTO>>> readMyStories() {
+        String email = getEmail();
+        BaseResponseDTO<List<StoryExposedDTO>> response = storyService.readMainPageStories(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
 
     @GetMapping("/{storyId}/like")
     @Operation(summary = "스토리 좋아요 | 좋아요 취소", description = "스토리를 '좋아요' 또는 '좋아요 취소'를 수행합니다.", tags={"스토리 내부"})
