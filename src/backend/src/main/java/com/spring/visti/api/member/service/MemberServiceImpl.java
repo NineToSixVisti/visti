@@ -3,6 +3,7 @@ package com.spring.visti.api.member.service;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
@@ -182,6 +183,7 @@ public class MemberServiceImpl implements MemberService{
 
         member.updateMemberToken(null);
         memberRepository.save(member);
+        log.info("===== "+ email+ " 로그아웃 완료 =============");
         return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
 
     }
@@ -197,6 +199,23 @@ public class MemberServiceImpl implements MemberService{
 
         return new BaseResponseDTO<MemberMyInfoDTO>(member.getNickname() + "의 간략 정보입니다.", 200, member);
 //        return new BaseResponseDTO("$s 님의 정보를 제공해 드립니다", 200, member);
+    }
+
+    @Override
+    public BaseResponseDTO<String> changePassword(String email, String newPW) {
+        log.info("===== " +email+ " 비밀번호 변경 진행 =============");
+        Member member = getMember(email, memberRepository);
+
+        if (!isValidPassword(newPW)) {
+            throw new ApiException(INVALID_PASSWORD_FORMAT);
+        }
+
+        String encryptedPassword = passwordEncoder.encode(newPW);
+
+        member.updatePassword(encryptedPassword);
+        memberRepository.save(member);
+        log.info("===== " +email+ " 비밀번호 변경 완료 =============");
+        return new BaseResponseDTO<>("비밀번호 변경이 완료되었습니다.", 200);
     }
 
     @Override

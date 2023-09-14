@@ -1,4 +1,5 @@
-/docs/ngrinder
+/**/*.backup
+ngrinder
 node_modules
 HELP.md
 .gradle

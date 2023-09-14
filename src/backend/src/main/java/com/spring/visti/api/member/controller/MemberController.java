@@ -3,6 +3,7 @@ package com.spring.visti.api.member.controller;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.member.service.EmailService;
 import com.spring.visti.api.member.service.MemberService;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
@@ -103,6 +104,19 @@ public class MemberController {
         String email = getEmail();
 
         BaseResponseDTO<MemberMyInfoProfileDTO> response = memberService.getMyData(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/changePW")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.", tags = {"마이 페이지"})
+    public  ResponseEntity<? extends BaseResponseDTO<String>> changePassword(
+            @RequestBody MemberChangePasswordDTO memberInfo
+    ){
+
+        String email = getEmail();
+        String newPW = memberInfo.getPassword();
+
+        BaseResponseDTO<String> response = memberService.changePassword(email, newPW);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

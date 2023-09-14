@@ -20,7 +20,7 @@ public interface StoryService extends DefaultService {
 
     BaseResponseDTO<String> likeStory(Long storyId, String email);
 
-    BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email, String sorting_option);
+    BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email);
 
     BaseResponseDTO<String> deleteStory(Long storyId, String email);
 
