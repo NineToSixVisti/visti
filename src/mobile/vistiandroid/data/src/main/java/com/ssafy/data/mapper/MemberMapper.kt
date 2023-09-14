@@ -4,7 +4,7 @@ import com.ssafy.data.dto.MemberDto
 import com.ssafy.data.dto.MemberSimpleDto
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.MemberSimple
-import com.ssafy.domain.model.UserType
+import com.ssafy.domain.model.MemberType
 
 fun MemberSimpleDto.toDomain(): MemberSimple {
     return MemberSimple(
@@ -19,15 +19,15 @@ fun MemberSimpleDto.toDomain(): MemberSimple {
 
 fun MemberDto.toDomain(): Member {
     return Member(
-        email, nickname, profilePath, mapStringToEnum(role), memberType, dailyStory, status, storyBoxes, stories
+        email, nickname, profilePath, mapMemberTypeToEnum(role), memberType, dailyStory, status, storyBoxes, stories
     )
 }
 
-fun mapStringToEnum(userTypeStr: String): UserType {
+fun mapMemberTypeToEnum(userTypeStr: String): MemberType {
     return when (userTypeStr) {
-        "USER" -> UserType.USER
-        "SUBSCRIPTION" -> UserType.SUBSCRIPTION
-        "ADMIN" -> UserType.ADMIN
+        "USER" -> MemberType.USER
+        "SUBSCRIPTION" -> MemberType.SUBSCRIPTION
+        "ADMIN" -> MemberType.ADMIN
         else -> throw IllegalArgumentException("알 수 없는 사용자 유형: $userTypeStr")
     }
 }

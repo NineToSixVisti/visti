@@ -8,7 +8,7 @@ data class MemberResponse(
 
 data class MemberSimpleDto(
     @SerializedName("nickname") val nickname: String,
-    @SerializedName("profile_path") val profilePath: String?,
+    @SerializedName("profilePath") val profilePath: String?,
     @SerializedName("role") val role: String,
     @SerializedName("memberType") val memberType: String,
     @SerializedName("dailyStory") val dailyStory: String,
@@ -18,7 +18,7 @@ data class MemberSimpleDto(
 data class MemberDto(
     @SerializedName("email") val email: String,
     @SerializedName("nickname") val nickname: String,
-    @SerializedName("profile_path") val profilePath: String?,
+    @SerializedName("profilePath") val profilePath: String?,
     @SerializedName("role") val role: String,
     @SerializedName("memberType") val memberType: String,
     @SerializedName("dailyStory") val dailyStory: String,

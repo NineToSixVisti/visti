@@ -10,11 +10,11 @@ data class StoryResponse(
 data class StoryDto(
     @SerializedName("id") val id: Int = 0,
     @SerializedName("storyBoxId") val storyBoxId: Int = 0,
-    @SerializedName("file_type") val fileType: String = "",
-    @SerializedName("file_path") val filePath: String = "",
+    @SerializedName("mainFileType") val fileType: String = "",
+    @SerializedName("mainFilePath") val filePath: String = "",
     @SerializedName("blind") val blind: Boolean = false,
-    @SerializedName("created_at") val createdAt: String = "",
-    @SerializedName("finish_at") val finishAt: String = "",
+    @SerializedName("createdAt") val createdAt: String = "",
+    @SerializedName("finishAt") val finishAt: String = "",
     @SerializedName("like") val like: Boolean = false
 )
 
@@ -38,10 +38,10 @@ data class StoryBoxResponse(
 
 data class StoryBoxDto(
     @SerializedName("id") val id: Int = 0,
-    @SerializedName("box_img_path") val boxImgPath: String = "",
+    @SerializedName("boxImgPath") val boxImgPath: String = "",
     @SerializedName("name") val name: String = "",
-    @SerializedName("created_at") val createdAt: String = "",
-    @SerializedName("finished_at") val finishedAt: String = "",
+    @SerializedName("createdAt") val createdAt: String = "",
+    @SerializedName("finishedAt") val finishedAt: String = "",
     @SerializedName("blind") val blind: Boolean = false
 )
 

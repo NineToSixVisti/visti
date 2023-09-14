@@ -1,6 +1,6 @@
 package com.ssafy.domain.model
 
-enum class UserType {
+enum class MemberType {
     USER,
     SUBSCRIPTION,
     ADMIN
