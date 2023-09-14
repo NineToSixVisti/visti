@@ -1,6 +1,7 @@
-
 # ignore 된 피알 목록
-## 1. application-properties 
+
+## 1. application-properties
+
 ```
 # MySQL
 spring.datasource.url={your db}
@@ -49,10 +50,16 @@ spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.timeout=5000
 spring.mail.properties.mail.smtp.starttls.enable=true
 
+# S3
+cloud.aws.region.static=ap-northeast-2
+cloud.aws.stack.auto-=false
+cloud.aws.credentials.accessKey={ACCESS_KEY}
+cloud.aws.credentials.secretKey={SECRET_KEY}
+cloud.aws.s3.bucket=visti-s3
 ```
 
-
 ## 2. application-oauth.properties
+
 ```
 #Naver
 spring.security.oauth2.client.registration.naver.client-id=
@@ -81,6 +88,5 @@ spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/o
 spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
 spring.security.oauth2.client.provider.kakao.user-name-attribute=id
 ```
-
 
 926
