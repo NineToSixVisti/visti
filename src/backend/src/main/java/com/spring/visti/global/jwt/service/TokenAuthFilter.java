@@ -37,13 +37,10 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
 
         log.info("JWT Filtering Started! =======================================");
-        String accessToken = tokenProvider.getHeaderToken(request, "Access");
+        String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
         String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
-        try {
-            if (accessToken.startsWith("Bearer ")) {
-                accessToken = accessToken.substring(7);
-            }
 
+        try {
             // 액세스 토큰의 유효성 검사
             tokenProvider.validateToken(accessToken);
 
@@ -93,6 +90,17 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         // TokenAuthfilter에서 authentication을 넣어주면 UsernamePasswordAuthenticationFilter 내에서 인증 된 것을 확인하고 추가적인 작업을 진행하지 않는다.
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+    private static final String BEARER_PREFIX = "Bearer ";
+
+    public String extractTokenFromHeader(String headerValue) {
+        if (headerValue == null || !headerValue.trim().toLowerCase().startsWith(BEARER_PREFIX.toLowerCase())) {
+            return null;
+        }
+
+        return headerValue.trim().substring(BEARER_PREFIX.length());
+    }
+
+
 
     private boolean isSwaggerRequest(HttpServletRequest request) {
         String uri = request.getRequestURI();

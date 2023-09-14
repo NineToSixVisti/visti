@@ -26,6 +26,9 @@ public class JwtProvideService {
         return (String) redisTemplate.opsForValue().get(email);
     }
 
+    public String expireRefreshToekn(String email){
+        return (String) redisTemplate.opsForValue().get(email);
+    }
     // 만료 시간을 계산하는 메서드
     private long calculateExpirationInMinutes(Date expireTime) {
         if (expireTime == null) {
