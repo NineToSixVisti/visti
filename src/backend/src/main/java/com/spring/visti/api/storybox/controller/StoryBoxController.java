@@ -97,6 +97,14 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/mainpage")
+    @Operation(summary = "메인페이지에 제공 될 내림차순 정렬 된 스토리 박스 조회", description = "최신 스토리 박스 제공해드립니다.", tags={"메인페이지"})
+    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxExposedDTO>>> readMainPageStoryBoxes() {
+        String email = getEmail();
+        BaseResponseDTO<List<StoryBoxExposedDTO>> response = storyBoxService.readMainPageStoryBoxes(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 
     @GetMapping("/{storyBoxId}/info")
     @Operation(summary = "스토리 박스 기본정보 제공 - 스토 박스 최상단 부분", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공", tags={"스토리-박스 내부"})
