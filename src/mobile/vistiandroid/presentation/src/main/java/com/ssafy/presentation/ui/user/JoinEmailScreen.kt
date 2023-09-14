@@ -20,7 +20,7 @@ import androidx.navigation.NavHostController
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
-import com.ssafy.presentation.ui.user.componet.LogInButton
+import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @Composable
@@ -82,9 +82,9 @@ fun JoinEmailScreen(navController: NavHostController) {
             fontWeight = FontWeight.Bold
         )
 
-        LogInButton("번호 전송", SecondaryColor)
+//        VistiButton("번호 전송", SecondaryColor)
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("인증하기", PrimaryColor)
+//        VistiButton("인증하기", PrimaryColor)
 
     }
 

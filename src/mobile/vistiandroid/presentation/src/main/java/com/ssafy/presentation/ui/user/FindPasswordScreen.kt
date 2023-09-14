@@ -19,10 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.user.componet.LogInButton
+import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
-@Preview
 @Composable
 fun FindPasswordScreen(navController: NavHostController) {
     Column(
@@ -62,7 +61,7 @@ fun FindPasswordScreen(navController: NavHostController) {
             joinEmailTextFieldState = it
         }
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("인증하기", PrimaryColor)
+       // VistiButton("인증하기", PrimaryColor)
     }
 
 }

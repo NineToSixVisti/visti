@@ -2,6 +2,7 @@ package com.ssafy.presentation.ui.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,10 +80,15 @@ fun LogInScreen(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
+
             Text(
                 text = "비밀번호 찾기", color = PrimaryColor, fontSize = 12.sp,
-                textDecoration = TextDecoration.Underline
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    navController.navigate(route = LogInNav.FindPassword.route)
+                }
             )
+
             Row() {
                 Text(
                     modifier = Modifier.padding(end = 5.dp),
@@ -90,31 +96,46 @@ fun LogInScreen(navController: NavHostController) {
                     color = Grey, fontSize = 12.sp,
                     textDecoration = TextDecoration.Underline
                 )
+
                 Text(
                     text = "회원가입",
                     color = PrimaryColor, fontSize = 12.sp,
-                    textDecoration = TextDecoration.Underline
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable {
+                        navController.navigate(route = LogInNav.JoinEmail.route)
+                    }
                 )
+
             }
         }
         Box(modifier = Modifier.padding(15.dp))
-        LogInVisti {
+        LogInButton("비스티 로그인", PrimaryColor, R.drawable.logo_white) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
             }
         }
-        Box(modifier = Modifier.padding(5.dp))
-        LogInKaKao()
-        Box(modifier = Modifier.padding(5.dp))
-        LogInNaver()
+        LogInButton("카카오 로그인", Color(0xFFFEE500), R.drawable.kakao) {
+            navController.navigate(route = LogInNav.Main.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
+        LogInButton("비스티 로그인", Color(0xFF03C75A), R.drawable.naver) {
+            navController.navigate(route = LogInNav.Main.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
 
     }
 }
 
 @Composable
-fun LogInVisti(onClick: () -> Unit) {
+fun LogInButton(text: String, color: Color, imageId: Int, onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         Row(
             modifier = Modifier
@@ -125,7 +146,7 @@ fun LogInVisti(onClick: () -> Unit) {
                     )
                     clip = true
                 }
-                .background(PrimaryColor)
+                .background(color)
                 .padding(vertical = 5.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -136,87 +157,16 @@ fun LogInVisti(onClick: () -> Unit) {
                     .alpha(1f)
                     .padding(20.dp, 16.dp, 0.dp, 16.dp)
                     .size(20.dp),
-                painter = painterResource(id = R.drawable.logo_white),
+                painter = painterResource(id = imageId),
                 contentDescription = "home_logo"
             )
             Text(
-                text = "비스티 로그인",
+                text = text,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
             )
             Text(text = "")
         }
-    }
-
-}
-
-@Composable
-fun LogInKaKao() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                shape = RoundedCornerShape(
-                    40.dp
-                )
-                clip = true
-            }
-            .background(Color(0xFFFEE500))
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-
-        ) {
-        Image(
-            modifier = Modifier
-                .alpha(1f)
-                .padding(20.dp, 16.dp, 0.dp, 16.dp)
-                .size(20.dp),
-            painter = painterResource(id = R.drawable.kakao),
-            contentDescription = "home_logo"
-        )
-        Text(
-            text = "카카오 로그인",
-            color = Color.Black,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(text = "")
-    }
-}
-
-@Composable
-fun LogInNaver() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                shape = RoundedCornerShape(
-                    40.dp
-                )
-                clip = true
-            }
-            .background(Color(0xFF03C75A))
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-
-        ) {
-        Image(
-            modifier = Modifier
-                .alpha(1f)
-                .padding(20.dp, 16.dp, 0.dp, 16.dp)
-                .size(20.dp),
-            painter = painterResource(id = R.drawable.naver),
-            contentDescription = "home_logo"
-        )
-        Text(
-            text = "네이버 로그인",
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(text = "")
     }
 }
