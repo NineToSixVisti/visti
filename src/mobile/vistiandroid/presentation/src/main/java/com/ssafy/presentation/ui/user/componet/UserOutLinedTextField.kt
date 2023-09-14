@@ -31,6 +31,7 @@ fun UserOutLinedTextField(hint: String, text: String, textState: (String) -> Uni
         },
         singleLine = true,
         colors = outlinedTextFieldColors(
+            cursorColor = Color(0x44E03C31),
             focusedBorderColor = PrimaryColor, unfocusedBorderColor = Color(0xFFEEEEEE)
         )
     )

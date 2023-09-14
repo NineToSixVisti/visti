@@ -64,7 +64,6 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
                 }) {
                     Icon(
                         painter = icon,
-
                         contentDescription = "Visibility Icon"
                     )
                 }
@@ -73,6 +72,7 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
                 keyboardType = KeyboardType.Password
             ),
             colors = outlinedTextFieldColors(
+                cursorColor = PrimaryColor,
                 focusedBorderColor = PrimaryColor, unfocusedBorderColor = Color(0xFFEEEEEE)
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None

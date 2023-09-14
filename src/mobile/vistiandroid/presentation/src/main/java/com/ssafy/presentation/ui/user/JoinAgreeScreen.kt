@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,13 +70,21 @@ fun JoinAgreeScreen(navController: NavHostController) {
         CheckBoxRow(
             text = "만 14세 이상입니다",
             value = joinAgreeAgeChecked,
-            onClick = { setChecked1(!joinAgreeAgeChecked) }
-        )
+            onClick = {
+                setChecked1(!joinAgreeAgeChecked)
+            },
+
+            )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = joinAgreeServiceChecked,
-                onCheckedChange = { setChecked2(!joinAgreeServiceChecked) })
+                onCheckedChange = { setChecked2(!joinAgreeServiceChecked) },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = PrimaryColor,
+                    uncheckedColor = PrimaryColor,
+                )
+            )
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -93,7 +102,12 @@ fun JoinAgreeScreen(navController: NavHostController) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = joinAgreePersonalChecked,
-                onCheckedChange = { setChecked3(!joinAgreePersonalChecked) })
+                onCheckedChange = { setChecked3(!joinAgreePersonalChecked) },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = PrimaryColor,
+                    uncheckedColor = PrimaryColor,
+                )
+            )
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -127,7 +141,12 @@ fun JoinAgreeScreen(navController: NavHostController) {
 @Composable
 fun CheckBoxRow(text: String, value: Boolean, onClick: (Any) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked = value, onCheckedChange = onClick)
+        Checkbox(
+            checked = value, onCheckedChange = onClick, colors = CheckboxDefaults.colors(
+                checkedColor = PrimaryColor,
+                uncheckedColor = PrimaryColor,
+            )
+        )
         ClickableText(
             text = AnnotatedString(text),
             onClick = onClick,

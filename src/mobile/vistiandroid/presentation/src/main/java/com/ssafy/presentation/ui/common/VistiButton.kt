@@ -33,8 +33,9 @@ fun VistiButton(text: String, color: Color, onClick: () -> Unit) {
             }
             .background(color)
             .clickable { onClick() }
-            .padding(15.dp),
-        textAlign = TextAlign.Center
+            .padding(20.dp),
+        textAlign = TextAlign.Center,
+
     )
 
 }

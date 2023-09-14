@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
+import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
@@ -132,7 +133,6 @@ fun LogInScreen(navController: NavHostController) {
                 }
             }
         }
-
     }
 }
 
@@ -159,7 +159,7 @@ fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onCl
         Image(
             modifier = Modifier
                 .alpha(1f)
-                .padding(20.dp, 16.dp, 0.dp, 16.dp)
+                .padding(start = 25.dp)
                 .size(20.dp),
             painter = painterResource(id = imageId),
             contentDescription = "home_logo"
@@ -169,6 +169,7 @@ fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onCl
             color = textColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(15.dp)
         )
         Text(text = "")
     }
