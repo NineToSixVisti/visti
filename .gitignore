@@ -1,5 +1,5 @@
 /**/*.backup
-/ngrinder
+/ngrinder/
 node_modules
 HELP.md
 .gradle
