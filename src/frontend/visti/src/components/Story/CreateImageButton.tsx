@@ -18,24 +18,34 @@ const CreateImageComponent: React.FC = () => {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-        ctx.font = `${fontSize}px Arial`;
+        
+        // 텍스트 스타일 설정
+        ctx.font = `${fontSize+25}px Arial`;
         ctx.fillStyle = color;
-    
-      
-        ctx.fillText(text, position.x+130, position.y+590);
 
-        const mergedImage = canvas.toDataURL();
-const downloadLink = document.createElement('a');
-downloadLink.href = mergedImage;
-downloadLink.download = 'mergedImage.png';
-downloadLink.innerText = 'Download Image';
-document.body.appendChild(downloadLink);
+        // 텍스트의 기준점을 중앙으로 설정
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
 
+        // 텍스트 그리기
+        ctx.fillText(text, position.x, position.y);
 
+        // Blob 객체 생성 및 다운로드 URL 생성
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'mergedImage.png';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+          }
+        });
       };
     }
-  };
-
+};
   return <button onClick={handleCreateImage}>이미지 생성</button>;
 }
 

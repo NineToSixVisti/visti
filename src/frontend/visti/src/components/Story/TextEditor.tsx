@@ -25,7 +25,7 @@ const FinalText = styled.div<{ fontSize: number, color: string }>`
   color: ${props => props.color};
 `;
 
-const TextEditor: React.FC = () => {
+const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void }> = ({ onEditorOpen, onEditorClose }) => {
   const dispatch = useDispatch();
   const { text, fontSize, color, position } = useSelector((state: RootState) => state.text);
 
@@ -41,7 +41,14 @@ const TextEditor: React.FC = () => {
 
   return (
     <EditorContainer>
-        <button onClick={() => setEditorVisible(!editorVisible)}>T</button>
+        <button onClick={() => {
+          setEditorVisible(!editorVisible);
+          if (editorVisible) {
+            onEditorClose(); 
+          } else {
+            onEditorOpen(); 
+          }
+        }}>T</button>
         {editorVisible && (
             <>
                 <ColorEditor setColor={(color: string) => {
