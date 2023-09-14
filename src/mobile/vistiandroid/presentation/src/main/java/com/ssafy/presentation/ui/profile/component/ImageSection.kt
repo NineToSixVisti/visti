@@ -11,13 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import com.ssafy.presentation.R
 
 @Composable
 fun ImageSection(
-    image: Painter,
+    imageUrl: String?,
     modifier: Modifier = Modifier
 ) {
+    val image = if(imageUrl == null) painterResource(id = R.drawable.ic_profile) else rememberAsyncImagePainter(imageUrl)
+
     Image(
         painter = image,
         contentDescription = null,
