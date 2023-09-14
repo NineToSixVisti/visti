@@ -14,14 +14,15 @@ const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   
   const [tap, setTap] = useState<string>('story');
-  const [isStory, setIsStory] = useState(false);
+  const [isStory, setIsStory] = useState<boolean>(false);
+  const [isPrivate, setPrivate] = useState<boolean>(false);
 
   return (
     <>
       <TopWrap>
         <FirstTop>
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
-          <p>버니즈</p>
+          <p onClick={()=>{setPrivate(!isPrivate)}}>버니즈</p>
           <ModifySvg/>
         </FirstTop>
         <TopMian>
@@ -39,7 +40,7 @@ const StoryboxDetail: React.FC = () => {
           setStory={() => { setTap('story'); }} 
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
-        {tap === 'story' && <Story isStory={isStory}/>}
+        {tap === 'story' && <Story isStory={isStory} isPrivate={isPrivate}/>}
         {tap === 'member' && <Member />}
         {tap === 'detail' && <Detail />}
       </MainWrap>
