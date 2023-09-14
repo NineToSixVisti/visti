@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.StoryBoxList
-import com.ssafy.domain.usecase.GetMemberInformUseCase
-import com.ssafy.domain.usecase.GetMyStoryBoxUseCase
-import com.ssafy.domain.usecase.GetMyStoryUseCase
+import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
+import com.ssafy.domain.usecase.memberinformation.GetMyStoryBoxUseCase
+import com.ssafy.domain.usecase.memberinformation.GetMyStoryUseCase
 import com.ssafy.presentation.ui.like.LikeListState
 import com.ssafy.presentation.ui.like.MemberState
 import com.ssafy.presentation.ui.like.MyStoryBoxState

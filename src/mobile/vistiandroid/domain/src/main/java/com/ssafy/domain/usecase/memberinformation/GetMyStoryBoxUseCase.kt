@@ -1,4 +1,4 @@
-package com.ssafy.domain.usecase
+package com.ssafy.domain.usecase.memberinformation
 
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpException
 import com.ssafy.domain.model.Resource

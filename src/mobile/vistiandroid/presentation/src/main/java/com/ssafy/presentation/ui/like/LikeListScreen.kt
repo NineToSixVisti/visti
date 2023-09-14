@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,10 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LikeListScreen(viewModel: ImageListViewModel = hiltViewModel()) {
+fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
     val state = viewModel.state.value
+
     when {
         state.error.isNotBlank() -> {
             Box(

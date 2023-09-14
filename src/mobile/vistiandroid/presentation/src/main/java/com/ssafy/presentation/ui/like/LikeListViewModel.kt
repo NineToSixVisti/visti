@@ -5,25 +5,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Resource
-import com.ssafy.domain.usecase.GetMyStoryUseCase
+import com.ssafy.domain.usecase.likedstory.GetLikedStoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class ImageListViewModel @Inject constructor(
-    private val getImagesUseCase: GetMyStoryUseCase
+class LikeListViewModel @Inject constructor(
+    private val getLikedStoryUseCase: GetLikedStoryUseCase
 ) : ViewModel() {
     private val _state = mutableStateOf(LikeListState())
     val state: State<LikeListState> = _state
 
     init {
-        getImages()
+        getLikedStories()
     }
 
-    private fun getImages() {
-        getImagesUseCase().onEach { result ->
+    private fun getLikedStories() {
+        getLikedStoryUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _state.value = LikeListState(stories = result.data?.content ?: emptyList())

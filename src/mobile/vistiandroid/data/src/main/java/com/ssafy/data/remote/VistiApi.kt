@@ -15,4 +15,7 @@ interface VistiApi {
 
     @GET("/api/story/mystory")
     suspend fun getMyStories(@Query("page") page : Int, @Query("size") size : Int): StoryResponse
+
+    @GET("/api/story/likedstory")
+    suspend fun getLikedStories(@Query("page") page : Int, @Query("size") size : Int, @Query("sorting_option") sortingOption : String): StoryResponse
 }

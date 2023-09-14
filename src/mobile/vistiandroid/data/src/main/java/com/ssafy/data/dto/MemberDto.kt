@@ -1,7 +1,5 @@
 package com.ssafy.data.dto
 
-import com.google.gson.annotations.SerializedName
-
 data class MemberResponse(
     val message: String, val status : String, val detail : MemberDto
 )
