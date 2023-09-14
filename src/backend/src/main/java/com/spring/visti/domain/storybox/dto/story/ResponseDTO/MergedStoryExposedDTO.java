@@ -60,7 +60,7 @@ public class MergedStoryExposedDTO {
                 .sub_file_type(story.getSub_file_type())
                 .sub_file_path(story.getSub_file_path())
                 .blind(story.getStoryBox().getBlind())
-                .created_at(story.getCreate_at())
+                .created_at(story.getCreateAt())
                 .finish_at(story.getStoryBox().getFinish_at())
                 .like(like)
                 .build();

@@ -58,7 +58,7 @@ public class StoryBoxDetailDTO {
                 .blind(storyBox.getBlind())
                 .member_num(member_num)
                 .story_num(story_num)
-                .create_at(storyBox.getCreate_at())
+                .create_at(storyBox.getCreateAt())
                 .finish_at(storyBox.getFinish_at())
                 .build();
     }

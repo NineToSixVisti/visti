@@ -31,7 +31,7 @@ public class StoryBoxInfoDTO {
                 .box_img_path(storyBox.getBox_img_path())
                 .name(storyBox.getName())
                 .blind(storyBox.getBlind())
-                .create_at(storyBox.getCreate_at())
+                .create_at(storyBox.getCreateAt())
                 .finish_at(storyBox.getFinish_at())
                 .build();
     }

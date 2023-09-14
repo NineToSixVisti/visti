@@ -52,7 +52,7 @@ public class StoryExposedDTO {
                 .file_type(story.getMain_file_type())
                 .file_path(story.getMain_file_path())
                 .blind(story.getStoryBox().getBlind())
-                .created_at(story.getCreate_at())
+                .created_at(story.getCreateAt())
                 .finish_at(story.getStoryBox().getFinish_at())
                 .like(like)
                 .build();

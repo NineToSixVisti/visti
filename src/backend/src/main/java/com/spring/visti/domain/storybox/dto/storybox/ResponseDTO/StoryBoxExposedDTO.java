@@ -35,7 +35,7 @@ public class StoryBoxExposedDTO {
                 .id(storyBox.getId())
                 .box_img_path(storyBox.getBox_img_path())
                 .name(storyBox.getName())
-                .created_at(storyBox.getCreate_at())
+                .created_at(storyBox.getCreateAt())
                 .finished_at(storyBox.getFinish_at())
                 .blind(storyBox.getBlind())
                 .build();
