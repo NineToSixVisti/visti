@@ -14,6 +14,7 @@ const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   
   const [tap, setTap] = useState<string>('story');
+  const [isStory, setIsStory] = useState(false);
 
   return (
     <>
@@ -24,7 +25,7 @@ const StoryboxDetail: React.FC = () => {
           <ModifySvg/>
         </FirstTop>
         <TopMian>
-          <div></div>
+          <div onClick={() => setIsStory(!isStory)}></div>
           <div>
             <p>스토리 생성 가능 시간</p>
             <p>15:30:30</p>
@@ -38,7 +39,7 @@ const StoryboxDetail: React.FC = () => {
           setStory={() => { setTap('story'); }} 
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
-        {tap === 'story' && <Story />}
+        {tap === 'story' && <Story isStory={isStory}/>}
         {tap === 'member' && <Member />}
         {tap === 'detail' && <Detail />}
       </MainWrap>
