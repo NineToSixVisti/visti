@@ -2,6 +2,7 @@ package com.spring.visti.api.member.service;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.common.service.DefaultService;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
@@ -21,6 +22,8 @@ public interface MemberService extends DefaultService {
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);
     BaseResponseDTO<?> signOut(HttpServletRequest request);
     BaseResponseDTO<MemberMyInfoDTO> getInfo(String email);
+
+    BaseResponseDTO<String> changePassword(String email, String newPW);
 
     BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email);
 }

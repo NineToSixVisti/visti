@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
         // 인증 코드 생성
         String authNum = createCode();
-
+        log.info("====" + email + "에게 이메일 전송을 시도합니다. ======");
         String subject = "";
         if(type.equals("find")) {
             // 임시 비밀번호는 생성 후 DB에 저장
@@ -49,11 +49,13 @@ public class EmailServiceImpl implements EmailService {
             // 임시 비밀번호로 Update
             boolean isEmailChanged = changePassword(email, authNum);
             if (!isEmailChanged){
-                return new BaseResponseDTO<>("Email을 정확히 입력해주세요.", 200);
+                log.info("Send Mail to " + email + " Failed");
+                return new BaseResponseDTO<>("Email이 데이터베이스에 없습니다.", 200);
             }
         }else if(type.equals("certification")){
 
             if (!isValidEmail(email)) {
+                log.info("Send Mail to " + email + " Failed");
                 throw new ApiException(INVALID_EMAIL_FORMAT);
             }
 
@@ -63,6 +65,7 @@ public class EmailServiceImpl implements EmailService {
             // 인증 코드 Redis에 저장
             authService.saveAuthCode(email, authNum);
         }else{
+            log.info("Send Mail to " + email + " Failed");
             return new BaseResponseDTO<>("이메일 전송에 실패했습니다.", 400);
         }
 
@@ -92,7 +95,7 @@ public class EmailServiceImpl implements EmailService {
         return false;
     }
 
-    public String createCode() {
+    private String createCode() {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
 
@@ -108,13 +111,13 @@ public class EmailServiceImpl implements EmailService {
         return key.toString();
     }
 
-    public String setContext(String code, String type) {
+    private String setContext(String code, String type) {
         Context context = new Context();
         context.setVariable("code", code);
         return templateEngine.process(type, context);
     }
 
-    public static boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(email).matches();
