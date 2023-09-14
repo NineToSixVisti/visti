@@ -40,6 +40,7 @@ public enum ErrorCode {
     NO_STORY_ERROR(HttpStatus.NOT_FOUND, "STORY001", "스토리 정보가 없습니다."),
     UNAUTHORIZED_STORY_ERROR(HttpStatus.FORBIDDEN, "STORY002", "스토리를 삭제할 권한이 없습니다."),
     MAX_STORY_QUOTA_REACHED(HttpStatus.FORBIDDEN, "STORY003", "스토리 작성 할당량 초과"),
+    NOT_DEFINED_SORTING_ACTION(HttpStatus.FORBIDDEN, "STORY004", "정의된 정렬방식이 아닙니다."),
 
     // Story Box Part
     NO_STORY_BOX_ERROR(HttpStatus.NOT_FOUND, "SBOX001", "스토리 박스 정보가 없습니다."),
