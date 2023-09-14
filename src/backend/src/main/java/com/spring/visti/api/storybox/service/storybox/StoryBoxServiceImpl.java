@@ -120,7 +120,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
-                .sorted((sb1, sb2) -> sb2.getCreateAt().compareTo(sb1.getCreateAt())) // 내림차순 정렬
+                .sorted((sb1, sb2) -> sb2.getCreatedAt().compareTo(sb1.getCreatedAt())) // 내림차순 정렬
                 .limit(forMainPage)
                 .map(StoryBoxExposedDTO::of)
                 .toList();

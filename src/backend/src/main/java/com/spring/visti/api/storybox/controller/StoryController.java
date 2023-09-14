@@ -130,8 +130,8 @@ public class StoryController {
 
     private Sort getSortOption(String sorting_option) {
         return switch (sorting_option) {
-            case "ascend" -> Sort.by(Sort.Order.asc("createAt"));
-            case "descend" -> Sort.by(Sort.Order.desc("createAt"));
+            case "ascend" -> Sort.by(Sort.Order.asc("createdAt"));
+            case "descend" -> Sort.by(Sort.Order.desc("createdAt"));
             default -> Sort.unsorted();
         };
     }

@@ -19,28 +19,32 @@ public class StoryExposedDTO {
     private MemberExposedDTO member;
 
 
-    private StoryType file_type;
-    private String file_path;
+    private StoryType mainFileType;
+    private String mainFilePath;
+
+//    private StoryType subFileType;
+//    private String subFilePath;
 
     private Boolean blind;
-    private LocalDateTime created_at;
-    private LocalDateTime finish_at;
     private Boolean like;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime finishedAt;
 
     @Builder
     public StoryExposedDTO(Long id, Long storyBoxId, Member member,
-                           StoryType file_type, String file_path,
-                           Boolean blind, LocalDateTime created_at, LocalDateTime finish_at, Boolean like
+                           StoryType mainFileType, String mainFilePath,
+                           Boolean blind, LocalDateTime createdAt, LocalDateTime finishedAt, Boolean like
                         ){
         this.id = id;
         this.storyBoxId = storyBoxId;
         this.member = MemberExposedDTO.of(member);
-        this.file_type = file_type;
-        this.file_path = file_path;
+        this.mainFileType = mainFileType;
+        this.mainFilePath = mainFilePath;
 
         this.blind = blind;
-        this.created_at = created_at;
-        this.finish_at = finish_at;
+        this.createdAt = createdAt;
+        this.finishedAt = finishedAt;
         this.like = like;
     }
 
@@ -49,11 +53,11 @@ public class StoryExposedDTO {
                 .id(story.getId())
                 .storyBoxId(story.getStoryBox().getId())
                 .member(story.getMember())
-                .file_type(story.getMain_file_type())
-                .file_path(story.getMain_file_path())
+                .mainFileType(story.getMainFileType())
+                .mainFilePath(story.getMainFilePath())
                 .blind(story.getStoryBox().getBlind())
-                .created_at(story.getCreateAt())
-                .finish_at(story.getStoryBox().getFinish_at())
+                .createdAt(story.getCreatedAt())
+                .finishedAt(story.getStoryBox().getFinishedAt())
                 .like(like)
                 .build();
     }

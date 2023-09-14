@@ -191,8 +191,8 @@ public class StoryServiceImpl implements StoryService{
 
     private List<StoryExposedDTO> sortStories(List<StoryExposedDTO> stories, String sorting_option) {
         switch (sorting_option) {
-            case "ascend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreated_at));
-            case "descend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreated_at).reversed());
+            case "ascend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreatedAt));
+            case "descend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreatedAt).reversed());
             case "shuffle" -> Collections.shuffle(stories);
             default -> throw new IllegalArgumentException("Invalid sorting option: " + sorting_option);
         }

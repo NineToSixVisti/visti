@@ -103,7 +103,7 @@ public class NaverLoginServiceImpl implements OAuthService {
                             .email(MemberType.NAVER + naverUserInfo.getResponse().getId())
                             .password(encryptedPassword)
                             .nickname(naverUserInfo.getResponse().getNickname())
-                            .profile_path(naverUserInfo.getResponse().getProfileImageUrl())
+                            .profilePath(naverUserInfo.getResponse().getProfileImageUrl())
                             .role(Role.USER)
                             .memberType(MemberType.NAVER)
                             .build();

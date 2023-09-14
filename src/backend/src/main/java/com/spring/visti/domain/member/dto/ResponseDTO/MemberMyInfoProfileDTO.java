@@ -13,7 +13,7 @@ public class MemberMyInfoProfileDTO {
 
     private String email;
     private String nickname;
-    private String profile_path;
+    private String profilePath;
 
     private Role role;
     private MemberType memberType;
@@ -27,13 +27,13 @@ public class MemberMyInfoProfileDTO {
     private Integer stories;
 
     @Builder
-    public MemberMyInfoProfileDTO(String email, String nickname, String profile_path,
+    public MemberMyInfoProfileDTO(String email, String nickname, String profilePath,
                                   Role role, MemberType memberType, Integer dailyStory, Boolean status,
                                   Integer storyBoxes, Integer stories){
 
         this.email = email;
         this.nickname = nickname;
-        this.profile_path = profile_path;
+        this.profilePath = profilePath;
 
         this.role= role;
         this.memberType = memberType;
@@ -49,7 +49,7 @@ public class MemberMyInfoProfileDTO {
         return MemberMyInfoProfileDTO.builder()
                 .email(member.getEmail())
                 .nickname(member.getNickname())
-                .profile_path(member.getProfile_path())
+                .profilePath(member.getProfilePath())
                 .role(member.getRole())
                 .memberType(member.getMemberType())
                 .dailyStory(member.getDailyStory())
