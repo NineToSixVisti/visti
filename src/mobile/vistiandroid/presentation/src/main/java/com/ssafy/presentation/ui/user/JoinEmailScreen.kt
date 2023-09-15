@@ -70,7 +70,7 @@ fun JoinEmailScreen(navController: NavHostController) {
             joinEmailTextFieldState = it
         }
         Text(
-            text = "인증번호",
+            text = "인증코드",
             modifier = Modifier
                 .padding(vertical = 5.dp),
             textAlign = TextAlign.Center,
@@ -81,7 +81,7 @@ fun JoinEmailScreen(navController: NavHostController) {
         UserOutLinedTextField(
             hint = "인증번호를 입력해주세요",
             text = joinNumberTextFieldState,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Text
         ) {
             joinNumberTextFieldState = it
         }
