@@ -27,12 +27,12 @@ public class ShortUrlController {
     private final StoryBoxService storyBoxService;
     private final UrlExpiryService urlExpiryService;
 
-    @GetMapping("/{shortenedUrl}")
-    @Operation(summary = "스토리박스 숏링크 수집", description = "스토리박스에 접속가능한 링크를 제공해줍니다.", tags={"앱 외부에서 접근"})
+    @GetMapping("/{shortenedUrls}")
+    @Operation(summary = "스토리박스 숏링크 수집", description = "스토리박스에 접속가능한 링크를 제공해줍니다.")
     ResponseEntity<? extends BaseResponseDTO<String>> redirect(
-            @PathVariable String shortenedUrl
+            @PathVariable String shortenedUrls
     ) {
-        String expandedParam = urlExpiryService.expand(shortenedUrl);
+        String expandedParam = urlExpiryService.expand(shortenedUrls);
 
         if (expandedParam.isEmpty()){
             throw new ApiException(NO_INVITATION_STORY_BOX);
