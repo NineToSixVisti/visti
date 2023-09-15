@@ -23,38 +23,45 @@ import java.util.Locale
 fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
     val state = viewModel.state.value
 
-    when {
-        state.error.isNotBlank() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = state.error)
-            }
+    Scaffold(
+        topBar = {
+            ToolbarWithLikeList()
         }
-
-        state.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        else -> {
-            Scaffold(
-                topBar = {
-                    ToolbarWithLikeList()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            
+            when {
+                state.error.isNotBlank() -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = state.error)
+                    }
                 }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
+
+                state.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                else -> {
                     val grouped = state.stories.groupBy { story ->
-                        val createdAtDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault()).parse(story.createdAt)
+                        val createdAtDate =
+                            SimpleDateFormat(
+                                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                                Locale.getDefault()
+                            ).parse(
+                                story.createdAt
+                            )
                         val formattedCreatedAt = if (createdAtDate != null) {
                             SimpleDateFormat("yyyy년 MM월", Locale.getDefault()).format(createdAtDate)
                         } else {

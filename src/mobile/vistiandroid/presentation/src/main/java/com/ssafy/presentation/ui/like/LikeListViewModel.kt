@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.domain.model.LikeSortType
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.likedstory.GetLikedStoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +20,11 @@ class LikeListViewModel @Inject constructor(
     val state: State<LikeListState> = _state
 
     init {
-        getLikedStories()
+        getLikedStories(LikeSortType.DOWN)
     }
 
-    private fun getLikedStories() {
-        getLikedStoryUseCase().onEach { result ->
+    fun getLikedStories(sortType: LikeSortType) {
+        getLikedStoryUseCase(sortType).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _state.value = LikeListState(stories = result.data?.content ?: emptyList())
