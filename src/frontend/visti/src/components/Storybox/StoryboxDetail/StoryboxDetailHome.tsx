@@ -62,7 +62,7 @@ const FirstTop = styled.div`
   align-items: center; 
 
   >p {
-    margin : 0 150px 0 0;
+    margin : 0 100px 0 0;
     font-weight: 600;
     font-size: 24px;
   }
@@ -108,7 +108,8 @@ const MainWrap = styled.div`
 `
 
 const GoBackSvg = styled(GoBack)`
-  margin-left: 10px;
+
+  padding: 15px;
 `
 
 const ModifySvg = styled(Modify)`

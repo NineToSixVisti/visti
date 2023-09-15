@@ -96,17 +96,22 @@ const LogoWrap = styled.div`
   align-items: center;
   position: relative;
 
->img {
-  width: 70px;
-  height: 28px;
-  margin: auto;
+  /* >div {
+    width: 50px;
+    height: 100%;
+  } */
+
+  >img {
+    width: 70px;
+    height: 28px;
+    margin: auto;
 }
 `
 
 const GoBackSvg = styled(GoBack)`
   position: absolute;
-  top: 15px;
-  left: 20px;
+  left: 5px;
+  padding: 15px;
 `
 
 const MainWrap = styled.div`
