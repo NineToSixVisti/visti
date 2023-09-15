@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -111,7 +112,7 @@ fun LogInScreen(navController: NavHostController) {
         }
 
         Box(modifier = Modifier.padding(15.dp))
-        LogInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white) {
+        LogInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
@@ -119,7 +120,7 @@ fun LogInScreen(navController: NavHostController) {
             }
         }
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("카카오 로그인", Color(0xFFFEE500), Color.Black, R.drawable.kakao) {
+        LogInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
@@ -127,7 +128,7 @@ fun LogInScreen(navController: NavHostController) {
             }
         }
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("비스티 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver) {
+        LogInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
             navController.navigate(route = LogInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
@@ -138,7 +139,14 @@ fun LogInScreen(navController: NavHostController) {
 }
 
 @Composable
-fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onClick: () -> Unit) {
+fun LogInButton(
+    text: String,
+    color: Color,
+    textColor: Color,
+    imageId: Int,
+    imageSize: Dp,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -161,7 +169,7 @@ fun LogInButton(text: String, color: Color, textColor: Color, imageId: Int, onCl
             modifier = Modifier
                 .alpha(1f)
                 .padding(start = 25.dp)
-                .size(20.dp),
+                .size(imageSize),
             painter = painterResource(id = imageId),
             contentDescription = "home_logo"
         )
