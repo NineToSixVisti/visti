@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBuildDTO {
 
-    private Long storyBoxId;
-
     private StoryType mainFileType;
     private String mainFilePath;
 
@@ -25,10 +23,9 @@ public class StoryBuildDTO {
     private String subFilePath;
 
     @Builder
-    public StoryBuildDTO(Long storyBoxId,
+    public StoryBuildDTO(
                          StoryType mainFileType, String mainFilePath,
                          StoryType subFileType, String subFilePath){
-        this.storyBoxId = storyBoxId;
         this.mainFileType = mainFileType;
         this.mainFilePath = mainFilePath;
         this.subFileType = subFileType;
