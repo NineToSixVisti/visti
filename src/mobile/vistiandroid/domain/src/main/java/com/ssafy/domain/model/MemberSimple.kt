@@ -13,7 +13,7 @@ data class Member(
     val email: String = "",
     val nickname: String = "",
     val profilePath: String? = null,
-    val role: String = "",
+    val role: MemberType = MemberType.USER,
     val memberType: String = "",
     val dailyStory: String = "",
     val status: Boolean = true,

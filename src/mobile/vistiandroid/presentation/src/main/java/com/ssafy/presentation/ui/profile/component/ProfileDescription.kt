@@ -13,11 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.domain.model.LikeSortType
+import com.ssafy.domain.model.MemberType
 import com.ssafy.presentation.R
 
 @Composable
 fun ProfileDescription(
-    displayName: String
+    displayName: String, memberRole : MemberType
 ) {
     val letterSpacing = 0.5.sp
     val lineHeight = 20.sp
@@ -33,10 +34,12 @@ fun ProfileDescription(
             letterSpacing = letterSpacing,
             lineHeight = lineHeight
         )
-        Image(
-            painter = painterResource(id = R.drawable.ic_check),
-            contentDescription = LikeSortType.UP.name,
-            modifier = Modifier.padding(start = 3.dp)
-        )
+        if(memberRole == MemberType.SUBSCRIPTION) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_check),
+                contentDescription = LikeSortType.UP.name,
+                modifier = Modifier.padding(start = 3.dp)
+            )
+        }
     }
 }

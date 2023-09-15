@@ -6,14 +6,13 @@ import com.ssafy.data.dto.StoryBoxDto
 import com.ssafy.data.dto.StoryBoxListDto
 import com.ssafy.data.dto.StoryDto
 import com.ssafy.data.dto.StoryListDto
+import com.ssafy.domain.model.MemberType
 import com.ssafy.domain.model.Pageable
 import com.ssafy.domain.model.Sort
 import com.ssafy.domain.model.Story
 import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.model.StoryList
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 fun StoryBoxDto.toDomain(): StoryBox {
     return StoryBox(id, boxImgPath, name, createdAt, finishedAt, blind)

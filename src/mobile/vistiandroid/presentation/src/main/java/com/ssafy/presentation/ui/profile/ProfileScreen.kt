@@ -142,6 +142,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                     Spacer(modifier = Modifier.height(4.dp))
                     ProfileSection(
                         memberInformation.nickname,
+                        memberInformation.role,
                         memberInformation.profilePath,
                         memberInformation.stories,
                         memberInformation.storyBoxes)
