@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +39,6 @@ import androidx.navigation.NavHostController
 import com.ssafy.presentation.LogInNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
-import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
@@ -66,7 +66,7 @@ fun LogInScreen(navController: NavHostController) {
         )
         Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
         var loginEmailTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField("이메일을 입력하세요", loginEmailTextFieldState) {
+        UserOutLinedTextField("이메일을 입력하세요", loginEmailTextFieldState, KeyboardType.Email) {
             loginEmailTextFieldState = it
         }
 
@@ -109,6 +109,7 @@ fun LogInScreen(navController: NavHostController) {
 
             }
         }
+
         Box(modifier = Modifier.padding(15.dp))
         LogInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white) {
             navController.navigate(route = LogInNav.Main.route) {
