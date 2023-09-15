@@ -13,7 +13,7 @@ const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, CloseModal}) => {
     <Overay>    
       <ModalContainer>
         <MainModal>
-          <img src={process.env.PUBLIC_URL +"/assets/Visti_icon.svg"} alt="Visti Logo"/>
+          <img src={process.env.PUBLIC_URL +"/assets/Visti_icon.png"} alt="Visti Logo"/>
           <p>스토리 박스를 생성하시겠습니까?</p>
         </MainModal>
         <FootModal>

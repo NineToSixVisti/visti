@@ -14,17 +14,19 @@ const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   
   const [tap, setTap] = useState<string>('story');
+  const [isStory, setIsStory] = useState<boolean>(false);
+  const [isPrivate, setPrivate] = useState<boolean>(false);
 
   return (
     <>
       <TopWrap>
         <FirstTop>
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
-          <p>버니즈</p>
+          <p onClick={()=>{setPrivate(!isPrivate)}}>버니즈</p>
           <ModifySvg/>
         </FirstTop>
         <TopMian>
-          <div></div>
+          <div onClick={() => setIsStory(!isStory)}></div>
           <div>
             <p>스토리 생성 가능 시간</p>
             <p>15:30:30</p>
@@ -38,7 +40,7 @@ const StoryboxDetail: React.FC = () => {
           setStory={() => { setTap('story'); }} 
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
-        {tap === 'story' && <Story />}
+        {tap === 'story' && <Story isStory={isStory} isPrivate={isPrivate}/>}
         {tap === 'member' && <Member />}
         {tap === 'detail' && <Detail />}
       </MainWrap>
@@ -60,7 +62,7 @@ const FirstTop = styled.div`
   align-items: center; 
 
   >p {
-    margin : 0 150px 0 0;
+    margin : 0 100px 0 0;
     font-weight: 600;
     font-size: 24px;
   }
@@ -106,7 +108,8 @@ const MainWrap = styled.div`
 `
 
 const GoBackSvg = styled(GoBack)`
-  margin-left: 10px;
+
+  padding: 15px;
 `
 
 const ModifySvg = styled(Modify)`

@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
-import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { useNavigate } from 'react-router-dom';
+
+import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
+import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
+import { ReactComponent as SearchIcon } from '../../assets/images/search_button.svg'
 
 const StoryboxHome = () => {
   const [boxList, setBoxList] = useState(false)
@@ -50,10 +53,10 @@ const StoryboxHome = () => {
         <img src={process.env.PUBLIC_URL +"/assets/Visti-red.png"} alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
       </LogoWrap>
       <TopWrap>
-        <img src={process.env.PUBLIC_URL +"/assets/storybox-create.svg"} alt="create" onClick={()=>{navigate("/storybox/join")}}/>
+        <CreateBoxSvg onClick={()=>{navigate("/storybox/join")}}/>
         <SearchWrap>
-          <input type="text" value={search} onChange={onChange} placeholder='검색어 입력'/>
-          <img src={process.env.PUBLIC_URL + '/assets/search_button.svg'} alt="search"/>
+          <input type="text" value={search} onChange={onChange} />
+          <SearchSvg/>
         </SearchWrap>
       </TopWrap>
       {
@@ -65,7 +68,7 @@ const StoryboxHome = () => {
         <MainBoxWrap>
           <BoxWrap onClick={()=>{navigate("/storybox/detail")}}>
             <NameWrap>
-              <p>버니즈(2023.01.01 ~ 12.12)<LockSVG></LockSVG></p>
+              <p>버니즈(2023.01.01 ~ 12.12)<LockSvg></LockSvg></p>
             </NameWrap>
           </BoxWrap>
           <BoxWrap>
@@ -120,25 +123,17 @@ const TopWrap = styled.div`
 `;
 
 const SearchWrap = styled.div`
-  flex-grow: 1; 
-  width: 272px;
-  height: 20px;
+  /* flex-grow: 1;  */
+  width: 250px;
+  height: 35px;
   position: relative; 
 
   >input {
     width: 100%;
     height: 100%;
-    border-radius : 8px;
-  }
-
-  >img {
-    position: absolute; 
-    right: 5px; 
-    top: 60%; 
-    transform: translateY(-50%); 
-    width: 15px; 
-    height: 15px; 
-    cursor: pointer; 
+    background-color: #ededed;
+    border-radius : 4px;
+    border: 0px;
   }
 `;
 
@@ -151,7 +146,7 @@ const MainWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+  /* padding: 5px; */
 
 >img {
   width: 103px;
@@ -215,8 +210,23 @@ const NameWrap = styled.div`
 }
 `
 
-const LockSVG = styled(Lock)`
+const LockSvg = styled(Lock)`
   margin-left: 3px;
+`
+
+const CreateBoxSvg = styled(CreateBox)`
+  width: 28px;
+  height: 28px;
+`
+
+const SearchSvg = styled(SearchIcon)`
+  position: absolute; 
+  right: 5px; 
+  top: 55%; 
+  transform: translateY(-50%); 
+  width: 20px; 
+  height: 20px; 
+  cursor: pointer; 
 `
 
 export default StoryboxHome
