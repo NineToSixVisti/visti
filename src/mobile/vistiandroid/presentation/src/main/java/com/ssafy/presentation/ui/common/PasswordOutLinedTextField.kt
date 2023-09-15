@@ -72,7 +72,7 @@ fun PasswordOutLinedTextField(hint: String, password: String, passwordState: (St
                 keyboardType = KeyboardType.Password
             ),
             colors = outlinedTextFieldColors(
-                cursorColor = PrimaryColor,
+                cursorColor = Color(0x44E03C31),
                 focusedBorderColor = PrimaryColor, unfocusedBorderColor = Color(0xFFEEEEEE)
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None
