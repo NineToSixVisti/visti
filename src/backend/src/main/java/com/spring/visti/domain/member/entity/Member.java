@@ -112,11 +112,10 @@ public class Member extends BaseEntity{
         return true;
     }
 
-    public void expireMember(){
+    public void withdrawMember(){
         this.email = null;
         this.name = null;
         this.profilePath = null;
-        this.role = null;
         this.status = false;
     }
 }

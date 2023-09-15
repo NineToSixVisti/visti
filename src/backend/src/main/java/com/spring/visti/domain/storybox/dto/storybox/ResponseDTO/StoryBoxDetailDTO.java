@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.dto.storybox.ResponseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberExposedDTO;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import lombok.Builder;
@@ -17,7 +18,9 @@ public class StoryBoxDetailDTO {
     private MemberExposedDTO creator;
     private String detail;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime finishedAt;
 
     private Integer memberNum;
