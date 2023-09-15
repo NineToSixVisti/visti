@@ -68,3 +68,4 @@ fun NavGraphBuilder.settingsGraph(
         SubscriptionScreen(navController = navController)
     }
 }
+
