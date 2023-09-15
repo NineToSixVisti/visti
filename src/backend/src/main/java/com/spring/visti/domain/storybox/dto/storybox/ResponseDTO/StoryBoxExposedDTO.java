@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.dto.storybox.ResponseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,9 @@ public class StoryBoxExposedDTO {
     private Long id;
     private String boxImgPath;
     private String name;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime finishedAt;
     private Boolean blind;
 

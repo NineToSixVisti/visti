@@ -111,7 +111,7 @@ public class StoryController {
     }
 
     @DeleteMapping("/{storyIds}")
-    @Operation(summary = "스토리 삭제", description = "스토리를 삭제합니다.", tags={"스토리 내부"})
+    @Operation(summary = "스토리 삭제", description = "스토리를 삭제합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> deleteStory(
             @PathVariable Long storyIds
     ) {
@@ -162,7 +162,7 @@ public class StoryController {
     }
 
     @GetMapping("/mystory")
-    @Operation(summary = "내가 작성한 스토리 조회", description = "작성한 스토리를 조회합니다.", tags={"마이 페이지"})
+    @Operation(summary = "내가 작성한 스토리 조회", description = "작성한 스토리를 조회합니다.")
     public ResponseEntity<? extends BaseResponseDTO<List<StoryExposedDTO>>> readMyStories(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = perPage ) Integer size

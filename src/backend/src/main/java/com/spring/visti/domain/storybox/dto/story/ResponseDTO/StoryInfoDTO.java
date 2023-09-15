@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.dto.story.ResponseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberExposedDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.storybox.constant.StoryType;
@@ -26,7 +27,9 @@ public class StoryInfoDTO {
 
 
     private Boolean blind;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime finishedAt;
     private Boolean like;
 
