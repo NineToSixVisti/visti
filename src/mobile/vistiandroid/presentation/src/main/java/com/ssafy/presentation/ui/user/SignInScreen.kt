@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.theme.Grey
@@ -46,13 +46,13 @@ import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogInScreen(navController: NavHostController) {
-    val loginScrollState = rememberScrollState()
+fun SignInScreen(navController: NavHostController) {
+    val signInScrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(loginScrollState)
+            .verticalScroll(signInScrollState)
             .padding(20.dp),
     ) {
         Image(
@@ -66,15 +66,15 @@ fun LogInScreen(navController: NavHostController) {
             contentScale = ContentScale.FillHeight,
         )
         Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
-        var loginEmailTextFieldState by remember { mutableStateOf("") }
-        UserOutLinedTextField("이메일을 입력하세요", loginEmailTextFieldState, KeyboardType.Email) {
-            loginEmailTextFieldState = it
+        var signInEmailTextFieldState by remember { mutableStateOf("") }
+        UserOutLinedTextField("이메일을 입력하세요", signInEmailTextFieldState, KeyboardType.Email) {
+            signInEmailTextFieldState = it
         }
 
         Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
-        var loginPasswordTextFieldState by remember { mutableStateOf("") }
-        PasswordOutLinedTextField("비밀번호를 입력하세요", loginPasswordTextFieldState) {
-            loginPasswordTextFieldState = it
+        var signInPasswordTextFieldState by remember { mutableStateOf("") }
+        PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
+            signInPasswordTextFieldState = it
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +87,7 @@ fun LogInScreen(navController: NavHostController) {
                 text = "비밀번호 찾기", color = PrimaryColor, fontSize = 12.sp,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable {
-                    navController.navigate(route = LogInNav.FindPassword.route)
+                    navController.navigate(route = SignInNav.FindPassword.route)
                 }
             )
 
@@ -104,7 +104,7 @@ fun LogInScreen(navController: NavHostController) {
                     color = PrimaryColor, fontSize = 12.sp,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        navController.navigate(route = LogInNav.JoinEmail.route)
+                        navController.navigate(route = SignInNav.JoinEmail.route)
                     }
                 )
 
@@ -112,24 +112,24 @@ fun LogInScreen(navController: NavHostController) {
         }
 
         Box(modifier = Modifier.padding(15.dp))
-        LogInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
-            navController.navigate(route = LogInNav.Main.route) {
+        SignInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
+            navController.navigate(route = SignInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
             }
         }
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
-            navController.navigate(route = LogInNav.Main.route) {
+        SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
+            navController.navigate(route = SignInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
             }
         }
         Box(modifier = Modifier.padding(5.dp))
-        LogInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
-            navController.navigate(route = LogInNav.Main.route) {
+        SignInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
+            navController.navigate(route = SignInNav.Main.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
@@ -139,7 +139,7 @@ fun LogInScreen(navController: NavHostController) {
 }
 
 @Composable
-fun LogInButton(
+fun SignInButton(
     text: String,
     color: Color,
     textColor: Color,

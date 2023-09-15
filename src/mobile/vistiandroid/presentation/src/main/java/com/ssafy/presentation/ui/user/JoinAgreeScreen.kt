@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.PrimaryColor
@@ -129,7 +129,7 @@ fun JoinAgreeScreen(navController: NavHostController) {
                 .padding(vertical = 15.dp)
         )
         VistiButton("회원가입", PrimaryColor) {
-            navController.navigate(route = LogInNav.LogIn.route) {
+            navController.navigate(route = SignInNav.SignIn.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }

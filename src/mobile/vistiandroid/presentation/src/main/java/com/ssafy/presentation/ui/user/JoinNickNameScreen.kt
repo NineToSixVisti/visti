@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
@@ -28,11 +28,11 @@ import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @Composable
 fun JoinNickNameScreen(navController: NavHostController) {
-    val loginScrollState = rememberScrollState()
+    val signInScrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(loginScrollState)
+            .verticalScroll(signInScrollState)
             .padding(20.dp)
     ) {
         Text(
@@ -76,7 +76,7 @@ fun JoinNickNameScreen(navController: NavHostController) {
 
 
         VistiButton("다음", PrimaryColor) {
-            navController.navigate(route = LogInNav.JoinAgree.route)
+            navController.navigate(route = SignInNav.JoinAgree.route)
         }
         Box(modifier = Modifier.padding(5.dp))
 

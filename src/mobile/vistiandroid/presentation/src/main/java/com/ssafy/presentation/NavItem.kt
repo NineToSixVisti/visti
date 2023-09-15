@@ -6,7 +6,7 @@ import com.ssafy.presentation.NavigationRouteName.JOIN_AGREE
 import com.ssafy.presentation.NavigationRouteName.JOIN_EMAIL
 import com.ssafy.presentation.NavigationRouteName.JOIN_NICKNAME
 import com.ssafy.presentation.NavigationRouteName.JOIN_PASSWORD
-import com.ssafy.presentation.NavigationRouteName.LOGIN
+import com.ssafy.presentation.NavigationRouteName.SIGN_IN
 import com.ssafy.presentation.NavigationRouteName.MAIN
 import com.ssafy.presentation.NavigationRouteName.MAIN_HOME
 import com.ssafy.presentation.NavigationRouteName.MAIN_LIKE
@@ -28,7 +28,7 @@ object NavigationRouteName {
     const val SETTING_USER_ACCOUNT = "계정"
     const val SETTING_SUBSCRIPTION = "구독"
 
-    const val LOGIN = "로그인"
+    const val SIGN_IN = "로그인"
     const val FIND_PASSWORD = "비밀번호 찾기"
     const val JOIN_EMAIL = "회원가입 이메일"
     const val JOIN_PASSWORD = "회원가입 비밀번호"
@@ -76,19 +76,19 @@ sealed class SettingNav(
         SettingNav(SETTING_SUBSCRIPTION, SETTING_SUBSCRIPTION)
 }
 
-sealed class LogInNav(
+sealed class SignInNav(
     override val route: String,
     override val title: String
 ) : Destination {
-    object LogIn : LogInNav(LOGIN, LOGIN)
-    object Main : LogInNav(MAIN, MAIN)
-    object FindPassword : LogInNav(FIND_PASSWORD, FIND_PASSWORD)
+    object SignIn : SignInNav(SIGN_IN, SIGN_IN)
+    object Main : SignInNav(MAIN, MAIN)
+    object FindPassword : SignInNav(FIND_PASSWORD, FIND_PASSWORD)
     object JoinEmail :
-        LogInNav(JOIN_EMAIL, JOIN_EMAIL)
+        SignInNav(JOIN_EMAIL, JOIN_EMAIL)
 
     object JoinAgree :
-        LogInNav(JOIN_AGREE, JOIN_AGREE)
+        SignInNav(JOIN_AGREE, JOIN_AGREE)
 
-    object JoinPassword : LogInNav(JOIN_PASSWORD, JOIN_PASSWORD)
-    object JoinNickName : LogInNav(JOIN_NICKNAME, JOIN_NICKNAME)
+    object JoinPassword : SignInNav(JOIN_PASSWORD, JOIN_PASSWORD)
+    object JoinNickName : SignInNav(JOIN_NICKNAME, JOIN_NICKNAME)
 }
