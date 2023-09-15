@@ -77,16 +77,6 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/signout")
-    @Operation(summary = "로그 아웃", description = "버튼 클릭시 로그아웃 진행[구현 안됨]")
-    public ResponseEntity<?> signOut(){
-
-        String email = getEmail();
-
-        return ResponseEntity.status(200).body("구현이 안되어있습니다.");
-    }
-
-
     @GetMapping("/inform")
     @Operation(summary = "사용자 정보", description = "[프로필용]Access Token 을 통해 사용자의 간략한 정보를 받아옴")
     public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoDTO>> getInfo(){
@@ -119,6 +109,27 @@ public class MemberController {
         BaseResponseDTO<String> response = memberService.changePassword(email, newPW);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @PostMapping("/signout")
+    @Operation(summary = "로그아웃", description = "로그아웃을 진행합니다..")
+    public  ResponseEntity<? extends BaseResponseDTO<String>> signOut(){
+
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = memberService.signOut(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/withdraw")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.")
+    public  ResponseEntity<? extends BaseResponseDTO<String>> withdrawalUser(){
+
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = memberService.withdrawalUser(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 
     private String getEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

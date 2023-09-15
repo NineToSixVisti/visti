@@ -117,5 +117,6 @@ public class Member extends BaseEntity{
         this.name = null;
         this.profilePath = null;
         this.status = false;
+        this.refreshToken = null;
     }
 }

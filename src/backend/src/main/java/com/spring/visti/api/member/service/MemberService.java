@@ -20,7 +20,10 @@ public interface MemberService extends DefaultService {
     BaseResponseDTO<String> verifyAuthNum(AuthDTO memberInfo);
 
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);
-    BaseResponseDTO<?> signOut(HttpServletRequest request);
+    BaseResponseDTO<String> signOut(String email);
+
+    BaseResponseDTO<String> withdrawalUser(String email);
+
     BaseResponseDTO<MemberMyInfoDTO> getInfo(String email);
 
     BaseResponseDTO<String> changePassword(String email, String newPW);
