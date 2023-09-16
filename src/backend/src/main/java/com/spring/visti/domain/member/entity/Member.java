@@ -48,7 +48,7 @@ public class Member extends BaseEntity{
     private Role role;
 
     @Column
-    private Integer dailyStory;
+    private Integer dailyStoryCount;
 
     @Column
     private Integer reportedCount;
@@ -77,7 +77,7 @@ public class Member extends BaseEntity{
         this.role = role;
         this.memberType = memberType;
         this.status = true;
-        this.dailyStory = 0;
+        this.dailyStoryCount = 0;
         this.reportedCount = 0;
     }
 
@@ -91,25 +91,18 @@ public class Member extends BaseEntity{
 
     public void updateReportCount(Integer reportedCount){this.reportedCount = reportedCount;}
 
-    public boolean dailyStoryCount(){
-        Integer limit;
+    public void updateDailyStoryCount(Integer dailyStory){this.dailyStoryCount =dailyStory;}
 
+    public int dailyStoryMaximum(){
+        int limit;
         if (this.role.equals(Role.USER)){
             limit = 5;
-
-            if (this.dailyStory >= limit){
-                return false;
-            }
-
         } else if (this.role.equals(Role.SUBSCRIBER)) {
             limit = 6;
-
-            if (this.dailyStory >= limit){
-                return false;
-            }
+        }else{ // this.role.equals(Role.ADMIN)
+            limit = Integer.MAX_VALUE;
         }
-        this.dailyStory += 1;
-        return true;
+        return limit;
     }
 
     public void withdrawMember(){
