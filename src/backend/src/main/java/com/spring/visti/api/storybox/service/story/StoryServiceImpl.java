@@ -7,7 +7,6 @@ import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
-import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.StoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
@@ -17,11 +16,9 @@ import com.spring.visti.domain.storybox.repository.StoryRepository;
 
 import com.spring.visti.utils.exception.ApiException;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,9 +43,9 @@ public class StoryServiceImpl implements StoryService{
     public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
         Member member = getMember(email, memberRepository);
 
-
-        boolean canWriteStory = member.dailyStoryCount();
-        if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
+        int writtenStory = member.getDailyStoryCount();
+        int canWriteStory = member.dailyStoryMaximum();
+        if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
 
         Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(storyBuildDTO.getStoryBoxId(), member);
         if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
@@ -57,6 +54,8 @@ public class StoryServiceImpl implements StoryService{
 
         Story story = storyBuildDTO.toEntity(member, storyBox);
         storyRepository.save(story);
+
+        member.updateDailyStoryCount(writtenStory+1);
 
         return new BaseResponseDTO<>("스토리 생성이 완료되었습니다.", 200);
     }
@@ -67,6 +66,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
 
         Member member = getMember(email, memberRepository);
@@ -83,6 +83,7 @@ public class StoryServiceImpl implements StoryService{
 
 
     @Override
+    @Transactional
     public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 
@@ -100,6 +101,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
         Member member = getMember(email, memberRepository);
 
@@ -123,6 +125,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 
