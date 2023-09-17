@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.dto.storybox.ResponseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,28 +12,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxInfoDTO {
 
-    private String box_img_path;
+    private String boxImgPath;
     private String name;
     private Boolean blind;
-    private LocalDateTime create_at;
-    private LocalDateTime finish_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
+    private LocalDateTime finishedAt;
 
     @Builder
-    public StoryBoxInfoDTO(String box_img_path, String name, Boolean blind, LocalDateTime create_at, LocalDateTime finish_at){
-        this.box_img_path = box_img_path;
+    public StoryBoxInfoDTO(String boxImgPath, String name, Boolean blind, LocalDateTime createdAt, LocalDateTime finishedAt){
+        this.boxImgPath = boxImgPath;
         this.name = name;
         this.blind = blind;
-        this.create_at = create_at;
-        this.finish_at = finish_at;
+        this.createdAt = createdAt;
+        this.finishedAt = finishedAt;
     }
 
     public static StoryBoxInfoDTO toResponse(StoryBox storyBox){
         return StoryBoxInfoDTO.builder()
-                .box_img_path(storyBox.getBox_img_path())
+                .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
                 .blind(storyBox.getBlind())
-                .create_at(storyBox.getCreateAt())
-                .finish_at(storyBox.getFinish_at())
+                .createdAt(storyBox.getCreatedAt())
+                .finishedAt(storyBox.getFinishedAt())
                 .build();
     }
 }

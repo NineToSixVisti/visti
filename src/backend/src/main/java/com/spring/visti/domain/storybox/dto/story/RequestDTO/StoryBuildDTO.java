@@ -17,22 +17,21 @@ import java.time.LocalDateTime;
 public class StoryBuildDTO {
 
     private Long storyBoxId;
+    private StoryType mainFileType;
+    private String mainFilePath;
 
-    private StoryType main_file_type;
-    private String main_file_path;
-
-    private StoryType sub_file_type;
-    private String sub_file_path;
+    private StoryType subFileType;
+    private String subFilePath;
 
     @Builder
     public StoryBuildDTO(Long storyBoxId,
-                         StoryType main_file_type, String main_file_path,
-                         StoryType sub_file_type, String sub_file_path){
+                         StoryType mainFileType, String mainFilePath,
+                         StoryType subFileType, String subFilePath){
         this.storyBoxId = storyBoxId;
-        this.main_file_type = main_file_type;
-        this.main_file_path = main_file_path;
-        this.sub_file_type = sub_file_type;
-        this.sub_file_path = sub_file_path;
+        this.mainFileType = mainFileType;
+        this.mainFilePath = mainFilePath;
+        this.subFileType = subFileType;
+        this.subFilePath = subFilePath;
     }
 
     public Story toEntity(Member member, StoryBox storyBox){
@@ -40,10 +39,10 @@ public class StoryBuildDTO {
         return  Story.builder()
                 .member(member)
                 .storyBox(storyBox)
-                .main_file_type(main_file_type)
-                .main_file_path(main_file_path)
-                .sub_file_type(sub_file_type)
-                .sub_file_path(sub_file_path)
+                .mainFileType(mainFileType)
+                .mainFilePath(mainFilePath)
+                .subFileType(subFileType)
+                .subFilePath(subFilePath)
                 .build();
     }
 }

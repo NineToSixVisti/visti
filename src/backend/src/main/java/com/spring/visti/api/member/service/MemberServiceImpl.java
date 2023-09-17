@@ -170,12 +170,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public BaseResponseDTO<?> signOut(HttpServletRequest httpRequest) {
+    public BaseResponseDTO<String> signOut(String email) {
         // 토큰 탐색
-        String accessToken = tokenProvider.getHeaderToken(httpRequest, "Access");
-//        String refreshToken = tokenProvider.getHeaderToken(httpRequest, "Refresh");
-        String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
-
         log.info("===== " +email+ " 로그아웃 진행 =============");
         Member member = getMember(email, memberRepository);
 
@@ -185,7 +181,21 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(member);
         log.info("===== "+ email+ " 로그아웃 완료 =============");
         return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
+    }
 
+    @Override
+    @Transactional
+    public BaseResponseDTO<String> withdrawalUser(String email) {
+        // 토큰 탐색
+        log.info("===== " +email+ " 로그아웃 진행 =============");
+        Member member = getMember(email, memberRepository);
+        member.withdrawMember();
+
+        jwtProvideService.expireRefreshToekn(email);
+
+        memberRepository.save(member);
+        log.info("===== "+ email+ " 로그아웃 완료 =============");
+        return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
     }
 
 

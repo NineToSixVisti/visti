@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.dto.storybox.ResponseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,31 +13,33 @@ import java.time.LocalDateTime;
 public class StoryBoxExposedDTO {
 
     private Long id;
-    private String box_img_path;
+    private String boxImgPath;
     private String name;
-    private LocalDateTime created_at;
-    private LocalDateTime finished_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
+    private LocalDateTime finishedAt;
     private Boolean blind;
 
     @Builder
-    public StoryBoxExposedDTO(Long id, String box_img_path, String name,
-                              LocalDateTime created_at, LocalDateTime finished_at,
+    public StoryBoxExposedDTO(Long id, String boxImgPath, String name,
+                              LocalDateTime createdAt, LocalDateTime finishedAt,
                               Boolean blind){
         this.id = id;
-        this.box_img_path = box_img_path;
+        this.boxImgPath = boxImgPath;
         this.name = name;
-        this.created_at = created_at;
-        this.finished_at = finished_at;
+        this.createdAt = createdAt;
+        this.finishedAt = finishedAt;
         this.blind = blind;
     }
 
     public static StoryBoxExposedDTO of(StoryBox storyBox){
         return StoryBoxExposedDTO.builder()
                 .id(storyBox.getId())
-                .box_img_path(storyBox.getBox_img_path())
+                .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
-                .created_at(storyBox.getCreateAt())
-                .finished_at(storyBox.getFinish_at())
+                .createdAt(storyBox.getCreatedAt())
+                .finishedAt(storyBox.getFinishedAt())
                 .blind(storyBox.getBlind())
                 .build();
     }

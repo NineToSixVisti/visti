@@ -36,7 +36,7 @@ public class MemberController {
     private final EmailService emailService;
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입", description = "회원가입을 진행합니다", tags = {"회원 가입"})
+    @Operation(summary = "회원가입", description = "회원가입을 진행합니다")
     public ResponseEntity<? extends BaseResponseDTO<String>> signUp(
             @RequestBody MemberJoinDTO memberInfo
     ) {
@@ -46,7 +46,7 @@ public class MemberController {
 
 
     @GetMapping("/sendmail")
-    @Operation(summary = "이메일 중복확인 + 이메일[이메일 전송]", description = " 이메일 확인 후, 메일 전송을 진행합니다.. type : 1. certification [회원 가입] \n 2. find [임시 비밀번호 발급]", tags = {"이메일 전송", "회원 가입", "임시 비밀번호 발급"})
+    @Operation(summary = "이메일 중복확인 + 이메일[이메일 전송]", description = " 이메일 확인 후, 메일 전송을 진행합니다.. type : 1. certification [회원 가입] \n 2. find [임시 비밀번호 발급]")
     public ResponseEntity<? extends BaseResponseDTO<String>> sendMail(
             @RequestParam String email,
             @RequestParam String type
@@ -59,7 +59,7 @@ public class MemberController {
     }
 
     @PostMapping("/verify-authnum")
-    @Operation(summary = "이메일 인증[이메일 확인]", description = "인증코드 조회를 진행합니다.", tags = {"회원 가입"})
+    @Operation(summary = "이메일 인증[이메일 확인]", description = "인증코드 조회를 진행합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> verifyAuthNum(
             @RequestBody AuthDTO verificationCode
     ){
@@ -68,7 +68,7 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    @Operation(summary = "로그인", description = "Id, PW로 로그인 진행", tags = {"회원 가입", "메인 페이지"})
+    @Operation(summary = "로그인", description = "Id, PW로 로그인 진행")
     public ResponseEntity<? extends BaseResponseDTO<TokenDTO>> signIn(
             @RequestBody MemberLoginDTO memberInfo,
             HttpServletResponse httpResponse
@@ -77,18 +77,8 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/signout")
-    @Operation(summary = "로그 아웃", description = "버튼 클릭시 로그아웃 진행[구현 안됨]", tags = {"마이 페이지"})
-    public ResponseEntity<?> signOut(){
-
-        String email = getEmail();
-
-        return ResponseEntity.status(200).body("구현이 안되어있습니다.");
-    }
-
-
     @GetMapping("/inform")
-    @Operation(summary = "사용자 정보", description = "[프로필용]Access Token 을 통해 사용자의 간략한 정보를 받아옴", tags = {"메인 페이지"})
+    @Operation(summary = "사용자 정보", description = "[프로필용]Access Token 을 통해 사용자의 간략한 정보를 받아옴")
     public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoDTO>> getInfo(){
 
         String email = getEmail();
@@ -98,7 +88,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    @Operation(summary = "사용자 정보", description = "[마이페이지용]Access Token 을 통해 사용자의 상세한 정보를 받아옴", tags = {"마이 페이지"})
+    @Operation(summary = "사용자 정보", description = "[마이페이지용]Access Token 을 통해 사용자의 상세한 정보를 받아옴")
     public  ResponseEntity<? extends BaseResponseDTO<MemberMyInfoProfileDTO>> getMyData(){
 
         String email = getEmail();
@@ -107,8 +97,8 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/changePW")
-    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.", tags = {"마이 페이지"})
+    @PostMapping("/changepw")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.")
     public  ResponseEntity<? extends BaseResponseDTO<String>> changePassword(
             @RequestBody MemberChangePasswordDTO memberInfo
     ){
@@ -119,6 +109,27 @@ public class MemberController {
         BaseResponseDTO<String> response = memberService.changePassword(email, newPW);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @PostMapping("/signout")
+    @Operation(summary = "로그아웃", description = "로그아웃을 진행합니다..")
+    public  ResponseEntity<? extends BaseResponseDTO<String>> signOut(){
+
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = memberService.signOut(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/withdraw")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.")
+    public  ResponseEntity<? extends BaseResponseDTO<String>> withdrawalUser(){
+
+        String email = getEmail();
+
+        BaseResponseDTO<String> response = memberService.withdrawalUser(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 
     private String getEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

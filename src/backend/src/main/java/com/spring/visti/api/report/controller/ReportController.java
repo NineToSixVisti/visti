@@ -28,46 +28,46 @@ public class ReportController {
     private final ReportService reportService;
 
 
-    @PostMapping("/storyid/{storyId}")
-    @Operation(summary = "신고 진행", description = "사용자가 신고를 진행합니다.", tags={"스토리 내부"})
+    @PostMapping("/storyid/{storyIds}")
+    @Operation(summary = "신고 진행", description = "사용자가 신고를 진행합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> createReport(
-            @PathVariable Long storyId,
+            @PathVariable Long storyIds,
             @RequestBody ReportBuildDTO reportInfo
     ) {
         String email = getEmail();
 
-        BaseResponseDTO<String> response = reportService.createReport(storyId, reportInfo, email);
+        BaseResponseDTO<String> response = reportService.createReport(storyIds, reportInfo, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/reports")
-    @Operation(summary = "처리 안된 신고 리스트업", description = "처리 안된 신고들을 리스트합니다.", tags={"관리자 페이지"})
+    @Operation(summary = "처리 안된 신고 리스트업", description = "처리 안된 신고들을 리스트합니다.")
     public ResponseEntity<? extends BaseResponseDTO<List<ReportExposedDTO>>> readReports() {
         String email = getEmail();
 
         BaseResponseDTO<List<ReportExposedDTO>> response = reportService.readReports(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-    @GetMapping("/{reportId}")
-    @Operation(summary = "처리 안된 신고 조회", description = "신고를 조회합니다.", tags={"관리자 페이지"})
+    @GetMapping("/{reportIds}")
+    @Operation(summary = "처리 안된 신고 조회", description = "신고를 조회합니다.")
     public ResponseEntity<? extends BaseResponseDTO<ReportExposedDTO>> readReportDetail(
-            @PathVariable Long reportId
+            @PathVariable Long reportIds
     ) {
         String email = getEmail();
 
-        BaseResponseDTO<ReportExposedDTO> response = reportService.readReportDetail(reportId, email);
+        BaseResponseDTO<ReportExposedDTO> response = reportService.readReportDetail(reportIds, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{reportId}")
-    @Operation(summary = "신고 처리", description = "신고를 처리합니다.", tags={"관리자 페이지"})
+    @PostMapping("/{reportIds}")
+    @Operation(summary = "신고 처리", description = "신고를 처리합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> updateReport(
-            @PathVariable Long reportId,
+            @PathVariable Long reportIds,
             @RequestBody Boolean process
     ) {
         String email = getEmail();
 
-        BaseResponseDTO<String> response = reportService.updateReport(reportId, process, email);
+        BaseResponseDTO<String> response = reportService.updateReport(reportIds, process, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

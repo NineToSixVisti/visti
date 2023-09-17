@@ -1,7 +1,0 @@
-FROM openjdk:11-jre
-
-COPY ngrinder-controller-3.5.8.war /app/ngrinder-controller.war
-
-EXPOSE 8000 16001
-
-CMD ["java", "-jar", "/app/ngrinder-controller.war", "--port", "8000"]
