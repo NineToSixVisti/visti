@@ -41,16 +41,19 @@ const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void
 
   return (
     <EditorContainer>
-        <button onClick={() => {
-          setEditorVisible(!editorVisible);
-          if (editorVisible) {
+        <button 
+    id="text-toggle-button"
+    onClick={() => {
+        setEditorVisible(!editorVisible);
+        if (editorVisible) {
             onEditorClose(); 
-          } else {
+        } else {
             onEditorOpen(); 
-          }
-        }}>T</button>
+        }
+    }}
+>T</button>
         {editorVisible && (
-            <>
+            <div id="editor-tools"> {/* 이 div로 텍스트 편집 도구들을 감쌉니다. */}
                 <ColorEditor setColor={(color: string) => {
                   setColor(color);
                   dispatch(setColor(color));
@@ -69,12 +72,11 @@ const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void
                     fontSize={fontSize}
                     color={color}
                 />
-            </>
+            </div>
         )}
      
         {!editorVisible && (
             <Draggable 
-             
               onStop={(e, data) => {
                 console.log(`X: ${data.x}, Y: ${data.y}`);
                 dispatch(setPosition({ x: data.x, y: data.y }));
