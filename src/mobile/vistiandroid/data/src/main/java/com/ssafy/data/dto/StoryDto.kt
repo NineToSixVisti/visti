@@ -1,6 +1,7 @@
 package com.ssafy.data.dto
 
 import com.google.gson.annotations.SerializedName
+import com.ssafy.domain.model.Story
 
 
 data class StoryResponse(
@@ -19,7 +20,7 @@ data class StoryDto(
 )
 
 data class StoryListDto(
-    @SerializedName("content") val content: List<StoryDto> = emptyList(),
+    @SerializedName("content") val content: List<Story> = emptyList(),
     @SerializedName("pageable") val pageable: PageableDto = PageableDto(),
     @SerializedName("last") val last: Boolean = false,
     @SerializedName("totalPages") val totalPages: Int = 0,

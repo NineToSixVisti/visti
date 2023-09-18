@@ -37,10 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
+import com.ssafy.presentation.ui.like.LikeListState
 import com.ssafy.presentation.ui.profile.component.PostTabView
 import com.ssafy.presentation.ui.profile.component.ProfileSection
 import com.ssafy.presentation.ui.profile.component.SettingSection
@@ -52,7 +55,9 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
-    val state = viewModel.state.value
+    val articles = viewModel.getBreakingNews().collectAsLazyPagingItems()
+
+    val myStoryAppendState = articles.loadState.append
     val memberInformationState = viewModel.memberInformation.value
     val myStoryBoxState = viewModel.myStoryBoxes.value
 
@@ -67,16 +72,16 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
     }
 
     when {
-        state.error.isNotBlank() || memberInformationState.error.isNotBlank() || myStoryBoxState.error.isNotBlank() -> {
+         myStoryAppendState is LoadState.Error || memberInformationState.error.isNotBlank() || myStoryBoxState.error.isNotBlank() -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = state.error)
+                Text(text = "Error")
             }
         }
 
-        state.isLoading || memberInformationState.isLoading || myStoryBoxState.isLoading -> {
+         myStoryAppendState is LoadState.Loading || memberInformationState.isLoading || myStoryBoxState.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -166,7 +171,9 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         selectedTabIndex = it
                     }
                     when (selectedTabIndex) {
-                        0 -> StoryLazyVerticalGrid(state.stories)
+                        0 -> {
+                            StoryLazyVerticalGrid(articles)
+                        }
                         1 -> StoryBoxLazyColumn(myStoryBoxes.content)
                     }
                 }

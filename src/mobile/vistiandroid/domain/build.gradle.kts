@@ -52,4 +52,8 @@ dependencies {
     implementation(Dependencies.RETROFIT.RETROFIT_CONVERTER)
     implementation(Dependencies.OKHTTP.OKHTTP_CORE)
     implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
+
+    val pagingVersion = "3.1.1"
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
 }
