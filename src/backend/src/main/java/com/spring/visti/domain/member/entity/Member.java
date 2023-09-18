@@ -6,6 +6,7 @@ import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 
+import com.spring.visti.global.fcm.entity.FireBaseMessage;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,9 @@ public class Member extends BaseEntity{
 
     @OneToMany(mappedBy = "member")
     private List<Story> memberStories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<FireBaseMessage> messages = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<MemberLikeStory> memberLikedStories = new ArrayList<>();
