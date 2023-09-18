@@ -48,9 +48,9 @@ public class StoryServiceImpl implements StoryService{
     public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile) {
         Member member = getMember(email, memberRepository);
 
-
-        boolean canWriteStory = member.dailyStoryCount();
-        if (!canWriteStory){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
+        int writtenStory = member.getDailyStoryCount();
+        int canWriteStory = member.dailyStoryMaximum();
+        if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
 
         Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(storyBuildDTO.getStoryBoxId(), member);
         if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
@@ -70,6 +70,8 @@ public class StoryServiceImpl implements StoryService{
         Story story = storyBuildDTO.toEntity(member, storyBox,imageUrl);
         storyRepository.save(story);
 
+        member.updateDailyStoryCount(writtenStory+1);
+
         return new BaseResponseDTO<>("스토리 생성이 완료되었습니다.", 200);
     }
 
@@ -79,6 +81,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
 
         Member member = getMember(email, memberRepository);
@@ -95,6 +98,7 @@ public class StoryServiceImpl implements StoryService{
 
 
     @Override
+    @Transactional
     public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 
@@ -112,6 +116,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
         Member member = getMember(email, memberRepository);
 
@@ -135,6 +140,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 

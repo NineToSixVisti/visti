@@ -47,7 +47,7 @@ public class MemberMyInfoDTO {
                 .profilePath(member.getProfilePath())
                 .role(member.getRole())
                 .memberType(member.getMemberType())
-                .dailyStory(member.getDailyStory())
+                .dailyStory(member.getDailyStoryCount())
                 .stories(member.getMemberStories().size())
                 .status(member.getStatus())
                 .build();

@@ -44,7 +44,6 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 public class StoryBoxServiceImpl implements StoryBoxService {
 
     private final MemberRepository memberRepository;
-    private final MemberLikeStoryRepository memberLikeStoryRepository;
     private final StoryBoxMemberRepository storyBoxMemberRepository;
     private final StoryBoxRepository storyBoxRepository;
     private final StoryRepository storyRePository;
@@ -52,6 +51,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final UrlExpiryService urlExpiryService;
     private final S3UploadService s3UploadService;
 
+    private final MemberLikeStoryRepository memberLikeStoryRepository;
     @Override
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile){
@@ -127,6 +127,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
         Member member = getMember(email, memberRepository);
@@ -249,6 +250,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -259,6 +261,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> generateStoryBoxLink(Long id, String email) {
         Member member = getMember(email, memberRepository);
 
@@ -291,6 +294,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> validateStoryBoxLink(String token, String email) {
         Optional<StoryBox> _storyBox = storyBoxRepository.findByToken(token);
 
@@ -321,6 +325,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
         Member member = getMember(email, memberRepository);
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
