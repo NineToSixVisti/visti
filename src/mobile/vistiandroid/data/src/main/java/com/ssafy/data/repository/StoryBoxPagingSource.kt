@@ -3,19 +3,19 @@ package com.ssafy.data.repository
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ssafy.data.remote.VistiApi
-import com.ssafy.domain.model.Story
+import com.ssafy.domain.model.StoryBox
 
-class StoryPagingSource (
+class StoryBoxPagingSource (
     private val api: VistiApi,
-    ): PagingSource<Int, Story>() {
-        override fun getRefreshKey(state: PagingState<Int, Story>): Int? {
+    ): PagingSource<Int, StoryBox>() {
+        override fun getRefreshKey(state: PagingState<Int, StoryBox>): Int? {
             return 0
         }
 
-        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Story> {
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StoryBox> {
             return try {
                 val page = params.key ?: 0
-                val response = api.getMyStories(page = page, 24)
+                val response = api.getMyStoryBoxes(page = page, 10)
 
                 LoadResult.Page(
                     data = response.detail.content,

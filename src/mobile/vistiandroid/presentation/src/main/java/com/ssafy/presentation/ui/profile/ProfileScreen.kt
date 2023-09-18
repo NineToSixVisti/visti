@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +44,6 @@ import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
-import com.ssafy.presentation.ui.like.LikeListState
 import com.ssafy.presentation.ui.profile.component.PostTabView
 import com.ssafy.presentation.ui.profile.component.ProfileSection
 import com.ssafy.presentation.ui.profile.component.SettingSection
@@ -55,14 +55,15 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
-    val articles = viewModel.getBreakingNews().collectAsLazyPagingItems()
+    val myStories = viewModel.stories.collectAsLazyPagingItems()
+    val myStoryBoxes = viewModel.myStoryBoxes.collectAsLazyPagingItems()
 
-    val myStoryAppendState = articles.loadState.append
+    val myStoryAppendState = myStories.loadState.append
+    val myStoryBoxAppendState = myStoryBoxes.loadState.append
     val memberInformationState = viewModel.memberInformation.value
-    val myStoryBoxState = viewModel.myStoryBoxes.value
 
     val memberInformation = memberInformationState.memberInformation
-    val myStoryBoxes = myStoryBoxState.boxes
+
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -71,8 +72,13 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
         mutableIntStateOf(0)
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.initializeData()
+    }
+
     when {
-         myStoryAppendState is LoadState.Error || memberInformationState.error.isNotBlank() || myStoryBoxState.error.isNotBlank() -> {
+         myStoryAppendState is LoadState.Error
+                 || myStoryBoxAppendState is LoadState.Error -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -81,7 +87,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
             }
         }
 
-         myStoryAppendState is LoadState.Loading || memberInformationState.isLoading || myStoryBoxState.isLoading -> {
+         myStoryAppendState is LoadState.Loading || myStoryBoxAppendState is LoadState.Loading || memberInformationState.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -172,9 +178,9 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                     }
                     when (selectedTabIndex) {
                         0 -> {
-                            StoryLazyVerticalGrid(articles)
+                            StoryLazyVerticalGrid(myStories)
                         }
-                        1 -> StoryBoxLazyColumn(myStoryBoxes.content)
+                        1 -> StoryBoxLazyColumn(myStoryBoxes)
                     }
                 }
 

@@ -23,55 +23,30 @@ import com.ssafy.presentation.ui.theme.White
 @Composable
 fun InformationScreen(
     navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
-
-    when {
-        state.error.isNotBlank() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = state.error)
+    Scaffold(
+        topBar = {
+            BackToolbar(text = "정보") {
+                navController.popBackStack()
             }
         }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
 
-        state.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+            val colorState = if (isSystemInDarkTheme()) {
+                White
+            } else {
+                Black
             }
-        }
 
-        else -> {
-            Scaffold(
-                topBar = {
-                    BackToolbar(text = "정보") {
-                        navController.popBackStack()
-                    }
-                }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                ) {
+            DetailSettingButton("개인정보처리방침", colorState) {
 
-                    val colorState = if (isSystemInDarkTheme()) {
-                        White
-                    } else {
-                        Black
-                    }
+            }
+            DetailSettingButton("오픈소스 라이브러리", colorState) {
 
-                    DetailSettingButton("개인정보처리방침", colorState) {
-
-                    }
-                    DetailSettingButton("오픈소스 라이브러리", colorState) {
-
-                    }
-                }
             }
         }
     }

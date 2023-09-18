@@ -2,6 +2,7 @@ package com.ssafy.data.dto
 
 import com.google.gson.annotations.SerializedName
 import com.ssafy.domain.model.Story
+import com.ssafy.domain.model.StoryBoxList
 
 
 data class StoryResponse(
@@ -34,7 +35,7 @@ data class StoryListDto(
 )
 
 data class StoryBoxResponse(
-    val message: String, val status : String, val detail : StoryBoxListDto
+    val message: String, val status : String, val detail : StoryBoxList
 )
 
 data class StoryBoxDto(
