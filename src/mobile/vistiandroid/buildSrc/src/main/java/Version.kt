@@ -76,4 +76,6 @@ object Dependencies {
     const val TOOLBAR = "me.onebone:toolbar-compose:2.3.5"
 
     const val LOTTIE = "com.airbnb.android:lottie-compose:${Versions.ROTTIE_VERISON}"
+
+    const val DATASTORE = "androidx.datastore:datastore-preferences:1.0.0"
 }

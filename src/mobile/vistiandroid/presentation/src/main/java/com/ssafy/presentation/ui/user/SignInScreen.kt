@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.user
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,9 +38,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
@@ -46,8 +49,17 @@ import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignInScreen(
+    navController: NavHostController,
+    signInViewModel: SignInViewModel = hiltViewModel()
+) {
     val signInScrollState = rememberScrollState()
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    var signInEmailTextFieldState by remember { mutableStateOf("") }
+    var signInPasswordTextFieldState by remember { mutableStateOf("") }
+    val state = signInViewModel.userToken.value
 
     Column(
         modifier = Modifier
@@ -66,13 +78,13 @@ fun SignInScreen(navController: NavHostController) {
             contentScale = ContentScale.FillHeight,
         )
         Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
-        var signInEmailTextFieldState by remember { mutableStateOf("") }
+
         UserOutLinedTextField("이메일을 입력하세요", signInEmailTextFieldState, KeyboardType.Email) {
             signInEmailTextFieldState = it
         }
 
         Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
-        var signInPasswordTextFieldState by remember { mutableStateOf("") }
+
         PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
             signInPasswordTextFieldState = it
         }
@@ -107,17 +119,11 @@ fun SignInScreen(navController: NavHostController) {
                         navController.navigate(route = SignInNav.JoinEmail.route)
                     }
                 )
-
             }
         }
-
         Box(modifier = Modifier.padding(15.dp))
         SignInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
-            navController.navigate(route = SignInNav.Main.route) {
-                popUpTo(navController.graph.id) {
-                    inclusive = true
-                }
-            }
+            signInViewModel.signIn(signInEmailTextFieldState, signInPasswordTextFieldState)
         }
         Box(modifier = Modifier.padding(5.dp))
         SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
@@ -136,7 +142,9 @@ fun SignInScreen(navController: NavHostController) {
             }
         }
     }
+
 }
+
 
 @Composable
 fun SignInButton(

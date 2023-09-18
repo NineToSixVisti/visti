@@ -98,5 +98,8 @@ dependencies {
     implementation(Dependencies.LOTTIE)
 
     //시스템 화면 접근
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+
+    //datastore
+    implementation(Dependencies.DATASTORE)
 }
