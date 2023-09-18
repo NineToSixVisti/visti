@@ -6,23 +6,31 @@ import { RootState } from '../../store';
 import CreateImageComponent from './CreateImageButton';
 import NewStoryBar from './NewStoryBar';
 
-const StoryCreatorWrap = styled.div`
+const MainContainer = styled.div`
   width: 100%;
   height: 100%;
-  overflow-x:hidden;
-  overflow-y:hidden;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+`;
+
+const StoryCreatorWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;     
+  height: 100vh;
+  background-color: #f4f4f4;
 `;
 
 const ImageContainer = styled.div`
-position: relative;
-width: 100%;
-height: 500px;
-background-size: contain; 
-background-repeat: no-repeat;
-background-position: center;
-background-color: #f4f4f4; 
-background-image: ${({ backgroundImage }: { backgroundImage: string }) => `url(${backgroundImage})`};
-
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  margin-top: 5vh; 
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: ${({ backgroundImage }: { backgroundImage: string }) => `url(${backgroundImage})`};
 `;
 
 const TextEditorStyle = styled.div`
@@ -55,19 +63,20 @@ function StoryCreator() {
     };
 
     return (
-      <StoryCreatorWrap>
+      <MainContainer>
         <NewStoryBar />
-        <ImageContainer id="image-container" backgroundImage={selectedImage || 'defaultImageUrl'}>
-        
-          <TextEditorStyle>
-          <TextEditor onEditorOpen={handleEditorOpen} onEditorClose={handleEditorClose} />
-          </TextEditorStyle>
-          <CreateImageComponentStyle>
-    
-          </CreateImageComponentStyle>
-        </ImageContainer>
-        <CreateImageComponent />
-      </StoryCreatorWrap>
+        <StoryCreatorWrap>
+          <ImageContainer id="image-container" backgroundImage={selectedImage || 'defaultImageUrl'}>
+            <TextEditorStyle>
+              <TextEditor onEditorOpen={handleEditorOpen} onEditorClose={handleEditorClose} />
+            </TextEditorStyle>
+            <CreateImageComponentStyle>
+              {/* ... */}
+            </CreateImageComponentStyle>
+          </ImageContainer>
+          <CreateImageComponent />
+        </StoryCreatorWrap>
+      </MainContainer>
     );
 }
 

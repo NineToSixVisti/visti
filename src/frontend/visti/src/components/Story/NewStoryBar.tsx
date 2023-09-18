@@ -10,6 +10,7 @@ const CenteredDiv = styled.div`
     height: 100%;
     padding: 0 1rem;  
     position: relative;
+    zIndex: 1;
 `;
 
 const StyledBackIcon = styled(BackIcon)`

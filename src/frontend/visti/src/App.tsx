@@ -3,9 +3,18 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 import {store} from './store';
 import routes from './router';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  body, html {
+    overflow: hidden;
+  }
+`;
 
 function App() {
   return (
+    <>
+    <GlobalStyle />
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
@@ -17,6 +26,7 @@ function App() {
         </BrowserRouter>
       </div>
     </Provider>
+  </>
   );
 }
 
