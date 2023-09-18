@@ -2,6 +2,7 @@ package com.spring.visti.domain.storybox.dto.storybox.ResponseDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.visti.domain.storybox.entity.StoryBox;
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 public class StoryBoxExposedDTO {
 
     private Long id;
+    private String encryptedId;
+
     private String boxImgPath;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
@@ -22,10 +25,12 @@ public class StoryBoxExposedDTO {
     private Boolean blind;
 
     @Builder
-    public StoryBoxExposedDTO(Long id, String boxImgPath, String name,
+    public StoryBoxExposedDTO(Long id, String encryptedId,
+                              String boxImgPath, String name,
                               LocalDateTime createdAt, LocalDateTime finishedAt,
                               Boolean blind){
         this.id = id;
+        this.encryptedId = encryptedId;
         this.boxImgPath = boxImgPath;
         this.name = name;
         this.createdAt = createdAt;
@@ -34,8 +39,12 @@ public class StoryBoxExposedDTO {
     }
 
     public static StoryBoxExposedDTO of(StoryBox storyBox){
+        String encryptedId = SecurePathUtil.encryptAndEncode(String.valueOf(storyBox.getId()));
+        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
+        System.out.println("이거를 확인해주세요" + isDecrypted);
         return StoryBoxExposedDTO.builder()
                 .id(storyBox.getId())
+                .encryptedId(encryptedId)
                 .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
                 .createdAt(storyBox.getCreatedAt())
