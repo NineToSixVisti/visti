@@ -63,8 +63,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         Member member = getMember(email, memberRepository);
 
-
-
         // S3 파일 저장
         String postCategory = "storybox";
         String imageUrl;
@@ -87,10 +85,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<>("스토리-박스 생성이 완료되었습니다.", 200);
     }
 
-    @Override
-    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, String email) {
-        return null;
-    }
 
     @Override
     @Transactional
@@ -180,6 +174,15 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<Page<StoryBoxExposedDTO>>(
                 pageable.getPageNumber() +" 페이지의 내가 들어간 스토리-박스 조회가 완료되었습니다.",
                 200, myStoryBoxes);
+    }
+
+    @Override
+    public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String Keyword) {
+        Member member = getMember(email, memberRepository);
+//        Page<StoryBox> storyBoxes = storyBoxRepository.findByNameContaining(pageable, keyword);
+
+
+        return null;
     }
 
 

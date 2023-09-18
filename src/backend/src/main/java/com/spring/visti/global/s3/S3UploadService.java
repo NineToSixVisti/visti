@@ -1,5 +1,6 @@
 package com.spring.visti.global.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -87,5 +88,17 @@ public class S3UploadService{
         }
         return Optional.empty();
     }
+
+    //S3이미지 삭제
+
+    public void deleteS3File(String fileName) throws IOException{
+        try{
+            amazonS3Client.deleteObject(bucket, fileName);
+        }catch (SdkClientException e){
+            throw new IOException("Error Delete S3 file", e);
+        }
+    }
+
+
 }
 

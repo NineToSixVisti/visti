@@ -18,12 +18,15 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.spring.visti.utils.exception.ErrorCode.NOT_VALID_TYPE4SEND_MAIL;
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
@@ -113,12 +116,12 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/changeprofile")
+    @PostMapping(value = "/changeprofile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "회원정보 변경", description = "회원의 이메일, 닉네임, 프로필 사진을 변경합니다")
     public  ResponseEntity<? extends BaseResponseDTO<String>> changeprofile(
             @RequestPart("memberInfo") MemberChangeProfileDTO memberInfo,
-            @RequestPart("file") MultipartFile multipartFile
-            ){
+            @RequestPart(value = "file", required = false) MultipartFile multipartFile
+            ) throws IOException {
 
         String email = getEmail();
 

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 public interface MemberService extends DefaultService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
 
@@ -28,5 +30,5 @@ public interface MemberService extends DefaultService {
 
     BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email);
 
-    BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile file);
+    BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile file) throws IOException;
 }

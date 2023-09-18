@@ -5,6 +5,7 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -12,19 +13,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxBuildDTO {
 
-    private String boxImgPath;
+//    private String boxImgPath;
     private String name;
     private String detail;
     private Boolean blind;
     private LocalDateTime finishedAt;
 
     @Builder
-    public StoryBoxBuildDTO(String boxImgPath, String name, String detail, Boolean blind, LocalDateTime finishedAt){
-        this.boxImgPath = boxImgPath;
+    public StoryBoxBuildDTO(String name, String detail, Boolean blind, LocalDateTime finishedAt){
+//        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
         this.blind = blind;
         this.finishedAt = finishedAt;
+
     }
 
     public StoryBox toEntity(Member member, String boxImgPath){

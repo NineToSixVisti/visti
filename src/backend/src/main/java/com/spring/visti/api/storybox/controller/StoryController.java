@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.data.domain.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,11 +34,11 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 public class StoryController {
     private final StoryService storyService;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "스토리 만들기", description = "스토리를 만듭니다. 스토리 작성 수 | 해당 스토리박스의 일원이 아닐경우 에러가 발생합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> createStory(
             @RequestPart("storyInfo") StoryBuildDTO storyInfo,
-            @RequestPart("file")MultipartFile file
+            @RequestPart(value = "file", required = false)MultipartFile file
             ) {
         String email = getEmail();
         BaseResponseDTO<String> response = storyService.createStory(storyInfo, email, file);

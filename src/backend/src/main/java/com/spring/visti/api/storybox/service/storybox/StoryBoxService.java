@@ -17,8 +17,6 @@ public interface StoryBoxService extends DefaultService {
     @Transactional
     BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile);
 
-    BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, String email);
-
     BaseResponseDTO<String> enterStoryBox(Long id, String email);
 
     BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email);
@@ -28,6 +26,8 @@ public interface StoryBoxService extends DefaultService {
     BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email);
 
     BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email);
+
+    BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword);
 
     BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email);
 
@@ -42,7 +42,6 @@ public interface StoryBoxService extends DefaultService {
     BaseResponseDTO<String> validateStoryBoxLink(String token, String email);
 
     BaseResponseDTO<String> leaveStoryBox(Long id, String email);
-
 
 
 }
