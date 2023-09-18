@@ -1,6 +1,6 @@
 package com.spring.visti.global.redis.service;
 
-import com.spring.visti.utils.urlshortener.Base62Util;
+import com.spring.visti.utils.urlutils.Base62Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
