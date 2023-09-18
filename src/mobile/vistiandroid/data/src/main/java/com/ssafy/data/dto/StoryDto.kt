@@ -6,7 +6,7 @@ import com.ssafy.domain.model.StoryBoxList
 
 
 data class StoryResponse(
-    val message: String, val status : String, val detail : StoryListDto
+    val message: String, val statusCode : String, val detail : StoryListDto
 )
 
 data class StoryDto(

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.Story
@@ -44,7 +43,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getMyStories() {
         viewModelScope.launch {
-            repository.getMyStories(24).cachedIn(viewModelScope).collect { pagingData ->
+            repository.getMyStories(3).collect { pagingData ->
                 _myStories.value = pagingData
             }
         }
@@ -52,7 +51,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getMyStoryBoxes() {
         viewModelScope.launch {
-            repository.getMyStoryBoxes(10).cachedIn(viewModelScope).collect { pagingData ->
+            repository.getMyStoryBoxes(10).collect { pagingData ->
                 _myStoryBoxes.value = pagingData
             }
         }

@@ -44,7 +44,7 @@ fun SortTypeRadioGroup(viewModel: LikeListViewModel = hiltViewModel()) {
         mutableStateOf(LikeSortType.DOWN)
     }
     val onSelectionChange = { type: LikeSortType ->
-        viewModel.getLikedStories(type)
+//        viewModel.getLikedStories(type)
         selectedSortOption = type
     }
 

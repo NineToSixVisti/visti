@@ -1,5 +1,7 @@
 package com.ssafy.presentation.ui.like
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +15,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.presentation.ui.like.component.LikeLazyVerticalGrid
 import com.ssafy.presentation.ui.like.component.ToolbarWithLikeList
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.Date
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
-    val state = viewModel.state.value
+    val likedStories = viewModel.likedStories.collectAsLazyPagingItems()
+    val likedStoryAppendState = likedStories.loadState.append
 
     Scaffold(
         topBar = {
@@ -35,16 +42,16 @@ fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
         ) {
             
             when {
-                state.error.isNotBlank() -> {
+                likedStoryAppendState is LoadState.Error -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = state.error)
+                        Text(text = likedStoryAppendState.error.toString())
                     }
                 }
 
-                state.isLoading -> {
+                likedStoryAppendState is LoadState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -54,13 +61,13 @@ fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
                 }
 
                 else -> {
-                    val grouped = state.stories.groupBy { story ->
+                    val grouped = likedStories.itemSnapshotList.groupBy { story ->
                         val createdAtDate =
                             SimpleDateFormat(
                                 "yyyy-MM-dd HH:mm:ss",
                                 Locale.getDefault()
                             ).parse(
-                                story.createdAt
+                                story?.createdAt ?: LocalDateTime.now().toString()
                             )
                         val formattedCreatedAt = if (createdAtDate != null) {
                             SimpleDateFormat("yyyy년 MM월", Locale.getDefault()).format(createdAtDate)

@@ -5,25 +5,38 @@ import androidx.paging.PagingState
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.domain.model.Story
 
-class StoryPagingSource (
+class StoryPagingSource(
     private val api: VistiApi,
-    ): PagingSource<Int, Story>() {
-        override fun getRefreshKey(state: PagingState<Int, Story>): Int? {
-            return 0
+    private val size: Int,
+) : PagingSource<Int, Story>() {
+
+    override fun getRefreshKey(state: PagingState<Int, Story>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
+    }
 
-        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Story> {
-            return try {
-                val page = params.key ?: 0
-                val response = api.getMyStories(page = page, 24)
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Story> {
+        return try {
+            val page = params.key ?: 0
+            val response = api.getMyStories(page = page, size)
 
+            if(response.statusCode == "200") {
                 LoadResult.Page(
                     data = response.detail.content,
                     prevKey = null,
                     nextKey = if (response.detail.last) null else page.plus(1),
                 )
-            } catch (e: Exception) {
-                LoadResult.Error(e)
+            } else {
+                LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = null,
+                    nextKey = null,
+                )
             }
+        } catch (e: Exception) {
+            LoadResult.Error(e)
         }
+    }
 }

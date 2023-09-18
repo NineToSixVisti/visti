@@ -15,7 +15,7 @@ import com.ssafy.domain.model.Story
 import com.ssafy.presentation.ui.common.StoryItem
 
 @Composable
-fun LikeLazyVerticalGrid(grouped: Map<String, List<Story>>) {
+fun LikeLazyVerticalGrid(grouped: Map<String, List<Story?>>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3)
     ) {
@@ -33,7 +33,9 @@ fun LikeLazyVerticalGrid(grouped: Map<String, List<Story>>) {
             }
 
             this.items(images) { image ->
-                StoryItem(image)
+                if (image != null) {
+                    StoryItem(image)
+                }
             }
         }
     }

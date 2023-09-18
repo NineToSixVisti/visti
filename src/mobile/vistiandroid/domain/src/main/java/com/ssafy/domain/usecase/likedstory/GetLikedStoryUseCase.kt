@@ -14,21 +14,21 @@ class GetLikedStoryUseCase @Inject constructor(
     private val repository: LikedStoryRepository
 ) {
     operator fun invoke(sortType: LikeSortType): Flow<Resource<StoryList>> = flow {
-        try {
-            emit(Resource.Loading<StoryList>())
-            val likeSortType = when (sortType) {
-                LikeSortType.DOWN -> "descend"
-                LikeSortType.UP -> "ascend"
-                LikeSortType.RANDOM -> "shuffle"
-            }
-            val myStoryResponse = repository.getLikedStories(0, 21, likeSortType)
-            emit(Resource.Success<StoryList>(myStoryResponse))
-        } catch (e: HttpException) {
-            emit(Resource.Error("${e.localizedMessage} HTTP Error"))
-        } catch (e: IOException) {
-            emit(Resource.Error("${e.localizedMessage} IO Error"))
-        } catch (e: Exception) {
-            emit(Resource.Error("${e.localizedMessage} Unknown Error"))
-        }
+//        try {
+//            emit(Resource.Loading<StoryList>())
+//            val likeSortType = when (sortType) {
+//                LikeSortType.DOWN -> "descend"
+//                LikeSortType.UP -> "ascend"
+//                LikeSortType.RANDOM -> "shuffle"
+//            }
+//            val myStoryResponse = repository.getLikedStories(0, 21, likeSortType)
+//            emit(Resource.Success<StoryList>(myStoryResponse))
+//        } catch (e: HttpException) {
+//            emit(Resource.Error("${e.localizedMessage} HTTP Error"))
+//        } catch (e: IOException) {
+//            emit(Resource.Error("${e.localizedMessage} IO Error"))
+//        } catch (e: Exception) {
+//            emit(Resource.Error("${e.localizedMessage} Unknown Error"))
+//        }
     }
 }

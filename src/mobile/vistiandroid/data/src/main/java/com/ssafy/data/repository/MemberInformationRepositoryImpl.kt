@@ -25,7 +25,7 @@ class MemberInformationRepositoryImpl @Inject constructor(
                 pageSize = size,
             ),
             pagingSourceFactory = {
-                StoryBoxPagingSource(api)
+                StoryBoxPagingSource(api, size)
             }
         ).flow
     }
@@ -36,7 +36,7 @@ class MemberInformationRepositoryImpl @Inject constructor(
                 pageSize = size,
             ),
             pagingSourceFactory = {
-                StoryPagingSource(api)
+                StoryPagingSource(api, size)
             }
         ).flow
     }
