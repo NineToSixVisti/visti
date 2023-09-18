@@ -18,6 +18,7 @@ import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.global.redis.service.UrlExpiryService;
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +27,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -47,10 +50,11 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final StoryRepository storyRePository;
 
     private final UrlExpiryService urlExpiryService;
+    private final S3UploadService s3UploadService;
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email){
+    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile){
 
         String storyBoxName = storyBoxBuildDTO.getName();
         if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
@@ -59,7 +63,20 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         Member member = getMember(email, memberRepository);
 
-        StoryBox storyBox = storyBoxBuildDTO.toEntity(member);
+
+
+        // S3 파일 저장
+        String postCategory = "storybox";
+        String imageUrl;
+
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        StoryBox storyBox = storyBoxBuildDTO.toEntity(member, imageUrl);
+
 
         storyBoxRepository.save(storyBox);
 
@@ -68,6 +85,11 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         storyBoxMemberRepository.save(newStoryBoxMember);
 
         return new BaseResponseDTO<>("스토리-박스 생성이 완료되었습니다.", 200);
+    }
+
+    @Override
+    public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, String email) {
+        return null;
     }
 
     @Override

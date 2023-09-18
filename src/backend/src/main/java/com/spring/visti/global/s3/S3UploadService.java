@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -37,9 +38,10 @@ public class S3UploadService{
 
     // S3에 파일 저장
     private String pathUpload(File uploadFile, String postCategory) {
-        String fileName = postCategory + "/" + uploadFile.getName();
+        //같은 이름으로 들어오면 저장이 안되므로 UUID 생성
+        String originName = UUID.randomUUID() + "-" + uploadFile.getName();
+        String fileName = postCategory + "/" + originName;
         String uploadImagePath = putS3(uploadFile, fileName);
-
         // 로컬 생성된 File 삭제 (File 로 전환하며 생성된 파일)
         removeNewFile(uploadFile);
 
@@ -51,7 +53,8 @@ public class S3UploadService{
         amazonS3Client.putObject(
                 // bucket 명, 고유 키 (file 이름), File 을 넣어서 요청 객체 만들기
                 new PutObjectRequest(bucket, fileName, uploadFile)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
+//                        .withCannedAcl(CannedAccessControlList.PublicRead) acl 사용 비권장하므로 IAM만 사용
+
         );
 
         // bucket 이름과, 고유 키를 통해 Url 을 불러오기
@@ -75,14 +78,14 @@ public class S3UploadService{
             if (converFile.createNewFile()) {
                 // 내부 내용 작성
                 try (FileOutputStream fos = new FileOutputStream(converFile)) {
-
                     fos.write(file.getBytes());
                 }
                 return Optional.of(converFile);
             }
         } catch (IOException e) {
-
+            log.error("error", e);
         }
         return Optional.empty();
     }
 }
+

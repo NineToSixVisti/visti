@@ -27,7 +27,7 @@ public class StoryBoxBuildDTO {
         this.finishedAt = finishedAt;
     }
 
-    public StoryBox toEntity(Member member){
+    public StoryBox toEntity(Member member, String boxImgPath){
 
         return  StoryBox.builder()
                 .creator(member)

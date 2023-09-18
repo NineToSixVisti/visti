@@ -13,11 +13,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -31,14 +33,15 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 @Tag(name = "Story Box 컨트롤러", description = "Story Box Controller API Document")
 public class StoryBoxController {
     private final StoryBoxService storyBoxService;
+    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 페이지"})
 
-    @PostMapping("/create")
-    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> createStoryBox(
-            @RequestBody StoryBoxBuildDTO storyBoxInfo
-    ) {
+            @RequestPart(value = "storyBoxInfo") StoryBoxBuildDTO storyBoxInfo,
+            @RequestPart(value = "file", required = false) MultipartFile multipartFile
+            ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.createStoryBox(storyBoxInfo, email);
+        BaseResponseDTO<String> response = storyBoxService.createStoryBox(storyBoxInfo, email, multipartFile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

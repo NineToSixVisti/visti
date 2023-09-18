@@ -55,7 +55,7 @@ cloud.aws.region.static=ap-northeast-2
 cloud.aws.stack.auto-=false
 cloud.aws.credentials.accessKey={ACCESS_KEY}
 cloud.aws.credentials.secretKey={SECRET_KEY}
-cloud.aws.s3.bucket=visti-s3
+cloud.aws.s3.bucket=visiti-s3
 ```
 
 ## 2. application-oauth.properties

@@ -3,15 +3,13 @@ package com.spring.visti.api.member.service;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.*;
 
-import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.global.redis.service.JwtProvideService;
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.jwt.dto.TokenDTO;
@@ -30,7 +28,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -51,6 +51,7 @@ public class MemberServiceImpl implements MemberService{
     private final JwtProvideService jwtProvideService;
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final S3UploadService s3UploadService;
     @Override
     @Transactional
     public BaseResponseDTO<String> signUp(MemberJoinDTO memberJoinDTO)
@@ -236,6 +237,36 @@ public class MemberServiceImpl implements MemberService{
         log.info("Member info: " + member);
 
         return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
+    }
+
+    @Override
+    public BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile multipartFile) {
+        Member member = getMember(email, memberRepository);
+        String newEmail = memberChangeProfileDTO.getNewEmail();
+        String nickname = memberChangeProfileDTO.getNickname();
+        if (!isValidEmail(newEmail)) {
+            throw new ApiException(INVALID_EMAIL_FORMAT);
+        }
+
+        // S3 파일 저장
+        String postCategory = "profile";
+        String imageUrl;
+        // 수정하면 이전에 있던 파일 없애야 함.
+
+        //기존 이미지 파일 삭제
+        String OriginProfilePath = member.getProfilePath();
+
+
+
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+        member.updateProfile(newEmail, nickname, imageUrl);
+        memberRepository.save(member);
+        return new BaseResponseDTO<>("회원정보 변경이 완료되었습니다.", 200);
+
     }
 
 

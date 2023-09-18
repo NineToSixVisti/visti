@@ -88,7 +88,11 @@ public class Member extends BaseEntity{
     public void updatePassword(String password){
         this.password = password;
     }
-
+    public void updateProfile(String email, String nickname, String profilePath){
+        this.email = email;
+        this.nickname = nickname;
+        this.profilePath = profilePath;
+    }
     public void updateReportCount(Integer reportedCount){this.reportedCount = reportedCount;}
 
     public boolean dailyStoryCount(){

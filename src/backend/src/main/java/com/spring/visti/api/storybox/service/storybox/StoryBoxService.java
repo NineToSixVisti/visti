@@ -8,10 +8,15 @@ import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface StoryBoxService extends DefaultService {
+    @Transactional
+    BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile);
+
     BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, String email);
 
     BaseResponseDTO<String> enterStoryBox(Long id, String email);
@@ -37,5 +42,7 @@ public interface StoryBoxService extends DefaultService {
     BaseResponseDTO<String> validateStoryBoxLink(String token, String email);
 
     BaseResponseDTO<String> leaveStoryBox(Long id, String email);
+
+
 
 }

@@ -7,7 +7,6 @@ import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
-import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.StoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
@@ -15,17 +14,18 @@ import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
@@ -40,10 +40,12 @@ public class StoryServiceImpl implements StoryService{
     private final StoryRepository storyRepository;
     private final StoryBoxRepository storyBoxRepository;
     private final StoryBoxMemberRepository storyBoxMemberRepository;
+    private final S3UploadService s3UploadService;
+
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
+    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile) {
         Member member = getMember(email, memberRepository);
 
 
@@ -55,7 +57,17 @@ public class StoryServiceImpl implements StoryService{
 
         StoryBox storyBox = getStoryBox(storyBuildDTO.getStoryBoxId(), storyBoxRepository);
 
-        Story story = storyBuildDTO.toEntity(member, storyBox);
+        // S3 파일 저장
+        String postCategory = "story";
+        String imageUrl;
+
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        Story story = storyBuildDTO.toEntity(member, storyBox,imageUrl);
         storyRepository.save(story);
 
         return new BaseResponseDTO<>("스토리 생성이 완료되었습니다.", 200);

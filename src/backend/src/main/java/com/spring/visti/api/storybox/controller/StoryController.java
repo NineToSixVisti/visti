@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,10 +36,11 @@ public class StoryController {
     @PostMapping("/create")
     @Operation(summary = "스토리 만들기", description = "스토리를 만듭니다. 스토리 작성 수 | 해당 스토리박스의 일원이 아닐경우 에러가 발생합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> createStory(
-            @RequestBody StoryBuildDTO storyInfo
-    ) {
+            @RequestPart("storyInfo") StoryBuildDTO storyInfo,
+            @RequestPart("file")MultipartFile file
+            ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyService.createStory(storyInfo, email);
+        BaseResponseDTO<String> response = storyService.createStory(storyInfo, email, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
