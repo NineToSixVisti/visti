@@ -34,7 +34,7 @@ public class StoryBuildDTO {
         this.subFilePath = subFilePath;
     }
 
-    public Story toEntity(Member member, StoryBox storyBox){
+    public Story toEntity(Member member, StoryBox storyBox, String mainFilePath){
 
         return  Story.builder()
                 .member(member)

@@ -65,6 +65,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'io.rest-assured:spring-mock-mvc'
 	implementation 'org.jsoup:jsoup:1.15.3'
+
+	//aws
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

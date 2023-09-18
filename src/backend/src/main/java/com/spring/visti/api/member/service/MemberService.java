@@ -2,16 +2,16 @@ package com.spring.visti.api.member.service;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.common.service.DefaultService;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
+import com.spring.visti.domain.member.dto.RequestDTO.*;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface MemberService extends DefaultService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
@@ -29,4 +29,6 @@ public interface MemberService extends DefaultService {
     BaseResponseDTO<String> changePassword(String email, String newPW);
 
     BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email);
+
+    BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile file) throws IOException;
 }
