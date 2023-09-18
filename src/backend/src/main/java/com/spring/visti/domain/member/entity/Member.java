@@ -57,6 +57,9 @@ public class Member extends BaseEntity{
     @Column(nullable = false, length = 10)
     private MemberType memberType;
 
+    @Column
+    private String fcmToken;
+
 //    private LocalDateTime tokenExpirationTime;
 
     @OneToMany(mappedBy = "member")
@@ -79,10 +82,15 @@ public class Member extends BaseEntity{
         this.status = true;
         this.dailyStoryCount = 0;
         this.reportedCount = 0;
+        this.fcmToken = "";
     }
 
     public void updateMemberToken(String refreshToken){
         this.refreshToken = refreshToken;
+    }
+
+    public void updateFCMToken(String fcmToken){
+        this.fcmToken = fcmToken;
     }
 
     public void updatePassword(String password){
