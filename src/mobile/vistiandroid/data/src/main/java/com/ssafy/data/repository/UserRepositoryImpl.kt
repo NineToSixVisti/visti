@@ -1,6 +1,5 @@
 package com.ssafy.data.repository
 
-import com.ssafy.data.dto.UserBodyDto
 import com.ssafy.data.mapper.toDomain
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.domain.model.user.UserBody

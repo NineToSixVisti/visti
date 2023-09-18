@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.user
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +50,9 @@ import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,91 +64,136 @@ fun SignInScreen(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+
     var signInEmailTextFieldState by remember { mutableStateOf("") }
     var signInPasswordTextFieldState by remember { mutableStateOf("") }
-    val state = signInViewModel.userToken.value
+    val state by signInViewModel.userToken.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(signInScrollState)
-            .padding(20.dp),
-    ) {
-        Image(
-            modifier = Modifier
-                .padding(top = 60.dp, bottom = 65.dp)
-                .height(70.dp)
-                .fillMaxWidth(),
-            alignment = Alignment.Center,
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = stringResource(R.string.log_in_logo_description),
-            contentScale = ContentScale.FillHeight,
-        )
-        Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
+    Scaffold(snackbarHost = {
+        SnackbarHost(snackbarHostState)
+    }) {
+        it
+        when {
+            state.error.isNotBlank() -> {
+                SideEffect {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        snackbarHostState.showSnackbar("아이디 비밀번호가 틀렸습니다.")
 
-        UserOutLinedTextField("이메일을 입력하세요", signInEmailTextFieldState, KeyboardType.Email) {
-            signInEmailTextFieldState = it
-        }
-
-        Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
-
-        PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
-            signInPasswordTextFieldState = it
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp)
-        ) {
-
-            Text(
-                text = "비밀번호 찾기", color = PrimaryColor, fontSize = 12.sp,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable {
-                    navController.navigate(route = SignInNav.FindPassword.route)
+                    }
+                    signInViewModel.delete()
                 }
+
+            }
+
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            state.token?.accessToken?.isNotBlank() == true -> {
+                navController.navigate(route = SignInNav.Main.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+                signInViewModel.delete()
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(signInScrollState)
+                .padding(20.dp),
+        ) {
+            Image(
+                modifier = Modifier
+                    .padding(top = 60.dp, bottom = 65.dp)
+                    .height(70.dp)
+                    .fillMaxWidth(),
+                alignment = Alignment.Center,
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = stringResource(R.string.log_in_logo_description),
+                contentScale = ContentScale.FillHeight,
             )
+            Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
 
-            Row() {
-                Text(
-                    modifier = Modifier.padding(end = 5.dp),
-                    text = "아직 아이디가 없다면?",
-                    color = Grey, fontSize = 12.sp,
-                    textDecoration = TextDecoration.Underline
-                )
+            UserOutLinedTextField("이메일을 입력하세요", signInEmailTextFieldState, KeyboardType.Email) {
+                signInEmailTextFieldState = it
+            }
+
+            Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+
+            PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
+                signInPasswordTextFieldState = it
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp)
+            ) {
 
                 Text(
-                    text = "회원가입",
-                    color = PrimaryColor, fontSize = 12.sp,
+                    text = "비밀번호 찾기", color = PrimaryColor, fontSize = 12.sp,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        navController.navigate(route = SignInNav.JoinEmail.route)
+                        navController.navigate(route = SignInNav.FindPassword.route)
                     }
                 )
-            }
-        }
-        Box(modifier = Modifier.padding(15.dp))
-        SignInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
-            signInViewModel.signIn(signInEmailTextFieldState, signInPasswordTextFieldState)
-        }
-        Box(modifier = Modifier.padding(5.dp))
-        SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
-            navController.navigate(route = SignInNav.Main.route) {
-                popUpTo(navController.graph.id) {
-                    inclusive = true
+
+                Row() {
+                    Text(
+                        modifier = Modifier.padding(end = 5.dp),
+                        text = "아직 아이디가 없다면?",
+                        color = Grey, fontSize = 12.sp,
+                        textDecoration = TextDecoration.Underline
+                    )
+
+                    Text(
+                        text = "회원가입",
+                        color = PrimaryColor, fontSize = 12.sp,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable {
+                            navController.navigate(route = SignInNav.JoinEmail.route)
+                        }
+                    )
                 }
             }
-        }
-        Box(modifier = Modifier.padding(5.dp))
-        SignInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
-            navController.navigate(route = SignInNav.Main.route) {
-                popUpTo(navController.graph.id) {
-                    inclusive = true
+
+
+            Box(modifier = Modifier.padding(15.dp))
+            SignInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
+                if (signInEmailTextFieldState.isBlank() || signInPasswordTextFieldState.isBlank()) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        snackbarHostState.showSnackbar("아이디 비밀번호 입력 값을 모두 기입하세요.")
+                    }
+                } else {
+                    signInViewModel.signIn(signInEmailTextFieldState, signInPasswordTextFieldState)
+                }
+            }
+            Box(modifier = Modifier.padding(5.dp))
+            SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
+                navController.navigate(route = SignInNav.Main.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+            }
+            Box(modifier = Modifier.padding(5.dp))
+            SignInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
+                navController.navigate(route = SignInNav.Main.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
                 }
             }
         }
     }
+
 
 }
 
