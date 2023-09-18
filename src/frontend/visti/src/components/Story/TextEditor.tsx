@@ -6,6 +6,7 @@ import Draggable from 'react-draggable';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store'; 
 import { setText, setFontSize, setColor, setPosition } from '../../store/slices/TextSlices';
+import { ReactComponent as TextButtonIcon } from '../../assets/images/text_button.svg';
 
 const EditorContainer = styled.div`
   position: relative;
@@ -20,12 +21,18 @@ const StyledTextarea = styled.textarea<{ fontSize: number, color: string }>`
   color: ${props => props.color};
 `;
 
+const TextButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
 const FinalText = styled.div<{ fontSize: number, color: string }>`
   font-size: ${props => props.fontSize}px;
   color: ${props => props.color};
 `;
 
-const TextEditor: React.FC = () => {
+const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void }> = ({ onEditorOpen, onEditorClose }) => {
   const dispatch = useDispatch();
   const { text, fontSize, color, position } = useSelector((state: RootState) => state.text);
 
@@ -41,9 +48,21 @@ const TextEditor: React.FC = () => {
 
   return (
     <EditorContainer>
-        <button onClick={() => setEditorVisible(!editorVisible)}>T</button>
+        <TextButton 
+            id="text-toggle-button"
+            onClick={() => {
+                setEditorVisible(!editorVisible);
+                if (editorVisible) {
+                    onEditorClose(); 
+                } else {
+                    onEditorOpen(); 
+                }
+            }}
+        >
+            <TextButtonIcon />
+        </TextButton>
         {editorVisible && (
-            <>
+            <div id="editor-tools">
                 <ColorEditor setColor={(color: string) => {
                   setColor(color);
                   dispatch(setColor(color));
@@ -62,12 +81,11 @@ const TextEditor: React.FC = () => {
                     fontSize={fontSize}
                     color={color}
                 />
-            </>
+            </div>
         )}
      
         {!editorVisible && (
             <Draggable 
-             
               onStop={(e, data) => {
                 console.log(`X: ${data.x}, Y: ${data.y}`);
                 dispatch(setPosition({ x: data.x, y: data.y }));
