@@ -10,11 +10,11 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
     baseURL: url,
     headers: {
       "Access_Token": token,
-      ...(options?.headers),  // 기타 다른 헤더 옵션이 있을 경우를 위해 추가
+      ...(options?.headers), 
     },
     ...options,
   });
 }
 
-export const baseInstance: AxiosInstance = baseAPI('http://localhost:8080/api/');
-export const authInstance: AxiosInstance = authAPI('http://localhost:8080/api/');
+export const baseInstance: AxiosInstance = baseAPI('http://j9d102.p.ssafy.io:8080/api/');
+export const authInstance: AxiosInstance = authAPI('http://j9d102.p.ssafy.io:8080/api/');

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
@@ -7,31 +7,50 @@ import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
 import { ReactComponent as SearchIcon } from '../../assets/images/search_button.svg'
 
+interface Storybox {
+  id: number;
+  blind : boolean;
+  boxImgPath : string;
+  createdAt: string;
+  finishedAt : string;
+  name : string; 
+}
+
+type BoxWrapProps = {
+  bgImage: string;
+};
+
 const StoryboxHome = () => {
-  const [boxList, setBoxList] = useState(false)
-  const [storyboxList, setStoryboxList] = useState([])
+  const [storyboxList, setStoryboxList] = useState<Storybox[]>([]);
+
   const [search, setSerch] = useState("");
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSerch(e.target.value)
   }
 
   const navigate = useNavigate();
-
-  useEffect(()=>{
-    authInstance.get('story-box/storybox')
-    .then(res => {
-      setStoryboxList(res.data);
-      console.log(storyboxList);
-    })
-    .catch(err => {
+  
+  const fetchData = useCallback(async () => {
+    try {
+      const data = await authInstance.get('story-box/storybox');
+      if (data) {
+        setStoryboxList(data.data.detail.content);
+        console.log(data.data)
+      }
+    } catch (err) {
       console.log('스토리박스 GET 중 에러 발생:', err);
-    })
-  },[storyboxList])
+    }
+  }, []);
+  
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+  
 
   return (
     <StoryboxWWrap>
       <LogoWrap>
-        <img src={process.env.PUBLIC_URL +"/assets/Visti-red.png"} alt="Visti Logo" onClick={() => setBoxList(boxList => !boxList)}/>
+        <img src={process.env.PUBLIC_URL +"/assets/Visti-red.png"} alt="Visti Logo"/>
       </LogoWrap>
       <TopWrap>
         <CreateBoxSvg onClick={()=>{navigate("/storybox/join")}}/>
@@ -41,34 +60,29 @@ const StoryboxHome = () => {
         </SearchWrap>
       </TopWrap>
       {
-        boxList ? 
-        <MainWrap>
-          <img src="/assets/storybox-no.svg" alt="" />
-          <p>스토리박스가<br/>하나도 없어요.</p>
-        </MainWrap> :
-        <MainBoxWrap>
-          <BoxWrap onClick={()=>{navigate("/storybox/detail")}}>
-            <NameWrap>
-              <p>버니즈(2023.01.01 ~ 12.12)<LockSvg></LockSvg></p>
-            </NameWrap>
-          </BoxWrap>
-          <BoxWrap>
-            <NameWrap>
-              <p>버니즈(2023.01.01 ~ 12.12)</p>
-            </NameWrap>
-          </BoxWrap>
-          <BoxWrap>
-            <NameWrap>
-              <p>버니즈(2023.01.01 ~ 12.12)</p>
-            </NameWrap>
-          </BoxWrap>
-          <BoxWrap>
-            <NameWrap>
-              <p>버니즈(2023.01.01 ~ 12.12)</p>
-            </NameWrap>
-          </BoxWrap>
-        </MainBoxWrap>
-      }      
+        storyboxList.length > 0 ? 
+          <MainBoxWrap>
+            {
+              storyboxList.map(storybox => (
+                <BoxWrap
+                  key={storybox.id}
+                  bgImage={storybox.boxImgPath}
+                  onClick={()=>{navigate(`/storybox/detail/${storybox.id}`)}}>
+                  <NameWrap>
+                  <p>
+                    {storybox.name.length > 15 ? `${storybox.name.substring(0, 15)}...` : storybox.name}
+                    {storybox.blind ? <LockSvg/> : null}
+                  </p>
+                  </NameWrap>
+                </BoxWrap>
+              ))
+            }            
+          </MainBoxWrap> :
+          <MainWrap>
+            <img src="/assets/storybox-no.svg" alt="" />
+            <p>스토리박스가<br/>하나도 없어요.</p>
+          </MainWrap>
+        }      
     </StoryboxWWrap>
   )
 }
@@ -155,9 +169,9 @@ const MainBoxWrap = styled.div`
   }
 `
 
-const BoxWrap = styled.div`
+const BoxWrap = styled.div<BoxWrapProps>`
   height: 220px;
-  background-image: url('https://www.job-post.co.kr/news/photo/202302/69349_71769_752.png');
+  background-image: url(${props => props.bgImage ? props.bgImage : '/assets/box_Image_input.svg'});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -170,7 +184,7 @@ const BoxWrap = styled.div`
 
 const NameWrap = styled.div`
   width: auto;
-  max-width: 300px;  
+  max-width: 100%;  
   height: 42px;
   border-radius: 12px;
   margin : 8px;
