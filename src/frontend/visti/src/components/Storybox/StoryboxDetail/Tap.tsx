@@ -35,7 +35,7 @@ const TapWrap = styled.div`
   height: 40px;
   /* background-color: lightcoral; */
 `
-
+ 
 const Box = styled.div<{ isMode: boolean }>`
   width: 100%;
   height: 100%;
