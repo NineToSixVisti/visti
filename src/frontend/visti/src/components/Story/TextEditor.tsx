@@ -6,6 +6,7 @@ import Draggable from 'react-draggable';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store'; 
 import { setText, setFontSize, setColor, setPosition } from '../../store/slices/TextSlices';
+import { ReactComponent as TextButtonIcon } from '../../assets/images/text_button.svg';
 
 const EditorContainer = styled.div`
   position: relative;
@@ -18,6 +19,12 @@ const StyledTextarea = styled.textarea<{ fontSize: number, color: string }>`
   height: 100px;
   font-size: ${props => props.fontSize}px;
   color: ${props => props.color};
+`;
+
+const TextButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
 `;
 
 const FinalText = styled.div<{ fontSize: number, color: string }>`
@@ -41,19 +48,21 @@ const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void
 
   return (
     <EditorContainer>
-        <button 
-    id="text-toggle-button"
-    onClick={() => {
-        setEditorVisible(!editorVisible);
-        if (editorVisible) {
-            onEditorClose(); 
-        } else {
-            onEditorOpen(); 
-        }
-    }}
->T</button>
+        <TextButton 
+            id="text-toggle-button"
+            onClick={() => {
+                setEditorVisible(!editorVisible);
+                if (editorVisible) {
+                    onEditorClose(); 
+                } else {
+                    onEditorOpen(); 
+                }
+            }}
+        >
+            <TextButtonIcon />
+        </TextButton>
         {editorVisible && (
-            <div id="editor-tools"> {/* 이 div로 텍스트 편집 도구들을 감쌉니다. */}
+            <div id="editor-tools">
                 <ColorEditor setColor={(color: string) => {
                   setColor(color);
                   dispatch(setColor(color));
