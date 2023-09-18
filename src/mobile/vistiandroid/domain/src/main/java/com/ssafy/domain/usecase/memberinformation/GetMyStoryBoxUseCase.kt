@@ -1,6 +1,5 @@
 package com.ssafy.domain.usecase.memberinformation
 
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpException
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.repository.MemberInformationRepository
@@ -14,13 +13,15 @@ class GetMyStoryBoxUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<StoryBoxList>> = flow {
         try {
-            emit(Resource.Loading<StoryBoxList>())
+            emit(Resource.Loading())
             val myStoryBoxResponse = repository.getMyStoryBoxes(0, 5)
-            emit(Resource.Success<StoryBoxList>(myStoryBoxResponse))
-        } catch (e: HttpException) {
-            emit(Resource.Error<StoryBoxList>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Success(myStoryBoxResponse))
+        } catch (e: retrofit2.HttpException) {
+            emit(Resource.Error("${e.localizedMessage} HTTP Error"))
         } catch (e: IOException) {
-            emit(Resource.Error<StoryBoxList>("Failed to connect to server \uD83D\uDE22"))
+            emit(Resource.Error("${e.localizedMessage} IO Error"))
+        } catch (e: Exception) {
+            emit(Resource.Error("${e.localizedMessage} Unknown Error"))
         }
     }
 }
