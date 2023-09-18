@@ -55,7 +55,7 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
-    val myStories = viewModel.stories.collectAsLazyPagingItems()
+    val myStories = viewModel.myStories.collectAsLazyPagingItems()
     val myStoryBoxes = viewModel.myStoryBoxes.collectAsLazyPagingItems()
 
     val myStoryAppendState = myStories.loadState.append

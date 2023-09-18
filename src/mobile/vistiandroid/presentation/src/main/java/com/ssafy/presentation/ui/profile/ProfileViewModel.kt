@@ -33,8 +33,8 @@ class ProfileViewModel @Inject constructor(
     private val _myStoryBoxes = MutableStateFlow<PagingData<StoryBox>>(PagingData.empty())
     val myStoryBoxes: StateFlow<PagingData<StoryBox>> = _myStoryBoxes
 
-    private val _stories = MutableStateFlow<PagingData<Story>>(PagingData.empty())
-    val stories: StateFlow<PagingData<Story>> = _stories
+    private val _myStories = MutableStateFlow<PagingData<Story>>(PagingData.empty())
+    val myStories: StateFlow<PagingData<Story>> = _myStories
 
     fun initializeData() {
         getMyStories()
@@ -45,7 +45,7 @@ class ProfileViewModel @Inject constructor(
     private fun getMyStories() {
         viewModelScope.launch {
             repository.getMyStories(24).cachedIn(viewModelScope).collect { pagingData ->
-                _stories.value = pagingData
+                _myStories.value = pagingData
             }
         }
     }
