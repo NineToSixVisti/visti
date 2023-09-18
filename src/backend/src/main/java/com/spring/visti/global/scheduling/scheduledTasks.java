@@ -6,6 +6,7 @@ import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.global.fcm.service.FcmService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ public class scheduledTasks {
     private final MemberRepository memberRepository;
     private final FcmService fcmService;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 22 * * ?")
     public void sendMessageToUserAt22Clock() { // 매일 22시에 실행
         // 모든 회원 중 dailyStoryCounts 가 채워지지 않은 사람들에게 메시지 보냄
