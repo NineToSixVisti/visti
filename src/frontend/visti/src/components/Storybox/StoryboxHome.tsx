@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { authInstance } from '../../apis/utils/instance'
 
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
@@ -8,44 +9,24 @@ import { ReactComponent as SearchIcon } from '../../assets/images/search_button.
 
 const StoryboxHome = () => {
   const [boxList, setBoxList] = useState(false)
-  const [storyboxList, setStoryboxList] = useState(
-    {
-      "message": "string",
-      "statusCode": 0,
-      "detail": [
-        {
-          "id": 0,
-          "box_img_path": 'https://www.job-post.co.kr/news/photo/202302/69349_71769_752.png',
-          "name": "버니즈",
-          "created_at": "2023-09-06T02:28:55.241Z",
-          "finished_at": "2023-12-12T02:28:55.241Z",
-          "blind": false
-        },
-        {
-          "id": 1,
-          "box_img_path": 'https://www.job-post.co.kr/news/photo/202302/69349_71769_752.png',
-          "name": "소원",
-          "created_at": "2023-07-08T02:28:55.241Z",
-          "finished_at": "2023-09-08T02:28:55.241Z",
-          "blind": true
-        },
-        {
-          "id": 3,
-          "box_img_path": 'https://www.job-post.co.kr/news/photo/202302/69349_71769_752.png',
-          "name": "싸피 D102",
-          "created_at": "2023-09-08T02:28:55.241Z",
-          "finished_at": "2023-10-10T02:28:55.241Z",
-          "blind": false
-        }
-      ]
-    }
-  )
+  const [storyboxList, setStoryboxList] = useState([])
   const [search, setSerch] = useState("");
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSerch(e.target.value)
   }
 
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    authInstance.get('story-box/storybox')
+    .then(res => {
+      setStoryboxList(res.data);
+      console.log(storyboxList);
+    })
+    .catch(err => {
+      console.log('스토리박스 GET 중 에러 발생:', err);
+    })
+  },[storyboxList])
 
   return (
     <StoryboxWWrap>
