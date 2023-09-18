@@ -17,6 +17,7 @@ import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
+import com.spring.visti.global.fcm.service.FcmService;
 import com.spring.visti.global.redis.service.UrlExpiryService;
 import com.spring.visti.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +50,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final UrlExpiryService urlExpiryService;
 
     private final MemberLikeStoryRepository memberLikeStoryRepository;
+    private final FcmService fcmService;
+
     @Override
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email){
@@ -292,6 +296,21 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(ALREADY_JOIN_ERROR);
         }
 
+        String nickname = getMember(email, memberRepository).getNickname();
+
+        _storyBoxMembers.forEach(
+                member -> {
+                    String fcmToken = member.getMember().getFcmToken();
+                    try {
+                        fcmService.sendMessageTo(fcmToken, "Visti",
+                                nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",
+                                "",
+                                "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
         StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(getMember(email, memberRepository), storyBox, Position.GUEST);
         storyBoxMemberRepository.save(newStoryBoxMember);
 
@@ -304,7 +323,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
         Member member = getMember(email, memberRepository);
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
-
 
         Optional<StoryBoxMember> targetStoryBoxMember = storyBoxes.stream()
                 .filter(storyBoxMember ->

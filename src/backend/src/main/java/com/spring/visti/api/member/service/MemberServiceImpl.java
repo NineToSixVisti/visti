@@ -2,9 +2,6 @@ package com.spring.visti.api.member.service;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
-import com.spring.visti.domain.member.constant.Role;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberChangePasswordDTO;
-import com.spring.visti.domain.member.dto.RequestDTO.MemberInformDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
@@ -18,7 +15,6 @@ import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import com.spring.visti.global.redis.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
