@@ -1,0 +1,15 @@
+<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.1875 5.625H5.625V12.1875H7.5V7.5H12.1875V5.625Z" fill="black"/>
+<path d="M15.9375 7.5V5.625H20.625V7.5H15.9375Z" fill="black"/>
+<path d="M24.375 7.5H29.0625V5.625H24.375V7.5Z" fill="black"/>
+<path d="M32.8125 5.625V7.5H37.5V12.1875H39.375V5.625H32.8125Z" fill="black"/>
+<path d="M39.375 15.9375H37.5V20.625H39.375V15.9375Z" fill="black"/>
+<path d="M39.375 24.375H37.5V29.0625H39.375V24.375Z" fill="black"/>
+<path d="M39.375 32.8125H37.5V37.5H32.8125V39.375H39.375V32.8125Z" fill="black"/>
+<path d="M29.0625 39.375V37.5H24.375V39.375H29.0625Z" fill="black"/>
+<path d="M20.625 39.375V37.5H15.9375V39.375H20.625Z" fill="black"/>
+<path d="M12.1875 39.375V37.5H7.5V32.8125H5.625V39.375H12.1875Z" fill="black"/>
+<path d="M5.625 29.0625H7.5V24.375H5.625V29.0625Z" fill="black"/>
+<path d="M5.625 20.625H7.5V15.9375H5.625V20.625Z" fill="black"/>
+<path d="M20.625 17.8125H13.125V14.0625H31.875V17.8125H24.375V30.9375H20.625V17.8125Z" fill="black"/>
+</svg>

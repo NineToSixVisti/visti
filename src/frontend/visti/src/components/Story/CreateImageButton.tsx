@@ -1,42 +1,44 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import html2canvas from 'html2canvas';
 
 const CreateImageComponent: React.FC = () => {
   const { selectedImage } = useSelector((state: RootState) => state.image);
-  const { text, fontSize, color, position } = useSelector((state: RootState) => state.text);
 
   const handleCreateImage = () => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    if (ctx && selectedImage) {
-      const img = new Image();
-      img.src = selectedImage;
-
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        ctx.font = `${fontSize}px Arial`;
-        ctx.fillStyle = color;
-    
-      
-        ctx.fillText(text, position.x+130, position.y+590);
-
-        const mergedImage = canvas.toDataURL();
-const downloadLink = document.createElement('a');
-downloadLink.href = mergedImage;
-downloadLink.download = 'mergedImage.png';
-downloadLink.innerText = 'Download Image';
-document.body.appendChild(downloadLink);
+    const node = document.getElementById('image-container'); 
+    const textToggleButton = document.getElementById('text-toggle-button'); // T 버튼의 ID
+    if (textToggleButton) {
+      textToggleButton.style.display = 'none'; // T 버튼 숨기기
+  }
 
 
-      };
-    }
-  };
+  if (node) {
+    html2canvas(node, { scale: 2 }).then(canvas => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const downloadLink = document.createElement('a');
+          downloadLink.href = url;
+          downloadLink.download = 'mergedImage.png';
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error generating image:', error);
+    }).finally(() => {
+      if (textToggleButton) {
+        textToggleButton.style.display = 'block'; // T 버튼 다시 보이게 하기
+      }
+    });
+  }
+};
 
-  return <button onClick={handleCreateImage}>이미지 생성</button>;
+return <button onClick={handleCreateImage}>이미지 생성</button>;
 }
 
-export default CreateImageComponent; 
+export default CreateImageComponent;
