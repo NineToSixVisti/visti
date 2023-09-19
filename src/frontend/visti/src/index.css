@@ -3,6 +3,15 @@
   src: url("./fonts/OpenSans-VariableFont_wdth,wght.ttf");
 }
 
+@font-face {
+  font-family: "Education-Bold";
+  src: url("./fonts/Education-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Education-light";
+  src: url("./fonts/Education-Light.ttf");
+}
 
 body {
   margin: 0;
@@ -20,5 +29,5 @@ html, body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    monospace; 
 }

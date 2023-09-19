@@ -30,12 +30,11 @@ const StoryboxHome = () => {
 
   const navigate = useNavigate();
   
-  const fetchData = useCallback(async () => {
+  const getStoryboxList = useCallback(async () => {
     try {
       const data = await authInstance.get('story-box/storybox');
       if (data) {
         setStoryboxList(data.data.detail.content);
-        console.log(data.data)
       }
     } catch (err) {
       console.log('스토리박스 GET 중 에러 발생:', err);
@@ -43,8 +42,8 @@ const StoryboxHome = () => {
   }, []);
   
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    getStoryboxList();
+  }, [getStoryboxList]);
   
 
   return (
