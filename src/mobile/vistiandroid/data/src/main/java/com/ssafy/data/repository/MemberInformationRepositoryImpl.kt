@@ -5,6 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.ssafy.data.mapper.toDomain
 import com.ssafy.data.remote.VistiApi
+import com.ssafy.data.repository.LikedStoryRepositoryImpl.Companion.NETWORK_STORY_BOX_PAGE_SIZE
+import com.ssafy.data.repository.LikedStoryRepositoryImpl.Companion.NETWORK_STORY_PAGE_SIZE
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Story
 import com.ssafy.domain.model.StoryBox
@@ -22,10 +24,10 @@ class MemberInformationRepositoryImpl @Inject constructor(
     override fun getMyStoryBoxes(size: Int): Flow<PagingData<StoryBox>> {
         return Pager(
             config = PagingConfig(
-                pageSize = size,
+                pageSize = NETWORK_STORY_BOX_PAGE_SIZE,
             ),
             pagingSourceFactory = {
-                StoryBoxPagingSource(api, size)
+                StoryBoxPagingSource(api)
             }
         ).flow
     }

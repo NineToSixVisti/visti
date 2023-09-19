@@ -29,8 +29,7 @@ class ProfileViewModel @Inject constructor(
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
-    private val _myStoryBoxes = MutableStateFlow<PagingData<StoryBox>>(PagingData.empty())
-    val myStoryBoxes: StateFlow<PagingData<StoryBox>> = _myStoryBoxes
+    val myStoryBoxes = repository.getMyStoryBoxes(5)
 
     private val _myStories = MutableStateFlow<PagingData<Story>>(PagingData.empty())
     val myStories: StateFlow<PagingData<Story>> = _myStories
@@ -38,21 +37,12 @@ class ProfileViewModel @Inject constructor(
     fun initializeData() {
         getMyStories()
         getMemberInformation()
-        getMyStoryBoxes()
     }
 
     private fun getMyStories() {
         viewModelScope.launch {
-            repository.getMyStories(3).collect { pagingData ->
+            repository.getMyStories(50).collect { pagingData ->
                 _myStories.value = pagingData
-            }
-        }
-    }
-
-    private fun getMyStoryBoxes() {
-        viewModelScope.launch {
-            repository.getMyStoryBoxes(10).collect { pagingData ->
-                _myStoryBoxes.value = pagingData
             }
         }
     }

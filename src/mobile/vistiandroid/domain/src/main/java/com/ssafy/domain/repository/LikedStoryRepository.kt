@@ -6,5 +6,5 @@ import com.ssafy.domain.model.Story
 import kotlinx.coroutines.flow.Flow
 
 interface LikedStoryRepository {
-    fun getLikedStories(size: Int, sortingOption: LikeSortType): Flow<PagingData<Story>>
+    fun getLikedStories(sortingOption: LikeSortType): Flow<PagingData<Story>>
 }

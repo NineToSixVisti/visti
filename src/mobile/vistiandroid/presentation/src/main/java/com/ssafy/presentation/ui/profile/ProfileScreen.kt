@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
@@ -52,14 +56,19 @@ import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.LightBackgroundColor
 
+@SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
     val myStories = viewModel.myStories.collectAsLazyPagingItems()
-    val myStoryBoxes = viewModel.myStoryBoxes.collectAsLazyPagingItems()
 
-    val myStoryAppendState = myStories.loadState.append
-    val myStoryBoxAppendState = myStoryBoxes.loadState.append
+    val pager = remember {
+        viewModel.myStoryBoxes
+    }
+
+    val lazyPagingItems = pager.collectAsLazyPagingItems()
+
+
     val memberInformationState = viewModel.memberInformation.value
 
     val memberInformation = memberInformationState.memberInformation
@@ -76,129 +85,108 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
         viewModel.initializeData()
     }
 
-    when {
-         myStoryAppendState is LoadState.Error
-                 || myStoryBoxAppendState is LoadState.Error -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Error")
-            }
-        }
-
-         myStoryAppendState is LoadState.Loading || myStoryBoxAppendState is LoadState.Loading || memberInformationState.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        else -> {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                memberInformation.email,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        },
-                        actions = {
-                            val iconColor = if (isSystemInDarkTheme()) {
-                                LightBackgroundColor
-                            } else {
-                                DarkBackgroundColor
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        navController.navigate(route = SettingNav.Subscription.route)
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_rocket),
-                                        contentDescription = LikeSortType.UP.name,
-                                        tint = iconColor,
-                                    )
-                                }
-
-                                IconButton(
-                                    onClick = {
-                                        showBottomSheet = true
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Menu,
-                                        contentDescription = LikeSortType.UP.name,
-                                        tint = iconColor,
-                                    )
-                                }
-                            }
-                        }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        memberInformation.email,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
                     )
-                }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                ) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    ProfileSection(
-                        memberInformation.nickname,
-                        memberInformation.role,
-                        memberInformation.profilePath,
-                        memberInformation.stories,
-                        memberInformation.storyBoxes)
-                    Spacer(modifier = Modifier.height(15.dp))
-                    PostTabView(
-                        imageWithText = listOf(
-                            ImageWithText(
-                                image = painterResource(id = R.drawable.ic_story),
-                                text = "Story"
-                            ),
-                            ImageWithText(
-                                image = painterResource(id = R.drawable.ic_box),
-                                text = "Box"
-                            ),
-                            ImageWithText(
-                                image = painterResource(id = R.drawable.ic_token),
-                                text = "NFT"
-                            )
-                        )
+                },
+                actions = {
+                    val iconColor = if (isSystemInDarkTheme()) {
+                        LightBackgroundColor
+                    } else {
+                        DarkBackgroundColor
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        selectedTabIndex = it
-                    }
-                    when (selectedTabIndex) {
-                        0 -> {
-                            StoryLazyVerticalGrid(myStories)
+                        IconButton(
+                            onClick = {
+                                navController.navigate(route = SettingNav.Subscription.route)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_rocket),
+                                contentDescription = LikeSortType.UP.name,
+                                tint = iconColor,
+                            )
                         }
-                        1 -> StoryBoxLazyColumn(myStoryBoxes)
+
+                        IconButton(
+                            onClick = {
+                                showBottomSheet = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = LikeSortType.UP.name,
+                                tint = iconColor,
+                            )
+                        }
                     }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+            Spacer(modifier = Modifier.height(4.dp))
+            ProfileSection(
+                memberInformation.nickname,
+                memberInformation.role,
+                memberInformation.profilePath,
+                memberInformation.stories,
+                memberInformation.storyBoxes
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            PostTabView(
+                imageWithText = listOf(
+                    ImageWithText(
+                        image = painterResource(id = R.drawable.ic_story),
+                        text = "Story"
+                    ),
+                    ImageWithText(
+                        image = painterResource(id = R.drawable.ic_box),
+                        text = "Box"
+                    ),
+                    ImageWithText(
+                        image = painterResource(id = R.drawable.ic_token),
+                        text = "NFT"
+                    )
+                )
+            ) {
+                selectedTabIndex = it
+            }
+            when (selectedTabIndex) {
+                0 -> {
+                    StoryLazyVerticalGrid(myStories)
                 }
 
-                if (showBottomSheet) {
-                    ModalBottomSheet(
-                        onDismissRequest = {
-                            showBottomSheet = false
-                        },
-                        sheetState = sheetState
-                    ) {
-                        SettingSection(navController = navController)
-                        Spacer(
-                            Modifier.windowInsetsBottomHeight(
-                                WindowInsets.navigationBars
-                            )
-                        )
-                    }
-                }
+                1 -> StoryBoxLazyColumn(lazyPagingItems)
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                SettingSection(navController = navController)
+                Spacer(
+                    Modifier.windowInsetsBottomHeight(
+                        WindowInsets.navigationBars
+                    )
+                )
             }
         }
     }
