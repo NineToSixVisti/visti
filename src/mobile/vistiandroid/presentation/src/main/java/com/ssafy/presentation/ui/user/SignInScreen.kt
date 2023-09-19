@@ -1,5 +1,7 @@
 package com.ssafy.presentation.ui.user
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,21 +46,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+private const val TAG = "kakaoSignin"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    navController: NavHostController,
+    navController: NavHostController,    @ApplicationContext context : Context,
     signInViewModel: SignInViewModel = hiltViewModel()
+
 ) {
     val signInScrollState = rememberScrollState()
     val snackbarHostState = remember {
@@ -68,6 +77,7 @@ fun SignInScreen(
     var signInEmailTextFieldState by remember { mutableStateOf("") }
     var signInPasswordTextFieldState by remember { mutableStateOf("") }
     val state by signInViewModel.userToken.collectAsState()
+
 
     Scaffold(snackbarHost = {
         SnackbarHost(snackbarHostState)
@@ -177,11 +187,42 @@ fun SignInScreen(
             }
             Box(modifier = Modifier.padding(5.dp))
             SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
-                navController.navigate(route = SignInNav.Main.route) {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
+
+                val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+                    if (error != null) {
+                        Log.e(TAG, "카카오계정으로 로그인 실패", error)
+                    } else if (token != null) {
+                        Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
                     }
                 }
+
+// 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                    UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                        if (error != null) {
+                            Log.e(TAG, "카카오톡으로 로그인 실패", error)
+
+                            // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                            // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            }
+
+                            // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                            UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                        } else if (token != null) {
+                            Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                        }
+                    }
+                } else {
+                    UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                }
+
+//                navController.navigate(route = SignInNav.Main.route) {
+//                    popUpTo(navController.graph.id) {
+//                        inclusive = true
+//                    }
+//                }
             }
             Box(modifier = Modifier.padding(5.dp))
             SignInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
@@ -193,6 +234,8 @@ fun SignInScreen(
             }
         }
     }
+
+
 
 
 }

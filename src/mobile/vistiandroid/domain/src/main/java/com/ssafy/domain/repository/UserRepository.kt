@@ -5,4 +5,6 @@ import com.ssafy.domain.model.user.UserToken
 
 interface UserRepository {
     suspend fun signIn(userBody: UserBody): UserToken
+
+    //suspend fun kakaoSignIn()
 }

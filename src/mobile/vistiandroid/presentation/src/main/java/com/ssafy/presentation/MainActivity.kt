@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavGraph(navController = navController, window)
+                    NavGraph(navController = navController, window,applicationContext)
 //                    MainScreen(window)
                 }
             }

@@ -102,4 +102,7 @@ dependencies {
 
     //datastore
     implementation(Dependencies.DATASTORE)
+
+    //카카오 로그인
+    implementation(Dependencies.KAKAO)
 }

@@ -8,6 +8,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import javax.inject.Inject
+
 private const val TAG = "XAcessTokenInterceptor"
 class XAccessTokenInterceptor @Inject constructor(
     private val dataSource: PreferenceDataSource

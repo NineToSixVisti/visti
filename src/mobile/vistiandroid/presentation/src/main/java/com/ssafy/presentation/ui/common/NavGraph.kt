@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import android.content.Context
 import android.view.Window
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -15,13 +16,13 @@ import com.ssafy.presentation.ui.user.JoinPasswordScreen
 import com.ssafy.presentation.ui.user.SignInScreen
 
 @Composable
-fun NavGraph(navController: NavHostController, window: Window) {
+fun NavGraph(navController: NavHostController, window: Window,context:Context) {
     NavHost(
         navController = navController,
         startDestination = SignInNav.SignIn.route
     ) {
         composable(route = SignInNav.SignIn.route) {
-            SignInScreen(navController = navController)
+            SignInScreen(navController = navController,context)
         }
 
         composable(route = SignInNav.Main.route) {
