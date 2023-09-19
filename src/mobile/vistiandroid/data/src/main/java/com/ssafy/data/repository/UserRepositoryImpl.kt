@@ -20,4 +20,12 @@ class UserRepositoryImpl @Inject constructor(
         preferenceDataSource.putString(REFRESH_TOKEN, response.refreshToken)
         return response
     }
+
+    override suspend fun socialSignUp(provider: String, accessToken: String): UserToken {
+        val response = api.socialSignIn(provider, accessToken).detail.toDomain()
+        preferenceDataSource.putString(ACCESS_TOKEN, response.accessToken)
+        preferenceDataSource.putString(REFRESH_TOKEN, response.refreshToken)
+        return response
+    }
+
 }

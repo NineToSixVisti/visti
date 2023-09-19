@@ -8,6 +8,7 @@ import com.ssafy.data.dto.UserTokenResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface VistiApi {
@@ -33,4 +34,9 @@ interface VistiApi {
     @POST("/api/member/signin")
     suspend fun signIn(@Body userBodyDto: UserBodyDto): UserTokenResponse
 
+    @GET("/oauth/{provider}")
+    suspend fun socialSignIn(
+        @Path("provider") provider: String,
+        @Query("accessToken") accessToken: String
+    ): UserTokenResponse
 }

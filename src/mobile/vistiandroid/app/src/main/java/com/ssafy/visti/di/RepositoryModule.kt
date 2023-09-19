@@ -1,6 +1,5 @@
 package com.ssafy.visti.di
 
-import com.kakao.sdk.user.UserApiClient
 import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
@@ -33,13 +32,10 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: VistiApi,preferenceDataSource: PreferenceDataSource): UserRepository {
-        return UserRepositoryImpl(api,preferenceDataSource)
+    fun provideUserRepository(
+        api: VistiApi,
+        preferenceDataSource: PreferenceDataSource
+    ): UserRepository {
+        return UserRepositoryImpl(api, preferenceDataSource)
     }
-
-//    @Provides
-//    @Singleton
-//    fun kakaoLogin(api: UserApiClient): UserRepository {
-//        return UserRepositoryImpl(api)
-//    }
 }

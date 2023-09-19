@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.user.SignUseCase
+import com.ssafy.domain.usecase.user.SocialUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signUseCase: SignUseCase,
+    private val socialUseCase: SocialUseCase,
 ) : ViewModel() {
 
     private val _userToken = MutableStateFlow<UserState>(UserState())
@@ -38,6 +40,25 @@ class SignInViewModel @Inject constructor(
 
         }.launchIn(viewModelScope)
     }
+    fun socialSignIn(provider: String, accessToken: String) {
+        socialUseCase(provider, accessToken).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _userToken.value = UserState(token = result.data)
+                }
+
+                is Resource.Error -> {
+                    _userToken.value = UserState(error = result.message ?: "An error occurred")
+                }
+
+                is Resource.Loading -> {
+                    _userToken.value = UserState(isLoading = true)
+                }
+            }
+
+        }.launchIn(viewModelScope)
+    }
+
 
     fun delete() {
         _userToken.value = UserState()
