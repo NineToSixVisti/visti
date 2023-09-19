@@ -37,7 +37,7 @@ public class StoryBoxBuildDTO {
         // "yyyy-MM-ddTHH:mm:ss" 형식의 문자열을 LocalDateTime으로 파싱
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
-        
+
         return  StoryBox.builder()
                 .creator(member)
                 .boxImgPath(boxImgPath)
