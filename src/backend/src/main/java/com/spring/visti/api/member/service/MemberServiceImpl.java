@@ -254,9 +254,9 @@ public class MemberServiceImpl implements MemberService{
         // S3 파일 저장
         String postCategory = "profile";
         String imageUrl;
-        // 프로필 사진 변경->이전 사진 삭제
+        // 프로필 사진 변경->이전 사진 삭제(이전 사진이 있을 경우만)
         String originProfilePath = member.getProfilePath();
-        if (!originProfilePath.isEmpty()){
+        if (!Objects.equals(originProfilePath, "사진없음")){
             int s3DomainLastIndex = originProfilePath.indexOf(".com/") + 5;
             if (s3DomainLastIndex > 0) {
                 String pathWithFilename = originProfilePath.substring(s3DomainLastIndex);
