@@ -6,6 +6,7 @@ import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 
 import com.spring.visti.utils.exception.ApiException;
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.spring.visti.utils.exception.ErrorCode.NOT_DEFINED_SORTING_ACTION;
-import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
+import static com.spring.visti.utils.exception.ErrorCode.*;
 
 @RestController
 @RequestMapping("/api/story")
@@ -48,10 +48,14 @@ public class StoryController {
     @GetMapping("/{storyIds}")
     @Operation(summary = "스토리 조회", description = "스토리를 조회합니다. 유저정보가 맞지 않거나 | 해당 스토리가 없을 경우 에러가 발생합니다.")
     public ResponseEntity<? extends BaseResponseDTO<StoryExposedDTO>> readStory(
-            @PathVariable Long storyIds
+            @PathVariable String storyIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<StoryExposedDTO> response = storyService.readStory(storyIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyIds);
+        long decryptedStoryId = getDecryptedStoryId(isDecryptedStoryId);
+
+        BaseResponseDTO<StoryExposedDTO> response = storyService.readStory(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -106,20 +110,28 @@ public class StoryController {
     @GetMapping("/{storyIds}/like")
     @Operation(summary = "스토리 좋아요 | 좋아요 취소", description = "스토리를 '좋아요' 또는 '좋아요 취소'를 수행합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> likeStory(
-            @PathVariable Long storyIds
+            @PathVariable String storyIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyService.likeStory(storyIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyIds);
+        long decryptedStoryId = getDecryptedStoryId(isDecryptedStoryId);
+
+        BaseResponseDTO<String> response = storyService.likeStory(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/{storyIds}")
     @Operation(summary = "스토리 삭제", description = "스토리를 삭제합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> deleteStory(
-            @PathVariable Long storyIds
+            @PathVariable String storyIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyService.deleteStory(storyIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyIds);
+        long decryptedStoryId = getDecryptedStoryId(isDecryptedStoryId);
+//
+        BaseResponseDTO<String> response = storyService.deleteStory(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -137,6 +149,14 @@ public class StoryController {
             case "descend" -> Sort.by(Sort.Order.desc("createdAt"));
             default -> Sort.unsorted();
         };
+    }
+
+    private long getDecryptedStoryId(String isDecryptedStoryId){
+        try {
+            return Long.parseLong(isDecryptedStoryId);
+        } catch (NumberFormatException e) {
+            throw new ApiException(NO_STORY_ERROR);
+        }
     }
 
     /*
