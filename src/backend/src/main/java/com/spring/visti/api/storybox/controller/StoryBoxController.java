@@ -8,9 +8,9 @@ import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
 import com.spring.visti.utils.exception.ApiException;
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,12 +23,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import javax.swing.text.AbstractDocument;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
+import static com.spring.visti.utils.exception.ErrorCode.NO_STORY_ERROR;
 
 @RestController
 @RequestMapping("/api/story-box")
@@ -52,10 +50,14 @@ public class StoryBoxController {
     @PostMapping("/{storyBoxIds}/enter")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
-            @PathVariable Long storyBoxIds
+            @PathVariable String storyBoxIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.enterStoryBox(storyBoxIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<String> response = storyBoxService.enterStoryBox(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -63,22 +65,30 @@ public class StoryBoxController {
     @PostMapping("/{storyBoxIds}/setting")
     @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
-            @PathVariable Long storyBoxIds,
+            @PathVariable String storyBoxIds,
             @RequestBody StoryBoxSetDTO storyBoxInfo
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.setStoryBox(storyBoxIds, storyBoxInfo, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<String> response = storyBoxService.setStoryBox(decryptedStoryId, storyBoxInfo, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/{storyBoxId}/delete")
+    @DeleteMapping("/{storyBoxIds}/delete")
     @Operation(summary = "스토리-박스 나가기", description = "해당 스토리-박스를 나갑니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
-            @PathVariable Long storyBoxId
+            @PathVariable String storyBoxIds
     ) {
 
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.leaveStoryBox(storyBoxId, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<String> response = storyBoxService.leaveStoryBox(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -129,10 +139,14 @@ public class StoryBoxController {
     @GetMapping("/{storyBoxIds}/info")
     @Operation(summary = "스토리 박스 기본정보 제공 - 스토 박스 최상단 부분", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공")
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxInfoDTO>> readStoryBoxInfo(
-            @PathVariable Long storyBoxIds
+            @PathVariable String storyBoxIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<StoryBoxInfoDTO> response = storyBoxService.readStoryBoxInfo(storyBoxIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<StoryBoxInfoDTO> response = storyBoxService.readStoryBoxInfo(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -140,42 +154,58 @@ public class StoryBoxController {
     @GetMapping("/{storyBoxIds}/story-list")
     @Operation(summary = "스토리 박스의 스토리 리스트업", description = "스토리박스 내의 스토리를 모두 리스트업 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<Page<StoryExposedDTO>>> readStoryInStoryBox(
-            @PathVariable Long storyBoxIds,
+            @PathVariable String storyBoxIds,
             @RequestParam(name= "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name= "size", required = false, defaultValue = perPageStory ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(PageRequest.of(page, size), storyBoxIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(PageRequest.of(page, size), decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/{storyBoxIds}/members")
     @Operation(summary = "스토리 박스 멤버들 리스트업", description = "스토리 박스 내부에 참여하고있는 멤버들을 리스트업합니다.")
     public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxMemberListDTO>>> readMemberOfStoryBox(
-            @PathVariable Long storyBoxIds
+            @PathVariable String storyBoxIds
     ) {
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
         String email = getEmail();
-        BaseResponseDTO<List<StoryBoxMemberListDTO>> response = storyBoxService.readMemberOfStoryBox(storyBoxIds, email);
+        BaseResponseDTO<List<StoryBoxMemberListDTO>> response = storyBoxService.readMemberOfStoryBox(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/{storyBoxIds}/detail")
     @Operation(summary = "스토리박스 상세 정보 조회", description = "스토리박스의 상세정보를 조회합니다.")
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxDetailDTO>> readStoryBoxDetail(
-            @PathVariable Long storyBoxIds
+            @PathVariable String storyBoxIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<StoryBoxDetailDTO> response = storyBoxService.readStoryBoxDetail(storyBoxIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<StoryBoxDetailDTO> response = storyBoxService.readStoryBoxDetail(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/{storyBoxIds}/generate")
     @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
-            @PathVariable Long storyBoxIds
+            @PathVariable String storyBoxIds
     ) {
         String email = getEmail();
-        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(storyBoxIds, email);
+
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+
+        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -199,6 +229,15 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 */
+
+    private long getDecryptedStoryBoxId(String isDecryptedStoryId){
+        try {
+            return Long.parseLong(isDecryptedStoryId);
+        } catch (NumberFormatException e) {
+            throw new ApiException(NO_STORY_ERROR);
+        }
+    }
+
     private String getEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null) {
