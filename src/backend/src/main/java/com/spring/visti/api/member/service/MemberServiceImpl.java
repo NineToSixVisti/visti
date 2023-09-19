@@ -3,8 +3,7 @@ package com.spring.visti.api.member.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
-import com.spring.visti.domain.member.constant.Role;
-import com.spring.visti.domain.member.dto.RequestDTO.*;
+import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
@@ -17,7 +16,6 @@ import com.spring.visti.global.jwt.dto.TokenDTO;
 import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import com.spring.visti.global.redis.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;

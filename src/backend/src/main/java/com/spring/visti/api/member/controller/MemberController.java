@@ -140,7 +140,7 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw")
-    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
     public  ResponseEntity<? extends BaseResponseDTO<String>> withdrawalUser(){
 
         String email = getEmail();

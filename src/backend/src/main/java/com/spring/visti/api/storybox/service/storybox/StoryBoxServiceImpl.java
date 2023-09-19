@@ -17,6 +17,7 @@ import com.spring.visti.domain.storybox.entity.StoryBoxMember;
 import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
+import com.spring.visti.global.fcm.service.FcmService;
 import com.spring.visti.global.redis.service.UrlExpiryService;
 import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
@@ -52,6 +53,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     private final S3UploadService s3UploadService;
 
     private final MemberLikeStoryRepository memberLikeStoryRepository;
+    private final FcmService fcmService;
+
     @Override
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile){
@@ -317,6 +320,21 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(ALREADY_JOIN_ERROR);
         }
 
+        String nickname = getMember(email, memberRepository).getNickname();
+
+        _storyBoxMembers.forEach(
+                member -> {
+                    String fcmToken = member.getMember().getFcmToken();
+                    try {
+                        fcmService.sendMessageTo(fcmToken, "Visti",
+                                nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",
+                                "",
+                                "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
         StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(getMember(email, memberRepository), storyBox, Position.GUEST);
         storyBoxMemberRepository.save(newStoryBoxMember);
 
@@ -329,7 +347,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
         Member member = getMember(email, memberRepository);
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
-
 
         Optional<StoryBoxMember> targetStoryBoxMember = storyBoxes.stream()
                 .filter(storyBoxMember ->
