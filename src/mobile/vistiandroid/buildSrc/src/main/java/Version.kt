@@ -80,4 +80,6 @@ object Dependencies {
     const val DATASTORE = "androidx.datastore:datastore-preferences:1.0.0"
 
     const val KAKAO = "com.kakao.sdk:v2-user:2.10.0"
+
+    const val NAVER = "com.navercorp.nid:oauth:5.7.0"
 }

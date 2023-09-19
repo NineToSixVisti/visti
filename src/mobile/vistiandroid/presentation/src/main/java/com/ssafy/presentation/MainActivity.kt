@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavigationScreen
 import com.ssafy.presentation.ui.common.NavGraph
@@ -26,7 +27,12 @@ class MainActivity : ComponentActivity() {
     val mainViewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        NaverIdLoginSDK.initialize(
+            this@MainActivity,
+            "mE50MSQqCj6GYFbT2CVW",
+            "iytWOxmTy8",
+            "Visti"
+        )
         setContent {
             val navController = rememberNavController()
             VistiAndroidTheme {
@@ -36,8 +42,9 @@ class MainActivity : ComponentActivity() {
                     val memberInformationState = mainViewModel.memberInformation.value
                     when {
                         memberInformationState.error.isNotBlank() -> {
-                            NavGraph(navController = navController, window, applicationContext)
+                            NavGraph(navController = navController, window, this@MainActivity)
                         }
+
                         else -> {
                             MainScreen(window)
                         }

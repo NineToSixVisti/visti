@@ -1,11 +1,12 @@
 package com.ssafy.domain.usecase.memberinformation
 
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpException
+
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.repository.MemberInformationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 

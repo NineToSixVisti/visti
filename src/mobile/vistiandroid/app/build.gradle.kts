@@ -65,4 +65,7 @@ dependencies {
 
     //카카오 로그인
     implementation(Dependencies.KAKAO)
+
+    //네이버 로그인
+    implementation(Dependencies.NAVER)
 }
