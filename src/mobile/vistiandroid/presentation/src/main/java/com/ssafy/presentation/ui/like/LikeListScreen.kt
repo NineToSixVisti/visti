@@ -57,7 +57,7 @@ fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
                     val grouped = state.stories.groupBy { story ->
                         val createdAtDate =
                             SimpleDateFormat(
-                                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                                "yyyy-MM-dd HH:mm:ss",
                                 Locale.getDefault()
                             ).parse(
                                 story.createdAt

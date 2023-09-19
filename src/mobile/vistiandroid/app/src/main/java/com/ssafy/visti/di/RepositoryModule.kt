@@ -1,5 +1,6 @@
 package com.ssafy.visti.di
 
+import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
 import com.ssafy.data.repository.MemberInformationRepositoryImpl
@@ -31,13 +32,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: VistiApi): UserRepository {
-        return UserRepositoryImpl(api)
+    fun provideUserRepository(api: VistiApi,preferenceDataSource: PreferenceDataSource): UserRepository {
+        return UserRepositoryImpl(api,preferenceDataSource)
     }
-
-//    @Provides
-//    @Singleton
-//    fun providePreferenceDataSource(@ApplicationContext context: Context) : PreferenceDataSource {
-//        return PreferenceDataSource(context)
-//    }
 }
