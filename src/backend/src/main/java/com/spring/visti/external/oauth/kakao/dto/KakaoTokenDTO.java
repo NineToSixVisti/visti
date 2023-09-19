@@ -1,16 +1,23 @@
 package com.spring.visti.external.oauth.kakao.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class KakaoTokenDTO {
-    @JsonProperty("access_token")
+    @JsonProperty("accessToken")
     private String accessToken;
 
-    @JsonProperty("token_type")
+    @JsonProperty("tokenType")
     private String tokenType;
 
-    @JsonProperty("refresh_token")
+    @JsonProperty("refreshToken")
     private String refreshToken;
 
+    @Builder
+    public KakaoTokenDTO(String accessToken, String tokenType, String refreshToken) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+        this.refreshToken = refreshToken;
+    }
 }

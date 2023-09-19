@@ -8,6 +8,7 @@ import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.external.oauth.kakao.dto.KakaoTokenDTO;
 import com.spring.visti.external.oauth.kakao.dto.KakaoUserProfileDTO;
 import com.spring.visti.external.oauth.service.LoginService;
+import com.spring.visti.external.oauth.service.OAuthDTOConverter;
 import com.spring.visti.external.oauth.service.OAuthService;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
@@ -52,40 +53,16 @@ public class KakaoLoginServiceImpl implements OAuthService {
     private final PasswordEncoder passwordEncoder;
     private final LoginService loginService;
 
+    private final OAuthDTOConverter<KakaoTokenDTO> converter;
+
     @Override
     public BaseResponseDTO<TokenDTO> processOAuthLogin(Map<String, String> OAuthParams) {
-        KakaoTokenDTO kakaoToken = kakaoTokenInfo(OAuthParams).getBody();
+        KakaoTokenDTO kakaoToken = converter.convertToDto(OAuthParams);
 
         assert kakaoToken != null;
         Member member = getKakaoMember(kakaoToken);
 
         return loginService.SocialLogin(member);
-    }
-
-
-    private ResponseEntity<KakaoTokenDTO> kakaoTokenInfo(Map<String, String> OAuthParams) {
-        String code = OAuthParams.get("code");
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-        // POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
-        return restTemplate.exchange(
-                tokenProviderUri,
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                KakaoTokenDTO.class
-        );
     }
 
     public Member getKakaoMember(KakaoTokenDTO kakaoTokenDTO) {

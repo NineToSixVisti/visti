@@ -5,9 +5,11 @@ import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.constant.Role;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
+import com.spring.visti.external.oauth.kakao.dto.KakaoTokenDTO;
 import com.spring.visti.external.oauth.naver.dto.NaverTokenDTO;
 import com.spring.visti.external.oauth.naver.dto.NaverUserProfileDTO;
 import com.spring.visti.external.oauth.service.LoginService;
+import com.spring.visti.external.oauth.service.OAuthDTOConverter;
 import com.spring.visti.external.oauth.service.OAuthService;
 import com.spring.visti.global.jwt.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
@@ -50,41 +52,16 @@ public class NaverLoginServiceImpl implements OAuthService {
     private final PasswordEncoder passwordEncoder;
     private final LoginService loginService;
 
+    private final OAuthDTOConverter<NaverTokenDTO> converter;
+
     @Override
     public BaseResponseDTO<TokenDTO> processOAuthLogin(Map<String, String> OAuthParams) {
-        NaverTokenDTO naverToken = naverTokenInfo(OAuthParams).getBody();
+        NaverTokenDTO naverToken = converter.convertToDto(OAuthParams);
 
         assert naverToken != null;
         Member member = getNaverMember(naverToken);
 
         return loginService.SocialLogin(member);
-    }
-
-    private ResponseEntity<NaverTokenDTO> naverTokenInfo(Map<String, String> OAuthParams){
-        String code = OAuthParams.get("code");
-        String state = OAuthParams.get("state");
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("client_secret", clientSecret);
-        params.add("code", code);
-        params.add("state", state);
-
-        HttpEntity<MultiValueMap<String, String>> naverTokenRequest = new HttpEntity<>(params, headers);
-
-        // POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
-        return restTemplate.exchange(
-                tokenProviderUri,
-                HttpMethod.POST,
-                naverTokenRequest,
-                NaverTokenDTO.class
-        );
     }
 
     public Member getNaverMember(NaverTokenDTO naverTokenDTO) {

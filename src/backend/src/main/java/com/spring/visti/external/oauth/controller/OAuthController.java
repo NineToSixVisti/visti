@@ -30,6 +30,7 @@ public class OAuthController {
     ){
 
         OAuthService service = serviceFactory.getService(provider);
+
         BaseResponseDTO<TokenDTO> response = service.processOAuthLogin(params);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
