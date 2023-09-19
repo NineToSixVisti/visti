@@ -17,7 +17,7 @@ COPY --from=builder /build/build/libs/visti-0.0.1-SNAPSHOT.jar .
 
 EXPOSE 8080
 # root 대신 nobody 권한으로 실행
-USER nobody
+USER root
 CMD [ \
     "java", \
     "-jar", \
