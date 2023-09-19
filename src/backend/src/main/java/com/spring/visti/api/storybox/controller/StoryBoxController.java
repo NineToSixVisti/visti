@@ -36,7 +36,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_STORY_ERROR;
 public class StoryBoxController {
     private final StoryBoxService storyBoxService;
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 페이지"})
+    @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.")
 
     public ResponseEntity<? extends BaseResponseDTO<String>> createStoryBox(
              @RequestPart("storyBoxInfo") StoryBoxBuildDTO storyBoxInfo,
@@ -112,6 +112,18 @@ public class StoryBoxController {
     ) {
         String email = getEmail();
         BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readStoryBoxes(PageRequest.of(page, size), email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/searchstorybox")
+    @Operation(summary = "스토리 박스 검색", description = "스토리박스의 name을 통해 keyword로 내가 들어간 스토리박스를 검색합니다")
+    public ResponseEntity<? extends BaseResponseDTO<Page<StoryBoxExposedDTO>>> searchStoryBoxes(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = perPageBox) Integer size,
+            @RequestParam(name= "keyword", required = false) String keyword
+    ){
+        String email = getEmail();
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.searchStoryBoxes(PageRequest.of(page,size), email,keyword);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
