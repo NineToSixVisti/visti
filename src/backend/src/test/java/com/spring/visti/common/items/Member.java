@@ -21,7 +21,7 @@ public class Member {
      public static String refreshToken;
      public static Boolean status = true;
      final static Role role = Role.USER;
-     final static Integer dailyStory = 0;
+     final static Integer dailyStoryCount = 0;
      final static MemberType memberType = MemberType.SOCIAL;
 
     public static MemberJoinDTO 회원가입_정보작성() {

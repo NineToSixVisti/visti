@@ -26,7 +26,7 @@ public class StoryBox {
         LocalDateTime now = LocalDateTime.now();
         StoryBox.finishedAt = now.plusHours(2);
         return StoryBoxBuildDTO.builder()
-                .boxImgPath(boxImgPath)
+//                .boxImgPath(boxImgPath)
                 .name(name)
                 .detail(detail)
                 .blind(blind)

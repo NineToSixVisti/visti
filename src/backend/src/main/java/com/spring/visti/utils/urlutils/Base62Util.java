@@ -1,12 +1,16 @@
-package com.spring.visti.utils.urlshortener;
+package com.spring.visti.utils.urlutils;
 
 import org.springframework.stereotype.Component;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Base64;
 
 @Component
 public class Base62Util {
 
-    static final char[] BASE62 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
-
+    static final char[] BASE62 = "bZ3Egr2JwYn6TkmaQ8zsNlOj9VdptW7v0iDLyxXheR5oPFUM4S1fIBGKcCAbuHq".toCharArray();
+//    static final char[] BASE62 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
     public static String encoding(long value) {
         final StringBuilder sb = new StringBuilder();
         do {
@@ -27,6 +31,5 @@ public class Base62Util {
         }
         return result;
     }
-
 
 }

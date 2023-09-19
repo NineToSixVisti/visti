@@ -51,6 +51,10 @@ public enum ErrorCode {
     NO_INVITATION_STORY_BOX(HttpStatus.BAD_REQUEST, "SBOX006", "들어갈 수 있는 기간이 지났습니다."),
     NO_MATCH_STORY_BOX_ERROR(HttpStatus.BAD_REQUEST, "SBOX007", "옳지 않은 스토리 박스 정보 입니다."),
 
+    // Fire Base Token Part
+    FAILED_TO_SEND_MESSAGE(HttpStatus.BAD_REQUEST, "FBSEND001", "Notification 전송에 실패했습니다."),
+    FAILED_TO_MAKE_MESSAGE(HttpStatus.BAD_REQUEST, "FBSEND002", "메시지 생성에 실패했습니다."),
+
 
     // Report Part
     ALREADY_REPORTED(HttpStatus.CONFLICT, "REPORT001", "이미 신고한 스토리입니다."),

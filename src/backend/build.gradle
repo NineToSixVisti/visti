@@ -56,6 +56,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+	//fcm
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
 	// tester
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.projectlombok:lombok:1.18.26'
@@ -63,7 +67,7 @@ dependencies {
 	testImplementation 'io.rest-assured:rest-assured:5.3.0'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured:2.0.6.RELEASE'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'io.rest-assured:spring-mock-mvc'
+	testImplementation 'io.rest-assured:spring-mock-mvc:5.3.0'
 	implementation 'org.jsoup:jsoup:1.15.3'
 
 	//aws
