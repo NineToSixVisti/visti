@@ -2,6 +2,10 @@ package com.spring.visti.utils.urlutils;
 
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Base64;
+
 @Component
 public class Base62Util {
 
@@ -27,6 +31,5 @@ public class Base62Util {
         }
         return result;
     }
-
 
 }
