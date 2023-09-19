@@ -14,6 +14,7 @@ import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
 import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
 
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
@@ -37,10 +40,12 @@ public class StoryServiceImpl implements StoryService{
     private final StoryRepository storyRepository;
     private final StoryBoxRepository storyBoxRepository;
     private final StoryBoxMemberRepository storyBoxMemberRepository;
+    private final S3UploadService s3UploadService;
+
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email) {
+    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile) {
         Member member = getMember(email, memberRepository);
 
         int writtenStory = member.getDailyStoryCount();
@@ -52,7 +57,17 @@ public class StoryServiceImpl implements StoryService{
 
         StoryBox storyBox = getStoryBox(storyBuildDTO.getStoryBoxId(), storyBoxRepository);
 
-        Story story = storyBuildDTO.toEntity(member, storyBox);
+        // S3 파일 저장
+        String postCategory = "story";
+        String imageUrl;
+
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        Story story = storyBuildDTO.toEntity(member, storyBox,imageUrl);
         storyRepository.save(story);
 
         member.updateDailyStoryCount(writtenStory+1);

@@ -7,11 +7,14 @@ import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.StoryBoxExposedDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface StoryService extends DefaultService {
-    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, String email);
+
+    BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile);
 
     BaseResponseDTO<String> createNFT4Story(Long storyId, String email);
 

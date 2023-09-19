@@ -1,14 +1,15 @@
 package com.spring.visti.api.member.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.constant.MemberType;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 
-import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.global.redis.service.JwtProvideService;
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.jwt.dto.TokenDTO;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -26,7 +28,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -46,6 +50,8 @@ public class MemberServiceImpl implements MemberService{
     private final JwtProvideService jwtProvideService;
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final S3UploadService s3UploadService;
+
     @Override
     @Transactional
     public BaseResponseDTO<String> signUp(MemberJoinDTO memberJoinDTO)
@@ -79,6 +85,7 @@ public class MemberServiceImpl implements MemberService{
         log.info("===== Sign UP 완료 =============");
         return new BaseResponseDTO<>("회원가입이 완료되었습니다.", 200);
     }
+
 
     @Override
     public BaseResponseDTO<String> verifyMember(String email, String type) {
@@ -231,6 +238,38 @@ public class MemberServiceImpl implements MemberService{
         log.info("Member info: " + member);
 
         return new BaseResponseDTO<MemberMyInfoProfileDTO>(member.getNickname() + "의 상세 정보입니다.", 200, member);
+    }
+
+    @Override
+    public BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile multipartFile) throws IOException {
+        Member member = getMember(email, memberRepository);
+        String newEmail = memberChangeProfileDTO.getNewEmail();
+        String nickname = memberChangeProfileDTO.getNickname();
+        if (!isValidEmail(newEmail)) {
+            throw new ApiException(INVALID_EMAIL_FORMAT);
+        }
+
+        // S3 파일 저장
+        String postCategory = "profile";
+        String imageUrl;
+        // 프로필 사진 변경->이전 사진 삭제
+        String originProfilePath = member.getProfilePath();
+        if (!originProfilePath.isEmpty()){
+            int s3DomainLastIndex = originProfilePath.indexOf(".com/") + 5;
+            if (s3DomainLastIndex > 0) {
+                String pathWithFilename = originProfilePath.substring(s3DomainLastIndex);
+                s3UploadService.deleteS3File(pathWithFilename);
+            }
+        }
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+        member.updateProfile(newEmail, nickname, imageUrl);
+        memberRepository.save(member);
+        return new BaseResponseDTO<>("회원정보 변경이 완료되었습니다.", 200);
+
     }
 
 
