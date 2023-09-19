@@ -76,6 +76,7 @@ public class StoryBoxController {
     public ResponseEntity<? extends BaseResponseDTO<String>> leaveStoryBox(
             @PathVariable Long storyBoxId
     ) {
+
         String email = getEmail();
         BaseResponseDTO<String> response = storyBoxService.leaveStoryBox(storyBoxId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
