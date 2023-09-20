@@ -21,6 +21,7 @@ import com.spring.visti.global.fcm.service.FcmService;
 import com.spring.visti.global.redis.service.UrlExpiryService;
 import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
+import jakarta.mail.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -181,12 +182,15 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String Keyword) {
+    public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
         Member member = getMember(email, memberRepository);
-//        Page<StoryBox> storyBoxes = storyBoxRepository.findByNameContaining(pageable, keyword);
+        Page<StoryBox> storyBoxMembers = storyBoxMemberRepository.findJoinedByMemberAndKeyword(member,keyword,pageable);
+        Page<StoryBoxExposedDTO> searchStoryBoxes = storyBoxMembers
+                .map(storyBoxMember -> StoryBoxExposedDTO.of(storyBoxMember));
 
-
-        return null;
+        return new BaseResponseDTO<Page<StoryBoxExposedDTO>>(
+                pageable.getPageNumber() + "페이지의 검색결과 조회가 완료되었습니다.",
+                200, searchStoryBoxes);
     }
 
 
