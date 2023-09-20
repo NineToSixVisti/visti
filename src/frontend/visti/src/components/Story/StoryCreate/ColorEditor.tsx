@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ReactComponent as TextColorIcon } from '../../assets/images/textcolor.svg';
+import { ReactComponent as TextColorIcon } from '../../../assets/images/textcolor.svg';
 
 const ColorPalette = styled.div`
   display: flex;
