@@ -60,6 +60,9 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile){
 
+        log.info(storyBoxBuildDTO.getDetail());
+        log.info(storyBoxBuildDTO.getName());
+
         String storyBoxName = storyBoxBuildDTO.getName();
         if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
@@ -76,8 +79,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         } catch (IOException e) {
             throw new ApiException(FILE_TYPE_ERROR);
         }
-        log.info(storyBoxBuildDTO.getDetail());
-        log.info(storyBoxBuildDTO.getName());
+
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member, imageUrl);
 
 
