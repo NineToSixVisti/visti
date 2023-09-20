@@ -76,7 +76,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         } catch (IOException e) {
             throw new ApiException(FILE_TYPE_ERROR);
         }
-
+        log.info(storyBoxBuildDTO.getDetail());
+        log.info(storyBoxBuildDTO.getName());
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member, imageUrl);
 
 
