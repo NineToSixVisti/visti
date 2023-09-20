@@ -60,15 +60,13 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile){
 
-        log.info(storyBoxBuildDTO.getDetail());
-        log.info(storyBoxBuildDTO.getName());
-
         String storyBoxName = storyBoxBuildDTO.getName();
         if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         // S3 파일 저장
         String postCategory = "storybox";
@@ -96,7 +94,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         // 이미 가입된 스토리 박스인지 확인
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
@@ -118,7 +117,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
@@ -137,7 +137,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
@@ -155,7 +156,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST,pageable);
 
@@ -171,7 +173,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMember(member, pageable);
 
@@ -186,7 +189,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
         Page<StoryBox> storyBoxMembers = storyBoxMemberRepository.findJoinedByMemberAndKeyword(member,keyword,pageable);
         Page<StoryBoxExposedDTO> searchStoryBoxes = storyBoxMembers
                 .map(storyBoxMember -> StoryBoxExposedDTO.of(storyBoxMember));
@@ -200,7 +204,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email) {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
@@ -216,6 +221,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
         Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
         Set<Long> likedStoryIds = _memberLikeStory.stream()
@@ -236,7 +242,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         if (!storyBoxMemberRepository.existsByStoryBoxIdAndMember(id, member)){
             throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
@@ -273,7 +280,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> generateStoryBoxLink(Long id, String email) {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(id, member);
 
@@ -352,7 +360,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
 
         Optional<StoryBoxMember> targetStoryBoxMember = storyBoxes.stream()

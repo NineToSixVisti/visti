@@ -1,5 +1,7 @@
 package com.spring.visti.global.redis.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,24 +13,25 @@ import java.util.concurrent.TimeUnit;
 public class JwtProvideService {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisBlackListTemplate;
 
-    public void saveRefreshToken(String email, String refreshToken, Date expireTime) {
+    public void addToBlackList(String token, Date expireTime) {
+        // 토큰의 만료 시간이 있으면 해당 만료 시간까지만 블랙리스트에 추가됩니다.
         long expiresInMinutes = calculateExpirationInMinutes(expireTime);
 
-        // expiresInMinutes 값이 0 또는 음수인 경우, Redis에 토큰을 저장하지 않습니다.
         if (expiresInMinutes > 0) {
-            redisTemplate.opsForValue().set(email, refreshToken, expiresInMinutes, TimeUnit.MINUTES);
+            redisBlackListTemplate.opsForValue().set(token, "invalid", expiresInMinutes, TimeUnit.MINUTES);
+        } else {
+            // 토큰의 만료 시간이 없는 경우 임의의 기간 동안 블랙리스트에 추가됩니다.
+            redisBlackListTemplate.opsForValue().set(token, "invalid", 30, TimeUnit.MINUTES);
         }
     }
 
-    public String getRefreshToken(String email){
-        return (String) redisTemplate.opsForValue().get(email);
+    public boolean isTokenInBlackList(String token) {
+        return redisBlackListTemplate.opsForValue().get(token) != null;
     }
 
-    public String expireRefreshToekn(String email){
-        return (String) redisTemplate.opsForValue().get(email);
-    }
+
     // 만료 시간을 계산하는 메서드
     private long calculateExpirationInMinutes(Date expireTime) {
         if (expireTime == null) {

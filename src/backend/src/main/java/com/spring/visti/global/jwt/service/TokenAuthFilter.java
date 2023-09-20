@@ -1,5 +1,6 @@
 package com.spring.visti.global.jwt.service;
 
+import com.spring.visti.domain.member.service.CustomUserDetails;
 import com.spring.visti.global.redis.service.JwtProvideService;
 import com.spring.visti.utils.exception.ApiException;
 import jakarta.servlet.FilterChain;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -37,24 +39,25 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
 
         log.info("JWT Filtering Started! =======================================");
-
+        String accessToken = null;
+        String email = null;
         try {
-            String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
-            String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
+            accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
+
+            email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
+            setAuthentication(email);
+
+
             // 액세스 토큰의 유효성 검사
             tokenProvider.validateToken(accessToken);
 
-            // 엑세스 토큰 인증 진행
-            setAuthentication(email);
             log.info("==== Access Token alive! ===================================");
         } catch (ApiException e) {
             if (e.getCode().equals(JWT_EXPIRED)) {
                 // 액세스 토큰이 만료되었을 경우 리프레시 토큰 검증
-                String accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
-                String email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
-                // String refreshToken = tokenProvider.getHeaderToken(request, "Refresh");
+                String refreshToken = getMemberRefreshToken();
 
-                String refreshToken = jwtProvideService.getRefreshToken(email);
+                if (refreshToken == null){ throw new ApiException(NO_TOKEN_HEADER);}
 
                 try {
                     log.info("==== Access Token Died, is Refresh valid? ==================");
@@ -82,6 +85,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         }
 
         log.info("JWT Filtering Finished! =======================================");
+
         chain.doFilter(request, response);
     }
 
@@ -106,7 +110,13 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         return headerValue.trim();
     }
 
-
+    private String getMemberRefreshToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() != null) {
+            return ((CustomUserDetails) authentication.getPrincipal()).getMember().getRefreshToken();
+        }
+        throw new ApiException(JWT_NOT_SUPPORT);
+    }
 
     private boolean isSwaggerRequest(HttpServletRequest request) {
         String uri = request.getRequestURI();
