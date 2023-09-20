@@ -13,7 +13,8 @@ fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3)
     ) {
-        this.items(stories.itemSnapshotList) { image ->
+        this.items(stories.itemCount) { index ->
+            val image = stories[index]
             if (image != null) {
                 StoryItem(image)
             }

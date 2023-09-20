@@ -101,7 +101,7 @@ dependencies {
     //시스템 화면 접근
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
-    val pagingVersion = "3.1.1"
+    val pagingVersion = "3.2.1"
     implementation("androidx.paging:paging-runtime:$pagingVersion")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha20")
+    implementation("androidx.paging:paging-compose:3.2.1")
 }

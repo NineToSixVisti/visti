@@ -27,6 +27,7 @@ import com.ssafy.presentation.ui.like.component.LoadingItem
 import com.ssafy.presentation.ui.like.component.LoadingView
 import com.ssafy.presentation.ui.like.component.ToolbarWithLikeList
 import com.ssafy.presentation.ui.like.component.header
+import kotlinx.coroutines.flow.retry
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Date
@@ -47,7 +48,7 @@ fun LikeListScreen(viewModel: LikeListViewModel = hiltViewModel()) {
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            val lazyLikedStories = likedStories.collectAsLazyPagingItems()
+            val lazyLikedStories = likedStories
 
             val grouped = lazyLikedStories.itemSnapshotList.groupBy { story ->
                 val createdAtDate =

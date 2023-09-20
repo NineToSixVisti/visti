@@ -25,7 +25,7 @@ class LikedStoryRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        const val NETWORK_STORY_PAGE_SIZE = 20
+        const val NETWORK_STORY_PAGE_SIZE = 24
         const val NETWORK_STORY_BOX_PAGE_SIZE = 10
     }
 }

@@ -21,7 +21,7 @@ class MemberInformationRepositoryImpl @Inject constructor(
         return api.getMemberInformation().detail.toDomain()
     }
 
-    override fun getMyStoryBoxes(size: Int): Flow<PagingData<StoryBox>> {
+    override fun getMyStoryBoxes(): Flow<PagingData<StoryBox>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_STORY_BOX_PAGE_SIZE,
@@ -32,13 +32,13 @@ class MemberInformationRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getMyStories(size: Int): Flow<PagingData<Story>> {
+    override fun getMyStories(): Flow<PagingData<Story>> {
         return Pager(
             config = PagingConfig(
-                pageSize = size,
+                pageSize = NETWORK_STORY_PAGE_SIZE,
             ),
             pagingSourceFactory = {
-                StoryPagingSource(api, size)
+                StoryPagingSource(api)
             }
         ).flow
     }

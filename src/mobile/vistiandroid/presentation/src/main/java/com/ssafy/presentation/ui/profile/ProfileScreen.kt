@@ -61,18 +61,10 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
     val myStories = viewModel.myStories.collectAsLazyPagingItems()
-
-    val pager = remember {
-        viewModel.myStoryBoxes
-    }
-
-    val lazyPagingItems = pager.collectAsLazyPagingItems()
-
+    val lazyPagingItems = viewModel.myStoryBoxes.collectAsLazyPagingItems()
 
     val memberInformationState = viewModel.memberInformation.value
-
     val memberInformation = memberInformationState.memberInformation
-
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -166,10 +158,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                 selectedTabIndex = it
             }
             when (selectedTabIndex) {
-                0 -> {
-                    StoryLazyVerticalGrid(myStories)
-                }
-
+                0 -> StoryLazyVerticalGrid(myStories)
                 1 -> StoryBoxLazyColumn(lazyPagingItems)
             }
         }

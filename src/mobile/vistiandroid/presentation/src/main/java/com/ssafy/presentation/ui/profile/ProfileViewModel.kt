@@ -23,28 +23,17 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
-    private val repository: MemberInformationRepository,
+    repository: MemberInformationRepository,
 ) : ViewModel() {
 
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
-    val myStoryBoxes = repository.getMyStoryBoxes(5)
-
-    private val _myStories = MutableStateFlow<PagingData<Story>>(PagingData.empty())
-    val myStories: StateFlow<PagingData<Story>> = _myStories
+    val myStoryBoxes = repository.getMyStoryBoxes()
+    val myStories = repository.getMyStories()
 
     fun initializeData() {
-        getMyStories()
         getMemberInformation()
-    }
-
-    private fun getMyStories() {
-        viewModelScope.launch {
-            repository.getMyStories(50).collect { pagingData ->
-                _myStories.value = pagingData
-            }
-        }
     }
 
 
