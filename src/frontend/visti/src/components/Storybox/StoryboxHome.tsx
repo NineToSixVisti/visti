@@ -9,6 +9,7 @@ import { ReactComponent as SearchIcon } from '../../assets/images/search_button.
 
 interface Storybox {
   id: number;
+  encryptedId: string;
   blind : boolean;
   boxImgPath : string;
   createdAt: string;
@@ -66,7 +67,7 @@ const StoryboxHome = () => {
                 <BoxWrap
                   key={storybox.id}
                   bgImage={storybox.boxImgPath}
-                  onClick={()=>{navigate(`/storybox/detail/${storybox.id}`)}}>
+                  onClick={()=>{navigate(`/storybox/detail/${storybox.encryptedId}`)}}>
                   <NameWrap>
                   <p>
                     {storybox.name.length > 15 ? `${storybox.name.substring(0, 15)}...` : storybox.name}
