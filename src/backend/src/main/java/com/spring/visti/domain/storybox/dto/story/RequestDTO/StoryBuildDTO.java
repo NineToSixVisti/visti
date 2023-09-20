@@ -6,6 +6,7 @@ import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.storybox.constant.StoryType;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBuildDTO {
 
-    private Long storyBoxId;
+    private String storyBoxId;
     private StoryType mainFileType;
     private String mainFilePath;
 
@@ -24,7 +25,7 @@ public class StoryBuildDTO {
     private String subFilePath;
 
     @Builder
-    public StoryBuildDTO(Long storyBoxId,
+    public StoryBuildDTO(String storyBoxId,
                          StoryType mainFileType, String mainFilePath,
                          StoryType subFileType, String subFilePath){
         this.storyBoxId = storyBoxId;

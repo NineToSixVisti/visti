@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
 @RestController
-@RequestMapping("/short")
+@RequestMapping("/visti")
 @RequiredArgsConstructor
 @Tag(name = "ShortURL Validator", description = "숏 URL 해석용")
 public class ShortUrlController {
