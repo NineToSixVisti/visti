@@ -20,6 +20,8 @@ public class StoryExposedDTO {
     private String encryptedId;
 
     private Long storyBoxId;
+    private String encryptedStoryBoxId;
+
     private MemberExposedDTO member;
 
     private StoryType mainFileType;
@@ -38,7 +40,8 @@ public class StoryExposedDTO {
 
     @Builder
     public StoryExposedDTO(Long id, String encryptedId,
-                           Long storyBoxId, Member member,
+                           Long storyBoxId,  String encryptedStoryBoxId,
+                           Member member,
                            StoryType mainFileType, String mainFilePath,
                            Boolean blind, LocalDateTime createdAt, LocalDateTime finishedAt, Boolean like
                         ){
@@ -46,6 +49,7 @@ public class StoryExposedDTO {
         this.encryptedId = encryptedId;
 
         this.storyBoxId = storyBoxId;
+        this.encryptedStoryBoxId = encryptedStoryBoxId;
         this.member = MemberExposedDTO.of(member);
         this.mainFileType = mainFileType;
         this.mainFilePath = mainFilePath;
@@ -60,10 +64,17 @@ public class StoryExposedDTO {
         String encryptedId = SecurePathUtil.encryptAndEncode(String.valueOf(story.getId()));
         String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
         System.out.println("이거를 확인해주세요" + isDecrypted);
+
+
+        String encryptedStoryBoxId = SecurePathUtil.encryptAndEncode(String.valueOf(story.getStoryBox().getId()));
+        String isDecryptedStoryBox = SecurePathUtil.decodeAndDecrypt(encryptedStoryBoxId);
+        System.out.println("이거를 확인해주세요" + isDecryptedStoryBox);
+
         return StoryExposedDTO.builder()
                 .id(story.getId())
                 .encryptedId(encryptedId)
                 .storyBoxId(story.getStoryBox().getId())
+                .encryptedStoryBoxId(encryptedStoryBoxId)
                 .member(story.getMember())
                 .mainFileType(story.getMainFileType())
                 .mainFilePath(story.getMainFilePath())

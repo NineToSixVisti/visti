@@ -17,6 +17,7 @@ import com.spring.visti.domain.storybox.repository.StoryRepository;
 import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,10 +53,13 @@ public class StoryServiceImpl implements StoryService{
         int canWriteStory = member.dailyStoryMaximum();
         if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
 
-        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(storyBuildDTO.getStoryBoxId(), member);
+        String isDecryptedStoryBoxId = SecurePathUtil.decodeAndDecrypt(storyBuildDTO.getStoryBoxId());
+        long decryptedStoryBoxId = getDecryptedId(isDecryptedStoryBoxId);
+
+        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(decryptedStoryBoxId, member);
         if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
 
-        StoryBox storyBox = getStoryBox(storyBuildDTO.getStoryBoxId(), storyBoxRepository);
+        StoryBox storyBox = getStoryBox(decryptedStoryBoxId, storyBoxRepository);
 
         // S3 파일 저장
         String postCategory = "story";
@@ -67,7 +71,7 @@ public class StoryServiceImpl implements StoryService{
             throw new ApiException(FILE_TYPE_ERROR);
         }
 
-        Story story = storyBuildDTO.toEntity(member, storyBox,imageUrl);
+        Story story = storyBuildDTO.toEntity(member, storyBox, imageUrl);
         storyRepository.save(story);
 
         member.updateDailyStoryCount(writtenStory+1);
@@ -246,6 +250,12 @@ public class StoryServiceImpl implements StoryService{
 
             }
     }
-
+    private long getDecryptedId(String isDecryptedId){
+        try {
+            return Long.parseLong(isDecryptedId);
+        } catch (NumberFormatException e) {
+            throw new ApiException(NO_STORY_BOX_ERROR);
+        }
+    }
 }
 

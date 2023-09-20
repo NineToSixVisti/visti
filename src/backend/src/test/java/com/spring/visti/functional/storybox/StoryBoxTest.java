@@ -9,6 +9,7 @@ import com.spring.visti.domain.member.dto.RequestDTO.MemberJoinDTO;
 import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
 import com.spring.visti.functional.member.MemberTest;
+import com.spring.visti.utils.exception.ApiException;
 import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -17,6 +18,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import static com.spring.visti.utils.exception.ErrorCode.NO_STORY_ERROR;
 
 @Slf4j
 public class StoryBoxTest extends AcceptanceTest {
@@ -46,18 +54,21 @@ public class StoryBoxTest extends AcceptanceTest {
     @Test
     public void 스토리박스_생성_테스트(){
 
-        StoryBoxBuildDTO request = StoryBox.스토리박스_생성();
+        StoryBoxBuildDTO storyInfo = StoryBox.스토리박스_생성();
+        File fileToUpload = new File("path_to_your_file"); // 여기에 실제 업로드할 파일의 경로를 지정해주세요.
 
-        // 2. 스토리박스 생성
+        // 스토리박스 생성
         RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Access_Token", accessToken)  // 토큰 정보를 헤더에 추가
-                    .body(request)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header("Access_Token", accessToken)  // 토큰 정보를 헤더에 추가
+                .multiPart("storyBoxInfo", storyInfo, "application/json")  // 스토리 정보를 멀티파트로 추가
+                .multiPart("file", fileToUpload)   // 파일을 멀티파트로 추가
                 .when()
-                    .post("/api/story-box/create")
+                .post("/api/story-box/create")
                 .then()
-                    .log().all().extract();
+                .log().all().extract();
     }
+
     @Test
     public void 스토리박스_접근(){
         스토리박스_생성();
@@ -76,7 +87,7 @@ public class StoryBoxTest extends AcceptanceTest {
 
     @Test
     public void 스토리박스_정보_조회(){
-        Integer storyBoxId = _스토리박스_접근();
+        String storyBoxId = _스토리박스_접근();
 
         // 2. 스토리박스 정보 조회
         RestAssured.given()
@@ -126,7 +137,7 @@ public class StoryBoxTest extends AcceptanceTest {
 
     @Test
     public void 스토리박스_링크_받기(){
-        Integer storyBoxId = _스토리박스_접근();
+        String storyBoxId = _스토리박스_접근();
         // 2. 스토리박스 상세정보 조회
         ExtractableResponse<Response> response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -186,7 +197,7 @@ public class StoryBoxTest extends AcceptanceTest {
                 .extract();
     }
 
-    public Integer _스토리박스_접근(){
+    public String _스토리박스_접근(){
         스토리박스_생성_테스트();
 
         // 2. 스토리박스 조회
@@ -199,11 +210,11 @@ public class StoryBoxTest extends AcceptanceTest {
                 .then()
                 .extract();
 
-        return response.path("detail.content[0].id");
+        return response.path("detail.content[0].encryptedId");
     }
 
     public String _스토리박스_링크_받기(){
-        Integer storyBoxId = _스토리박스_접근();
+        String storyBoxId = _스토리박스_접근();
         // 2. 스토리박스 상세정보 조회
         ExtractableResponse<Response> response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -216,6 +227,21 @@ public class StoryBoxTest extends AcceptanceTest {
                 .extract();
 
         return response.path("detail");
+    }
+
+    private File fileLoader(String imgPath){
+        try{
+            URL resourceUrl = getClass().getClassLoader().getResource(imgPath);
+            File fileToUpload;
+            if (resourceUrl != null) {
+                fileToUpload = new File(resourceUrl.toURI());
+                return fileToUpload;
+            } else {
+                throw new ApiException(NO_STORY_ERROR);
+            }
+        }catch (Error | URISyntaxException e){
+            throw new RuntimeException(e);
+        }
     }
 
 }
