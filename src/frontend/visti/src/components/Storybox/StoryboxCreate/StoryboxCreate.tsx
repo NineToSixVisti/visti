@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../../assets/images/plus_button_red.svg"
@@ -57,7 +57,9 @@ const StoryboxCreate = () => {
   };
 
   const OpenModal = () => {
-    setIsModalOpen(true)  
+    if (checkData()){
+      setIsModalOpen(true);
+    }
   }
 
   const CloseModal = () => {
@@ -75,12 +77,42 @@ const StoryboxCreate = () => {
       if (response.data.statusCode === 200) {
         console.log('스토리박스가 성공적으로 생성되었습니다.');
       } else {
-        console.log('스토리박스 생성 실패:', response.data.message);
+        console.log('스토리박스 생성 실패:');
       }
     } catch (err) {
       console.log('스토리박스 POST 중 에러 발생:', err);
     }
   }, []);
+
+  // 입력시의 조건
+  const checkData = () => {
+    if (!groupName.trim()) {
+      alert('그룹 이름을 입력해주세요!')
+      return false;
+    }
+    if (groupName.length >= 20) {
+      alert('그룹 이름은 18자 이하로 입력해주세요!')
+      return false;
+    }
+    if (!groupDetail.trim()) {
+      alert("그룹 소개글을 입력해주세요.");
+      return false;
+    } 
+    if (groupDetail.trim().length >= 100) {
+      alert("그룹 소개글은 100자 이하로 입력해주세요.");
+      return false;
+    }
+    if (!value) {
+      alert("종료일자를 설정해주세요.");
+      return false;
+    }
+    const today = dayjs();
+    if (value.isBefore(today, 'day')) {
+      alert("종료시간은 오늘 날짜 이후여야 합니다.");
+      return false;
+  }
+    return true;
+  }
 
   // formData 출력을 하기 위해
   const formDataToObject = (formData: FormData) => {
@@ -118,14 +150,22 @@ const StoryboxCreate = () => {
     console.log(json);
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
 
-    console.log(formDataToObject(formData));
+    // console.log(formDataToObject(formData));
     postStorybox(formData);
+    setIsModalOpen(false);
+    navigate('/storybox')
   }
   
   
   return (
     <Wrap>
-      <CheckModal isModalOpen={isModalOpen} CloseModal={CloseModal}/>
+      <CheckModal 
+        isModalOpen={isModalOpen} CloseModal={CloseModal}
+        handleSubmit={handleSubmit} postStorybox={postStorybox}
+        formDataToObject={formDataToObject} file={file}
+        groupDetail={groupDetail} groupName={groupName}
+        disclosure={disclosure} value={value}
+        />
       <LogoWrap>
         <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
         <img src={process.env.PUBLIC_URL + '/assets/Visti-red.png'} alt="Visti Logo"/> 

@@ -1,12 +1,22 @@
 import React from 'react'
 import styled from 'styled-components';
+import { Dayjs } from 'dayjs';
 
 interface CheckModalProps {
-  isModalOpen : boolean;
-  CloseModal : () => void;
+  isModalOpen: boolean;
+  file: File | null;
+  groupName: string;
+  groupDetail: string;
+  disclosure: boolean;
+  value: Dayjs | null;
+  CloseModal: () => void;
+  handleSubmit: () => Promise<void>;
+  postStorybox: (formData: FormData) => Promise<void>;
+  formDataToObject: (formData: FormData) => any;
 }
 
-const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, CloseModal}) => {
+const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, groupDetail, disclosure, value,
+    CloseModal, handleSubmit, postStorybox}) => {
   if (!isModalOpen) return null;
 
   return (
@@ -18,7 +28,7 @@ const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, CloseModal}) => {
         </MainModal>
         <FootModal>
           <div onClick={CloseModal}>취소</div>
-          <div >확인</div>
+          <div onClick={()=>{handleSubmit();}}>확인</div>
         </FootModal>
       </ModalContainer>
     </Overay>
