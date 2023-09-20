@@ -4,9 +4,9 @@ import FontSize from './FontSizeEditor';
 import ColorEditor from './ColorEditor';
 import Draggable from 'react-draggable';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store'; 
-import { setText, setFontSize, setColor, setPosition } from '../../store/slices/TextSlices';
-import { ReactComponent as TextButtonIcon } from '../../assets/images/text_button.svg';
+import { RootState } from '../../../store'; 
+import { setText, setFontSize, setColor, setPosition } from '../../../store/slices/TextSlices';
+import { ReactComponent as TextButtonIcon } from '../../../assets/images/text_button.svg';
 
 const EditorContainer = styled.div`
   position: relative;

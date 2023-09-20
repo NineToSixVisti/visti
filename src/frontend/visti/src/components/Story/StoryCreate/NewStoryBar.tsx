@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as BackIcon } from '../../assets/images/back_button.svg';
+import { ReactComponent as BackIcon } from '../../../assets/images/back_button.svg';
 
 const CenteredDiv = styled.div`
     display: flex;

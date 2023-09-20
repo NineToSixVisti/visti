@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import TextEditor from './TextEditor';
-import { RootState } from '../../store';
+import { RootState } from '../../../store';
 import CreateImageComponent from './CreateImageButton';
 import NewStoryBar from './NewStoryBar';
 

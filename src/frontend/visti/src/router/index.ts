@@ -3,8 +3,8 @@ import StoryboxCreate from "../components/Storybox/StoryboxCreate/StoryboxCreate
 import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetailHome";
 
 
-import StoryHome from "../components/Story/StoryHome"
-import StoryCreator from "../components/Story/StoryCreator";
+import StoryHome from "../components/Story/StoryCreate/StoryHome"
+import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 
 const routes = [
   {

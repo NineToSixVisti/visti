@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState } from '../../../store';
 import html2canvas from 'html2canvas';
 import styled from 'styled-components';
-import { ReactComponent as CompleteButton } from '../../assets/images/complete_button.svg';
+import { ReactComponent as CompleteButton } from '../../../assets/images/complete_button.svg';
 import { create } from 'ipfs-http-client';
-import { setImage, setCID } from '../../store/slices/MergeImageSlice'; // Redux actions를 import합니다.
+import { setImage, setCID } from '../../../store/slices/MergeImageSlice'; // Redux actions를 import합니다.
 
 const ipfs = create({
-  host: 'localhost',
+  host: 'j9d102.p.ssafy.io',
   port: 5001,
   protocol: 'http'
 });
@@ -46,13 +46,13 @@ const CreateImageComponent: React.FC = () => {
             URL.revokeObjectURL(url);
     
             // IPFS에 이미지 업로드
-            const file = new File([blob], 'mergedImage.png', { type: 'image/png' });
-            const added = await ipfs.add(file);
-            console.log("Uploaded to IPFS with CID:", added.path);
+            // const file = new File([blob], 'mergedImage.png', { type: 'image/png' });
+            // const added = await ipfs.add(file);
+            // console.log("Uploaded to IPFS with CID:", added.path);
     
             // CID를 Redux store에 저장
-            dispatch(setCID(added.path));
-          }
+            // dispatch(setCID(added.path));
+          } 
         }, 'image/png');
       } catch (error) {
         console.error('Error generating image:', error);

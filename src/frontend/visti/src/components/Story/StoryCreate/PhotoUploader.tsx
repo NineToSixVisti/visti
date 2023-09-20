@@ -1,6 +1,6 @@
 import React, { forwardRef, ChangeEvent } from 'react';  
 import { useDispatch } from 'react-redux';
-import { setImageHeight } from '../../store/slices/ImageSlice';
+import { setImageHeight } from '../../../store/slices/ImageSlice';
 
 type PhotoUploaderProps = { 
   onImageUpload: (image: File) => void;
