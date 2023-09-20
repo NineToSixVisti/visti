@@ -35,9 +35,9 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_STORY_ERROR;
 @Tag(name = "Story Box 컨트롤러", description = "Story Box Controller API Document")
 public class StoryBoxController {
     private final StoryBoxService storyBoxService;
+
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "스토리-박스 만들기", description = "스토리-박스를 만듭니다.", tags={"스토리-박스 페이지"})
-
     public ResponseEntity<? extends BaseResponseDTO<String>> createStoryBox(
              @RequestPart("storyBoxInfo") StoryBoxBuildDTO storyBoxInfo,
              @RequestPart(value = "file", required = false) MultipartFile multipartFile

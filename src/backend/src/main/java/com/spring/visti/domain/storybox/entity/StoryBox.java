@@ -73,6 +73,10 @@ public class StoryBox extends BaseEntity {
         }
     }
 
+    public void updateBlind(Boolean blind){
+        this.blind = blind;
+    }
+
     public void updateToken(String token, LocalDateTime expireTime){
         this.token = token;
         this.expireTime = expireTime;

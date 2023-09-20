@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static java.time.LocalDate.now;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +33,19 @@ public class scheduledTasks {
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
+        
+        // 블라인드 여부 업데이트
+        LocalDate now = now();
+
+        String dateTimeString = now + "T00:01:00"; // 또는 다른 원하는 시간
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+        List<StoryBox> storyBoxes = storyBoxRepository.findAllByFinishedAtBeforeAndBlindIsFalse(localDateTime);
+        storyBoxes.forEach(storyBox-> storyBox.updateBlind(true));
     }
 
-    @Transactional
+
     @Scheduled(cron = "0 0 22 * * ?")
     public void sendMessageToUserAt22Clock() { // 매일 22시에 실행
         // 모든 회원 중 dailyStoryCounts 가 채워지지 않은 사람들에게 메시지 보냄
@@ -59,8 +72,8 @@ public class scheduledTasks {
     public void sendMessageBeforeClose() { // 매일 18시에 실행
         // 모슽 스토리 박스들 중 해당 날짜에 종료가 되는 스토리박스에게 알림이감
 
-        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-        LocalDateTime endOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        LocalDateTime startOfToday = LocalDateTime.of(now(), LocalTime.MIN);
+        LocalDateTime endOfToday = LocalDateTime.of(now(), LocalTime.MAX);
 
         List<StoryBox> storyBoxesClosingToday = storyBoxRepository.findByFinishedAtBetween(startOfToday, endOfToday);
         storyBoxesClosingToday
