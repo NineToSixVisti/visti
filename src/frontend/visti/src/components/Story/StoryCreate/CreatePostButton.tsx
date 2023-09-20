@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PhotoUploader from './PhotoUploader';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setSelectedImage } from '../../store/slices/ImageSlice';
+import { setSelectedImage } from '../../../store/slices/ImageSlice';
 
 function CreatePostButton() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
