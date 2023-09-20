@@ -147,7 +147,7 @@ const StoryboxCreate = () => {
       json.finishedAt = value.format('YYYY-MM-DD');
     }
 
-    console.log(json);
+    // console.log(json);
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
 
     // console.log(formDataToObject(formData));

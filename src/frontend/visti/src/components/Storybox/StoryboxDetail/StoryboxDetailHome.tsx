@@ -11,28 +11,74 @@ import Member from './Member';
 import Detail from './Detail';
 import { authInstance } from '../../../apis/utils/instance';
 
-const StoryboxDetail: React.FC = () => {
-  interface StoryboxInfo {
-  name: string;
-  boxImgPath?: string;
-  blind?: boolean;
-  createdAt: string;
-  finishedAt: string;
+interface StoryboxInfo {
+name: string;
+boxImgPath?: string;
+blind?: boolean;
+createdAt: string;
+finishedAt: string;
 }
 
+interface StoryInfo {
+  id: number;
+  encryptedId: string;
+  storyBoxId: number;
+  member: {
+    nickname: string;
+    profilePath: string | null;
+    status: boolean;
+  };
+  mainFileType: string;
+  mainFilePath: string;
+  blind: boolean;
+  like: boolean;
+  createdAt: string;
+  finishedAt: string;
+};
+
+const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{id:string}>();
   const [tap, setTap] = useState<string>('story');
+  
   const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
-  const [isStory, setIsStory] = useState<boolean>(false);
-  const [isPrivate, setPrivate] = useState<boolean>(false);
+  const [storyInfo, setStoryInfo] = useState<StoryInfo[]>([]);
+
+  const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
+
+  useEffect(() => {
+    const updateRemainingTime = () => {
+      const now = new Date();
+      const finishDate = new Date(storyboxInfo.finishedAt);
+      const diff = finishDate.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setRemainingTime('00:00:00');
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      setRemainingTime(formattedTime);
+    };
+
+    updateRemainingTime();
+    const intervalId = setInterval(updateRemainingTime, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [storyboxInfo.finishedAt]);
 
   const getStoryboxInfo = useCallback(async () => {
     try  {
       const data = await authInstance.get(`story-box/${id}/info`)
       if (data) {
         setStoryboxInfo(data.data.detail);
-        console.log(data.data.detail)
+        // console.log(data.data.detail)
       }
     }
     catch (err) {
@@ -40,9 +86,23 @@ const StoryboxDetail: React.FC = () => {
     }
   }, [id]);
 
+  const getStoryInfo = useCallback(async () => {
+    try {
+      const data = await authInstance.get(`story-box/${id}/story-list`)
+      if (data) {
+        setStoryInfo(data.data.detail.content)
+        console.log(data.data.detail.content)
+      }
+    }
+    catch (err) {
+      console.log('스토리Info GET 중 에러 발생', err)
+    }
+  }, [id])
+
   useEffect(()=>{
     getStoryboxInfo();
-  }, [getStoryboxInfo]);
+    getStoryInfo();
+  }, [getStoryboxInfo, getStoryInfo]);
 
   const formatDate = (dateStr: string, includeYear: boolean = true): string => {
     const date = new Date(dateStr);
@@ -61,14 +121,15 @@ const StoryboxDetail: React.FC = () => {
       <TopWrap>
         <FirstTop>
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
-          <p onClick={()=>{setPrivate(!isPrivate)}}>{storyboxInfo.name}</p>
+          <p>
+          {storyboxInfo.name.length > 10 ? `${storyboxInfo.name.substring(0, 10)}...` : storyboxInfo.name}</p>
           <ModifySvg/>
         </FirstTop>
         <TopMian bgImage={storyboxInfo.boxImgPath}>
-          <div onClick={() => setIsStory(!isStory)}></div>
+          <div></div>
           <div>
             <p>스토리 생성 가능 시간</p>
-            <p>15:30:30</p>
+            <p>{remainingTime}</p>
             <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
           </div>
         </TopMian>
@@ -79,7 +140,7 @@ const StoryboxDetail: React.FC = () => {
           setStory={() => { setTap('story'); }} 
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
-        {tap === 'story' && <Story isStory={isStory} isPrivate={isPrivate}/>}
+        {tap === 'story' && <Story storyInfo={storyInfo}/>}
         {tap === 'member' && <Member />}
         {tap === 'detail' && <Detail />}
       </MainWrap>

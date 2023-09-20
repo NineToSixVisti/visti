@@ -1,44 +1,56 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components';
 import { ReactComponent as Empty } from '../../../assets/images/story_empty.svg'
 import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
 
-type StoryProps = {
-  isStory : boolean,
-  isPrivate : boolean
-};
-
-const Story: React.FC<StoryProps> = ({isStory, isPrivate}) => {
-  const [storyList, setStoryList] = useState([1,1,1,1,1,1,1,1,1,1,1,1,1])
-
-  return (
-    <>
-    {
-      (!isStory) ?
-        <EmptyWrap>
-          <Empty/>
-          <p>스토리가 하나도 없어요</p>
-          <p>추억을 저장해 볼까요?</p>
-        </EmptyWrap> :
-        <StoryWrap>
-          {
-            storyList.map((a, index) => {
-              return <StoryDiv key={index} isPrivate={isPrivate} index={index}>
-                  {
-                    isPrivate ? <PrivateImg src={process.env.PUBLIC_URL + "/assets/Visti_icon.png"} alt='보호된 이미지'/> : null
-                  }
-                  {
-                    !isPrivate ? <FavoriteSvg/> : null
-                  }
-              </StoryDiv>;
-            })
-          }
-        </StoryWrap>  
-    }
-  </>
-  )
+interface StoryInfo {
+  id: number;
+  encryptedId: string;
+  storyBoxId: number;
+  member: {
+    nickname: string;
+    profilePath: string | null;
+    status: boolean;
+  };
+  mainFileType: string;
+  mainFilePath: string;
+  blind: boolean;
+  like: boolean;
+  createdAt: string;
+  finishedAt: string;
 }
 
+type StoryProps = {
+  storyInfo: StoryInfo[];
+};
+
+
+const Story: React.FC<StoryProps> = ({ storyInfo }) => {
+  return (
+    <>
+      {
+        storyInfo.length === 0 ? (
+          <EmptyWrap>
+            <Empty />
+            <p>스토리가 하나도 없어요</p>
+            <p>추억을 저장해 볼까요?</p>
+          </EmptyWrap>
+        ) : (
+          <StoryWrap>
+            {
+              storyInfo.map((story, index) => (
+                <StoryDiv key={story.id} index={index} isPrivate={story.blind} storyImg={story.mainFilePath}>
+                  {story.blind && <PrivateImg src={process.env.PUBLIC_URL + "/assets/Visti_icon.png"} alt='보호된 이미지' />}
+                  {!story.blind && story.like && <FavoriteSvg />}
+                </StoryDiv>
+              ))
+            }
+          </StoryWrap>
+        )
+      }
+    </>
+  )
+}
 const EmptyWrap = styled.div`
   width: 100%;
   height: 100%;
@@ -68,10 +80,10 @@ const StoryWrap = styled.div`
   gap: 0.2%; // gap의 거리 차이를 두기 위해
 `
 
-const StoryDiv = styled.div<{ isPrivate : boolean, index : number }>`
+const StoryDiv = styled.div<{ isPrivate : boolean; index : number; storyImg: string | undefined }>`
     height: 33vw;
     width: 100%;
-    background-image: ${props => props.isPrivate ? null : `url("https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202308/03/9f2025fe-1819-42a3-b5c1-13032da70bc8.jpg")`};
+    background-image: ${props => props.isPrivate ? 'none' : `url(${props.storyImg})`};
     background-color: ${props => (props.index % 6 >= 3 && props.isPrivate) ? '#FFF2F2' : '#fff'};
     background-size: cover;
     position: relative;
