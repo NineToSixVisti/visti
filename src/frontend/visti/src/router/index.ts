@@ -24,7 +24,7 @@ const routes = [
     Component : StoryCreator
   },
   {
-    path : "/storybox/detail",
+    path : "/storybox/detail/:id",
     Component : StoryboxDetail 
   }
 ]
