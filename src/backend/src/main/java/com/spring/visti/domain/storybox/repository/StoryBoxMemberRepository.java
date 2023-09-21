@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface StoryBoxMemberRepository extends JpaRepository<StoryBoxMember, Long> {
 
     Page<StoryBoxMember> findByMember(Member member, Pageable pageable);
+
     @Query("SELECT sbm.storyBox FROM StoryBoxMember sbm WHERE sbm.member = :member AND sbm.storyBox.name LIKE %:keyword%")
     Page<StoryBox> findJoinedByMemberAndKeyword(Member member, String keyword, Pageable pageable);
 
