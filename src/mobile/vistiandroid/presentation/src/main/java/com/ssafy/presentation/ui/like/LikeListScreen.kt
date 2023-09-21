@@ -113,8 +113,10 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel())
         }
 
         lazyLikedStories.itemCount == 0 -> {
-            EmptyItemView(modifier = Modifier.fillMaxSize(),
-                stringResource(R.string.empty_liked_story))
+            EmptyItemView(
+                modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_liked_story)
+            )
         }
 
         else -> {
@@ -171,7 +173,10 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel()) 
         }
 
         lazyLikedStories.itemCount == 0 -> {
-            EmptyItemView(modifier = Modifier.fillMaxSize(), stringResource(R.string.empty_liked_story))
+            EmptyItemView(
+                modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_liked_story)
+            )
         }
 
         else -> {
@@ -222,7 +227,10 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
         }
 
         lazyLikedStories.itemCount == 0 -> {
-            EmptyItemView(modifier = Modifier.fillMaxSize(), stringResource(R.string.empty_liked_story))
+            EmptyItemView(
+                modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_liked_story)
+            )
         }
 
         else -> {
@@ -238,8 +246,8 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
     }
 }
 
-fun isNewDateGroup(prevStory: String, currentStory: String): Boolean {
-    return prevStory != currentStory
+fun isContainsDateGroup(gridGroups: MutableList<GridGroup>, storyDate: String): GridGroup? {
+    return gridGroups.find { it.header == storyDate }
 }
 
 fun parseStoryDate(dateString: String?): Date? {
@@ -260,32 +268,22 @@ fun updateGridGroups(
     lazyLikedStories: LazyPagingItems<Story>,
     gridGroups: MutableList<GridGroup>
 ) {
-    var previousDate = gridGroups.lastOrNull()?.header ?: ""
-
     for (index in 0 until lazyLikedStories.itemCount) {
         val story = lazyLikedStories[index] ?: return
         val storyDate = formatStoryDate(parseStoryDate(story.createdAt))
 
-        // 이전 그룹과 같은 날짜인지 확인
-        if (isNewDateGroup(previousDate, storyDate)) {
-            // 이전 그룹과 다른 날짜일 때, 그룹 리스트 중에 같은 그룹이 있는지 확인
-            val existingGroup = gridGroups.find { it.header == storyDate }
+        // 그룹 리스트 중에 같은 그룹이 있는지 확인
+        val existingGroup = isContainsDateGroup(gridGroups, storyDate)
 
-            if (existingGroup != null) {
-                //바로 전은 아니지만 기존의 그룹이 존재
-                if (!existingGroup.stories.contains(story)) {
-                    existingGroup.stories.add(story)
-                }
-            } else {
-                // 아예 새로운 그룹
-                val newGroup = GridGroup(storyDate, mutableListOf(story))
-                gridGroups.add(newGroup)
+        if (existingGroup != null) {
+            //바로 전은 아니지만 기존의 그룹이 존재
+            if (!existingGroup.stories.contains(story)) {
+                existingGroup.stories.add(story)
             }
         } else {
-            //이미 있는 날짜 그룹
-            gridGroups.last().stories.add(story)
+            // 아예 새로운 그룹
+            val newGroup = GridGroup(storyDate, mutableListOf(story))
+            gridGroups.add(newGroup)
         }
-
-        previousDate = storyDate
     }
 }
