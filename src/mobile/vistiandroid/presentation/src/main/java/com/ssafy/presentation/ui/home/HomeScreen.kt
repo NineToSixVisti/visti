@@ -56,8 +56,6 @@ fun HomeScreen(
     val state = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberScrollState()
 
-
-
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
         state = state,

@@ -114,4 +114,7 @@ dependencies {
 
     //네이버 로그인
     implementation(Dependencies.NAVER)
+
+    // webview
+    implementation("com.google.accompanist:accompanist-webview:0.24.13-rc")
 }
