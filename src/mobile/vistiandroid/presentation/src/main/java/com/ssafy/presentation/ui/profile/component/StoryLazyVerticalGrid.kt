@@ -17,38 +17,40 @@ import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.LoadingView
 
 @Composable
-fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount : String) = when {
-    stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
-        LoadingView(modifier = Modifier.fillMaxSize())
+fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String) {
+    when {
+        stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
+            LoadingView(modifier = Modifier.fillMaxSize())
+        }
+
+        stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
+            val errorState = stories.loadState.refresh as LoadState.Error
+            val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
+
+            ErrorItem(
+                message = errorMessage,
+                modifier = Modifier.fillMaxWidth(),
+                onClickRetry = { stories.retry() }
+            )
+        }
+
+        storyCount == "0" -> {
+            EmptyItemView(
+                modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_story)
+            )
+        }
+
+        else -> {}
     }
 
-    stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
-        val errorState = stories.loadState.refresh as LoadState.Error
-        val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
-
-        ErrorItem(
-            message = errorMessage,
-            modifier = Modifier.fillMaxWidth(),
-            onClickRetry = { stories.retry() }
-        )
-    }
-
-    storyCount == "0" -> {
-        EmptyItemView(
-            modifier = Modifier.fillMaxSize(),
-            stringResource(R.string.empty_story)
-        )
-    }
-
-    else -> {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3)
-        ) {
-            this.items(stories.itemCount) { index ->
-                val image = stories[index]
-                if (image != null) {
-                    StoryItem(image)
-                }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3)
+    ) {
+        this.items(stories.itemCount) { index ->
+            val image = stories[index]
+            if (image != null) {
+                StoryItem(image)
             }
         }
     }

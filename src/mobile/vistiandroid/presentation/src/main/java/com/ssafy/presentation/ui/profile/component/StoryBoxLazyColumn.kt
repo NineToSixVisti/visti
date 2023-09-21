@@ -16,36 +16,38 @@ import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.LoadingView
 
 @Composable
-fun StoryBoxLazyColumn(boxes: LazyPagingItems<StoryBox>, storyBoxCount: String) = when {
-    boxes.loadState.refresh is LoadState.Loading || boxes.loadState.append is LoadState.Loading -> {
-        LoadingView(modifier = Modifier.fillMaxSize())
+fun StoryBoxLazyColumn(boxes: LazyPagingItems<StoryBox>, storyBoxCount: String) {
+    when {
+        boxes.loadState.refresh is LoadState.Loading || boxes.loadState.append is LoadState.Loading -> {
+            LoadingView(modifier = Modifier.fillMaxSize())
+        }
+
+        boxes.loadState.refresh is LoadState.Error || boxes.loadState.append is LoadState.Error -> {
+            val errorState = boxes.loadState.refresh as LoadState.Error
+            val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
+
+            ErrorItem(
+                message = errorMessage,
+                modifier = Modifier.fillMaxWidth(),
+                onClickRetry = { boxes.retry() }
+            )
+        }
+
+        storyBoxCount == "0" -> {
+            EmptyItemView(
+                modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_story_box)
+            )
+        }
+
+        else -> {}
     }
 
-    boxes.loadState.refresh is LoadState.Error || boxes.loadState.append is LoadState.Error -> {
-        val errorState = boxes.loadState.refresh as LoadState.Error
-        val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
-
-        ErrorItem(
-            message = errorMessage,
-            modifier = Modifier.fillMaxWidth(),
-            onClickRetry = { boxes.retry() }
-        )
-    }
-
-    storyBoxCount == "0" -> {
-        EmptyItemView(
-            modifier = Modifier.fillMaxSize(),
-            stringResource(R.string.empty_story_box)
-        )
-    }
-
-    else -> {
-        LazyColumn {
-            items(boxes.itemCount) { index ->
-                val item = boxes[index]
-                if (item != null) {
-                    StoryBoxItem(item)
-                }
+    LazyColumn {
+        items(boxes.itemCount) { index ->
+            val item = boxes[index]
+            if (item != null) {
+                StoryBoxItem(item)
             }
         }
     }

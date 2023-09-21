@@ -205,12 +205,6 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
     val likedStories = viewModel.likedStoriesByRandom
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
-    val gridGroups = remember { mutableStateListOf<GridGroup>() }
-
-    LaunchedEffect(lazyLikedStories.itemSnapshotList) {
-        updateGridGroups(lazyLikedStories, gridGroups)
-    }
-
     when {
         lazyLikedStories.loadState.refresh is LoadState.Loading || lazyLikedStories.loadState.append is LoadState.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())
