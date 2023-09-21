@@ -3,18 +3,13 @@ package com.ssafy.presentation.ui.like
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,12 +21,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.LikeSortType
@@ -42,7 +35,6 @@ import com.ssafy.presentation.ui.like.component.GridGroup
 import com.ssafy.presentation.ui.like.component.LoadingView
 import com.ssafy.presentation.ui.like.component.SortTypeRadioGroup
 import com.ssafy.presentation.ui.like.component.header
-import kotlinx.coroutines.flow.Flow
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -265,8 +257,12 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
             val storyDate = formatStoryDate(parseStoryDate(story.createdAt))
 
             if (isNewDateGroup(previousDate, storyDate)) {
-                if (gridGroups.any { it.header == storyDate }) {
-                    gridGroups.find { it.header == storyDate }?.stories?.add(story)
+                val existingGroup = gridGroups.find { it.header == storyDate }
+
+                if (existingGroup != null) {
+                    if (!existingGroup.stories.contains(story)) {
+                        existingGroup.stories.add(story)
+                    }
                 } else {
                     val newGroup = GridGroup(storyDate, mutableListOf(story))
                     gridGroups.add(newGroup)
