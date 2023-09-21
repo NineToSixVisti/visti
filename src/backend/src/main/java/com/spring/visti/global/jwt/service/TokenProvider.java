@@ -1,6 +1,7 @@
 package com.spring.visti.global.jwt.service;
 
 import com.spring.visti.domain.member.constant.Role;
+import com.spring.visti.global.redis.service.JwtProvideService;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.constant.GrantType;
@@ -39,6 +40,7 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 //@RequiredArgsConstructor // 의존성 주입의 관점에서는 제거해도 상관없다...?
 public class TokenProvider  {
 
+    private final JwtProvideService jwtProvideService;
     private final CustomUserDetailsService userDetailsService;
     private final Key key;
     private static final Long ACCESS_TIME = 30 * 60 * 1000L; // 30 min
@@ -53,11 +55,11 @@ public class TokenProvider  {
     public static final String REFRESH_TOKEN = "Refresh_Token";
 
     public TokenProvider(@Value("${jwt.secret.key}") String secretKey,
-                         CustomUserDetailsService userDetailsService){
-
+                         JwtProvideService jwtProvideService, CustomUserDetailsService userDetailsService){
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userDetailsService = userDetailsService;
+        this.jwtProvideService = jwtProvideService;
     }
 
     // 인증 객체 생성
@@ -122,8 +124,13 @@ public class TokenProvider  {
     public void validateToken(String token){
 
         try{
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-//            System.out.println(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody());
+//            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+
+            if (TokenType.ACCESS.name().equals(claims.getSubject()) && jwtProvideService.isTokenInBlackList(token)) {
+                throw new ApiException(JWT_INVALID);
+            }
+
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             throw new ApiException(JWT_INVALID);
         } catch (ExpiredJwtException e) {

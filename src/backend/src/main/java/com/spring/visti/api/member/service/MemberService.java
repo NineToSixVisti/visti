@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 public interface MemberService extends DefaultService {
     BaseResponseDTO<String> signUp(MemberJoinDTO memberInfo);
@@ -20,9 +21,9 @@ public interface MemberService extends DefaultService {
     BaseResponseDTO<String> verifyAuthNum(AuthDTO memberInfo);
 
     BaseResponseDTO<TokenDTO> signIn(MemberLoginDTO memberInfo, HttpServletResponse response);
-    BaseResponseDTO<String> signOut(String email);
+    BaseResponseDTO<String> signOut(String email, String access_token);
 
-    BaseResponseDTO<String> withdrawalUser(String email);
+    BaseResponseDTO<String> withdrawalUser(String email, String access_token);
 
     BaseResponseDTO<MemberMyInfoDTO> getInfo(String email);
 

@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -155,14 +156,11 @@ public class MemberServiceImpl implements MemberService{
             String accessToken = tokenDTO.getAccessToken();
             String refreshToken = tokenDTO.getRefreshToken();
 
-            // 6. redis 에 refresh token 저장
-            jwtProvideService.saveRefreshToken(email, refreshToken, tokenDTO.getRefreshTokenExpireTime());
-
-            // 7. refreshToken 을 업데이트하고 데이터베이스에 저장합니다.
+            // 6. refreshToken 을 업데이트하고 데이터베이스에 저장합니다.
             member.updateMemberToken(refreshToken);
             memberRepository.save(member);
 
-            // 8. 토큰 정보를 Header 로 등록
+            // 7. 토큰 정보를 Header 로 등록
             tokenProvider.setHeaderAccessToken(httpResponse, accessToken);
 
             log.info("===== "+ email+ " 로그인 완료 =============");
@@ -174,31 +172,35 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> signOut(String email) {
+    public BaseResponseDTO<String> signOut(String email, String access_token) {
         // 토큰 탐색
-        log.info("===== " +email+ " 로그아웃 진행 =============");
-        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
+        log.info("===== " +member.getEmail()+ " 로그아웃 진행 =============");
+//        Member member = getMember(email, memberRepository);
 
-        jwtProvideService.expireRefreshToekn(email);
+        Date expiresIn = tokenProvider.parseClaims(access_token).getExpiration();
+        jwtProvideService.addToBlackList(access_token, expiresIn);
 
         member.updateMemberToken(null);
         memberRepository.save(member);
-        log.info("===== "+ email+ " 로그아웃 완료 =============");
+        log.info("===== "+ member.getEmail()+ " 로그아웃 완료 =============");
         return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
     }
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> withdrawalUser(String email) {
+    public BaseResponseDTO<String> withdrawalUser(String email, String access_token) {
         // 토큰 탐색
-        log.info("===== " +email+ " 로그아웃 진행 =============");
-        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
+        log.info("===== " +member.getEmail()+ " 회원 탈퇴 진행 =============");
+//        Member member = getMember(email, memberRepository);
         member.withdrawMember();
 
-        jwtProvideService.expireRefreshToekn(email);
+        Date expiresIn = tokenProvider.parseClaims(access_token).getExpiration();
+        jwtProvideService.addToBlackList(access_token, expiresIn);
 
         memberRepository.save(member);
-        log.info("===== "+ email+ " 로그아웃 완료 =============");
+        log.info("===== "+ member.getEmail() + " 회원 탈퇴 완료 =============");
         return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
     }
 
@@ -206,7 +208,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
-        Member _member = getMember(email, memberRepository);
+//        Member _member = getMember(email, memberRepository);
+
+        Member _member = getMemberBySecurity();
 
         MemberMyInfoDTO member = MemberMyInfoDTO.of(_member);
 
@@ -217,9 +221,9 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public BaseResponseDTO<String> changePassword(String email, String newPW) {
-        log.info("===== " +email+ " 비밀번호 변경 진행 =============");
-        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
+        log.info("===== " + member.getEmail() + " 비밀번호 변경 진행 =============");
         if (!isValidPassword(newPW)) {
             throw new ApiException(INVALID_PASSWORD_FORMAT);
         }
@@ -228,14 +232,14 @@ public class MemberServiceImpl implements MemberService{
 
         member.updatePassword(encryptedPassword);
         memberRepository.save(member);
-        log.info("===== " +email+ " 비밀번호 변경 완료 =============");
+        log.info("===== " +member.getEmail()+ " 비밀번호 변경 완료 =============");
         return new BaseResponseDTO<>("비밀번호 변경이 완료되었습니다.", 200);
     }
 
     @Override
     public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
-        Member _member = getMember(email, memberRepository);
+        Member _member = getMemberBySecurity();
         MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
         log.info("Member info: " + member);
 
@@ -244,7 +248,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile multipartFile) throws IOException {
-        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
         String newEmail = memberChangeProfileDTO.getNewEmail();
         String nickname = memberChangeProfileDTO.getNickname();
         if (!isValidEmail(newEmail)) {

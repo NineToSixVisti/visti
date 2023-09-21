@@ -55,7 +55,7 @@ public class StoryBoxTest extends AcceptanceTest {
     public void 스토리박스_생성_테스트(){
 
         StoryBoxBuildDTO storyInfo = StoryBox.스토리박스_생성();
-        File fileToUpload = new File("path_to_your_file"); // 여기에 실제 업로드할 파일의 경로를 지정해주세요.
+        File fileToUpload = fileLoader("static/kakao_login_medium.png"); // 여기에 실제 업로드할 파일의 경로를 지정해주세요.
 
         // 스토리박스 생성
         RestAssured.given()

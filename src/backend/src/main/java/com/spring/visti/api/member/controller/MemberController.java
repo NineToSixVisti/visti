@@ -10,12 +10,14 @@ import com.spring.visti.domain.member.dto.RequestDTO.MemberLoginDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberMyInfoProfileDTO;
 import com.spring.visti.global.jwt.dto.TokenDTO;
+import com.spring.visti.global.jwt.service.TokenProvider;
 import com.spring.visti.global.redis.dto.AuthDTO;
 import com.spring.visti.utils.exception.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static com.spring.visti.utils.exception.ErrorCode.NOT_VALID_TYPE4SEND_MAIL;
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
@@ -40,6 +43,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final EmailService emailService;
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행합니다")
@@ -131,21 +135,27 @@ public class MemberController {
 
     @PostMapping("/signout")
     @Operation(summary = "로그아웃", description = "로그아웃을 진행합니다..")
-    public  ResponseEntity<? extends BaseResponseDTO<String>> signOut(){
+    public  ResponseEntity<? extends BaseResponseDTO<String>> signOut(
+        HttpServletRequest request
+    ){
 
         String email = getEmail();
+        String access_token = tokenProvider.getHeaderToken(request, "Access");
 
-        BaseResponseDTO<String> response = memberService.signOut(email);
+        BaseResponseDTO<String> response = memberService.signOut(email, access_token);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/withdraw")
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
-    public  ResponseEntity<? extends BaseResponseDTO<String>> withdrawalUser(){
+    public  ResponseEntity<? extends BaseResponseDTO<String>> withdrawalUser(
+            HttpServletRequest request
+    ){
 
         String email = getEmail();
+        String access_token = tokenProvider.getHeaderToken(request, "Access");
 
-        BaseResponseDTO<String> response = memberService.withdrawalUser(email);
+        BaseResponseDTO<String> response = memberService.withdrawalUser(email, access_token);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
