@@ -2,6 +2,7 @@ package com.spring.visti.api.storybox.service.storybox;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberExposedDTO;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
@@ -241,7 +242,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     @Transactional
-    public BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email) {
+    public BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email) {
 //        Member member = getMember(email, memberRepository);
         Member member = getMemberBySecurity();
 
@@ -253,17 +254,12 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
 
         //private Position position; 받아와야함...
-        List<StoryBoxMemberListDTO> storyBoxMembers = _storyBoxMembers.stream()
-                .map(storyBoxMember -> {
-
-                    MemberExposedDTO memberInform = MemberExposedDTO.of(storyBoxMember.getMember());
-                    Position memberPosition = storyBoxMember.getPosition();
-
-                    return StoryBoxMemberListDTO.toResponse(memberInform, memberPosition);
-                })
+        List<MemberStoryBoxExposedDTO> storyBoxMembers = _storyBoxMembers.stream()
+                .map(storyBoxMember -> MemberStoryBoxExposedDTO
+                        .toResponse(storyBoxMember.getMember(), storyBoxMember.getPosition()))
                 .toList();
 
-        return new BaseResponseDTO<List<StoryBoxMemberListDTO>>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxMembers);
+        return new BaseResponseDTO<List<MemberStoryBoxExposedDTO>>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxMembers);
     }
 
     @Override

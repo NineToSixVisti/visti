@@ -2,6 +2,7 @@ package com.spring.visti.api.storybox.service.storybox;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.common.service.DefaultService;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
@@ -33,7 +34,7 @@ public interface StoryBoxService extends DefaultService {
 
     BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email);
 
-    BaseResponseDTO<List<StoryBoxMemberListDTO>> readMemberOfStoryBox(Long id, String email);
+    BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email);
 
     BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email);
 

@@ -3,6 +3,7 @@ package com.spring.visti.api.storybox.controller;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.storybox.StoryBoxService;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
@@ -169,7 +170,7 @@ public class StoryBoxController {
 
     @GetMapping("/{storyBoxIds}/members")
     @Operation(summary = "스토리 박스 멤버들 리스트업", description = "스토리 박스 내부에 참여하고있는 멤버들을 리스트업합니다.")
-    public ResponseEntity<? extends BaseResponseDTO<List<StoryBoxMemberListDTO>>> readMemberOfStoryBox(
+    public ResponseEntity<? extends BaseResponseDTO<List<MemberStoryBoxExposedDTO>>> readMemberOfStoryBox(
             @PathVariable String storyBoxIds
     ) {
 
@@ -177,7 +178,7 @@ public class StoryBoxController {
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
         String email = getEmail();
-        BaseResponseDTO<List<StoryBoxMemberListDTO>> response = storyBoxService.readMemberOfStoryBox(decryptedStoryId, email);
+        BaseResponseDTO<List<MemberStoryBoxExposedDTO>> response = storyBoxService.readMemberOfStoryBox(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
