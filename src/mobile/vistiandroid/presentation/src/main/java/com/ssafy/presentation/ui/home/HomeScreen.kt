@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
 import com.ssafy.presentation.ui.home.component.HomeStoryBoxItem
@@ -62,58 +65,75 @@ fun HomeScreen(
 
     val homeStorySate = homeViewModel.homeStoryState.value
 
+    when {
+        homeStorySate.error.isNotBlank() -> {
 
-    CollapsingToolbarScaffold(
-        modifier = Modifier.fillMaxSize(),
-        state = state,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbar = {
+        }
+
+        homeStorySate.isLoading -> {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(540.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.temp_image),
-                    contentDescription = "toolbar background",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(state.toolbarState.progress)
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(1 - state.toolbarState.progress)
-                        .background(PrimaryColor)
-                )
+                CircularProgressIndicator()
             }
-            HomeToolBar(state)
+        }
 
-            Image(
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(top = 10.dp, bottom = 15.dp)
-                    .road(Alignment.Center, Alignment.BottomEnd)
-                    .size(20.dp)
-                    .alpha(1 - state.toolbarState.progress),
-                painter = painterResource(id = R.drawable.logo_white),
-                contentDescription = "home_logo"
-            )
-        },
-    ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .padding(start = 20.dp, top = 20.dp)
-        ) {
-            HomeContent()
+        else -> {
+            CollapsingToolbarScaffold(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+                toolbar = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .height(540.dp),
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.temp_image),
+                            contentDescription = "toolbar background",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .alpha(state.toolbarState.progress)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .alpha(1 - state.toolbarState.progress)
+                                .background(PrimaryColor)
+                        )
+                    }
+                    HomeToolBar(state)
+
+                    Image(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(top = 10.dp, bottom = 15.dp)
+                            .road(Alignment.Center, Alignment.BottomEnd)
+                            .size(20.dp)
+                            .alpha(1 - state.toolbarState.progress),
+                        painter = painterResource(id = R.drawable.logo_white),
+                        contentDescription = "home_logo"
+                    )
+                },
+            ) {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .padding(start = 20.dp, top = 20.dp)
+                ) {
+                    HomeContent(homeStorySate.stories)
+                }
+            }
         }
     }
+
 }
 
 @Composable
-fun HomeContent() {
+fun HomeContent(homeStoryList: List<HomeStory>) {
     Row(
         verticalAlignment = Alignment.Bottom
     ) {
@@ -138,8 +158,8 @@ fun HomeContent() {
         fontWeight = FontWeight.Bold
     )
     LazyRow {
-        items(5) {
-            HomeStoryItem()
+        items(homeStoryList) { homeStory ->
+            HomeStoryItem(homeStory)
         }
     }
 }
