@@ -38,6 +38,8 @@ public interface StoryBoxService extends DefaultService {
 
     BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email);
 
+    BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email);
+
     BaseResponseDTO<String> generateStoryBoxLink(Long id, String email);
 
     BaseResponseDTO<String> validateStoryBoxLink(String token, String email);

@@ -47,8 +47,8 @@ public class StoryServiceImpl implements StoryService{
     @Override
     @Transactional
     public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         int writtenStory = member.getDailyStoryCount();
         int canWriteStory = member.dailyStoryMaximum();
@@ -88,8 +88,8 @@ public class StoryServiceImpl implements StoryService{
     @Override
     @Transactional
     public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Story _story = getStory(storyId, storyRepository);
 
@@ -150,8 +150,8 @@ public class StoryServiceImpl implements StoryService{
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Page<MemberLikeStory> _memberLikedStories = memberLikeStoryRepository.findByMember(member, pageable);
 
@@ -176,8 +176,8 @@ public class StoryServiceImpl implements StoryService{
     @Override
     @Transactional
     public BaseResponseDTO<String> likeStory(Long storyId, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
         Story story = getStory(storyId, storyRepository);
         boolean isMemberLike = memberLikeStoryRepository.existsByMemberIdAndStoryId(member.getId(), storyId);
 
@@ -197,8 +197,8 @@ public class StoryServiceImpl implements StoryService{
     public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 
         // 사용자 조회
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // 스토리 조회
         Story story = getStory(storyId, storyRepository);
