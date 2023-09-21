@@ -1,6 +1,7 @@
 package com.ssafy.visti.di
 
 import com.ssafy.data.remote.VistiApi
+import com.ssafy.data.remote.XAccessTokenInterceptor
 import com.ssafy.domain.model.Constants
 import dagger.Module
 import dagger.Provides
@@ -18,21 +19,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(xAccessTokenInterceptor: XAccessTokenInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
-            }).addInterceptor {
-                it.proceed(it.request().newBuilder().apply {
-                    addHeader(
-                        "access_token",
-                         "BEARER eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJhdXRoIjoiUk9MRV9BRE1JTiIsInVzZXJfZW1haWwiOiJzc29sbGlkYTk0QGdtYWlsLmNvbSIsImV4cCI6MTY5NTIxOTIyOX0.l1deLeNRsn71MXhYCmwclbmdEO6CzFLlqLzTdhIck6cqtTPcV145Z243wjI2VUxiWv5Pw85NrUBp-QUMQR9-KA"
-                    )
-                    addHeader(
-                        "refresh_token",
-                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiZXhwIjoxNzEzMzYxNDI5fQ.CKFlc_l12RO3dUCBWFoZgkcAYAqWSc1hOPo7yhCTkmFwn8lZnksnIYlwgSPdPliY6_OR0ekrG25_kqinZpWiUA")
-                }.build())
-            }.build()
+            })
+            .addInterceptor(xAccessTokenInterceptor)
+            .build()
     }
 
     @Provides
@@ -45,4 +38,5 @@ object AppModule {
             .build()
             .create(VistiApi::class.java)
     }
+
 }

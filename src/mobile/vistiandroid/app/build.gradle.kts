@@ -62,4 +62,10 @@ dependencies {
     implementation(Dependencies.RETROFIT.RETROFIT_CONVERTER)
     implementation(Dependencies.OKHTTP.OKHTTP_CORE)
     implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
+
+    //카카오 로그인
+    implementation(Dependencies.KAKAO)
+
+    //네이버 로그인
+    implementation(Dependencies.NAVER)
 }

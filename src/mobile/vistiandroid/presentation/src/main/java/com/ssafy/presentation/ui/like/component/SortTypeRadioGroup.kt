@@ -42,7 +42,7 @@ fun SortTypeRadioGroup(
     }
 
     var selectedSortOption by remember {
-        mutableStateOf(LikeSortType.DOWN)
+        mutableStateOf(currentSortType)
     }
 
     val onSelectionChange = { type: LikeSortType ->

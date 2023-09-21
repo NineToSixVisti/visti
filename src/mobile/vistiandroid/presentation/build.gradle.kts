@@ -101,7 +101,17 @@ dependencies {
     //시스템 화면 접근
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
+    //paging
     val pagingVersion = "3.2.1"
     implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.paging:paging-compose:3.2.1")
+
+    //datastore
+    implementation(Dependencies.DATASTORE)
+
+    //카카오 로그인
+    implementation(Dependencies.KAKAO)
+
+    //네이버 로그인
+    implementation(Dependencies.NAVER)
 }

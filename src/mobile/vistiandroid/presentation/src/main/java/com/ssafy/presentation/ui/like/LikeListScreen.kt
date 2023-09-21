@@ -228,49 +228,49 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
     }
 }
 
-    fun isNewDateGroup(prevStory: String, currentStory: String): Boolean {
-        return prevStory != currentStory
+fun isNewDateGroup(prevStory: String, currentStory: String): Boolean {
+    return prevStory != currentStory
+}
+
+fun parseStoryDate(dateString: String?): Date? {
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    return try {
+        dateString?.let { format.parse(it) }
+    } catch (e: ParseException) {
+        null
     }
+}
 
-    fun parseStoryDate(dateString: String?): Date? {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return try {
-            dateString?.let { format.parse(it) }
-        } catch (e: ParseException) {
-            null
-        }
-    }
+fun formatStoryDate(date: Date?): String {
+    val format = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+    return date?.let { format.format(it) } ?: format.format(Date())
+}
 
-    fun formatStoryDate(date: Date?): String {
-        val format = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        return date?.let { format.format(it) } ?: format.format(Date())
-    }
+fun updateGridGroups(
+    lazyLikedStories: LazyPagingItems<Story>,
+    gridGroups: MutableList<GridGroup>
+) {
+    var previousDate = gridGroups.lastOrNull()?.header ?: ""
 
-    fun updateGridGroups(
-        lazyLikedStories: LazyPagingItems<Story>,
-        gridGroups: MutableList<GridGroup>
-    ) {
-        var previousDate = gridGroups.lastOrNull()?.header ?: ""
+    for (index in 0 until lazyLikedStories.itemCount) {
+        val story = lazyLikedStories[index] ?: return
+        val storyDate = formatStoryDate(parseStoryDate(story.createdAt))
 
-        for (index in 0 until lazyLikedStories.itemCount) {
-            val story = lazyLikedStories[index] ?: return
-            val storyDate = formatStoryDate(parseStoryDate(story.createdAt))
+        if (isNewDateGroup(previousDate, storyDate)) {
+            val existingGroup = gridGroups.find { it.header == storyDate }
 
-            if (isNewDateGroup(previousDate, storyDate)) {
-                val existingGroup = gridGroups.find { it.header == storyDate }
-
-                if (existingGroup != null) {
-                    if (!existingGroup.stories.contains(story)) {
-                        existingGroup.stories.add(story)
-                    }
-                } else {
-                    val newGroup = GridGroup(storyDate, mutableListOf(story))
-                    gridGroups.add(newGroup)
+            if (existingGroup != null) {
+                if (!existingGroup.stories.contains(story)) {
+                    existingGroup.stories.add(story)
                 }
             } else {
-                gridGroups.last().stories.add(story)
+                val newGroup = GridGroup(storyDate, mutableListOf(story))
+                gridGroups.add(newGroup)
             }
-
-            previousDate = storyDate
+        } else {
+            gridGroups.last().stories.add(story)
         }
+
+        previousDate = storyDate
     }
+}

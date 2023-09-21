@@ -53,6 +53,7 @@ dependencies {
     implementation(Dependencies.OKHTTP.OKHTTP_CORE)
     implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
 
+    //paging 3
     val pagingVersion = "3.1.1"
     implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")

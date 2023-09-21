@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.LogInNav
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
@@ -27,11 +27,11 @@ import com.ssafy.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun JoinPasswordScreen(navController: NavHostController) {
-    val loginScrollState = rememberScrollState()
+    val signInScrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(loginScrollState)
+            .verticalScroll(signInScrollState)
             .padding(20.dp)
     ) {
         Text(
@@ -86,7 +86,7 @@ fun JoinPasswordScreen(navController: NavHostController) {
         )
 
         VistiButton("다음", PrimaryColor) {
-            navController.navigate(route = LogInNav.JoinNickName.route)
+            navController.navigate(route = SignInNav.JoinNickName.route)
         }
         Box(modifier = Modifier.padding(5.dp))
 
