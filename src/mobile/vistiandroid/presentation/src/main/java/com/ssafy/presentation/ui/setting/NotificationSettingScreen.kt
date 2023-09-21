@@ -25,56 +25,33 @@ import com.ssafy.presentation.ui.setting.component.NotificationSwitch
 
 @Composable
 fun NotificationSettingScreen(
-    navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    navController: NavController
 ) {
-    val state = viewModel.state.value
 
-    when {
-        state.error.isNotBlank() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = state.error)
+    var allNotification by remember { mutableStateOf(false) }
+    var storyNotification by remember { mutableStateOf(true) }
+    var storyBoxNotification by remember { mutableStateOf(true) }
+
+    Scaffold(
+        topBar = {
+            BackToolbar(text = "알림") {
+                navController.popBackStack()
             }
         }
-
-        state.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(start = 8.dp, end = 8.dp)
+        ) {
+            NotificationSwitch("모든 알림", "모든 알림이 전송됩니다.", allNotification) {
+                allNotification = it
             }
-        }
-
-        else -> {
-            var allNotification by remember { mutableStateOf(false) }
-            var storyNotification by remember { mutableStateOf(true) }
-            var storyBoxNotification by remember { mutableStateOf(true) }
-
-            Scaffold(
-                topBar = {
-                    BackToolbar(text = "알림") {
-                        navController.popBackStack()
-                    }
-                }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding).padding(start = 8.dp, end = 8.dp)
-                ) {
-                    NotificationSwitch("모든 알림", "모든 알림이 전송됩니다.", allNotification) {
-                        allNotification = it
-                    }
-                    NotificationSwitch("스토리 알림", "스토리 알림이 전송됩니다.", storyNotification) {
-                        storyNotification = it
-                    }
-                    NotificationSwitch("스토리 박스 알림", "스토리 박스 알림이 전송됩니다.", storyBoxNotification) {
-                        storyBoxNotification = it
-                    }
-                }
+            NotificationSwitch("스토리 알림", "스토리 알림이 전송됩니다.", storyNotification) {
+                storyNotification = it
+            }
+            NotificationSwitch("스토리 박스 알림", "스토리 박스 알림이 전송됩니다.", storyBoxNotification) {
+                storyBoxNotification = it
             }
         }
     }

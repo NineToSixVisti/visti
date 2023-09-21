@@ -3,8 +3,8 @@ package com.ssafy.domain.model
 data class Story(
     val id: Int = 0,
     val storyBoxId: Int = 0,
-    val fileType: String = "",
-    val filePath: String = "",
+    val mainFileType: String = "",
+    val mainFilePath: String = "",
     val blind: Boolean = false,
     val createdAt: String = "",
     val finishAt: String = "",

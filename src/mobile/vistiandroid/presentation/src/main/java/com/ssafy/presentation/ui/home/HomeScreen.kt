@@ -56,10 +56,8 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    articleId: String? = null,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = rememberCollapsingToolbarScaffoldState()

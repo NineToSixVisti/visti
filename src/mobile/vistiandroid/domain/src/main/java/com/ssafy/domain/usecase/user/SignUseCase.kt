@@ -1,7 +1,5 @@
 package com.ssafy.domain.usecase.user
 
-import android.telecom.Call
-import android.util.Log
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.user.UserBody
 import com.ssafy.domain.model.user.UserToken

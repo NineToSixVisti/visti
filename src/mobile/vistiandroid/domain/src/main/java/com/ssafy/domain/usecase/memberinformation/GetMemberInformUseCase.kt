@@ -1,6 +1,5 @@
 package com.ssafy.domain.usecase.memberinformation
 
-
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.repository.MemberInformationRepository
@@ -19,9 +18,11 @@ class GetMemberInformUseCase @Inject constructor(
             val memberInformation = repository.getMemberInformation()
             emit(Resource.Success<Member>(memberInformation))
         } catch (e: HttpException) {
-            emit(Resource.Error<Member>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Error<Member>("${e.localizedMessage} HTTP Error"))
         } catch (e: IOException) {
-            emit(Resource.Error<Member>("Failed to connect to server \uD83D\uDE22"))
+            emit(Resource.Error<Member>("${e.localizedMessage} IO Error"))
+        } catch (e: Exception) {
+            emit(Resource.Error<Member>("${e.localizedMessage} Unknown Error"))
         }
     }
 }

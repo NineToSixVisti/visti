@@ -47,9 +47,8 @@ fun StoryDto.toDomain(): Story {
 }
 
 fun StoryListDto.toDomain(): StoryList {
-    val contentList = content.map { it.toDomain() }
     return StoryList(
-        contentList,
+        content,
         pageable.toDomain(),
         last,
         totalPages,

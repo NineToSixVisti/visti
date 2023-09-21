@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.MATERIAL3)
+    implementation("androidx.paging:paging-common-ktx:3.2.1")
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.Test.TEST_EXT)
     androidTestImplementation(Dependencies.Test.ESPRESSO_CORE)
@@ -98,7 +99,12 @@ dependencies {
     implementation(Dependencies.LOTTIE)
 
     //시스템 화면 접근
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+
+    //paging
+    val pagingVersion = "3.2.1"
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+    implementation("androidx.paging:paging-compose:3.2.1")
 
     //datastore
     implementation(Dependencies.DATASTORE)

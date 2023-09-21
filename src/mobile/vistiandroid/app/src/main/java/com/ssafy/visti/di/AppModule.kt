@@ -24,18 +24,6 @@ object AppModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-//            .addInterceptor {
-//                it.proceed(it.request().newBuilder().apply {
-//                    addHeader(
-//                        "access_token",
-//                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJhdXRoIjoiUk9MRV9BRE1JTiIsInVzZXJfZW1haWwiOiJzc29sbGlkYTk0QGdtYWlsLmNvbSIsImV4cCI6MTY5NTIxOTIyOX0.l1deLeNRsn71MXhYCmwclbmdEO6CzFLlqLzTdhIck6cqtTPcV145Z243wjI2VUxiWv5Pw85NrUBp-QUMQR9-KA"
-//                    )
-//                    addHeader(
-//                        "refresh_token",
-//                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiZXhwIjoxNzEzMzYxNDI5fQ.CKFlc_l12RO3dUCBWFoZgkcAYAqWSc1hOPo7yhCTkmFwn8lZnksnIYlwgSPdPliY6_OR0ekrG25_kqinZpWiUA"
-//                    )
-//                }.build())
-//            }
             .addInterceptor(xAccessTokenInterceptor)
             .build()
     }
