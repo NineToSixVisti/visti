@@ -39,8 +39,9 @@ public enum ErrorCode {
     // Story Part
     NO_STORY_ERROR(HttpStatus.NOT_FOUND, "STORY001", "스토리 정보가 없습니다."),
     UNAUTHORIZED_STORY_ERROR(HttpStatus.FORBIDDEN, "STORY002", "스토리를 삭제할 권한이 없습니다."),
-    MAX_STORY_QUOTA_REACHED(HttpStatus.FORBIDDEN, "STORY003", "스토리 작성 할당량 초과"),
+    MAX_STORY_QUOTA_REACHED_MEMBER(HttpStatus.FORBIDDEN, "STORY003", "사용자의 스토리 작성 할당량이 초과되었습니다."),
     NOT_DEFINED_SORTING_ACTION(HttpStatus.FORBIDDEN, "STORY004", "정의된 정렬방식이 아닙니다."),
+    MAX_STORY_QUOTA_REACHED_STORYBOX(HttpStatus.FORBIDDEN, "STORY005", "스토리박스의 스토리 작성 할당량이 초과되었습니다."),
 
     // Story Box Part
     NO_STORY_BOX_ERROR(HttpStatus.NOT_FOUND, "SBOX001", "스토리 박스 정보가 없습니다."),
@@ -50,6 +51,7 @@ public enum ErrorCode {
     NO_STORY_BOX_NAME_ERROR(HttpStatus.BAD_REQUEST, "SBOX005", "스토리 박스의 이름을 길이를 맞춰주세요."),
     NO_INVITATION_STORY_BOX(HttpStatus.BAD_REQUEST, "SBOX006", "들어갈 수 있는 기간이 지났습니다."),
     NO_MATCH_STORY_BOX_ERROR(HttpStatus.BAD_REQUEST, "SBOX007", "옳지 않은 스토리 박스 정보 입니다."),
+    MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX(HttpStatus.BAD_REQUEST, "SBOX008", "들어갈 수 있는 사용자의 제한을 넘었습니다."),
 
     // Fire Base Token Part
     FAILED_TO_SEND_MESSAGE(HttpStatus.BAD_REQUEST, "FBSEND001", "Notification 전송에 실패했습니다."),
