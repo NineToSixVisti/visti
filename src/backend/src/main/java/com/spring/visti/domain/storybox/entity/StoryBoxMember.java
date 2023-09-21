@@ -1,5 +1,6 @@
 package com.spring.visti.domain.storybox.entity;
 
+import com.spring.visti.domain.common.entity.BaseTimeEntity;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.storybox.constant.Position;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class StoryBoxMember {
+public class StoryBoxMember extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
