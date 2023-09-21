@@ -1,5 +1,7 @@
 package com.ssafy.presentation.ui.home
 
+
+import android.os.CountDownTimer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,10 +13,13 @@ import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMyLastStoryBoxUseCase
+import com.ssafy.presentation.ui.common.TimeFormatExt.timeFormat
 import com.ssafy.presentation.ui.like.MemberState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,9 +42,50 @@ class HomeViewModel @Inject constructor(
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
+
+    private var countDownTimer: CountDownTimer? = null
+    private val userInputHour = TimeUnit.HOURS.toMillis(0)
+    private val userInputMinute = TimeUnit.MINUTES.toMillis(0)
+    private val userInputSecond = TimeUnit.SECONDS.toMillis(10)
+
+    val initialTotalTimeInMillis = userInputHour + userInputMinute + userInputSecond
+    var timeLeft = mutableStateOf(initialTotalTimeInMillis)
+    val countDownInterval = 1000L // 1 seconds is the lowest
+
+    val timerText = mutableStateOf(timeLeft.value.timeFormat())
+
+    val isPlaying = mutableStateOf(false)
+
+    fun startCountDownTimer() = viewModelScope.launch {
+        isPlaying.value = true
+        countDownTimer = object : CountDownTimer(timeLeft.value, countDownInterval) {
+            override fun onTick(currentTimeLeft: Long) {
+                timerText.value = currentTimeLeft.timeFormat()
+                timeLeft.value = currentTimeLeft
+            }
+
+            override fun onFinish() {
+                timerText.value = initialTotalTimeInMillis.timeFormat()
+                isPlaying.value = false
+            }
+        }.start()
+    }
+
+    fun stopCountDownTimer() = viewModelScope.launch {
+        isPlaying.value = false
+        countDownTimer?.cancel()
+    }
+
+    fun resetCountDownTimer() = viewModelScope.launch {
+        isPlaying.value = false
+        countDownTimer?.cancel()
+        timerText.value = initialTotalTimeInMillis.timeFormat()
+        timeLeft.value = initialTotalTimeInMillis
+    }
+
     init {
-        getHomeStory()
-        getHomeStoryBox()
+        // getHomeStory()
+        //  getHomeStoryBox()
         getMemberInformation()
         getHomeLastStoryBox()
     }
@@ -89,6 +135,7 @@ class HomeViewModel @Inject constructor(
                 is Resource.Success -> {
                     _homeLastStoryBoxState.value =
                         HomeLastStoryBoxState(storyBox = result.data ?: StoryBox())
+                    startCountDownTimer()
                 }
 
                 is Resource.Error -> {

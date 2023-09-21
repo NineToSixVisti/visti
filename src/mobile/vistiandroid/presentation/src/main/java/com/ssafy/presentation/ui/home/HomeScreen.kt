@@ -23,6 +23,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,7 +108,7 @@ fun HomeScreen(
                                 .background(PrimaryColor)
                         )
                     }
-                    HomeToolBar(state)
+                    HomeToolBar(state,homeViewModel)
 
                     Image(
                         modifier = Modifier
@@ -205,7 +206,7 @@ fun HomeContentDes() {
 }
 
 @Composable
-fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
+fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeViewModel) {
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -238,7 +239,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState) {
             }
         }
         Text(
-            text = "15:30:30",
+            text = homeViewModel.timerText.value,
             fontSize = 60.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold,
