@@ -3,6 +3,7 @@ package com.ssafy.data.repository
 import com.ssafy.data.mapper.toDomain
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.domain.model.Member
+import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.model.StoryList
 import com.ssafy.domain.model.home.HomeStory
@@ -26,5 +27,9 @@ class MemberInformationRepositoryImpl @Inject constructor(
 
     override suspend fun getHomeMyStories(): List<HomeStory> {
         return api.getHomeStories().detail.map { it.toDomain() }
+    }
+
+    override suspend fun getHomeMyStoryBox(): List<StoryBox> {
+        return api.getHomeStoryBox().detail.map { it.toDomain() }
     }
 }

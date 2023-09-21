@@ -1,7 +1,5 @@
 package com.ssafy.domain.model
 
-import java.util.Date
-
 data class Story(
     val id: Int = 0,
     val storyBoxId: Int = 0,
@@ -29,6 +27,7 @@ data class StoryList(
 
 data class StoryBox(
     val id: Int = 0,
+    val encryptedId: String,
     val boxImgPath: String = "",
     val name: String = "",
     val createdAt: String = "",

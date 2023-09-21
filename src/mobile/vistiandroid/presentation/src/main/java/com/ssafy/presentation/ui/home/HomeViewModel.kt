@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
+import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.presentation.ui.like.MemberState
@@ -19,10 +20,14 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
+    private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
     val homeStoryState: State<HomeStoryState> = _homeStoryState
+
+    private val _homeStoryBoxState = mutableStateOf(HomeStoryBoxState())
+    val homeStoryBoxState: State<HomeStoryBoxState> = _homeStoryBoxState
 
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
@@ -32,7 +37,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         getHomeStory()
-       // getMemberInformation()
+        getHomeStoryBox()
+        // getMemberInformation()
     }
 
     private fun getHomeStory() {
@@ -43,11 +49,32 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _homeStoryState.value = HomeStoryState(error = result.message ?: "An error occurred")
+                    _homeStoryState.value =
+                        HomeStoryState(error = result.message ?: "An error occurred")
                 }
 
                 is Resource.Loading -> {
                     _homeStoryState.value = HomeStoryState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getHomeStoryBox() {
+        getHomeStoryBoxUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _homeStoryBoxState.value =
+                        HomeStoryBoxState(storyBox = result.data ?: emptyList())
+                }
+
+                is Resource.Error -> {
+                    _homeStoryBoxState.value =
+                        HomeStoryBoxState(error = result.message ?: "An error occurred")
+                }
+
+                is Resource.Loading -> {
+                    _homeStoryBoxState.value = HomeStoryBoxState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

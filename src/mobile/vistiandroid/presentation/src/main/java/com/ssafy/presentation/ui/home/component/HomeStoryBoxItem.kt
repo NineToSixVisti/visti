@@ -21,11 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.domain.model.StoryBox
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.Black20
 
 @Composable
-fun HomeStoryBoxItem() {
+fun HomeStoryBoxItem(homeStoryBox: StoryBox) {
     Card(
         modifier = Modifier
             .padding(end = 10.dp), shape = RoundedCornerShape(12.dp)

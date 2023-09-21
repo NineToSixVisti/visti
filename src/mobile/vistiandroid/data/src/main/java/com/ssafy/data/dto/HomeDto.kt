@@ -1,9 +1,15 @@
 package com.ssafy.data.dto
 
+import com.ssafy.domain.model.StoryBox
+
 data class HomeStoryResponse(
     val detail: List<HomeStoryDto>,
     val message: String,
     val statusCode: Int
+)
+
+data class HomeStoryBoxResponse(
+    val message: String, val status: String, val detail: List<StoryBoxDto>
 )
 
 data class HomeStoryDto(

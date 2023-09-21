@@ -41,6 +41,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
@@ -64,6 +65,7 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val homeStorySate = homeViewModel.homeStoryState.value
+    val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
 
     when {
         homeStorySate.error.isNotBlank() -> {
@@ -124,7 +126,7 @@ fun HomeScreen(
                         .verticalScroll(scrollState)
                         .padding(start = 20.dp, top = 20.dp)
                 ) {
-                    HomeContent(homeStorySate.stories)
+                    HomeContent(homeStorySate.stories, homeStoryBoxState.storyBox)
                 }
             }
         }
@@ -133,7 +135,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeContent(homeStoryList: List<HomeStory>) {
+fun HomeContent(homeStoryList: List<HomeStory>, homeStoryBoxList: List<StoryBox>) {
     Row(
         verticalAlignment = Alignment.Bottom
     ) {
@@ -147,8 +149,8 @@ fun HomeContent(homeStoryList: List<HomeStory>) {
         fontWeight = FontWeight.Bold
     )
     LazyRow {
-        items(5) {
-            HomeStoryBoxItem()
+        items(homeStoryBoxList) { homeStoryBox ->
+            HomeStoryBoxItem(homeStoryBox)
         }
     }
     Text(
