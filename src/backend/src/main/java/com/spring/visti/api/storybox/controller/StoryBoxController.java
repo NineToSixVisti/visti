@@ -102,7 +102,7 @@ public class StoryBoxController {
             @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
     ) {
         String email = getEmail();
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(pageRequest, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -114,7 +114,7 @@ public class StoryBoxController {
             @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
     ) {
         String email = getEmail();
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readStoryBoxes(pageRequest, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -167,7 +167,7 @@ public class StoryBoxController {
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(pageRequest, decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
