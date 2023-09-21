@@ -20,23 +20,6 @@ createdAt: string;
 finishedAt: string;
 }
 
-interface StoryInfo {
-  id: number;
-  encryptedId: string;
-  storyBoxId: number;
-  member: {
-    nickname: string;
-    profilePath: string | null;
-    status: boolean;
-  };
-  mainFileType: string;
-  mainFilePath: string;
-  blind: boolean;
-  like: boolean;
-  createdAt: string;
-  finishedAt: string;
-};
-
 type DivProps = {
   bgImage ?: string;
 }
@@ -48,7 +31,6 @@ const StoryboxDetail: React.FC = () => {
   const [tap, setTap] = useState<string>('story');
   
   const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
-  const [storyInfo, setStoryInfo] = useState<StoryInfo[]>([]);
 
   const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
 
@@ -92,23 +74,10 @@ const StoryboxDetail: React.FC = () => {
     }
   }, [id]);
 
-  const getStoryInfo = useCallback(async () => {
-    try {
-      const data = await authInstance.get(`story-box/${id}/story-list`)
-      if (data) {
-        setStoryInfo(data.data.detail.content)
-        console.log(data.data.detail.content)
-      }
-    }
-    catch (err) {
-      console.log('스토리Info GET 중 에러 발생', err)
-    }
-  }, [id])
 
   useEffect(()=>{
     getStoryboxInfo();
-    getStoryInfo();
-  }, [getStoryboxInfo, getStoryInfo]);
+  }, [getStoryboxInfo]);
 
   const formatDate = (dateStr: string, includeYear: boolean = true): string => {
     const date = new Date(dateStr);
@@ -146,7 +115,7 @@ const StoryboxDetail: React.FC = () => {
           setStory={() => { setTap('story'); }} 
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
-        {tap === 'story' && <Story storyInfo={storyInfo}/>}
+        {tap === 'story' && <Story id={id}/>}
         {tap === 'member' && <Member id={id}/>}
         {tap === 'detail' && <Detail id={id}/>}
       </MainWrap>
