@@ -66,18 +66,6 @@ class HomeViewModel @Inject constructor(
             }
         }.start()
     }
-//
-//    fun stopCountDownTimer() = viewModelScope.launch {
-//        isPlaying.value = false
-//        countDownTimer?.cancel()
-//    }
-//
-//    fun resetCountDownTimer() = viewModelScope.launch {
-//        isPlaying.value = false
-//        countDownTimer?.cancel()
-//        timerText.value = initialTotalTimeInMillis.timeFormat()
-//        timeLeft.value = initialTotalTimeInMillis
-//    }
 
     init {
         // getHomeStory()

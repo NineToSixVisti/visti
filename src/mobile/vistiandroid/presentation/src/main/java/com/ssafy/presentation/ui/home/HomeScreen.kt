@@ -20,10 +20,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +44,7 @@ import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
+import com.ssafy.presentation.ui.common.loadImage
 import com.ssafy.presentation.ui.home.component.HomeStoryBoxItem
 import com.ssafy.presentation.ui.home.component.HomeStoryItem
 import com.ssafy.presentation.ui.theme.Black20
@@ -65,6 +64,9 @@ fun HomeScreen(
 
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
+    val homeLastStoryBox = homeViewModel.homeLastStoryBoxState.value.storyBox
+    val memberInformation = homeViewModel.memberInformation.value.memberInformation
+
 
     when {
         homeStorySate.error.isNotBlank() -> {
@@ -92,7 +94,7 @@ fun HomeScreen(
                             .height(540.dp),
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.temp_image),
+                            painter = loadImage(imageUrl = homeLastStoryBox.boxImgPath),
                             contentDescription = "toolbar background",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -106,7 +108,7 @@ fun HomeScreen(
                                 .background(PrimaryColor)
                         )
                     }
-                    HomeToolBar(state,homeViewModel)
+                    HomeToolBar(state, homeViewModel)
 
                     Image(
                         modifier = Modifier
@@ -205,6 +207,9 @@ fun HomeContentDes() {
 
 @Composable
 fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeViewModel) {
+
+    val homeLastStoryBox = homeViewModel.homeLastStoryBoxState.value.storyBox
+    val memberInformation = homeViewModel.memberInformation.value.memberInformation
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -217,13 +222,22 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+//            Image(
+//                painter = painter,
+//                contentDescription = "StoryBox",
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .aspectRatio(3f / 2f)
+//                    .fillMaxSize()
+//            )
+            loadImage(homeLastStoryBox.boxImgPath)
             Image(
-                painter = painterResource(id = R.drawable.image_profile),
+                painter = loadImage(imageUrl = memberInformation.profilePath.toString()),
                 contentDescription = "home profile image",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(40.dp)
-                    .shadow(20.dp)
                     .border(2.dp, Color.Black, CircleShape)
 
             )
@@ -288,7 +302,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                 contentDescription = "home_logo"
             )
             Text(
-                text = "싸피 9기 1반",
+                text = homeLastStoryBox.name,
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
