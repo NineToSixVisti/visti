@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,13 +41,15 @@ public class S3UploadService{
     }
 
     // S3에 파일 저장
-    private String pathUpload(File uploadFile, String postCategory) {
+    private String pathUpload(File uploadFile, String postCategory) throws UnsupportedEncodingException {
         //같은 이름으로 들어오면 저장이 안되므로 UUID 생성
         String originName = UUID.randomUUID() + "-" + uploadFile.getName();
         String fileName = postCategory + "/" + originName;
-        String uploadImagePath = putS3(uploadFile, fileName);
+        String imagePath = putS3(uploadFile, fileName);
         // 로컬 생성된 File 삭제 (File 로 전환하며 생성된 파일)
         removeNewFile(uploadFile);
+
+        String uploadImagePath = URLDecoder.decode(imagePath, StandardCharsets.UTF_8.toString());
 
         return uploadImagePath;
     }

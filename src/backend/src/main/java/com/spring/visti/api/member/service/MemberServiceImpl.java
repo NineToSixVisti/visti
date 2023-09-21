@@ -247,6 +247,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile multipartFile) throws IOException {
         Member member = getMember(email, memberRepository);
         String newEmail = memberChangeProfileDTO.getNewEmail();
