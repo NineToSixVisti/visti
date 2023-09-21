@@ -64,8 +64,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // S3 파일 저장
         String postCategory = "storybox";
@@ -93,8 +93,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // 이미 가입된 스토리 박스인지 확인
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
@@ -116,8 +116,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
@@ -136,8 +136,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
@@ -155,8 +155,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST, pageable);
 
@@ -172,8 +172,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMember(member, pageable);
 
@@ -188,8 +188,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
         Page<StoryBox> storyBoxMembers = storyBoxMemberRepository.findJoinedByMemberAndKeyword(member,keyword,pageable);
         Page<StoryBoxExposedDTO> searchStoryBoxes = storyBoxMembers
                 .map(storyBoxMember -> StoryBoxExposedDTO.of(storyBoxMember));
