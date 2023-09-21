@@ -64,7 +64,7 @@ public class StoryBoxController {
     }
 
 
-    @PostMapping("/{storyBoxIds}/setting")
+    @PutMapping("/{storyBoxIds}/setting")
     @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
