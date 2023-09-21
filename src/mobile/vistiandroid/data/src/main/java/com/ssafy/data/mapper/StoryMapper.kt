@@ -12,9 +12,24 @@ import com.ssafy.domain.model.Story
 import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.model.StoryList
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 fun StoryBoxDto.toDomain(): StoryBox {
-    return StoryBox(id, encryptedId, boxImgPath, name, createdAt, finishedAt, blind)
+
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val targetCalendar = Calendar.getInstance()
+    targetCalendar.time = sdf.parse(finishedAt) ?: Calendar.getInstance().time
+    val currentCalendar = Calendar.getInstance()
+    var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
+
+    if (timeDiffInMillis < 0){
+        timeDiffInMillis = 0
+    }
+
+
+    return StoryBox(id, encryptedId, boxImgPath, name, createdAt, timeDiffInMillis, blind)
 }
 
 fun StoryBoxListDto.toDomain(): StoryBoxList {

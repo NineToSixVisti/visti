@@ -31,7 +31,7 @@ data class StoryBox(
     val boxImgPath: String = "",
     val name: String = "",
     val createdAt: String = "",
-    val finishAt: String = "",
+    val finishAt: Long = 0L,
     val blind: Boolean = false
 )
 

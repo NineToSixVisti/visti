@@ -19,7 +19,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,13 +41,9 @@ class HomeViewModel @Inject constructor(
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
-
     private var countDownTimer: CountDownTimer? = null
-    private val userInputHour = TimeUnit.HOURS.toMillis(0)
-    private val userInputMinute = TimeUnit.MINUTES.toMillis(0)
-    private val userInputSecond = TimeUnit.SECONDS.toMillis(10)
 
-    val initialTotalTimeInMillis = userInputHour + userInputMinute + userInputSecond
+    var initialTotalTimeInMillis = 0L
     var timeLeft = mutableStateOf(initialTotalTimeInMillis)
     val countDownInterval = 1000L // 1 seconds is the lowest
 
@@ -58,7 +53,7 @@ class HomeViewModel @Inject constructor(
 
     fun startCountDownTimer() = viewModelScope.launch {
         isPlaying.value = true
-        countDownTimer = object : CountDownTimer(timeLeft.value, countDownInterval) {
+        countDownTimer = object : CountDownTimer(initialTotalTimeInMillis, countDownInterval) {
             override fun onTick(currentTimeLeft: Long) {
                 timerText.value = currentTimeLeft.timeFormat()
                 timeLeft.value = currentTimeLeft
@@ -67,21 +62,22 @@ class HomeViewModel @Inject constructor(
             override fun onFinish() {
                 timerText.value = initialTotalTimeInMillis.timeFormat()
                 isPlaying.value = false
+                getHomeLastStoryBox()
             }
         }.start()
     }
-
-    fun stopCountDownTimer() = viewModelScope.launch {
-        isPlaying.value = false
-        countDownTimer?.cancel()
-    }
-
-    fun resetCountDownTimer() = viewModelScope.launch {
-        isPlaying.value = false
-        countDownTimer?.cancel()
-        timerText.value = initialTotalTimeInMillis.timeFormat()
-        timeLeft.value = initialTotalTimeInMillis
-    }
+//
+//    fun stopCountDownTimer() = viewModelScope.launch {
+//        isPlaying.value = false
+//        countDownTimer?.cancel()
+//    }
+//
+//    fun resetCountDownTimer() = viewModelScope.launch {
+//        isPlaying.value = false
+//        countDownTimer?.cancel()
+//        timerText.value = initialTotalTimeInMillis.timeFormat()
+//        timeLeft.value = initialTotalTimeInMillis
+//    }
 
     init {
         // getHomeStory()
@@ -135,6 +131,7 @@ class HomeViewModel @Inject constructor(
                 is Resource.Success -> {
                     _homeLastStoryBoxState.value =
                         HomeLastStoryBoxState(storyBox = result.data ?: StoryBox())
+                    initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
                     startCountDownTimer()
                 }
 
