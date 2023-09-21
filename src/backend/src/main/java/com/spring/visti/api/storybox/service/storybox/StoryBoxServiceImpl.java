@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -205,12 +206,16 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
-        StoryBoxInfoDTO storyBoxInfoDTO = StoryBoxInfoDTO.toResponse(storyBox);
+        Member creator = storyBox.getCreator();
+
+        boolean isHost = Objects.equals(member.getId(), creator.getId());
+
+        StoryBoxInfoDTO storyBoxInfoDTO = StoryBoxInfoDTO.toResponse(storyBox, isHost);
 
         return new BaseResponseDTO<StoryBoxInfoDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
@@ -243,8 +248,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         if (!storyBoxMemberRepository.existsByStoryBoxIdAndMember(id, member)){
             throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
@@ -274,10 +279,24 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
+    public BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email) {
+        Member member = getMember(email, memberRepository);
+
+        List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
+                .map(storyBoxMember -> {
+                    StoryBox storyBox = storyBoxMember.getStoryBox();
+                    return storyBox;
+                }).toList();
+
+
+        return new BaseResponseDTO<StoryBoxExposedDTO>();
+    }
+
+    @Override
     @Transactional
     public BaseResponseDTO<String> generateStoryBoxLink(Long id, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(id, member);
 
@@ -356,8 +375,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> leaveStoryBox(Long storyBoxId, String email){
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
 
         Optional<StoryBoxMember> targetStoryBoxMember = storyBoxes.stream()

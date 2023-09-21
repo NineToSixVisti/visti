@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -101,7 +102,8 @@ public class StoryBoxController {
             @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(PageRequest.of(page, size), email);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readMyStoryBoxes(pageRequest, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -112,7 +114,8 @@ public class StoryBoxController {
             @RequestParam(name= "size", required = false, defaultValue = perPageBox ) Integer size
     ) {
         String email = getEmail();
-        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readStoryBoxes(PageRequest.of(page, size), email);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.readStoryBoxes(pageRequest, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -164,7 +167,9 @@ public class StoryBoxController {
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
-        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(PageRequest.of(page, size), decryptedStoryId, email);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdAt")));
+
+        BaseResponseDTO<Page<StoryExposedDTO>> response = storyBoxService.readStoriesInStoryBox(pageRequest, decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

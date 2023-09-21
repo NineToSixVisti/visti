@@ -29,7 +29,7 @@ public class scheduledTasks {
     private final FcmService fcmService;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    @Scheduled(cron = "0 0 11 * * ?") // 매일 자정에 실행
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
@@ -41,8 +41,8 @@ public class scheduledTasks {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
 
-        List<StoryBox> storyBoxes = storyBoxRepository.findAllByFinishedAtBeforeAndBlindIsFalse(localDateTime);
-        storyBoxes.forEach(storyBox-> storyBox.updateBlind(true));
+        List<StoryBox> storyBoxes = storyBoxRepository.findAllByFinishedAtBeforeAndBlindIsTrue(localDateTime);
+        storyBoxes.forEach(storyBox-> storyBox.updateBlind(false));
     }
 
 
