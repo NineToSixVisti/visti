@@ -7,7 +7,7 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 `;
 

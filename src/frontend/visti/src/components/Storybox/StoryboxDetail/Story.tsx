@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import { ReactComponent as Empty } from '../../../assets/images/story_empty.svg'
 import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
+import { useNavigate } from 'react-router-dom';
 
 interface StoryInfo {
   id: number;
@@ -26,6 +27,8 @@ type StoryProps = {
 
 
 const Story: React.FC<StoryProps> = ({ storyInfo }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       {
@@ -39,7 +42,8 @@ const Story: React.FC<StoryProps> = ({ storyInfo }) => {
           <StoryWrap>
             {
               storyInfo.map((story, index) => (
-                <StoryDiv key={story.id} index={index} isPrivate={story.blind} storyImg={story.mainFilePath}>
+                <StoryDiv key={story.id} index={index} isPrivate={story.blind} storyImg={story.mainFilePath}
+                  onClick={()=>{navigate(`/storydetail/${story.encryptedId}`)}}>
                   {story.blind && <PrivateImg src={process.env.PUBLIC_URL + "/assets/Visti_icon.png"} alt='보호된 이미지' />}
                   {!story.blind && story.like && <FavoriteSvg />}
                 </StoryDiv>
