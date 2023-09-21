@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    WindowCompat.setDecorFitsSystemWindows(window, false)
                     val memberInformationState = mainViewModel.memberInformation.value
                     when {
                         memberInformationState.error.isNotBlank() -> {
