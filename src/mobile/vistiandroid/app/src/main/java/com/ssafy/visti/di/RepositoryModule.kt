@@ -1,5 +1,6 @@
 package com.ssafy.visti.di
 
+import android.content.Context
 import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
@@ -11,6 +12,7 @@ import com.ssafy.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -37,5 +39,10 @@ class RepositoryModule {
         preferenceDataSource: PreferenceDataSource
     ): UserRepository {
         return UserRepositoryImpl(api, preferenceDataSource)
+    }
+
+    @Provides
+    fun providePreferenceDataSource(@ApplicationContext context: Context): PreferenceDataSource {
+        return PreferenceDataSource(context)
     }
 }
