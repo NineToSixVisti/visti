@@ -40,7 +40,7 @@ public class MemberLikeStory {
         this.updatedAt = updatedAt;
     }
 
-    public MemberLikeStory likeThis(Member member, Story story){
+    public static MemberLikeStory likeThis(Member member, Story story){
         return MemberLikeStory.builder()
                 .member(member)
                 .createdAt(story.getCreatedAt())
