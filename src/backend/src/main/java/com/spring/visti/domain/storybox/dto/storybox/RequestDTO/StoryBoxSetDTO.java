@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StoryBoxSetDTO {
 
-    private String boxImgPath;
+   // private String boxImgPath;
     private String name;
     private String detail;
 
     @Builder
-    public StoryBoxSetDTO(String boxImgPath, String name, String detail){
-        this.boxImgPath = boxImgPath;
+    public StoryBoxSetDTO(String name, String detail){
+     //   this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
     }

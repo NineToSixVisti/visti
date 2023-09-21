@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 public class MemberChangeProfileDTO {
     private String newEmail;
     private String nickname;
-    private String profilePath;
+//    private String profilePath;
 
 
     @Builder
-    public MemberChangeProfileDTO(String email, String newEmail, String nickname, String profilePath){
+    public MemberChangeProfileDTO(String newEmail, String nickname){
         this.newEmail = newEmail;
         this.nickname = nickname;
-        this.profilePath = profilePath;
+//        this.profilePath = profilePath;
     }
 }
 

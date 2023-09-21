@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface StoryBoxService extends DefaultService {
@@ -20,7 +21,7 @@ public interface StoryBoxService extends DefaultService {
 
     BaseResponseDTO<String> enterStoryBox(Long id, String email);
 
-    BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email);
+    BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email, MultipartFile multipartFile) throws IOException;
 
     BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email);
 
