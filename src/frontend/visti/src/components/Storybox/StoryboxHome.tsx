@@ -31,6 +31,9 @@ const StoryboxHome = () => {
 
   const navigate = useNavigate();
   
+  const [page, setPage] = useState<number>(1);  // 현재 페이지 번호
+  const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
+
   const getStoryboxList = useCallback(async () => {
     try {
       const data = await authInstance.get('story-box/storybox');
@@ -41,9 +44,42 @@ const StoryboxHome = () => {
       console.log('스토리박스 GET 중 에러 발생:', err);
     }
   }, []);
+
+  // const loadMoreData = async () => {
+  //   if (!hasMore) return;  // 더 이상 데이터가 없으면 리턴
   
+  //   try {
+  //     const nextPage = page + 1;
+  //     const data = await authInstance.get(`story-box/storybox?page=${nextPage}`);
+  
+  //     if (data && data.data && data.data.detail && data.data.detail.content) {
+  //       setStoryboxList(prev => [...prev, ...data.data.detail.content]);  // 현재 데이터에 추가
+  //       setPage(nextPage);
+  
+  //       if (data.data.detail.last === true) {  // 받아온 데이터가 없으면
+  //         setHasMore(false);  // 더 이상 데이터가 없음
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error('데이터 로드 중 에러 발생', err);
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.innerHeight + document.documentElement.scrollTop < document.documentElement.offsetHeight) return;
+  //     // 페이지 끝에 도달했을 때 다음 데이터 로드
+  //     loadMoreData();
+  //   };
+  
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
+  
+
   useEffect(() => {
     getStoryboxList();
+    // loadMoreData();
   }, [getStoryboxList]);
   
 

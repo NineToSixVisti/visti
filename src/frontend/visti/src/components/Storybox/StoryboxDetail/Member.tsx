@@ -1,17 +1,46 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
+import { authInstance } from '../../../apis/utils/instance';
 
-const Member = () => {
+interface MemberList {
+  nickname: string;
+  profilePath: string;
+  status: boolean;
+  position : string;
+};
 
-  const [memberList, setMemberList] = useState([1,1,1,1,1,1])
- 
+interface MemberProps {
+  id ?: string
+}
+
+const Member : React.FC<MemberProps> = ({id}) => {
+
+  const [memberList, setMemberList] = useState<MemberList[]>([]);
+
+  const getMemberList = useCallback(async () => {
+    try{
+      const data = await authInstance.get(`story-box/${id}/members`)
+      if (data) {
+        setMemberList(data.data.detail);
+        console.log(data.data.detail);
+      }
+    }
+    catch (err) {
+      console.log('스토리박스 Member GET 중 에러 발생', err)
+    }
+  },[id])
+
+  useEffect(()=>{
+    getMemberList();
+  },[getMemberList])
+
   return (
     <MemberWrap>
       {
-        memberList.map((a, index) => (
+        memberList.map((member, index) => (
           <MemberDiv key={index}>
-            <ProfileImg/>
-            <p>강민석</p>
+            <ProfileImg bgImage={member.profilePath}/>
+            <p>{member.nickname}</p>
           </MemberDiv>
         ))
       }
@@ -42,11 +71,15 @@ const MemberDiv = styled.div`
   }
 `
 
-const ProfileImg = styled.div`
+type BoxWrapProps = {
+  bgImage : string;
+};
+
+const ProfileImg = styled.div<BoxWrapProps>`
   width: 15vw;
   height: 15vw;
   border-radius: 42px;
-  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgc9Cml752xYTJwa1Yc6OG3V5-MqWTOSbflw&usqp=CAU");
+  background-image: url(${props => props.bgImage});
   background-size: cover;
   background-repeat: no-repeat;
 `

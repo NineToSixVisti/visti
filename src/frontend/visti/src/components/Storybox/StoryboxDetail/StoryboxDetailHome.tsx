@@ -141,7 +141,7 @@ const StoryboxDetail: React.FC = () => {
           setMember={() => { setTap('member'); }} 
           setDetail={() => { setTap('detail'); }}/>
         {tap === 'story' && <Story storyInfo={storyInfo}/>}
-        {tap === 'member' && <Member />}
+        {tap === 'member' && <Member id={id}/>}
         {tap === 'detail' && <Detail />}
       </MainWrap>
     </>
