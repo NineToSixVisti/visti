@@ -1,10 +1,8 @@
 package com.ssafy.presentation.ui.common
 
-import android.view.Window
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -24,16 +22,14 @@ import com.ssafy.presentation.ui.story.StoryScreen
 fun MainNavigationScreen(
     innerPaddings: PaddingValues,
     navController: NavHostController,
-    window: Window
-) {
-    WindowCompat.setDecorFitsSystemWindows(window, false)
+    ) {
     NavHost(
         modifier = Modifier,
         navController = navController,
         startDestination = MainNav.Home.route,
     ) {
         composable(MainNav.Home.route) {
-            HomeScreen(window)
+            HomeScreen()
         }
         composable(MainNav.Memory.route) {
             StoryScreen()

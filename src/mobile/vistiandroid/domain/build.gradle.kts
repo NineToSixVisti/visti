@@ -46,4 +46,10 @@ dependencies {
     implementation(Dependencies.Hilt.DAGGER_ANDROID)
     kapt(Dependencies.Hilt.DAGGER_COMPILER)
     implementation(Dependencies.Hilt.HILT_COMPOSE)
+
+    //retrofit & okhttp
+    implementation(Dependencies.RETROFIT.RETROFIT_CORE)
+    implementation(Dependencies.RETROFIT.RETROFIT_CONVERTER)
+    implementation(Dependencies.OKHTTP.OKHTTP_CORE)
+    implementation(Dependencies.OKHTTP.OKHTTP_LOGGING)
 }
