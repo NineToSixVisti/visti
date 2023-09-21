@@ -94,6 +94,16 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/lateststorybox")
+    @Operation(summary = "내가 작성한 스토리 박스 조회", description = "내가 작성한 스토리 박스를 리스트업 합니다.")
+    public ResponseEntity<? extends BaseResponseDTO<StoryBoxExposedDTO>> readLatestStoryBoxes(
+
+    ) {
+        String email = getEmail();
+        BaseResponseDTO<StoryBoxExposedDTO> response = storyBoxService.readLatestStoryBoxes(email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     private static final String perPageBox = "5";
     @GetMapping("/mystorybox")
     @Operation(summary = "내가 작성한 스토리 박스 조회", description = "내가 작성한 스토리 박스를 리스트업 합니다.")

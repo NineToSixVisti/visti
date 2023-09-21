@@ -186,7 +186,7 @@ public class StoryServiceImpl implements StoryService{
             return new BaseResponseDTO<>("스토리를 '좋아요 취소' 했습니다", 200);
         }
 
-        MemberLikeStory memberLikeThis = new MemberLikeStory().likeThis(member, story);
+        MemberLikeStory memberLikeThis = MemberLikeStory.likeThis(member, story);
         memberLikeStoryRepository.save(memberLikeThis);
         return new BaseResponseDTO<>("스토리를 '좋아요' 했습니다", 200);
     }

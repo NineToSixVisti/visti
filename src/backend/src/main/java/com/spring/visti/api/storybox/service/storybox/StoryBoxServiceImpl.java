@@ -32,10 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -287,9 +284,18 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
                 .map(StoryBoxMember::getStoryBox).toList();
 
-        StoryBox latestStoryBox = null;
+        StoryBox _latestFutureStoryBox = myStoryBoxes.stream()
+                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
+                .min(Comparator.comparing(StoryBox::getFinishedAt))
+                .orElse(null);
 
-        return new BaseResponseDTO<StoryBoxExposedDTO>();
+        if (_latestFutureStoryBox != null){
+            StoryBoxExposedDTO latestFutureStoryBox = StoryBoxExposedDTO.of(_latestFutureStoryBox);
+            return new BaseResponseDTO<StoryBoxExposedDTO>("가장 가까운 미래에 닫힐 Story Box 조회가 완료되었습니다",200 , latestFutureStoryBox);
+        }
+
+        return new BaseResponseDTO<StoryBoxExposedDTO>("가장 가까운 미래에 닫힐 Story Box 조회가 완료되었습니다",200 , null);
+
     }
 
     @Override
