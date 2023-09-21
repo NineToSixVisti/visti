@@ -283,11 +283,9 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         Member member = getMember(email, memberRepository);
 
         List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
-                .map(storyBoxMember -> {
-                    StoryBox storyBox = storyBoxMember.getStoryBox();
-                    return storyBox;
-                }).toList();
+                .map(StoryBoxMember::getStoryBox).toList();
 
+        StoryBox latestStoryBox = null;
 
         return new BaseResponseDTO<StoryBoxExposedDTO>();
     }
