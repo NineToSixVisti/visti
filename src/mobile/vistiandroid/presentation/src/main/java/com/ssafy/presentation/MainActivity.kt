@@ -1,7 +1,6 @@
 package com.ssafy.presentation
 
 import android.os.Bundle
-import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -41,13 +40,14 @@ class MainActivity : ComponentActivity() {
                 ) {
                     WindowCompat.setDecorFitsSystemWindows(window, false)
                     val memberInformationState = mainViewModel.memberInformation.value
+
                     when {
                         memberInformationState.error.isNotBlank() -> {
-                            NavGraph(navController = navController, window, this@MainActivity)
+                            NavGraph(navController = navController, this@MainActivity)
                         }
 
-                        else -> {
-                            MainScreen(window)
+                        memberInformationState.memberInformation.nickname.isNotBlank() -> {
+                            MainScreen()
                         }
                     }
                 }
@@ -58,16 +58,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(window: Window) {
+fun MainScreen() {
     val mainNavController = rememberNavController()
-    WindowCompat.setDecorFitsSystemWindows(window, false)
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         bottomBar = {
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavigationScreen(it, navController = mainNavController, window)
+        MainNavigationScreen(it, navController = mainNavController)
     }
 }
 
