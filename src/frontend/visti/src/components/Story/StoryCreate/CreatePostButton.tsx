@@ -34,7 +34,7 @@ function CreatePostButton() {
     
     return (
         <div style={{ position: 'relative' }}>
-            <Fab style={{ backgroundColor: '#F09E98' }} aria-label="add" onClick={handleMenuToggle}>
+            <Fab style={{ backgroundColor: '#F09E98', zIndex: 2, position: 'relative' }} aria-label="add" onClick={handleMenuToggle}>
                 <AddIcon style={{ color: '#FFFFFF' }} />
             </Fab>
             {isMenuOpen && (

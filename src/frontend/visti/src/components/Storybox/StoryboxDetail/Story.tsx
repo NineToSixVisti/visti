@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as Empty } from '../../../assets/images/story_empty.svg'
 import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
 import { useNavigate } from 'react-router-dom';
+import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
 
 interface StoryInfo {
   id: number;
@@ -49,6 +50,7 @@ const Story: React.FC<StoryProps> = ({ storyInfo }) => {
                 </StoryDiv>
               ))
             }
+            <CreatePostButton/>
           </StoryWrap>
         )
       }
