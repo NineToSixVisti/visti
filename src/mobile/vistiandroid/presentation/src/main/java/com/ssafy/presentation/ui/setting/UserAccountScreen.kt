@@ -27,7 +27,7 @@ import com.ssafy.presentation.ui.theme.White
 fun UserAccountScreen(
     navController: NavController, viewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.memberInformation.value
 
     when {
         state.error.isNotBlank() -> {

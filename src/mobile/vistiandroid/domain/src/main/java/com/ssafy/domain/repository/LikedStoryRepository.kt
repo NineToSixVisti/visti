@@ -1,7 +1,10 @@
 package com.ssafy.domain.repository
 
-import com.ssafy.domain.model.StoryList
+import androidx.paging.PagingData
+import com.ssafy.domain.model.LikeSortType
+import com.ssafy.domain.model.Story
+import kotlinx.coroutines.flow.Flow
 
 interface LikedStoryRepository {
-    suspend fun getLikedStories(page: Int, size : Int, sortingOption : String): StoryList
+    fun getLikedStories(sortingOption: LikeSortType): Flow<PagingData<Story>>
 }

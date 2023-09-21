@@ -34,7 +34,7 @@ fun StoryItem(
 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(story.filePath)
+                .data(story.mainFilePath)
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(placedHolder),
