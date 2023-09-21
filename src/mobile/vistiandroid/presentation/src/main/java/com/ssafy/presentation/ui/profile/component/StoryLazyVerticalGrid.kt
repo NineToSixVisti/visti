@@ -17,7 +17,7 @@ import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.LoadingView
 
 @Composable
-fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>) = when {
+fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount : String) = when {
     stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
         LoadingView(modifier = Modifier.fillMaxSize())
     }
@@ -33,7 +33,7 @@ fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>) = when {
         )
     }
 
-    stories.itemCount == 0 -> {
+    storyCount == "0" -> {
         EmptyItemView(
             modifier = Modifier.fillMaxSize(),
             stringResource(R.string.empty_story)

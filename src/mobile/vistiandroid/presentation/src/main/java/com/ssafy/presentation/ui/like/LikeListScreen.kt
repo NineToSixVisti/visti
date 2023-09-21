@@ -272,18 +272,23 @@ fun updateGridGroups(
         val story = lazyLikedStories[index] ?: return
         val storyDate = formatStoryDate(parseStoryDate(story.createdAt))
 
+        // 이전 그룹과 같은 날짜인지 확인
         if (isNewDateGroup(previousDate, storyDate)) {
+            // 이전 그룹과 다른 날짜일 때, 그룹 리스트 중에 같은 그룹이 있는지 확인
             val existingGroup = gridGroups.find { it.header == storyDate }
 
             if (existingGroup != null) {
+                //바로 전은 아니지만 기존의 그룹이 존재
                 if (!existingGroup.stories.contains(story)) {
                     existingGroup.stories.add(story)
                 }
             } else {
+                // 아예 새로운 그룹
                 val newGroup = GridGroup(storyDate, mutableListOf(story))
                 gridGroups.add(newGroup)
             }
         } else {
+            //이미 있는 날짜 그룹
             gridGroups.last().stories.add(story)
         }
 

@@ -3,19 +3,16 @@ package com.ssafy.presentation.ui.profile
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,10 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
@@ -158,8 +151,15 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                 selectedTabIndex = it
             }
             when (selectedTabIndex) {
-                0 -> StoryLazyVerticalGrid(myStories)
-                1 -> StoryBoxLazyColumn(lazyPagingItems)
+                0 -> StoryLazyVerticalGrid(
+                    myStories,
+                    memberInformation.stories
+                )
+
+                1 -> StoryBoxLazyColumn(
+                    lazyPagingItems,
+                    memberInformation.storyBoxes
+                )
             }
         }
 
