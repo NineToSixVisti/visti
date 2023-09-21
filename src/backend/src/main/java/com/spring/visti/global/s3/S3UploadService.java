@@ -31,7 +31,7 @@ public class S3UploadService{
     public String S3Upload(MultipartFile multipartFile, String postCategory) throws IOException {
         Optional<File> uploadFile = convert(multipartFile);
         if (!uploadFile.isPresent()) {
-            return "사진없음";
+            return "";
         }
 
         return pathUpload(uploadFile.get(), postCategory);
@@ -65,9 +65,9 @@ public class S3UploadService{
     // 로컬에 생성된 파일 삭제
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info("파일 삭제 성공");
+            log.info("임시 파일 삭제 성공");
         } else {
-            log.info("파일 삭제 실패");
+            log.info("임시 파일 삭제 실패");
         }
     }
 
