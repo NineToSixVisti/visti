@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
@@ -22,8 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    val mainViewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         NaverIdLoginSDK.initialize(
@@ -38,6 +37,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val mainViewModel : MainViewModel = hiltViewModel()
                     WindowCompat.setDecorFitsSystemWindows(window, false)
                     val memberInformationState = mainViewModel.memberInformation.value
 

@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -53,12 +54,13 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-
-    articleId: String? = null
+    articleId: String? = null,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberScrollState()
 
+    val homeStorySate = homeViewModel.homeStoryState.value
 
 
     CollapsingToolbarScaffold(
@@ -108,7 +110,6 @@ fun HomeScreen(
             HomeContent()
         }
     }
-
 }
 
 @Composable
