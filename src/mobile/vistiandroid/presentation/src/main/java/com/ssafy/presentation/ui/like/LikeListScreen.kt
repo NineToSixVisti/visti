@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -29,7 +30,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.domain.model.Story
+import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.StoryItem
+import com.ssafy.presentation.ui.like.component.EmptyItemView
 import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.GridGroup
 import com.ssafy.presentation.ui.like.component.LoadingView
@@ -109,6 +112,11 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel())
             )
         }
 
+        lazyLikedStories.itemCount == 0 -> {
+            EmptyItemView(modifier = Modifier.fillMaxSize(),
+                stringResource(R.string.empty_liked_story))
+        }
+
         else -> {
             LazyVerticalGrid(columns = GridCells.Fixed(3)) {
                 gridGroups.forEach { (title, group) ->
@@ -162,6 +170,10 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel()) 
             )
         }
 
+        lazyLikedStories.itemCount == 0 -> {
+            EmptyItemView(modifier = Modifier.fillMaxSize(), stringResource(R.string.empty_liked_story))
+        }
+
         else -> {
             LazyVerticalGrid(columns = GridCells.Fixed(3)) {
                 gridGroups.forEach { (title, group) ->
@@ -213,6 +225,10 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
                 modifier = Modifier.fillMaxWidth(),
                 onClickRetry = { lazyLikedStories.retry() }
             )
+        }
+
+        lazyLikedStories.itemCount == 0 -> {
+            EmptyItemView(modifier = Modifier.fillMaxSize(), stringResource(R.string.empty_liked_story))
         }
 
         else -> {
