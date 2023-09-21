@@ -161,7 +161,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 //        Member member = getMember(email, memberRepository);
         Member member = getMemberBySecurity();
 
-        Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST,pageable);
+        Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST, pageable);
 
         Page<StoryBoxExposedDTO> myStoryBoxes = _myStoryBoxes
                 .map(myStoryBox -> StoryBoxExposedDTO.of(myStoryBox.getStoryBox()));
@@ -281,6 +281,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     public BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email) {
         Member member = getMember(email, memberRepository);
+
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
                 .map(StoryBoxMember::getStoryBox).toList();
