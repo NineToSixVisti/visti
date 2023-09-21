@@ -71,5 +71,3 @@ fun MainScreen(window: Window) {
 }
 
 
-
-

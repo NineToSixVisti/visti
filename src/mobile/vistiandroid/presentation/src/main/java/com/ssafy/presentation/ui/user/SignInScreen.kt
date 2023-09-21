@@ -220,6 +220,7 @@ fun SignInScreen(
                             )
                         } else if (token != null) {
                             Log.i(TAG, "카카오톡으로 로그인 성공2 ${token.accessToken}")
+                            signInViewModel.socialSignIn("kakao", token.accessToken)
                         }
                     }
                 } else {
