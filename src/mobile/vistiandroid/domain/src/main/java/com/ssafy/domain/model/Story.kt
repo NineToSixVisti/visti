@@ -27,7 +27,7 @@ data class StoryList(
 
 data class StoryBox(
     val id: Int = 0,
-    val encryptedId: String,
+    val encryptedId: String = "",
     val boxImgPath: String = "",
     val name: String = "",
     val createdAt: String = "",

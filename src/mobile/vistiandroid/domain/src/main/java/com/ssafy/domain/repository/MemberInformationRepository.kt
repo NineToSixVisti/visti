@@ -12,4 +12,5 @@ interface MemberInformationRepository {
     suspend fun getMyStories(page: Int, size: Int): StoryList
     suspend fun getHomeMyStories(): List<HomeStory>
     suspend fun getHomeMyStoryBox(): List<StoryBox>
+    suspend fun getHomeLastStoryBox(): StoryBox
 }

@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
+import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
+import com.ssafy.domain.usecase.memberinformation.GetMyLastStoryBoxUseCase
 import com.ssafy.presentation.ui.like.MemberState
-import com.ssafy.presentation.ui.like.MyStoryBoxState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,6 +22,7 @@ class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
+    private val getMyLastStoryBoxUseCase: GetMyLastStoryBoxUseCase,
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
@@ -29,16 +31,17 @@ class HomeViewModel @Inject constructor(
     private val _homeStoryBoxState = mutableStateOf(HomeStoryBoxState())
     val homeStoryBoxState: State<HomeStoryBoxState> = _homeStoryBoxState
 
+    private val _homeLastStoryBoxState = mutableStateOf(HomeLastStoryBoxState())
+    val homeLastStoryBoxState: State<HomeLastStoryBoxState> = _homeLastStoryBoxState
+
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
-
-    private val _myStoryBoxes = mutableStateOf(MyStoryBoxState())
-    val myStoryBoxes: State<MyStoryBoxState> = _myStoryBoxes
 
     init {
         getHomeStory()
         getHomeStoryBox()
-        // getMemberInformation()
+        getMemberInformation()
+        getHomeLastStoryBox()
     }
 
     private fun getHomeStory() {
@@ -65,7 +68,7 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _homeStoryBoxState.value =
-                        HomeStoryBoxState(storyBox = result.data ?: emptyList())
+                        HomeStoryBoxState(storyBoxList = result.data ?: emptyList())
                 }
 
                 is Resource.Error -> {
@@ -75,6 +78,26 @@ class HomeViewModel @Inject constructor(
 
                 is Resource.Loading -> {
                     _homeStoryBoxState.value = HomeStoryBoxState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getHomeLastStoryBox() {
+        getMyLastStoryBoxUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _homeLastStoryBoxState.value =
+                        HomeLastStoryBoxState(storyBox = result.data ?: StoryBox())
+                }
+
+                is Resource.Error -> {
+                    _homeLastStoryBoxState.value =
+                        HomeLastStoryBoxState(error = result.message ?: "An error occurred")
+                }
+
+                is Resource.Loading -> {
+                    _homeLastStoryBoxState.value = HomeLastStoryBoxState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

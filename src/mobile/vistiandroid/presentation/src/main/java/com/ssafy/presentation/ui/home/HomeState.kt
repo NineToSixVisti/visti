@@ -11,6 +11,12 @@ data class HomeStoryState(
 
 data class HomeStoryBoxState(
     val isLoading: Boolean = false,
-    val storyBox: List<StoryBox> = emptyList(),
+    val storyBoxList: List<StoryBox> = emptyList(),
     val error: String = ""
 )
+data class HomeLastStoryBoxState(
+    val isLoading: Boolean = false,
+    val storyBox: StoryBox = StoryBox(),
+    val error: String = ""
+)
+

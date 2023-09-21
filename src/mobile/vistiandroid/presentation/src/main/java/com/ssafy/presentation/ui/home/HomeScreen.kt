@@ -126,7 +126,7 @@ fun HomeScreen(
                         .verticalScroll(scrollState)
                         .padding(start = 20.dp, top = 20.dp)
                 ) {
-                    HomeContent(homeStorySate.stories, homeStoryBoxState.storyBox)
+                    HomeContent(homeStorySate.stories, homeStoryBoxState.storyBoxList)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.ssafy.data.remote
 
+import com.ssafy.data.dto.HomeLastStoryBoxResponse
 import com.ssafy.data.dto.HomeStoryBoxResponse
 import com.ssafy.data.dto.HomeStoryResponse
 import com.ssafy.data.dto.MemberResponse
@@ -47,6 +48,9 @@ interface VistiApi {
 
     @GET("/api/story-box/mainpage")
     suspend fun getHomeStoryBox(): HomeStoryBoxResponse
+
+    @GET("/api/story-box/lateststorybox")
+    suspend fun getHomeLastStoryBox(): HomeLastStoryBoxResponse
 
 
 }

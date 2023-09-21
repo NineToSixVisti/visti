@@ -32,4 +32,8 @@ class MemberInformationRepositoryImpl @Inject constructor(
     override suspend fun getHomeMyStoryBox(): List<StoryBox> {
         return api.getHomeStoryBox().detail.map { it.toDomain() }
     }
+
+    override suspend fun getHomeLastStoryBox(): StoryBox {
+        return api.getHomeLastStoryBox().detail?.toDomain() ?: StoryBox()
+    }
 }

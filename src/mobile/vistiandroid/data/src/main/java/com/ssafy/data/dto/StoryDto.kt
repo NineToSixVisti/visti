@@ -38,7 +38,7 @@ data class StoryBoxResponse(
 
 data class StoryBoxDto(
     @SerializedName("id") val id: Int = 0,
-    val encryptedId: String,
+    @SerializedName("encryptedId") val encryptedId: String="",
     @SerializedName("boxImgPath") val boxImgPath: String = "",
     @SerializedName("name") val name: String = "",
     @SerializedName("createdAt") val createdAt: String = "",
