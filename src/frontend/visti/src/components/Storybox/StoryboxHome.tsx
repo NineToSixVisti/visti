@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
@@ -22,66 +22,61 @@ type BoxWrapProps = {
 };
 
 const StoryboxHome = () => {
-  const [storyboxList, setStoryboxList] = useState<Storybox[]>([]);
+  const navigate = useNavigate();
 
+  const [storyboxList, setStoryboxList] = useState<Storybox[]>([]);
   const [search, setSerch] = useState("");
+  
+  const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
+  const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
+  const observer = useRef<IntersectionObserver | null>(null);
+  
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSerch(e.target.value)
   }
 
-  const navigate = useNavigate();
+  const lastBoxElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
   
-  const [page, setPage] = useState<number>(1);  // 현재 페이지 번호
-  const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
-
   const getStoryboxList = useCallback(async () => {
     try {
-      const data = await authInstance.get('story-box/storybox');
-      if (data) {
-        setStoryboxList(data.data.detail.content);
-      }
+      const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
+      console.log("Returned data:", data);
+      setStoryboxList((prevStoryboxList) => [
+        ...prevStoryboxList,
+        ...data.detail.content,
+      ]);
+      setHasMore(!data.detail.last);
     } catch (err) {
       console.log('스토리박스 GET 중 에러 발생:', err);
     }
-  }, []);
-
-  // const loadMoreData = async () => {
-  //   if (!hasMore) return;  // 더 이상 데이터가 없으면 리턴
+  }, [page]);
   
-  //   try {
-  //     const nextPage = page + 1;
-  //     const data = await authInstance.get(`story-box/storybox?page=${nextPage}`);
-  
-  //     if (data && data.data && data.data.detail && data.data.detail.content) {
-  //       setStoryboxList(prev => [...prev, ...data.data.detail.content]);  // 현재 데이터에 추가
-  //       setPage(nextPage);
-  
-  //       if (data.data.detail.last === true) {  // 받아온 데이터가 없으면
-  //         setHasMore(false);  // 더 이상 데이터가 없음
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error('데이터 로드 중 에러 발생', err);
-  //   }
-  // };
-  
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.innerHeight + document.documentElement.scrollTop < document.documentElement.offsetHeight) return;
-  //     // 페이지 끝에 도달했을 때 다음 데이터 로드
-  //     loadMoreData();
-  //   };
-  
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
-  
-
   useEffect(() => {
     getStoryboxList();
-    // loadMoreData();
-  }, [getStoryboxList]);
+  }, [getStoryboxList, page]);
+
+  useEffect(() => {
+    console.log("Current storyboxList:", storyboxList); 
+  }, [storyboxList]);
   
+  useEffect(() => {
+    console.log("Current page:", page);  
+  }, [page]);
+
+  useEffect(() => {
+    console.log("Has more:", hasMore); 
+  }, [hasMore]);
 
   return (
     <StoryboxWWrap>
@@ -99,17 +94,19 @@ const StoryboxHome = () => {
         storyboxList.length > 0 ? 
           <MainBoxWrap>
             {
-              storyboxList.map(storybox => (
+              storyboxList.map((storybox, index) => (
                 <BoxWrap
-                  key={storybox.id}
+                  ref={index === storyboxList.length - 1 ? lastBoxElementRef : null}
+                  key={storybox.encryptedId}
                   bgImage={storybox.boxImgPath}
-                  onClick={()=>{navigate(`/storybox/detail/${storybox.encryptedId}`)}}>
-                  <NameWrap>
+                  onClick={() => {
+                  navigate(`/storybox/detail/${storybox.encryptedId}`);}}>
+                <NameWrap>
                   <p>
                     {storybox.name.length > 15 ? `${storybox.name.substring(0, 15)}...` : storybox.name}
                     {storybox.blind ? <LockSvg/> : null}
                   </p>
-                  </NameWrap>
+                </NameWrap>
                 </BoxWrap>
               ))
             }            

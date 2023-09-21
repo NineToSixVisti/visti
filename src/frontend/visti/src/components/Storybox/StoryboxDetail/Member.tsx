@@ -80,7 +80,7 @@ const ProfileImg = styled.div<BoxWrapProps>`
   height: 14vw;
   border-radius: 42px;
   background-image: url(${props => props.bgImage});
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `
