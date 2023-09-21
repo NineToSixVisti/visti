@@ -40,7 +40,7 @@ const Member : React.FC<MemberProps> = ({id}) => {
         memberList.map((member, index) => (
           <MemberDiv key={index}>
             <ProfileImg bgImage={member.profilePath}/>
-            <p>{member.nickname}</p>
+            <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
           </MemberDiv>
         ))
       }
@@ -76,11 +76,12 @@ type BoxWrapProps = {
 };
 
 const ProfileImg = styled.div<BoxWrapProps>`
-  width: 15vw;
-  height: 15vw;
+  width: 14vw;
+  height: 14vw;
   border-radius: 42px;
   background-image: url(${props => props.bgImage});
-  background-size: cover;
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
 `
 

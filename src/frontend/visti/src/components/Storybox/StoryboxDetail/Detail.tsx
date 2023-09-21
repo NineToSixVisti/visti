@@ -1,24 +1,57 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
+import { authInstance } from '../../../apis/utils/instance';
 
-const Detail = () => {
+interface storyboxDetail {
+  name : string;
+  detail : string;
+  createdAt: string;
+  finishedAt : string;
+  memberNum : Number;
+  storyNum : Number;
+  blind : boolean;
+}
+
+interface boxDetailProps {
+  id ?: string 
+}
+
+const Detail : React.FC<boxDetailProps> = ({id}) => {
+
+    const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
+
+  const getStoryboxDetail = useCallback(async () => {
+    try{
+      const data = await authInstance.get(`story-box/${id}/detail`)
+      if (data) {
+        setStoryboxDetail(data.data.detail);
+        console.log(data.data.detail);
+      }
+    }
+    catch (err) {
+      console.log('스토리박스 Detial GET 중 에러 발생', err)
+    }
+  },[id])
+
+  useEffect(()=>{
+    getStoryboxDetail();
+  },[getStoryboxDetail])
+
   return (
     <DetailWrap>
        <MemberStoryWrap>
           <MemberBox>
-            <p>인원 수</p>
-            <p>8/30</p>
+            <p>멤버 수</p>
+            <p>{storyboxDetail ? `${storyboxDetail.memberNum}/30` : 'Loading...'}</p>
           </MemberBox>
           <StoryBox>
             <p>스토리 수</p>
-            <p>12/100</p>
+            <p>{storyboxDetail ? `${storyboxDetail.storyNum}/100` : 'Loading...'}</p>
           </StoryBox>
        </MemberStoryWrap>
        <ExplainBox>
         <p>
-          {`9기 버니즈의 추억을 위한 공간입니다.
-            OOO하기위해 OOOO ~~
-            매일 한개씩 업로드 필수입니다!`}  
+          {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
         </p>
        </ExplainBox>
        <LinkCreate>링크 생성</LinkCreate>

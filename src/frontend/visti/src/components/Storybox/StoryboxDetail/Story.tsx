@@ -90,6 +90,7 @@ const StoryDiv = styled.div<{ isPrivate : boolean; index : number; storyImg: str
     background-image: ${props => props.isPrivate ? 'none' : `url(${props.storyImg})`};
     background-color: ${props => (props.index % 6 >= 3 && props.isPrivate) ? '#FFF2F2' : '#fff'};
     background-size: cover;
+    background-position: center;
     position: relative;
     display : flex;
     justify-content : center;

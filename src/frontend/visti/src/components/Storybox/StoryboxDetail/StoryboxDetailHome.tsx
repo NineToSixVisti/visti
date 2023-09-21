@@ -15,6 +15,7 @@ interface StoryboxInfo {
 name: string;
 boxImgPath?: string;
 blind?: boolean;
+isHost?: boolean;
 createdAt: string;
 finishedAt: string;
 }
@@ -35,6 +36,11 @@ interface StoryInfo {
   createdAt: string;
   finishedAt: string;
 };
+
+type DivProps = {
+  bgImage ?: string;
+}
+
 
 const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -78,7 +84,7 @@ const StoryboxDetail: React.FC = () => {
       const data = await authInstance.get(`story-box/${id}/info`)
       if (data) {
         setStoryboxInfo(data.data.detail);
-        // console.log(data.data.detail)
+        console.log(data.data.detail)
       }
     }
     catch (err) {
@@ -123,10 +129,10 @@ const StoryboxDetail: React.FC = () => {
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
           <p>
           {storyboxInfo.name.length > 10 ? `${storyboxInfo.name.substring(0, 10)}...` : storyboxInfo.name}</p>
-          <ModifySvg/>
+          { storyboxInfo.isHost && <ModifySvg/> } 
         </FirstTop>
-        <TopMian bgImage={storyboxInfo.boxImgPath}>
-          <div></div>
+        <TopMian>
+          <BgImageDiv bgImage={storyboxInfo.boxImgPath}></BgImageDiv>
           <div>
             <p>스토리 생성 가능 시간</p>
             <p>{remainingTime}</p>
@@ -142,7 +148,7 @@ const StoryboxDetail: React.FC = () => {
           setDetail={() => { setTap('detail'); }}/>
         {tap === 'story' && <Story storyInfo={storyInfo}/>}
         {tap === 'member' && <Member id={id}/>}
-        {tap === 'detail' && <Detail />}
+        {tap === 'detail' && <Detail id={id}/>}
       </MainWrap>
     </>
   )
@@ -174,25 +180,11 @@ const FirstTop = styled.div`
   }
 `;
 
-type DivProps = {
-  bgImage ?: string;
-}
-
-const TopMian = styled.div<DivProps>`
+const TopMian = styled.div`
   width: 100%;
   height: 70%;
   /* background-color: lightgreen; */
   display: flex;
-
-  >div:first-child{
-    width: 50%;
-    height: 100%;
-    background-image: url(${props => props.bgImage ? props.bgImage : '/assets/box_Image_input.svg'});
-    background-size: cover;
-    background-position: center;
-    border-radius: 12px;
-    display: flex;
-  }
 
   >div:nth-child(2) {
     width: 50%;
@@ -209,6 +201,16 @@ const TopMian = styled.div<DivProps>`
     font-size: 30px;
   }
   }
+`
+
+const BgImageDiv = styled.div<DivProps>`
+  width: 50%;
+  height: 100%;
+  background-image: url(${props => props.bgImage ? props.bgImage : '/assets/box_Image_input.svg'});
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  display: flex;
 `
 
 const MainWrap = styled.div`
