@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -40,6 +39,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
@@ -127,7 +127,11 @@ fun HomeScreen(
                         .verticalScroll(scrollState)
                         .padding(start = 20.dp, top = 20.dp)
                 ) {
-                    HomeContent(homeStorySate.stories, homeStoryBoxState.storyBoxList)
+                    HomeContent(
+                        homeStorySate.stories,
+                        homeStoryBoxState.storyBoxList,
+                        memberInformation
+                    )
                 }
             }
         }
@@ -136,12 +140,16 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeContent(homeStoryList: List<HomeStory>, homeStoryBoxList: List<StoryBox>) {
+fun HomeContent(
+    homeStoryList: List<HomeStory>,
+    homeStoryBoxList: List<StoryBox>,
+    memberInformation: Member
+) {
     Row(
         verticalAlignment = Alignment.Bottom
     ) {
         LoadLottie(80.dp, 120.dp, R.raw.animation_calendar)
-        HomeContentDes()
+        HomeContentDes(memberInformation)
     }
     Text(
         text = "진행중인 기록",
@@ -169,14 +177,14 @@ fun HomeContent(homeStoryList: List<HomeStory>, homeStoryBoxList: List<StoryBox>
 
 
 @Composable
-fun HomeContentDes() {
+fun HomeContentDes(memberInformation: Member) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.End,
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = "희주님", fontSize = 24.sp,
+                text = "${memberInformation.nickname}님", fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
             )
             Text(
@@ -192,7 +200,10 @@ fun HomeContentDes() {
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "34", fontSize = 18.sp, color = PrimaryColor, fontWeight = FontWeight.Bold,
+                text = memberInformation.stories,
+                fontSize = 18.sp,
+                color = PrimaryColor,
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = "개입니다!",
@@ -247,7 +258,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                     contentDescription = "home toolbar pencil"
                 )
                 Text(text = "x", color = Color.Black)
-                Text(text = "5", color = Color.Black)
+                Text(text = memberInformation.dailyStory, color = Color.Black)
             }
         }
         Text(
