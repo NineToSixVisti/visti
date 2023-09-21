@@ -7,10 +7,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
-public class MemberLikeStory extends BaseEntity {
+public class MemberLikeStory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +26,25 @@ public class MemberLikeStory extends BaseEntity {
     @JoinColumn(name = "story_id")
     private Story story;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Builder
-    public MemberLikeStory(Member member, Story story){
+    public MemberLikeStory(Member member, Story story, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.member = member;
         this.story = story;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public MemberLikeStory likeThis(Member member, Story story){
         return MemberLikeStory.builder()
                 .member(member)
+                .createdAt(story.getCreatedAt())
+                .updatedAt(story.getUpdatedAt())
                 .story(story)
                 .build();
     }
