@@ -14,7 +14,13 @@ class LikeListViewModel @Inject constructor(
     repository: LikedStoryRepository
 ) : ViewModel() {
 
-    val likedStories: Flow<PagingData<Story>> =
+    val likedStoriesByDescend: Flow<PagingData<Story>> =
         repository.getLikedStories(LikeSortType.DOWN)
+
+    val likedStoriesByAscend: Flow<PagingData<Story>> =
+        repository.getLikedStories(LikeSortType.UP)
+
+    val likedStoriesByRandom: Flow<PagingData<Story>> =
+        repository.getLikedStories(LikeSortType.RANDOM)
 }
 

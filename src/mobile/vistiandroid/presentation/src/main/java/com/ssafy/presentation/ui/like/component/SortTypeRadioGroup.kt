@@ -19,16 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
-import com.ssafy.presentation.ui.like.LikeListViewModel
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.LightBackgroundColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
 
 @Composable
-fun SortTypeRadioGroup(viewModel: LikeListViewModel = hiltViewModel()) {
+fun SortTypeRadioGroup(
+    currentSortType: LikeSortType,
+    onSortTypeChanged: (LikeSortType) -> Unit
+) {
     val iconColor = if (isSystemInDarkTheme()) {
         LightBackgroundColor
     } else {
@@ -43,8 +44,9 @@ fun SortTypeRadioGroup(viewModel: LikeListViewModel = hiltViewModel()) {
     var selectedSortOption by remember {
         mutableStateOf(LikeSortType.DOWN)
     }
+
     val onSelectionChange = { type: LikeSortType ->
-//        viewModel.getLikedStories(type)
+        onSortTypeChanged(type)
         selectedSortOption = type
     }
 
