@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxDetailDTO {
 
-    private String boxImgPath;
+//    private String boxImgPath;
     private String name;
-    private MemberExposedDTO creator;
+//    private MemberExposedDTO creator;
     private String detail;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
@@ -34,10 +34,10 @@ public class StoryBoxDetailDTO {
             Boolean blind, Integer memberNum, Integer storyNum,
             LocalDateTime createdAt, LocalDateTime finishedAt
                             ){
-        this.boxImgPath = boxImgPath;
+//        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
-        this.creator = creator;
+//        this.creator = creator;
 
         this.blind = blind;
         this.memberNum = memberNum;
@@ -48,16 +48,16 @@ public class StoryBoxDetailDTO {
     }
 
     public static StoryBoxDetailDTO toDetailDTO(StoryBox storyBox){
-        MemberExposedDTO creatorInfo = MemberExposedDTO.of(storyBox.getCreator());
+//        MemberExposedDTO creatorInfo = MemberExposedDTO.of(storyBox.getCreator());
 
         Integer member_num = storyBox.getStoryBoxMembers().size();
         Integer story_num = storyBox.getStories().size();
 
         return StoryBoxDetailDTO.builder()
-                .boxImgPath(storyBox.getBoxImgPath())
+//                .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
                 .detail(storyBox.getDetail())
-                .creator(creatorInfo)
+//                .creator(creatorInfo)
                 .blind(storyBox.getBlind())
                 .memberNum(member_num)
                 .storyNum(story_num)
