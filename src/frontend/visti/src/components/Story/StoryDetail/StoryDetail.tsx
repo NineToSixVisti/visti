@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { authInstance } from '../../../apis/utils/instance';
 import styled from 'styled-components';
+import { ReactComponent as BackButtonIcon } from '../../../assets/images/storydetailclose_button.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface StoryData {
   id: number;
@@ -17,17 +19,11 @@ interface StoryData {
   };
 }
 
-const Container = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-`;
-
-const MainImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 8px; 
 `;
 
 const ProfileContainer = styled.div`
@@ -39,31 +35,62 @@ const ProfileContainer = styled.div`
   transform: translateX(-50%); 
 `;
 
+const Nickname = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  margin-bottom: 8px; 
+`;
+
+const Container = styled.div`
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color:#d3d3d3;
+`;
+
+const MainImage = styled.img`
+  width: 100%;
+  height:90vh;
+  object-fit: contain;
+  border-radius: 15px; 
+`;
+
+
 const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 8px;
 `;
 
-const Nickname = styled.span`
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  margin-left: 8px;
-`;
 
 const CreatedAt = styled.span`
   font-size: 14px;
-  color: white;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  margin-left: 16px;
+  color: black;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  margin-left: 10px;
 `;
+const BackButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent; 
+  border: none;
+  cursor: pointer;
+  z-index: 10; 
+`;
+
 
 function StoryDetail() {
   const { id } = useParams<{ id?: string }>();
   const [storyData, setStoryData] = useState<StoryData | null>(null);
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -86,11 +113,16 @@ function StoryDetail() {
 
   return (
     <Container>
+     <BackButton onClick={handleBack}>
+        <BackButtonIcon /> 
+      </BackButton>
       <MainImage src={storyData.mainFilePath} alt="Story" />
       <ProfileContainer>
         {storyData.member.profilePath && <ProfileImage src={storyData.member.profilePath} alt="Profile" />}
-        <Nickname>{storyData.member.nickname}</Nickname>
-        <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
+        <InfoContainer>
+          <Nickname>{storyData.member.nickname}</Nickname>
+          <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
+        </InfoContainer>
       </ProfileContainer>
     </Container>
   );
