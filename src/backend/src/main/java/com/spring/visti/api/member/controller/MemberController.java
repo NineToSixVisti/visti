@@ -58,11 +58,11 @@ public class MemberController {
     }
 
     @PostMapping("/verify-authnum")
-    @Operation(summary = "이메일 인증[이메일 확인]", description = "이메일이 중복이 되는지 확인합니다.", tags = {"회원 가입"})
-    public ResponseEntity<? extends BaseResponseDTO<String>> verifyEmail(
+    @Operation(summary = "이메일 인증[이메일 확인]", description = "인증코드 조회를 진행합니다.", tags = {"회원 가입"})
+    public ResponseEntity<? extends BaseResponseDTO<String>> verifyAuthNum(
             @RequestBody AuthDTO verificationCode
     ){
-        BaseResponseDTO<String> response = memberService.verifyEmail(verificationCode);
+        BaseResponseDTO<String> response = memberService.verifyAuthNum(verificationCode);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
