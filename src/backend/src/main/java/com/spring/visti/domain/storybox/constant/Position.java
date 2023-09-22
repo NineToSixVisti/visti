@@ -4,8 +4,8 @@ public enum Position {
 
     HOST, GUEST;
 
-    public static Position from(String type) {
-        return Position.valueOf(type);
+    public static Position from(String role) {
+        return Position.valueOf(role);
     }
 
 }
