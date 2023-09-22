@@ -1,7 +1,14 @@
+/**/*.backup
+ngrinder/
+node_modules
 HELP.md
 .gradle
 application.properties
 application-oauth.properties
+application.properties
+application-test.properties
+/*.properties
+visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
