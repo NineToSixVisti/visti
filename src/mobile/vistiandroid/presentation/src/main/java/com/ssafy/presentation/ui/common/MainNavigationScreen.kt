@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.SettingNav
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
 import com.ssafy.presentation.ui.like.LikeListScreen
 import com.ssafy.presentation.ui.profile.ProfileScreen
@@ -17,6 +18,7 @@ import com.ssafy.presentation.ui.setting.NotificationSettingScreen
 import com.ssafy.presentation.ui.setting.SubscriptionScreen
 import com.ssafy.presentation.ui.setting.UserAccountScreen
 import com.ssafy.presentation.ui.story.StoryScreen
+import com.ssafy.presentation.ui.user.SignInScreen
 
 @Composable
 fun MainNavigationScreen(
@@ -62,6 +64,10 @@ fun NavGraphBuilder.settingsGraph(
 
     composable(route = SettingNav.Subscription.route) {
         SubscriptionScreen(navController = navController)
+    }
+
+    composable(route = SignInNav.SignIn.route) {
+//        SignInScreen(navController = navController)
     }
 }
 
