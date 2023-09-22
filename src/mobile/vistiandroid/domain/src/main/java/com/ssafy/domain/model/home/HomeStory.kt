@@ -12,3 +12,12 @@ data class HomeStory(
     val mainFileType: String,
     val storyBoxId: Int
 )
+data class HomeLastStoryBox(
+    val id: Int = -1,
+    val encryptedId: String = "",
+    val boxImgPath: String = "",
+    val name: String = "",
+    val createdAt: String = "",
+    val finishAt: Long = 0L,
+    val blind: Boolean = false
+)

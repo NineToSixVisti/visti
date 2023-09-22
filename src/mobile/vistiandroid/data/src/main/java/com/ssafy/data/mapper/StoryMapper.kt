@@ -13,23 +13,25 @@ import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.model.StoryList
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 fun StoryBoxDto.toDomain(): StoryBox {
+    val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val create = dateTimeFormat.parse(createdAt)
+    val finish = dateTimeFormat.parse(finishedAt)
 
-    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    val targetCalendar = Calendar.getInstance()
-    targetCalendar.time = sdf.parse(finishedAt) ?: Calendar.getInstance().time
-    val currentCalendar = Calendar.getInstance()
-    var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
+    // SimpleDateFormat을 사용하여 원하는 형식으로 날짜 포맷팅
+    val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
 
-    if (timeDiffInMillis < 0){
-        timeDiffInMillis = 0
-    }
-
-
-    return StoryBox(id, encryptedId, boxImgPath, name, createdAt, timeDiffInMillis, blind)
+    return StoryBox(
+        id,
+        encryptedId,
+        boxImgPath,
+        name,
+        dateFormat.format(create),
+        dateFormat.format(finish),
+        blind
+    )
 }
 
 fun StoryBoxListDto.toDomain(): StoryBoxList {

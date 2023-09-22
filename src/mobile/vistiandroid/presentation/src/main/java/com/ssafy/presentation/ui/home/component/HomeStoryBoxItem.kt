@@ -17,12 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.domain.model.StoryBox
-import com.ssafy.presentation.R
+import com.ssafy.presentation.ui.common.loadImage
 import com.ssafy.presentation.ui.theme.Black20
 
 @Composable
@@ -33,7 +32,7 @@ fun HomeStoryBoxItem(homeStoryBox: StoryBox) {
     ) {
         Box(modifier = Modifier.size(200.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.temp_image),
+                painter = loadImage(imageUrl = homeStoryBox.boxImgPath),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(), contentDescription = "진행중인 기록"
             )
@@ -43,7 +42,7 @@ fun HomeStoryBoxItem(homeStoryBox: StoryBox) {
                     .padding(10.dp)
             ) {
                 Text(
-                    text = "버니즈 9기",
+                    text = homeStoryBox.name,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontSize = 18.sp,
@@ -62,7 +61,7 @@ fun HomeStoryBoxItem(homeStoryBox: StoryBox) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "2023.09.01 ~ 09.30",
+                        text = "${homeStoryBox.createdAt} ~ ${homeStoryBox.finishAt}",
                         color = Color.White,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,

@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
-import com.ssafy.domain.model.StoryBox
+import com.ssafy.domain.model.home.HomeLastStoryBox
+import com.ssafy.domain.usecase.memberinformation.GetHomeLastStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
-import com.ssafy.domain.usecase.memberinformation.GetMyLastStoryBoxUseCase
 import com.ssafy.presentation.ui.common.TimeFormatExt.timeFormat
 import com.ssafy.presentation.ui.like.MemberState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
-    private val getMyLastStoryBoxUseCase: GetMyLastStoryBoxUseCase,
+    private val getHomeLastStoryBoxUseCase: GetHomeLastStoryBoxUseCase,
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
@@ -68,8 +68,8 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        // getHomeStory()
-        //  getHomeStoryBox()
+        getHomeStory()
+        getHomeStoryBox()
         getMemberInformation()
         getHomeLastStoryBox()
     }
@@ -114,13 +114,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getHomeLastStoryBox() {
-        getMyLastStoryBoxUseCase().onEach { result ->
+        getHomeLastStoryBoxUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _homeLastStoryBoxState.value =
-                        HomeLastStoryBoxState(storyBox = result.data ?: StoryBox())
+                        HomeLastStoryBoxState(storyBox = result.data ?: HomeLastStoryBox())
                     initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
-                    startCountDownTimer()
+                     startCountDownTimer()
                 }
 
                 is Resource.Error -> {
