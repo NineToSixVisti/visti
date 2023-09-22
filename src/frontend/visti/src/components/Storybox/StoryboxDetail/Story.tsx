@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as Empty } from '../../../assets/images/story_empty.svg'
 import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
 import { useNavigate } from 'react-router-dom';
+import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
 import { authInstance } from '../../../apis/utils/instance';
 
 interface StoryList {
@@ -105,6 +106,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
                 </StoryDiv>
               ))
             }
+            <CreatePostButton/>
           </StoryWrap>
         )
       }
