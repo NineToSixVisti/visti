@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
@@ -64,18 +65,19 @@ public class StoryBoxController {
     }
 
 
-    @PutMapping("/{storyBoxIds}/setting")
+    @PostMapping(value = "/{storyBoxIds}/setting" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
-            @RequestBody StoryBoxSetDTO storyBoxInfo
-    ) {
+            @RequestPart("storyBoxInfo") StoryBoxSetDTO storyBoxInfo,
+            @RequestPart("file") MultipartFile multipartfile
+    ) throws IOException {
         String email = getEmail();
-
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
-        BaseResponseDTO<String> response = storyBoxService.setStoryBox(decryptedStoryId, storyBoxInfo, email);
+        BaseResponseDTO<String> response = storyBoxService.setStoryBox(decryptedStoryId, storyBoxInfo, email, multipartfile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

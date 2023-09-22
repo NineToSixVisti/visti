@@ -110,7 +110,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email){
+    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email, MultipartFile multipartFile) throws IOException {
         String storyBoxName = storyBoxSetDTO.getName();
         if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
@@ -127,7 +127,25 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(UNAUTHORIZED_STORY_BOX_ERROR);
         }
 
-        storyBox.updateStoryBox(storyBoxSetDTO);
+        // S3 파일 저장
+        String postCategory = "storybox";
+        String imageUrl;
+        // 스토리박스 이전 사진 삭제(이전 사진이 있을 경우만)
+        String originImagePath = storyBox.getBoxImgPath();
+        if (originImagePath.length() > 0){
+            int s3DomainLastIndex = originImagePath.indexOf(".com/") + 5;
+            if (s3DomainLastIndex > 0) {
+                String pathWithFilename = originImagePath.substring(s3DomainLastIndex);
+                s3UploadService.deleteS3File(pathWithFilename);
+            }
+        }
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        storyBox.updateStoryBox(storyBoxSetDTO, imageUrl);
 
         return new BaseResponseDTO<>("스토리-박스 수정이 완료되었습니다.", 200);
     }
