@@ -25,7 +25,7 @@ fun NavGraph(navController: NavHostController, context: Context) {
         }
 
         composable(route = SignInNav.Main.route) {
-            MainScreen()
+            MainScreen(context)
         }
 
         composable(route = SignInNav.FindPassword.route) {

@@ -1,5 +1,6 @@
 package com.ssafy.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         memberInformationState.memberInformation.nickname.isNotBlank() -> {
-                            MainScreen()
+                            MainScreen(this)
                         }
                     }
                 }
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(context: Context) {
     val mainNavController = rememberNavController()
 
     Scaffold(
@@ -68,7 +69,7 @@ fun MainScreen() {
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavigationScreen(it, navController = mainNavController)
+        MainNavigationScreen(it, navController = mainNavController, context = context)
     }
 }
 

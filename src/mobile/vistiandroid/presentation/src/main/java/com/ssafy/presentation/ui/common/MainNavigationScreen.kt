@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import com.ssafy.presentation.ui.user.SignInScreen
 fun MainNavigationScreen(
     innerPaddings: PaddingValues,
     navController: NavHostController,
+    context: Context
     ) {
     NavHost(
         modifier = Modifier,
@@ -43,12 +45,13 @@ fun MainNavigationScreen(
             ProfileScreen(navController = navController)
         }
 
-        settingsGraph(navController)
+        settingsGraph(navController, context = context)
     }
 }
 
 fun NavGraphBuilder.settingsGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    context: Context
 ) {
     composable(route = SettingNav.Notification.route) {
         NotificationSettingScreen(navController = navController)
@@ -67,7 +70,7 @@ fun NavGraphBuilder.settingsGraph(
     }
 
     composable(route = SignInNav.SignIn.route) {
-//        SignInScreen(navController = navController)
+        SignInScreen(navController = navController, context = context)
     }
 }
 
