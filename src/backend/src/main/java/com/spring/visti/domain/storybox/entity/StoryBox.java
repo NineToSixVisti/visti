@@ -61,16 +61,14 @@ public class StoryBox extends BaseEntity {
         this.finishedAt = finishedAt;
     }
 
-    public void updateStoryBox(StoryBoxSetDTO storyBoxSetDTO) {
-        if(storyBoxSetDTO.getBoxImgPath() != null) {
-            this.boxImgPath = storyBoxSetDTO.getBoxImgPath();
-        }
+    public void updateStoryBox(StoryBoxSetDTO storyBoxSetDTO, String boxImgPath) {
         if(storyBoxSetDTO.getName() != null) {
             this.name = storyBoxSetDTO.getName();
         }
         if(storyBoxSetDTO.getDetail() != null) {
             this.detail = storyBoxSetDTO.getDetail();
         }
+        this.boxImgPath = boxImgPath;
     }
 
     public void updateBlind(Boolean blind){

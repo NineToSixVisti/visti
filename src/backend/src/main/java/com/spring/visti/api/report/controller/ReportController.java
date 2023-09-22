@@ -69,7 +69,7 @@ public class ReportController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{reportIds}")
+    @PutMapping("/{reportIds}")
     @Operation(summary = "신고 처리", description = "신고를 처리합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> updateReport(
             @PathVariable String reportIds,

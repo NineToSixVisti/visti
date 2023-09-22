@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
@@ -68,14 +69,16 @@ public class StoryBoxController {
     @Operation(summary = "스토리-박스 설정 및 수정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
-            @RequestBody StoryBoxSetDTO storyBoxInfo
-    ) {
+            @RequestPart("storyBoxInfo") StoryBoxSetDTO storyBoxInfo,
+            @RequestPart("file") MultipartFile multipartfile
+    ) throws IOException {
         String email = getEmail();
 
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
-        BaseResponseDTO<String> response = storyBoxService.setStoryBox(decryptedStoryId, storyBoxInfo, email);
+        BaseResponseDTO<String> response = storyBoxService.setStoryBox(decryptedStoryId, storyBoxInfo, email, multipartfile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -95,7 +98,7 @@ public class StoryBoxController {
     }
 
     @GetMapping("/lateststorybox")
-    @Operation(summary = "내가 작성한 스토리 박스 조회", description = "내가 작성한 스토리 박스를 리스트업 합니다.")
+    @Operation(summary = "가장 최신의 스토리박스 조회", description = "메인 페이지의 가ㅏㅇ 최신의 스토리박스를... 조회합니다....")
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxExposedDTO>> readLatestStoryBoxes(
 
     ) {

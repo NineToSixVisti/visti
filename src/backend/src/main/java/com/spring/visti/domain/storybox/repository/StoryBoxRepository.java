@@ -16,6 +16,5 @@ public interface StoryBoxRepository  extends JpaRepository<StoryBox, Long> {
 
     List<StoryBox> findByFinishedAtBetween(LocalDateTime start, LocalDateTime end);
 
-
     List<StoryBox> findAllByFinishedAtBeforeAndBlindIsTrue(LocalDateTime time);
 }

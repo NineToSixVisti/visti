@@ -107,7 +107,7 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/changepw")
+    @PutMapping("/changepw")
     @Operation(summary = "비밀번호 변경", description = "비밀번호 변경을 진행합니다, 동일하게 대소문자 8자리 특수기호를 필요로 합니다.")
     public  ResponseEntity<? extends BaseResponseDTO<String>> changePassword(
             @RequestBody MemberChangePasswordDTO memberInfo
@@ -120,7 +120,7 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping(value = "/changeprofile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/changeprofile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "회원정보 변경", description = "회원의 이메일, 닉네임, 프로필 사진을 변경합니다")
     public  ResponseEntity<? extends BaseResponseDTO<String>> changeprofile(
             @RequestPart("memberInfo") MemberChangeProfileDTO memberInfo,

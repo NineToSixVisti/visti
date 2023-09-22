@@ -64,8 +64,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // S3 파일 저장
         String postCategory = "storybox";
@@ -93,8 +93,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // 이미 가입된 스토리 박스인지 확인
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
@@ -110,14 +110,14 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     @Transactional
-    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email){
+    public BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email, MultipartFile multipartFile) throws IOException {
         String storyBoxName = storyBoxSetDTO.getName();
         if (storyBoxName == null || storyBoxName.isEmpty() || storyBoxName.length() > 20) {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
 
@@ -127,7 +127,25 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(UNAUTHORIZED_STORY_BOX_ERROR);
         }
 
-        storyBox.updateStoryBox(storyBoxSetDTO);
+        // S3 파일 저장
+        String postCategory = "storybox";
+        String imageUrl;
+        // 스토리박스 이전 사진 삭제(이전 사진이 있을 경우만)
+        String originImagePath = storyBox.getBoxImgPath();
+        if (originImagePath.length() > 0){
+            int s3DomainLastIndex = originImagePath.indexOf(".com/") + 5;
+            if (s3DomainLastIndex > 0) {
+                String pathWithFilename = originImagePath.substring(s3DomainLastIndex);
+                s3UploadService.deleteS3File(pathWithFilename);
+            }
+        }
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        storyBox.updateStoryBox(storyBoxSetDTO, imageUrl);
 
         return new BaseResponseDTO<>("스토리-박스 수정이 완료되었습니다.", 200);
     }
@@ -136,8 +154,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Transactional
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
@@ -155,8 +173,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMemberAndPosition(member, Position.HOST, pageable);
 
@@ -172,8 +190,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         Page<StoryBoxMember> _myStoryBoxes = storyBoxMemberRepository.findByMember(member, pageable);
 
@@ -188,8 +206,8 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
     @Override
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
-//        Member member = getMember(email, memberRepository);
-        Member member = getMemberBySecurity();
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
         Page<StoryBox> storyBoxMembers = storyBoxMemberRepository.findJoinedByMemberAndKeyword(member,keyword,pageable);
         Page<StoryBoxExposedDTO> searchStoryBoxes = storyBoxMembers
                 .map(storyBoxMember -> StoryBoxExposedDTO.of(storyBoxMember));
@@ -329,21 +347,27 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         String urlPath = "StoryBoxTokenInfo="+token;
         String shortenedUrl = urlExpiryService.shorten(urlPath);
 
-        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, "/short/"+shortenedUrl);
+        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, "/visti/"+shortenedUrl);
     }
 
     @Override
     @Transactional
     public BaseResponseDTO<String> validateStoryBoxLink(String token, String email) {
+        
+        if (email == null){
+            return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
+        }
+
         Optional<StoryBox> _storyBox = storyBoxRepository.findByToken(token);
 
         if (_storyBox.isEmpty()){
             throw new ApiException(NO_STORY_BOX_ERROR);
         }
 
-        if (email == null){
-            return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
+        if (_storyBox.get().getStoryBoxMembers().size() >= 30){
+            throw new ApiException(MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX);
         }
+
 
         StoryBox storyBox = _storyBox.get();
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();

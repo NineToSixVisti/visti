@@ -52,7 +52,7 @@ public class StoryServiceImpl implements StoryService{
 
         int writtenStory = member.getDailyStoryCount();
         int canWriteStory = member.dailyStoryMaximum();
-        if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED); }
+        if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED_MEMBER); }
 
         String isDecryptedStoryBoxId = SecurePathUtil.decodeAndDecrypt(storyBuildDTO.getStoryBoxId());
         long decryptedStoryBoxId = getDecryptedId(isDecryptedStoryBoxId);
@@ -61,6 +61,12 @@ public class StoryServiceImpl implements StoryService{
         if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
 
         StoryBox storyBox = getStoryBox(decryptedStoryBoxId, storyBoxRepository);
+
+        int storiesInStoryBox = storyBox.getStories().size();
+
+        if (storiesInStoryBox >= 100){
+            throw new ApiException(MAX_STORY_QUOTA_REACHED_STORYBOX);
+        }
 
         // S3 파일 저장
         String postCategory = "story";
