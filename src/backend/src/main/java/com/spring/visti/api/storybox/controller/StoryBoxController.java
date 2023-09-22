@@ -65,14 +65,15 @@ public class StoryBoxController {
     }
 
 
-    @PostMapping(value = "/{storyBoxIds}/setting" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.")
+    @PutMapping("/{storyBoxIds}/setting")
+    @Operation(summary = "스토리-박스 설정 및 수정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
             @RequestPart("storyBoxInfo") StoryBoxSetDTO storyBoxInfo,
             @RequestPart("file") MultipartFile multipartfile
     ) throws IOException {
         String email = getEmail();
+
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
 
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
