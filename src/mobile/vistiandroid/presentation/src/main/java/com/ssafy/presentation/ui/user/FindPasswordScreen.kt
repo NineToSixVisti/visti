@@ -71,11 +71,11 @@ fun FindPasswordScreen(navController: NavHostController) {
         }
         Box(modifier = Modifier.padding(5.dp))
         VistiButton("인증하기", PrimaryColor) {
-//            navController.navigate(route = SignInNav.SignIn.route) {
-//                popUpTo(navController.graph.id) {
-//                    inclusive = true
-//                }
-//            }
+            navController.navigate(route = SignInNav.SignIn.route) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
         }
     }
 }

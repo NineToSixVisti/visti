@@ -82,9 +82,7 @@ fun NavGraphBuilder.signupGraph(
     navController: NavHostController,
     context: Context
 ) {
-    Log.e("TAG", "NavGraphBuilder: asd", )
     composable(route = SignInNav.SignIn.route) {
-        Log.e("TAG", "signupGraph: asd", )
         SignInScreen(navController = navController, context)
     }
 

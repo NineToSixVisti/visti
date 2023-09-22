@@ -19,6 +19,7 @@ import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
+import com.ssafy.presentation.ui.user.SignInScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,7 +42,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     WindowCompat.setDecorFitsSystemWindows(window, false)
-                    Log.e("TAG", "MainScreen: MainA", )
                     MainScreen(this)
 //                    SignInScreen(navController = navController, context = this)
                 }
@@ -61,7 +61,6 @@ fun MainScreen(context: Context) {
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        Log.e("TAG", "MainScreen: Main", )
         MainNavHost(it, navController = mainNavController, context = context)
     }
 }

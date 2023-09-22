@@ -101,7 +101,6 @@ fun HomeScreen(
                 .verticalScroll(scrollState)
                 .padding(start = 20.dp, top = 20.dp)
         ) {
-            Log.e(" 하위","")
             HomeContent()
         }
     }

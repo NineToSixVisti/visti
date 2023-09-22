@@ -28,8 +28,8 @@ class SignInViewModel @Inject constructor(
     private val _userToken = MutableStateFlow<TokenState>(TokenState())
     val userToken: StateFlow<TokenState> = _userToken.asStateFlow()
 
-    private val _memberInformation = mutableStateOf(ProfileState())
-    val memberInformation: State<ProfileState> = _memberInformation
+    private val _memberInformation = MutableStateFlow(ProfileState())
+    val memberInformation: StateFlow<ProfileState> = _memberInformation.asStateFlow()
 
     init {
         getMemberInformation()
@@ -97,5 +97,6 @@ class SignInViewModel @Inject constructor(
 
     fun delete() {
         _userToken.value = TokenState()
+        _memberInformation.value = ProfileState()
     }
 }
