@@ -151,7 +151,7 @@ public class StoryBoxController {
         BaseResponseDTO<List<StoryBoxExposedDTO>> response = storyBoxService.readMainPageStoryBoxes(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
+ou
 
     @GetMapping("/{storyBoxIds}/info")
     @Operation(summary = "스토리 박스 기본정보 제공 - 스토 박스 최상단 부분", description = "1.블라인드여부, 2.시작 및 종료날짜, 3.스토리박스 명 제공")
