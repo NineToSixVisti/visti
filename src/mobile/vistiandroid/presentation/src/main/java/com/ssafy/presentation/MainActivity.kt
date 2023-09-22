@@ -2,6 +2,7 @@ package com.ssafy.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -16,8 +17,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
-import com.ssafy.presentation.ui.common.MainNavigationScreen
-import com.ssafy.presentation.ui.common.NavGraph
+import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,23 +35,15 @@ class MainActivity : ComponentActivity() {
             "Visti"
         )
         setContent {
-            val navController = rememberNavController()
+//            val navController = rememberNavController()
             VistiAndroidTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
                     WindowCompat.setDecorFitsSystemWindows(window, false)
-                    val memberInformationState = mainViewModel.memberInformation.value
-
-                    when {
-                        memberInformationState.error.isNotBlank() -> {
-                            NavGraph(navController = navController, this@MainActivity)
-                        }
-
-                        memberInformationState.memberInformation.nickname.isNotBlank() -> {
-                            MainScreen(this)
-                        }
-                    }
+                    Log.e("TAG", "MainScreen: MainA", )
+                    MainScreen(this)
+//                    SignInScreen(navController = navController, context = this)
                 }
             }
         }
@@ -69,7 +61,8 @@ fun MainScreen(context: Context) {
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavigationScreen(it, navController = mainNavController, context = context)
+        Log.e("TAG", "MainScreen: Main", )
+        MainNavHost(it, navController = mainNavController, context = context)
     }
 }
 

@@ -68,12 +68,12 @@ fun UserAccountScreen(
                         logOutState.value = false
                         viewModel.removeToken()
 
-                        navController.navigate(SignInNav.SignIn.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+//                        navController.navigate(SignInNav.SignIn.route) {
+//                            popUpTo(navController.graph.startDestinationId) {
+//                                inclusive = true
+//                            }
+//                            launchSingleTop = true
+//                        }
                     },
                     "로그아웃하시겠습니까?",
                     isDarkTheme

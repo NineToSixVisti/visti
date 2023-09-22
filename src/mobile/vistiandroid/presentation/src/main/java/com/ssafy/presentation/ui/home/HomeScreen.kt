@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -100,6 +101,7 @@ fun HomeScreen(
                 .verticalScroll(scrollState)
                 .padding(start = 20.dp, top = 20.dp)
         ) {
+            Log.e(" 하위","")
             HomeContent()
         }
     }

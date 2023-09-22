@@ -17,32 +17,5 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase
 ) : ViewModel() {
-    private val _memberInformation = mutableStateOf(ProfileState())
-    val memberInformation: State<ProfileState> = _memberInformation
 
-    init {
-        getMemberInformation()
-    }
-
-    private fun getMemberInformation() {
-        getMemberInformUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _memberInformation.value = ProfileState(
-                        memberInformation = result.data
-                            ?: Member()
-                    )
-                }
-
-                is Resource.Error -> {
-                    _memberInformation.value =
-                        ProfileState(error = result.message ?: "An error occurred")
-                }
-
-                is Resource.Loading -> {
-                    _memberInformation.value = ProfileState(isLoading = true)
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
 }

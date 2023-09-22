@@ -129,11 +129,11 @@ fun JoinAgreeScreen(navController: NavHostController) {
                 .padding(vertical = 15.dp)
         )
         VistiButton("회원가입", PrimaryColor) {
-            navController.navigate(route = SignInNav.SignIn.route) {
-                popUpTo(navController.graph.id) {
-                    inclusive = true
-                }
-            }
+//            navController.navigate(route = SignInNav.SignIn.route) {
+//                popUpTo(navController.graph.id) {
+//                    inclusive = true
+//                }
+//            }
         }
     }
 }
