@@ -347,21 +347,27 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         String urlPath = "StoryBoxTokenInfo="+token;
         String shortenedUrl = urlExpiryService.shorten(urlPath);
 
-        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, "/short/"+shortenedUrl);
+        return new BaseResponseDTO<String>("url Path가 발급되었습니다.", 200, "/visti/"+shortenedUrl);
     }
 
     @Override
     @Transactional
     public BaseResponseDTO<String> validateStoryBoxLink(String token, String email) {
+        
+        if (email == null){
+            return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
+        }
+
         Optional<StoryBox> _storyBox = storyBoxRepository.findByToken(token);
 
         if (_storyBox.isEmpty()){
             throw new ApiException(NO_STORY_BOX_ERROR);
         }
 
-        if (email == null){
-            return new BaseResponseDTO<>("회원가입 하게 할건가요?.", 200);
+        if (_storyBox.get().getStoryBoxMembers().size() >= 30){
+            throw new ApiException(MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX);
         }
+
 
         StoryBox storyBox = _storyBox.get();
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();

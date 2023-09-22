@@ -120,7 +120,7 @@ public class MemberController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping(value = "/changeprofile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/changeprofile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "회원정보 변경", description = "회원의 이메일, 닉네임, 프로필 사진을 변경합니다")
     public  ResponseEntity<? extends BaseResponseDTO<String>> changeprofile(
             @RequestPart("memberInfo") MemberChangeProfileDTO memberInfo,

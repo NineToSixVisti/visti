@@ -97,7 +97,7 @@ public class StoryBoxController {
     }
 
     @GetMapping("/lateststorybox")
-    @Operation(summary = "내가 작성한 스토리 박스 조회", description = "내가 작성한 스토리 박스를 리스트업 합니다.")
+    @Operation(summary = "가장 최신의 스토리박스 조회", description = "메인 페이지의 가ㅏㅇ 최신의 스토리박스를... 조회합니다....")
     public ResponseEntity<? extends BaseResponseDTO<StoryBoxExposedDTO>> readLatestStoryBoxes(
 
     ) {
