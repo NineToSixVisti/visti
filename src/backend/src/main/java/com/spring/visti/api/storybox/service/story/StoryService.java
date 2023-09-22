@@ -1,24 +1,34 @@
 package com.spring.visti.api.storybox.service.story;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
-import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
-import com.spring.visti.domain.storybox.entity.Story;
-import jakarta.servlet.http.HttpServletRequest;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
+import com.spring.visti.api.common.service.DefaultService;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
+import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.StoryBoxExposedDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface StoryService {
-    BaseResponseDTO<String> createStory(StoryBuildDTO storyInfo, HttpServletRequest httpServletRequest);
+public interface StoryService extends DefaultService {
 
-    BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile);
 
-    BaseResponseDTO<Story> readStory(Long storyId);
+    BaseResponseDTO<String> createNFT4Story(Long storyId, String email);
 
-    BaseResponseDTO<List<Story>> readMyStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email);
 
-    BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email);
 
-    BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest);
+    BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email);
 
-    BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> likeStory(Long storyId, String email);
+
+    BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email);
+
+    BaseResponseDTO<String> deleteStory(Long storyId, String email);
+
+
 }

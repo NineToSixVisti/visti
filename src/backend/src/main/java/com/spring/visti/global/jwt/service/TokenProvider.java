@@ -1,5 +1,7 @@
 package com.spring.visti.global.jwt.service;
 
+import com.spring.visti.domain.member.constant.Role;
+import com.spring.visti.global.redis.service.JwtProvideService;
 import com.spring.visti.utils.exception.ApiException;
 import com.spring.visti.domain.member.service.CustomUserDetailsService;
 import com.spring.visti.global.jwt.constant.GrantType;
@@ -38,6 +40,7 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 //@RequiredArgsConstructor // 의존성 주입의 관점에서는 제거해도 상관없다...?
 public class TokenProvider  {
 
+    private final JwtProvideService jwtProvideService;
     private final CustomUserDetailsService userDetailsService;
     private final Key key;
     private static final Long ACCESS_TIME = 30 * 60 * 1000L; // 30 min
@@ -52,11 +55,11 @@ public class TokenProvider  {
     public static final String REFRESH_TOKEN = "Refresh_Token";
 
     public TokenProvider(@Value("${jwt.secret.key}") String secretKey,
-                         CustomUserDetailsService userDetailsService){
-
+                         JwtProvideService jwtProvideService, CustomUserDetailsService userDetailsService){
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userDetailsService = userDetailsService;
+        this.jwtProvideService = jwtProvideService;
     }
 
     // 인증 객체 생성
@@ -83,7 +86,7 @@ public class TokenProvider  {
                 .compact();
     }
 
-    public TokenDTO generateTokenDTO(Authentication authentication){
+    public TokenDTO generateTokenDTO(Authentication authentication, Role role){
         //권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -93,13 +96,20 @@ public class TokenProvider  {
 
         long now = (new Date()).getTime();
 
+        long expiryTimeRefresh = now + REFRESH_TIME;
+        long expiryTimeAccess = now + ACCESS_TIME;
+        if (Role.ADMIN.equals(role)){
+            expiryTimeRefresh = expiryTimeRefresh + REFRESH_TIME * 30;
+            expiryTimeAccess = expiryTimeAccess + REFRESH_TIME;
+        }
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TIME);
+        Date accessTokenExpiresIn = new Date(expiryTimeAccess);
         String accessToken = createAccessToken(authorities, email, accessTokenExpiresIn);
 //        TokenProvider.setHeaderAccessToken(response, accessToken);
 //        TokenProvider.setHeaderRefreshToken(response, refreshToken);
         // Refresh Token 생성
-        Date refreshTokenExpiresIn = new Date(now + REFRESH_TIME);
+
+        Date refreshTokenExpiresIn = new Date(expiryTimeRefresh);
         String refreshToken = createRefreshToken(refreshTokenExpiresIn);
 
         return TokenDTO.builder()
@@ -114,8 +124,13 @@ public class TokenProvider  {
     public void validateToken(String token){
 
         try{
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-//            System.out.println(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody());
+//            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+
+            if (TokenType.ACCESS.name().equals(claims.getSubject()) && jwtProvideService.isTokenInBlackList(token)) {
+                throw new ApiException(JWT_INVALID);
+            }
+
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             throw new ApiException(JWT_INVALID);
         } catch (ExpiredJwtException e) {
@@ -187,7 +202,7 @@ public class TokenProvider  {
         return createAccessToken(authorities, email, accessTokenExpiresIn);
     }
     
-// 이후 레디스 추가시 수행하는 것이 적절할 듯
+// 이후 레디스 추가시 수행하는 것이 적절할 듯z
 //    public void expireToken(String token){
 //        Claims claims = parseClaims(token);
 //
