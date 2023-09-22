@@ -32,7 +32,7 @@ fun MainNavigationScreen(
             HomeScreen()
         }
         composable(MainNav.Memory.route) {
-            StoryScreen(navController = navController)
+            StoryScreen()
         }
         composable(MainNav.Like.route) {
             LikeListScreen()
