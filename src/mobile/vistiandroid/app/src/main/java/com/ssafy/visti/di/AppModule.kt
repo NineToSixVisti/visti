@@ -1,10 +1,9 @@
 package com.ssafy.visti.di
 
+import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.remote.XAccessTokenInterceptor
-import com.ssafy.data.repository.PreferenceDataSourceImpl
 import com.ssafy.domain.model.Constants
-import com.ssafy.domain.repository.PreferenceDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,11 +38,5 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(VistiApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun providePreferenceDataSource(preferenceDataSourceImpl: PreferenceDataSourceImpl): PreferenceDataSource {
-        return preferenceDataSourceImpl
     }
 }

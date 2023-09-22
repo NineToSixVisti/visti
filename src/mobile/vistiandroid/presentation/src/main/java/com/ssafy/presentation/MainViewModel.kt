@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
-import com.ssafy.presentation.ui.like.MemberState
+import com.ssafy.presentation.ui.profile.ProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -17,8 +17,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase
 ) : ViewModel() {
-    private val _memberInformation = mutableStateOf(MemberState())
-    val memberInformation: State<MemberState> = _memberInformation
+    private val _memberInformation = mutableStateOf(ProfileState())
+    val memberInformation: State<ProfileState> = _memberInformation
 
     init {
         getMemberInformation()
@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
         getMemberInformUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _memberInformation.value = MemberState(
+                    _memberInformation.value = ProfileState(
                         memberInformation = result.data
                             ?: Member()
                     )
@@ -36,11 +36,11 @@ class MainViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     _memberInformation.value =
-                        MemberState(error = result.message ?: "An error occurred")
+                        ProfileState(error = result.message ?: "An error occurred")
                 }
 
                 is Resource.Loading -> {
-                    _memberInformation.value = MemberState(isLoading = true)
+                    _memberInformation.value = ProfileState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

@@ -19,22 +19,22 @@ class SignInViewModel @Inject constructor(
     private val socialUseCase: SocialUseCase,
 ) : ViewModel() {
 
-    private val _userToken = MutableStateFlow<UserState>(UserState())
-    val userToken: StateFlow<UserState> = _userToken.asStateFlow()
+    private val _userToken = MutableStateFlow<TokenState>(TokenState())
+    val userToken: StateFlow<TokenState> = _userToken.asStateFlow()
 
     fun signIn(email: String, password: String) {
         signUseCase(email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _userToken.value = UserState(token = result.data)
+                    _userToken.value = TokenState(token = result.data)
                 }
 
                 is Resource.Error -> {
-                    _userToken.value = UserState(error = result.message ?: "An error occurred")
+                    _userToken.value = TokenState(error = result.message ?: "An error occurred")
                 }
 
                 is Resource.Loading -> {
-                    _userToken.value = UserState(isLoading = true)
+                    _userToken.value = TokenState(isLoading = true)
                 }
             }
 
@@ -44,15 +44,15 @@ class SignInViewModel @Inject constructor(
         socialUseCase(provider, accessToken).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _userToken.value = UserState(token = result.data)
+                    _userToken.value = TokenState(token = result.data)
                 }
 
                 is Resource.Error -> {
-                    _userToken.value = UserState(error = result.message ?: "An error occurred")
+                    _userToken.value = TokenState(error = result.message ?: "An error occurred")
                 }
 
                 is Resource.Loading -> {
-                    _userToken.value = UserState(isLoading = true)
+                    _userToken.value = TokenState(isLoading = true)
                 }
             }
 
@@ -61,6 +61,6 @@ class SignInViewModel @Inject constructor(
 
 
     fun delete() {
-        _userToken.value = UserState()
+        _userToken.value = TokenState()
     }
 }

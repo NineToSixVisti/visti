@@ -7,18 +7,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.AccompanistWebChromeClient
 import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebContent
 import com.google.accompanist.web.WebView
-import com.google.accompanist.web.WebViewNavigator
-import com.google.accompanist.web.WebViewState
-import com.ssafy.domain.repository.PreferenceDataSource
 
 @Composable
-fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel(), preferenceDataSource: PreferenceDataSource = hiltViewModel()) {
+fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel()) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -26,7 +20,6 @@ fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel(), preferenceDataSou
         ) {
             val webViewState = viewModel.webViewState
             val webViewNavigator = viewModel.webViewNavigator
-            val token = preferenceDataSource.getString("") ?: "access_token"
 
             WebView(
                 state = webViewState,
@@ -42,10 +35,10 @@ fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel(), preferenceDataSou
                         addJavascriptInterface(object {
                             @JavascriptInterface
                             fun getToken(): String {
-                                return token
+                                return viewModel.accessToken.value.accessToken
                             }
                         },
-                            "access_token" )
+                            "Android" )
                     }
                 }
             )
@@ -55,13 +48,3 @@ fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel(), preferenceDataSou
 
 val webViewClient = AccompanistWebViewClient()
 val webChromeClient = AccompanistWebChromeClient()
-
-class WebViewViewModel : ViewModel() {
-    val webViewState = WebViewState(
-        WebContent.Url(
-            url = "http://j9d102.p.ssafy.io:3000/storybox",
-            additionalHttpHeaders = emptyMap()
-        )
-    )
-    val webViewNavigator = WebViewNavigator(viewModelScope)
-}
