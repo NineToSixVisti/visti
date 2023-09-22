@@ -160,9 +160,12 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
 
+        LocalDateTime localDateTime = LocalDateTime.now();
+
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
-                .sorted((sb1, sb2) -> sb2.getCreatedAt().compareTo(sb1.getCreatedAt())) // 내림차순 정렬
+                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
+                .sorted((sb1, sb2) -> sb2.getFinishedAt().compareTo(sb1.getFinishedAt())) // 내림차순 정렬
                 .limit(forMainPage)
                 .map(StoryBoxExposedDTO::of)
                 .toList();
@@ -298,14 +301,20 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         Member member = getMember(email, memberRepository);
 
         LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime fourDaysLater = localDateTime.plusDays(4);
 
         List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
                 .map(StoryBoxMember::getStoryBox).toList();
 
         StoryBox _latestFutureStoryBox = myStoryBoxes.stream()
-                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
+                .filter(storyBox -> {
+                    return !storyBox.getFinishedAt().isBefore(localDateTime)
+                            && !storyBox.getFinishedAt().isAfter(fourDaysLater);
+                })
                 .min(Comparator.comparing(StoryBox::getFinishedAt))
                 .orElse(null);
+
+
 
         if (_latestFutureStoryBox != null){
             StoryBoxExposedDTO latestFutureStoryBox = StoryBoxExposedDTO.of(_latestFutureStoryBox);
