@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,7 +67,6 @@ fun HomeScreen(
 
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
-    val homeLastStoryBox = homeViewModel.homeLastStoryBoxState.value.storyBox
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
 
 
@@ -94,7 +96,7 @@ fun HomeScreen(
                             .height(540.dp),
                     ) {
                         Image(
-                            painter = loadImage(imageUrl = homeLastStoryBox.boxImgPath),
+                            painter = painterResource(id = R.drawable.image_backgroud_sky),
                             contentDescription = "toolbar background",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -126,6 +128,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .verticalScroll(scrollState)
                         .padding(start = 20.dp, top = 20.dp)
+                        .navigationBarsPadding()
                 ) {
                     HomeContent(
                         homeStorySate.stories,
@@ -148,7 +151,12 @@ fun HomeContent(
     Row(
         verticalAlignment = Alignment.Bottom
     ) {
-        LoadLottie(80.dp, 120.dp, R.raw.animation_calendar)
+
+        LoadLottie(
+            Modifier
+                .height(80.dp)
+                .width(120.dp), R.raw.animation_calendar
+        )
         HomeContentDes(memberInformation)
     }
     Text(
@@ -157,20 +165,60 @@ fun HomeContent(
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold
     )
-    LazyRow {
-        items(homeStoryBoxList) { homeStoryBox ->
-            HomeStoryBoxItem(homeStoryBox)
+    if (homeStoryBoxList.isEmpty()) {
+        LoadLottie(
+            Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(horizontal = 20.dp),
+            animationCalendar = R.raw.animation_scan
+        )
+        Text(
+            text = "진행중인 추억이 없어요.",
+            modifier = Modifier
+                .padding(top = 20.dp, bottom = 5.dp)
+                .fillMaxWidth(),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+    } else {
+        LazyRow {
+            items(homeStoryBoxList) { homeStoryBox ->
+                HomeStoryBoxItem(homeStoryBox)
+            }
         }
     }
+
     Text(
         text = "과거의 기록",
         modifier = Modifier.padding(top = 20.dp, bottom = 5.dp),
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold
     )
-    LazyRow {
-        items(homeStoryList) { homeStory ->
-            HomeStoryItem(homeStory)
+    if (homeStoryList.isEmpty()) {
+        LoadLottie(
+            Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(horizontal = 20.dp),
+            animationCalendar = R.raw.animation_scan
+        )
+        Text(
+            text = "저장된 추억이 없어요.",
+            modifier = Modifier
+                .padding(top = 20.dp, bottom = 5.dp)
+                .fillMaxWidth(),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+
+    } else {
+        LazyRow {
+            items(homeStoryList) { homeStory ->
+                HomeStoryItem(homeStory)
+            }
         }
     }
 }
@@ -270,55 +318,65 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 20.dp)
         )
-        Text(
-            text = "마감까지 남은 시간이에요!",
-            color = Color.Black,
-            fontSize = 25.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        val composition by rememberLottieComposition(
-            LottieCompositionSpec.RawRes(resId = R.raw.animation_diamond)
-        )
-        LottieAnimation(
-            modifier = Modifier
-                .padding(top = 30.dp)
-                .size(size = 200.dp)
-                .align(Alignment.CenterHorizontally),
-            composition = composition,
-            iterations = LottieConstants.IterateForever // animate forever
-        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-                .graphicsLayer {
-                    shape = RoundedCornerShape(
-                        40.dp
-                    )
-                    clip = true
-                    shadowElevation = 10f
-                }
-                .background(Black20),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-
-            ) {
-            Image(
-                modifier = Modifier
-                    .alpha(1f)
-                    .padding(20.dp, 16.dp, 0.dp, 16.dp)
-                    .size(20.dp),
-                painter = painterResource(id = R.drawable.logo_white),
-                contentDescription = "home_logo"
-            )
+        if (homeViewModel.homeLastStoryBoxState.value.storyBox.id == -1) {
             Text(
-                text = homeLastStoryBox.name,
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
+                text = "추억은 삶의 스케치북입니다.",
+                color = Color.Black,
+                fontSize = 25.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            Text(text = "")
+        } else {
+            Text(
+                text = "마감까지 남은 시간이에요!",
+                color = Color.Black,
+                fontSize = 25.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.RawRes(resId = R.raw.animation_diamond)
+            )
+            LottieAnimation(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .size(size = 200.dp)
+                    .align(Alignment.CenterHorizontally),
+                composition = composition,
+                iterations = LottieConstants.IterateForever // animate forever
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .graphicsLayer {
+                        shape = RoundedCornerShape(
+                            40.dp
+                        )
+                        clip = true
+                        shadowElevation = 10f
+                    }
+                    .background(Black20),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                Image(
+                    modifier = Modifier
+                        .alpha(1f)
+                        .padding(20.dp, 16.dp, 0.dp, 16.dp)
+                        .size(20.dp),
+                    painter = painterResource(id = R.drawable.logo_white),
+                    contentDescription = "home_logo"
+                )
+                Text(
+                    text = homeLastStoryBox.name,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(text = "")
+            }
         }
     }
 }

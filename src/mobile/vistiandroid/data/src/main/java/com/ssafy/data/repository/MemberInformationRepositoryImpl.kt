@@ -59,13 +59,12 @@ class MemberInformationRepositoryImpl @Inject constructor(
 
     override suspend fun getHomeLastStoryBox(): HomeLastStoryBox {
         val response = api.getHomeLastStoryBox().detail
-
+        val currentCalendar = Calendar.getInstance()
         if (response != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val targetCalendar = Calendar.getInstance()
             targetCalendar.time = sdf.parse(response.finishedAt) ?: Calendar.getInstance().time
 
-            val currentCalendar = Calendar.getInstance()
             var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
 
             if (timeDiffInMillis < 0) {
@@ -82,6 +81,9 @@ class MemberInformationRepositoryImpl @Inject constructor(
                 response.blind
             )
         }
-        return HomeLastStoryBox(finishAt=1000L)
+
+        currentCalendar.timeInMillis
+
+        return HomeLastStoryBox(finishAt = currentCalendar.timeInMillis)
     }
 }

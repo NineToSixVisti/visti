@@ -16,9 +16,13 @@ import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.presentation.ui.common.TimeFormatExt.timeFormat
 import com.ssafy.presentation.ui.like.MemberState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +47,7 @@ class HomeViewModel @Inject constructor(
 
     private var countDownTimer: CountDownTimer? = null
 
-    var initialTotalTimeInMillis = 0L
+    var initialTotalTimeInMillis = 10000L
     var timeLeft = mutableStateOf(initialTotalTimeInMillis)
     val countDownInterval = 1000L // 1 seconds is the lowest
 
@@ -65,6 +69,16 @@ class HomeViewModel @Inject constructor(
                 getHomeLastStoryBox()
             }
         }.start()
+    }
+
+    fun startTimer() = viewModelScope.launch {
+        val updateIntervalMillis = 1000L
+        while (true) {
+            val sdf = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+            val currentTimeString = sdf.format(Calendar.getInstance().time)
+            timerText.value = currentTimeString
+            delay(updateIntervalMillis)
+        }
     }
 
     init {
@@ -120,7 +134,11 @@ class HomeViewModel @Inject constructor(
                     _homeLastStoryBoxState.value =
                         HomeLastStoryBoxState(storyBox = result.data ?: HomeLastStoryBox())
                     initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
-                     startCountDownTimer()
+                    if (result.data!!.id != -1)
+                        startCountDownTimer()
+                    else
+                        startTimer()
+
                 }
 
                 is Resource.Error -> {
