@@ -1,12 +1,11 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../../assets/images/plus_button_red.svg"
 // import { ReactComponent as Calendar } from "../../../assets/images/calendar.svg"
 import './StoryboxCreate.css';
 
-import { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko'; 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -107,10 +106,10 @@ const StoryboxCreate = () => {
       return false;
     }
     const today = dayjs();
-    if (value.isBefore(today, 'day')) {
+    if (value.isBefore(today, 'day') || value.isSame(today, 'day')) {
       alert("종료시간은 오늘 날짜 이후여야 합니다.");
       return false;
-  }
+    }
     return true;
   }
 
@@ -155,8 +154,7 @@ const StoryboxCreate = () => {
     setIsModalOpen(false);
     navigate('/storybox')
   }
-  
-  
+
   return (
     <Wrap>
       <CheckModal 
