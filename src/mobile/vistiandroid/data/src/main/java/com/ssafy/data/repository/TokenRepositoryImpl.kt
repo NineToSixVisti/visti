@@ -2,14 +2,17 @@ package com.ssafy.data.repository
 
 import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
-import com.ssafy.domain.repository.StoryRepository
+import com.ssafy.domain.repository.TokenRepository
 import javax.inject.Inject
 
-class StoryRepositoryImpl @Inject constructor(
-    private val api: VistiApi,
+class TokenRepositoryImpl @Inject constructor(
     private val preferenceDataSource: PreferenceDataSource
-) : StoryRepository {
+) : TokenRepository {
     override suspend fun getToken(): String {
         return preferenceDataSource.getString(PreferenceDataSource.ACCESS_TOKEN, "accessToken")!!
+    }
+
+    override suspend fun deleteToken() {
+        return preferenceDataSource.remove(PreferenceDataSource.ACCESS_TOKEN)
     }
 }

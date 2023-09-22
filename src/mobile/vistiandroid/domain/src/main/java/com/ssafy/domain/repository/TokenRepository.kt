@@ -1,5 +1,6 @@
 package com.ssafy.domain.repository
 
-interface StoryRepository {
+interface TokenRepository {
     suspend fun getToken(): String
+    suspend fun deleteToken()
 }

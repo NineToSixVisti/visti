@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.DetailSettingButton
@@ -25,77 +26,60 @@ import com.ssafy.presentation.ui.theme.White
 
 @Composable
 fun UserAccountScreen(
-    navController: NavController, viewModel: ProfileViewModel = hiltViewModel()
+    navController: NavController, viewModel: UserAccountViewModel = hiltViewModel()
 ) {
-    val state = viewModel.memberInformation.value
+    val signOutState = remember { mutableStateOf(false) }
+    val logOutState = remember { mutableStateOf(false) }
 
-    when {
-        state.error.isNotBlank() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
-                Text(text = state.error)
-            }
+    Scaffold(topBar = {
+        BackToolbar(text = "정보") {
+            navController.popBackStack()
         }
+    }) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
 
-        state.isLoading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+            val colorState = if (isSystemInDarkTheme()) {
+                White
+            } else {
+                Black
             }
-        }
 
-        else -> {
-            val signOutState = remember { mutableStateOf(false) }
-            val logOutState = remember { mutableStateOf(false) }
+            DetailSettingButton("프로필 편집", colorState) {
 
-            Scaffold(topBar = {
-                BackToolbar(text = "정보") {
-                    navController.popBackStack()
-                }
-            }) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding)
-                ) {
+            }
+            DetailSettingButton("비밀번호 변경", colorState) {
 
-                    val colorState = if (isSystemInDarkTheme()) {
-                        White
-                    } else {
-                        Black
-                    }
+            }
+            DetailSettingButton("계정 로그아웃", PrimaryColor) {
+                logOutState.value = true
+            }
+            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
+                signOutState.value = true
+            }
 
-                    DetailSettingButton("프로필 편집", colorState) {
+            val isDarkTheme = isSystemInDarkTheme()
 
-                    }
-                    DetailSettingButton("비밀번호 변경", colorState) {
+            if (logOutState.value) {
+                VistiDialog(
+                    onDismissRequest = { logOutState.value = false },
+                    onConfirmation = {
+                        logOutState.value = false
+                        viewModel.removeToken()
+                    },
+                    "로그아웃하시겠습니까?",
+                    isDarkTheme
+                )
+            }
 
-                    }
-                    DetailSettingButton("계정 로그아웃", PrimaryColor) {
-                        logOutState.value = true
-                    }
-                    DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
-                        signOutState.value = true
-                    }
-
-                    val isDarkTheme = isSystemInDarkTheme()
-
-                    if (logOutState.value) {
-                        VistiDialog(onDismissRequest = { logOutState.value = false },
-                            onConfirmation = { logOutState.value = false },
-                            "로그아웃하시겠습니까?",
-                            isDarkTheme
-                        )
-                    }
-
-                    if (signOutState.value) {
-                        VistiDialog(onDismissRequest = { signOutState.value = false },
-                            onConfirmation = { signOutState.value = false },
-                            "회원 탈퇴하시겠습니까?",
-                            isDarkTheme
-                        )
-                    }
-                }
+            if (signOutState.value) {
+                VistiDialog(
+                    onDismissRequest = { signOutState.value = false },
+                    onConfirmation = { signOutState.value = false },
+                    "회원 탈퇴하시겠습니까?",
+                    isDarkTheme
+                )
             }
         }
     }

@@ -4,11 +4,11 @@ import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
 import com.ssafy.data.repository.MemberInformationRepositoryImpl
-import com.ssafy.data.repository.StoryRepositoryImpl
+import com.ssafy.data.repository.TokenRepositoryImpl
 import com.ssafy.data.repository.UserRepositoryImpl
 import com.ssafy.domain.repository.LikedStoryRepository
 import com.ssafy.domain.repository.MemberInformationRepository
-import com.ssafy.domain.repository.StoryRepository
+import com.ssafy.domain.repository.TokenRepository
 import com.ssafy.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -35,10 +35,9 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideStoryRepository(
-        api: VistiApi,
         preferenceDataSource: PreferenceDataSource
-    ): StoryRepository {
-        return StoryRepositoryImpl(api, preferenceDataSource)
+    ): TokenRepository {
+        return TokenRepositoryImpl(preferenceDataSource)
     }
 
     @Provides

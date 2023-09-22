@@ -1,4 +1,4 @@
-package com.ssafy.domain.usecase.story
+package com.ssafy.domain.usecase.account
 
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.repository.TokenRepository
@@ -8,13 +8,14 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class StoryUseCase @Inject constructor(
+
+class AccountUseCase @Inject constructor(
     private val repository: TokenRepository
 ) {
-    operator fun invoke(): Flow<Resource<String>> = flow {
+    operator fun invoke(): Flow<Resource<Unit>> = flow {
         try {
             emit(Resource.Loading())
-            val userTokenResponse = repository.getToken()
+            val userTokenResponse = repository.deleteToken()
             emit(Resource.Success(userTokenResponse))
         } catch (e: IOException) {
             emit(Resource.Error("Failed to connect to server \uD83D\uDE22"))
