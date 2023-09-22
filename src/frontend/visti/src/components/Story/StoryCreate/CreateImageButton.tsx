@@ -4,14 +4,13 @@ import { RootState } from '../../../store';
 import html2canvas from 'html2canvas';
 import styled from 'styled-components';
 import { ReactComponent as CompleteButton } from '../../../assets/images/complete_button.svg';
-import { create } from 'ipfs-http-client';
-import { setImage, setCID } from '../../../store/slices/MergeImageSlice'; // Redux actions를 import합니다.
+import { setImage, setCID } from '../../../store/slices/MergeImageSlice';
 
-const ipfs = create({
-  host: 'j9d102.p.ssafy.io',
-  port: 5001,
-  protocol: 'http'
-});
+// const ipfs = create({
+//   host: 'j9d102.p.ssafy.io',
+//   port: 5001,
+//   protocol: 'http'
+// });
 
 const CompleteButtonStyled = styled.button`
   background: transparent;
@@ -44,21 +43,31 @@ const CreateImageComponent: React.FC = () => {
             downloadLink.click();
             document.body.removeChild(downloadLink);
             URL.revokeObjectURL(url);
-    
-            // IPFS에 이미지 업로드
-            // const file = new File([blob], 'mergedImage.png', { type: 'image/png' });
-            // const added = await ipfs.add(file);
-            // console.log("Uploaded to IPFS with CID:", added.path);
-    
-            // CID를 Redux store에 저장
-            // dispatch(setCID(added.path));
-          } 
+
+            // 이미지를 API로 보내기
+            const formData = new FormData();
+            formData.append('mainFileType', 'LETTER');
+            formData.append('mainFilePath', blob, 'mergedImage.png');
+            formData.append('subFileType', 'LETTER');
+            formData.append('subFilePath', 'subImage.png'); // 이 부분은 실제 부차적인 이미지 경로로 변경해야 합니다.
+
+            const response = await fetch('/api/story/create', {
+              method: 'POST',
+              body: formData,
+            });
+
+            if (response.ok) {
+              console.log('이미지가 성공적으로 업로드되었습니다.');
+            } else {
+              console.error('이미지 업로드에 실패했습니다.');
+            }
+          }
         }, 'image/png');
       } catch (error) {
         console.error('Error generating image:', error);
       } finally {
         if (textToggleButton) {
-          textToggleButton.style.display = 'block'; 
+          textToggleButton.style.display = 'block';
         }
       }
     }

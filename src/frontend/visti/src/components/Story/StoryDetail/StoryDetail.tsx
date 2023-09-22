@@ -8,10 +8,12 @@ interface StoryData {
   encryptedId: string;
   mainFileType: string;
   mainFilePath: string;
+  createdAt: string;
   member: {
     nickname: string;
     profilePath: string | null;
     status: boolean;
+    
   };
 }
 
@@ -25,15 +27,16 @@ const Container = styled.div`
 const MainImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const ProfileContainer = styled.div`
   position: absolute;
-  top: 2%;
-  left: 2%;
+  bottom: 2%;
+  left: 25%; 
   display: flex;
   align-items: center;
+  transform: translateX(-50%); 
 `;
 
 const ProfileImage = styled.img`
@@ -48,6 +51,14 @@ const Nickname = styled.span`
   font-weight: bold;
   color: white;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  margin-left: 8px;
+`;
+
+const CreatedAt = styled.span`
+  font-size: 14px;
+  color: white;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  margin-left: 16px;
 `;
 
 function StoryDetail() {
@@ -68,12 +79,18 @@ function StoryDetail() {
 
   if (!storyData) return <div>Loading...</div>;
 
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
   return (
     <Container>
       <MainImage src={storyData.mainFilePath} alt="Story" />
       <ProfileContainer>
         {storyData.member.profilePath && <ProfileImage src={storyData.member.profilePath} alt="Profile" />}
         <Nickname>{storyData.member.nickname}</Nickname>
+        <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
       </ProfileContainer>
     </Container>
   );
