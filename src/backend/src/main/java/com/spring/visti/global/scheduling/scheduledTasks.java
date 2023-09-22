@@ -29,7 +29,7 @@ public class scheduledTasks {
     private final FcmService fcmService;
 
     @Transactional
-    @Scheduled(cron = "0 0 00 * * ?") // 매일 자정에 실행
+    @Scheduled(cron = "0 30 * * * ?") // 매일 자정에 실행
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
