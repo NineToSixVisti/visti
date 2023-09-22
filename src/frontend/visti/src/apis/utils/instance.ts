@@ -23,7 +23,7 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
 
   // 토큰이 없으면 기본 값을 사용합니다. (옵셔널)
   if (!token) {
-    token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJhdXRoIjoiUk9MRV9BRE1JTiIsInVzZXJfZW1haWwiOiJzc29sbGlkYTk0QGdtYWlsLmNvbSIsImV4cCI6MTY5NTYwNDc1M30.3GWi5uuI8N_3HBMm1xgWyAYT5rPnYEDu2fyUvMXD0sAmzOIuMp2lSlZ1u7oIKdrHSCFSrVhYQdIKeVVStZ0Uyg";;
+    token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJhdXRoIjoiUk9MRV9BRE1JTiIsInVzZXJfZW1haWwiOiJzc29sbGlkYTk0QGdtYWlsLmNvbSIsImV4cCI6MTY5NTgwMzQ5N30.upKLXMrDp68j-yHkUloL3kSew498aO33Zs2X2ED92EAlV2bKpakDHCLBqy9SA8R1xryH6z1obLmwH6aGkej7bA";;
   }
   
   return axios.create({

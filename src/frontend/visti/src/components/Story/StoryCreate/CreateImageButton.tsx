@@ -1,16 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
 import html2canvas from 'html2canvas';
 import styled from 'styled-components';
 import { ReactComponent as CompleteButton } from '../../../assets/images/complete_button.svg';
 import { setImage, setCID } from '../../../store/slices/MergeImageSlice';
-
-// const ipfs = create({
-//   host: 'j9d102.p.ssafy.io',
-//   port: 5001,
-//   protocol: 'http'
-// });
+import { authInstance } from '../../../apis/utils/instance';
 
 const CompleteButtonStyled = styled.button`
   background: transparent;
@@ -22,6 +17,7 @@ const CompleteButtonStyled = styled.button`
 const CreateImageComponent: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedImage } = useSelector((state: RootState) => state.image);
+  const storyBoxId = useSelector((state: RootState) => state.story.encryptedId); 
 
   const handleCreateImage = async () => {
     const node = document.getElementById('image-container'); 
@@ -35,6 +31,7 @@ const CreateImageComponent: React.FC = () => {
         const canvas = await html2canvas(node, { scale: 2 });
         canvas.toBlob(async (blob) => {
           if (blob) {
+            // 이미지를 브라우저에서 다운로드
             const url = URL.createObjectURL(blob);
             const downloadLink = document.createElement('a');
             downloadLink.href = url;
@@ -46,20 +43,20 @@ const CreateImageComponent: React.FC = () => {
 
             // 이미지를 API로 보내기
             const formData = new FormData();
+            formData.append('storyBoxId', storyBoxId || '');
             formData.append('mainFileType', 'LETTER');
             formData.append('mainFilePath', blob, 'mergedImage.png');
             formData.append('subFileType', 'LETTER');
-            formData.append('subFilePath', 'subImage.png'); // 이 부분은 실제 부차적인 이미지 경로로 변경해야 합니다.
-
-            const response = await fetch('/api/story/create', {
-              method: 'POST',
-              body: formData,
-            });
-
-            if (response.ok) {
-              console.log('이미지가 성공적으로 업로드되었습니다.');
-            } else {
-              console.error('이미지 업로드에 실패했습니다.');
+            formData.append('subFilePath', 'subImage.png'); 
+            try {
+              const response = await authInstance.post('/story/create', formData);
+              if (response.status === 200) {
+                console.log('이미지가 성공적으로 업로드되었습니다.');
+              } else {
+                console.error('이미지 업로드에 실패했습니다.');
+              }
+            } catch (error) {
+              console.error('API 요청 중 오류가 발생했습니다:', error);
             }
           }
         }, 'image/png');
@@ -72,7 +69,8 @@ const CreateImageComponent: React.FC = () => {
       }
     }
   };
-
+  useEffect(()=>{
+    console.log(storyBoxId)},[storyBoxId])
   return <CompleteButtonStyled onClick={handleCreateImage}><CompleteButton /></CompleteButtonStyled>;
 }
 
