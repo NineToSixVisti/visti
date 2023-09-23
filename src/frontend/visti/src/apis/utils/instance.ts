@@ -9,12 +9,17 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
   return axios.create({
     baseURL: url,
     headers: {
-      "Access_Token":token,
+      "Access_Token": token,
       ...(options?.headers), 
     },
     ...options,
   });
 }
 
+<<<<<<< HEAD
 export const baseInstance: AxiosInstance = baseAPI('https://j9d102.p.ssafy.io/api/');
 export const authInstance: AxiosInstance = authAPI('https://j9d102.p.ssafy.io/api/');
+=======
+export const baseInstance: AxiosInstance = baseAPI('http://j9d102.p.ssafy.io:8080/api/');
+export const authInstance: AxiosInstance = authAPI('http://j9d102.p.ssafy.io:8080/api/');
+>>>>>>> 5dd793f83f29e71573636ef91f3a0cc0e5c292b2
