@@ -13,7 +13,7 @@ RUN npm run build
 
 FROM nginx:latest 
 
-COPY nginx.conf /etc/nginx
+COPY nginx.conf /etc/nginx/sites-available/default
 
 COPY --from=builder /app/build /usr/share/nginx/html
 
