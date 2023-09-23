@@ -43,7 +43,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String email = null;
         try {
             accessToken = extractTokenFromHeader(tokenProvider.getHeaderToken(request, "Access"));
-
+            log.info("accessToken@@@@@@@@@@@@@@" + accessToken);
             email = (String) tokenProvider.parseClaims(accessToken).get("user_email");
             setAuthentication(email);
 
@@ -56,7 +56,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
             if (e.getCode().equals(JWT_EXPIRED)) {
                 // 액세스 토큰이 만료되었을 경우 리프레시 토큰 검증
                 String refreshToken = getMemberRefreshToken();
-
+                log.info("accessToken@@@@@@@@@@@@@@" + accessToken);
                 if (refreshToken == null){ throw new ApiException(NO_TOKEN_HEADER);}
 
                 try {
