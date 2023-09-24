@@ -1,5 +1,8 @@
 package com.ssafy.data.remote
 
+import com.ssafy.data.dto.HomeLastStoryBoxResponse
+import com.ssafy.data.dto.HomeStoryBoxResponse
+import com.ssafy.data.dto.HomeStoryResponse
 import com.ssafy.data.dto.MemberResponse
 import com.ssafy.data.dto.StoryBoxResponse
 import com.ssafy.data.dto.StoryResponse
@@ -39,4 +42,15 @@ interface VistiApi {
         @Path("provider") provider: String,
         @Query("accessToken") accessToken: String
     ): UserTokenResponse
+
+    @GET("/api/story/mainpage")
+    suspend fun getHomeStories(): HomeStoryResponse
+
+    @GET("/api/story-box/mainpage")
+    suspend fun getHomeStoryBox(): HomeStoryBoxResponse
+
+    @GET("/api/story-box/lateststorybox")
+    suspend fun getHomeLastStoryBox(): HomeLastStoryBoxResponse
+
+
 }
