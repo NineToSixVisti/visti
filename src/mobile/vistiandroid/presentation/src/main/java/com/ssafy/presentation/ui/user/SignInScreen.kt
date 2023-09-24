@@ -52,6 +52,7 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
+import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
@@ -63,8 +64,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private const val TAG = "kakaoSignin"
-
+private const val TAG = "SignInScreen"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
@@ -80,22 +80,42 @@ fun SignInScreen(
     var signInEmailTextFieldState by remember { mutableStateOf("") }
     var signInPasswordTextFieldState by remember { mutableStateOf("") }
     val state by signInViewModel.userToken.collectAsState()
-
+    val name by signInViewModel.memberInformation.collectAsState()
 
     Scaffold(snackbarHost = {
         SnackbarHost(snackbarHostState)
     }) {
         it
         when {
+            name.error.isNotBlank() -> {
+            }
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            name.memberInformation.nickname.isNotBlank() -> {
+                navController.navigate(route = MainNav.Home.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+                signInViewModel.delete()
+            }
+        }
+
+        when {
             state.error.isNotBlank() -> {
                 SideEffect {
                     CoroutineScope(Dispatchers.Main).launch {
                         snackbarHostState.showSnackbar("로그인에 실패하였습니다.")
-
                     }
                     signInViewModel.delete()
                 }
-
             }
 
             state.isLoading -> {
@@ -108,7 +128,7 @@ fun SignInScreen(
             }
 
             state.token?.accessToken?.isNotBlank() == true -> {
-                navController.navigate(route = SignInNav.Main.route) {
+                navController.navigate(route = MainNav.Home.route) {
                     popUpTo(navController.graph.id) {
                         inclusive = true
                     }
@@ -132,9 +152,16 @@ fun SignInScreen(
                 contentDescription = stringResource(R.string.log_in_logo_description),
                 contentScale = ContentScale.FillHeight,
             )
-            Text(text = stringResource(R.string.email), modifier = Modifier.padding(bottom = 5.dp))
+            Text(
+                text = stringResource(R.string.email),
+                modifier = Modifier.padding(bottom = 5.dp)
+            )
 
-            UserOutLinedTextField("이메일을 입력하세요", signInEmailTextFieldState, KeyboardType.Email) {
+            UserOutLinedTextField(
+                "이메일을 입력하세요",
+                signInEmailTextFieldState,
+                KeyboardType.Email
+            ) {
                 signInEmailTextFieldState = it
             }
 
@@ -179,17 +206,32 @@ fun SignInScreen(
 
 
             Box(modifier = Modifier.padding(15.dp))
-            SignInButton("비스티 로그인", PrimaryColor, Color.White, R.drawable.logo_white, 20.dp) {
+            SignInButton(
+                "비스티 로그인",
+                PrimaryColor,
+                Color.White,
+                R.drawable.logo_white,
+                20.dp
+            ) {
                 if (signInEmailTextFieldState.isBlank() || signInPasswordTextFieldState.isBlank()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         snackbarHostState.showSnackbar("아이디 비밀번호 입력 값을 모두 기입하세요.")
                     }
                 } else {
-                    signInViewModel.signIn(signInEmailTextFieldState, signInPasswordTextFieldState)
+                    signInViewModel.signIn(
+                        signInEmailTextFieldState,
+                        signInPasswordTextFieldState
+                    )
                 }
             }
             Box(modifier = Modifier.padding(5.dp))
-            SignInButton("카카오 로그인", Color(0xFFFDDC3F), Color.Black, R.drawable.kakao, 30.dp) {
+            SignInButton(
+                "카카오 로그인",
+                Color(0xFFFDDC3F),
+                Color.Black,
+                R.drawable.kakao,
+                30.dp
+            ) {
 
                 val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                     if (error != null) {
@@ -224,22 +266,36 @@ fun SignInScreen(
                         }
                     }
                 } else {
-                    UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                    UserApiClient.instance.loginWithKakaoAccount(
+                        context,
+                        callback = callback
+                    )
                 }
             }
             Box(modifier = Modifier.padding(5.dp))
-            SignInButton("네이버 로그인", Color(0xFF03C75A), Color.White, R.drawable.naver, 30.dp) {
+            SignInButton(
+                "네이버 로그인",
+                Color(0xFF03C75A),
+                Color.White,
+                R.drawable.naver,
+                30.dp
+            ) {
                 val oauthLoginCallback = object : OAuthLoginCallback {
                     override fun onSuccess() {
                         // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
-                        Log.e("로그인 성공","")
+                        Log.e("로그인 성공", "")
                         Log.e("AccessToken ->", NaverIdLoginSDK.getAccessToken().toString())
-                        signInViewModel.socialSignIn("naver", NaverIdLoginSDK.getAccessToken().toString())
+                        signInViewModel.socialSignIn(
+                            "naver",
+                            NaverIdLoginSDK.getAccessToken().toString()
+                        )
                     }
+
                     override fun onFailure(httpStatus: Int, message: String) {
                         val errorCode = NaverIdLoginSDK.getLastErrorCode().code
                         val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
                     }
+
                     override fun onError(errorCode: Int, message: String) {
                         onFailure(errorCode, message)
                     }
@@ -248,8 +304,6 @@ fun SignInScreen(
             }
         }
     }
-
-
 }
 
 

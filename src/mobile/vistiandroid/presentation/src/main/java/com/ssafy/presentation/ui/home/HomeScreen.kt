@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -64,7 +65,6 @@ fun HomeScreen(
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberScrollState()
-
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
@@ -139,7 +139,6 @@ fun HomeScreen(
             }
         }
     }
-
 }
 
 @Composable

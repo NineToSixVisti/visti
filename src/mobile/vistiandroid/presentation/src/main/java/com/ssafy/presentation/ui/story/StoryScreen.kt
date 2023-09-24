@@ -1,29 +1,50 @@
 package com.ssafy.presentation.ui.story
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
+import android.webkit.JavascriptInterface
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.web.AccompanistWebChromeClient
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.WebView
 
 @Composable
-fun StoryScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Home,
-            contentDescription = "StoryScreen",
-            tint = Color.Blue,
+fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel()) {
+    Scaffold { innerPadding ->
+        Column(
             modifier = Modifier
-                .size(150.dp)
-                .align(Alignment.Center)
-        )
+                .padding(innerPadding)
+        ) {
+            val webViewState = viewModel.webViewState
+            val webViewNavigator = viewModel.webViewNavigator
+
+            WebView(
+                state = webViewState,
+                client = webViewClient,
+                chromeClient = webChromeClient,
+                onCreated = { webView ->
+                    with(webView) {
+                        settings.run {
+                            javaScriptEnabled = true
+                            domStorageEnabled = true
+                            javaScriptCanOpenWindowsAutomatically = false
+                        }
+                        addJavascriptInterface(object {
+                            @JavascriptInterface
+                            fun getToken(): String {
+                                return viewModel.accessToken.value.accessToken
+                            }
+                        },
+                            "Android" )
+                    }
+                }
+            )
+        }
     }
 }
+
+val webViewClient = AccompanistWebViewClient()
+val webChromeClient = AccompanistWebChromeClient()

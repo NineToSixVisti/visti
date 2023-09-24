@@ -14,7 +14,7 @@ import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.presentation.ui.common.TimeFormatExt.timeFormat
-import com.ssafy.presentation.ui.like.MemberState
+import com.ssafy.presentation.ui.home.component.MemberState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn

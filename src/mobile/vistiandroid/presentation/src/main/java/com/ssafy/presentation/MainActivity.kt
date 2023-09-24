@@ -1,6 +1,8 @@
 package com.ssafy.presentation
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -16,9 +18,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
-import com.ssafy.presentation.ui.common.MainNavigationScreen
-import com.ssafy.presentation.ui.common.NavGraph
+import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
+import com.ssafy.presentation.ui.user.SignInScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,24 +34,12 @@ class MainActivity : ComponentActivity() {
             "Visti"
         )
         setContent {
-            val navController = rememberNavController()
             VistiAndroidTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val mainViewModel : MainViewModel = hiltViewModel()
                     WindowCompat.setDecorFitsSystemWindows(window, false)
-                    val memberInformationState = mainViewModel.memberInformation.value
-
-                    when {
-                        memberInformationState.error.isNotBlank() -> {
-                            NavGraph(navController = navController, this@MainActivity)
-                        }
-
-                        memberInformationState.memberInformation.nickname.isNotBlank() -> {
-                            MainScreen()
-                        }
-                    }
+                    MainScreen(this)
                 }
             }
         }
@@ -58,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(context: Context) {
     val mainNavController = rememberNavController()
 
     Scaffold(
@@ -67,7 +57,7 @@ fun MainScreen() {
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavigationScreen(it, navController = mainNavController)
+        MainNavHost(it, navController = mainNavController, context = context)
     }
 }
 
