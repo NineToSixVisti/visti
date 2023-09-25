@@ -160,7 +160,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
 
-        
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
