@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class Member extends BaseEntity{
     }
 
     public void withdrawMember(){
-        this.email = null;
+        this.email = "deleted_at" + LocalDateTime.now()+ email;
         this.name = null;
         this.profilePath = null;
         this.status = false;

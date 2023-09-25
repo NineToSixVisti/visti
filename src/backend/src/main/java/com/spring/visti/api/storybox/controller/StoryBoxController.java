@@ -65,7 +65,7 @@ public class StoryBoxController {
     }
 
 
-    @PutMapping("/{storyBoxIds}/setting" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{storyBoxIds}/setting", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "스토리-박스 설정 및 수정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
