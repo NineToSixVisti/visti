@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Member extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 50, nullable = false)
+    @Column(unique = true, length = 128, nullable = false)
     private String email;
 
     @Column
@@ -123,10 +124,17 @@ public class Member extends BaseEntity{
     }
 
     public void withdrawMember(){
-        this.email = "deleted_at" + LocalDateTime.now()+ email;
+        this.email = appendTimestampForDeletion(this.email);
         this.name = null;
         this.profilePath = null;
         this.status = false;
         this.refreshToken = null;
+    }
+
+    private static String appendTimestampForDeletion(String email) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        String[] parts = email.split("@");
+        return parts[0] + "_dt" + timestamp + "@" + parts[1];
     }
 }
