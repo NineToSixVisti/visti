@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
+import { useDispatch, useSelector } from 'react-redux';
+import { setStoryboxId } from '../../store/slices/storySlice';
 
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
@@ -23,7 +25,7 @@ type BoxWrapProps = {
 
 const StoryboxHome = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [storyboxList, setStoryboxList] = useState<Storybox[]>([]);
   const [search, setSerch] = useState("");
   
@@ -78,6 +80,7 @@ const StoryboxHome = () => {
     console.log("Has more:", hasMore); 
   }, [hasMore]);
 
+
   return (
     <StoryboxWWrap>
       <LogoWrap>
@@ -100,7 +103,9 @@ const StoryboxHome = () => {
                   key={storybox.encryptedId}
                   bgImage={storybox.boxImgPath}
                   onClick={() => {
-                  navigate(`/storybox/detail/${storybox.encryptedId}`);}}>
+                  navigate(`/storybox/detail/${storybox.encryptedId}`);
+                  console.log(storybox.encryptedId);
+                  dispatch(setStoryboxId(storybox.encryptedId));}}>
                 <NameWrap>
                   <p>
                     {storybox.name.length > 15 ? `${storybox.name.substring(0, 15)}...` : storybox.name}

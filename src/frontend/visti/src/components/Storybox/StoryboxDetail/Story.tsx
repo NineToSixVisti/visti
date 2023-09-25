@@ -5,9 +5,6 @@ import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
 import { useNavigate } from 'react-router-dom';
 import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
 import { authInstance } from '../../../apis/utils/instance';
-import { setStoryboxId } from '../../../store/slices/storySlice';
-import { useDispatch } from 'react-redux';
-
 
 interface StoryList {
   id: number;
@@ -30,9 +27,9 @@ interface StoryProps {
   id ?: string
 };
 
+
 const Story : React.FC<StoryProps> = ({id}) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   
   const [storyList, setStoryList] = useState<StoryList[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -62,14 +59,11 @@ const Story : React.FC<StoryProps> = ({id}) => {
         ]);
         setHasMore(!data.detail.last);
       }
-      if (page === 0){ // 한번만 불러오기 위해서
-        dispatch(setStoryboxId(data.detail.content.encryptedId));
-      }
     }
     catch (err) {
       console.log('스토리List GET 중 에러 발생', err);
     }
-  }, [id, page, dispatch])
+  }, [id, page])
 
   useEffect(()=>{
     getStoryList();
