@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setStoryboxId } from '../../store/slices/storySlice';
 
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
@@ -157,7 +157,7 @@ const TopWrap = styled.div`
 
 const SearchWrap = styled.div`
   /* flex-grow: 1;  */
-  width: 250px;
+  width: calc(100vw - 110px);
   height: 35px;
   position: relative; 
 

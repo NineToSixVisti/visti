@@ -104,7 +104,7 @@ const StoryboxCreate = () => {
     }
   }, []);
 
-  // 입력시의 조건
+  // 스토리 박스 생성할때의 조건
   const checkData = () => {
     if (!groupName.trim()) {
       alert('그룹 이름을 입력해주세요!')

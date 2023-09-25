@@ -97,7 +97,7 @@ const StoryboxDetail: React.FC = () => {
         <FirstTop>
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
           <p>
-          {storyboxInfo.name.length > 10 ? `${storyboxInfo.name.substring(0, 10)}...` : storyboxInfo.name}</p>
+          {storyboxInfo.name.length > 14 ? `${storyboxInfo.name.substring(0, 14)}...` : storyboxInfo.name}</p>
           { storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join", {state : { storyboxId : id }})}}/> } 
         </FirstTop>
         <TopMian>
