@@ -92,7 +92,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -110,7 +110,7 @@ public class StoryServiceImpl implements StoryService{
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -129,7 +129,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -154,7 +154,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
