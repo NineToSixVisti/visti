@@ -19,8 +19,8 @@ import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.theme.White
 
 @Composable
-fun UserAccountScreen(
-    navController: NavController, viewModel: UserAccountViewModel = hiltViewModel(),
+fun MemberAccountScreen(
+    navController: NavController, viewModel: MemberAccountViewModel = hiltViewModel(),
 ) {
     val signOutState = remember { mutableStateOf(false) }
     val logOutState = remember { mutableStateOf(false) }
@@ -77,7 +77,18 @@ fun UserAccountScreen(
             if (signOutState.value) {
                 VistiDialog(
                     onDismissRequest = { signOutState.value = false },
-                    onConfirmation = { signOutState.value = false },
+                    onConfirmation = {
+                        signOutState.value = false
+                        viewModel.deleteMember()
+                        viewModel.removeToken()
+
+                        navController.navigate(SignInNav.SignIn.route) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
                     "회원 탈퇴하시겠습니까?",
                     isDarkTheme
                 )

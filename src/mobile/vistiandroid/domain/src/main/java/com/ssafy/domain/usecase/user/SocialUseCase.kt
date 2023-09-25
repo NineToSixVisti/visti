@@ -2,7 +2,7 @@ package com.ssafy.domain.usecase.user
 
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.user.UserToken
-import com.ssafy.domain.repository.UserRepository
+import com.ssafy.domain.repository.MemberRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -10,7 +10,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SocialUseCase @Inject constructor(
-    private val repository: UserRepository
+    private val repository: MemberRepository
 ) {
     operator fun invoke(provider: String, accessToken: String): Flow<Resource<UserToken>> = flow {
         try {

@@ -7,13 +7,13 @@ import com.ssafy.data.mapper.toDomain
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.domain.model.user.UserBody
 import com.ssafy.domain.model.user.UserToken
-import com.ssafy.domain.repository.UserRepository
+import com.ssafy.domain.repository.MemberRepository
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(
+class MemberRepositoryImpl @Inject constructor(
     private val api: VistiApi,
     private val preferenceDataSource: PreferenceDataSource
-) : UserRepository {
+) : MemberRepository {
     override suspend fun signIn(userBody: UserBody): UserToken {
         val response = api.signIn(userBody.toDomain()).detail.toDomain()
         preferenceDataSource.putString(ACCESS_TOKEN, response.accessToken)
@@ -25,6 +25,13 @@ class UserRepositoryImpl @Inject constructor(
         val response = api.socialSignIn(provider, accessToken).detail.toDomain()
         preferenceDataSource.putString(ACCESS_TOKEN, response.accessToken)
         preferenceDataSource.putString(REFRESH_TOKEN, response.refreshToken)
+        return response
+    }
+
+    override suspend fun deleteMember(): String {
+        val response = api.signOut().detail
+        preferenceDataSource.remove(ACCESS_TOKEN)
+        preferenceDataSource.remove(REFRESH_TOKEN)
         return response
     }
 }

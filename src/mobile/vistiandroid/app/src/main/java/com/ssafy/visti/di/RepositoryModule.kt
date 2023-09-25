@@ -5,11 +5,11 @@ import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
 import com.ssafy.data.repository.MemberInformationRepositoryImpl
 import com.ssafy.data.repository.TokenRepositoryImpl
-import com.ssafy.data.repository.UserRepositoryImpl
+import com.ssafy.data.repository.MemberRepositoryImpl
 import com.ssafy.domain.repository.LikedStoryRepository
 import com.ssafy.domain.repository.MemberInformationRepository
 import com.ssafy.domain.repository.TokenRepository
-import com.ssafy.domain.repository.UserRepository
+import com.ssafy.domain.repository.MemberRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,7 +45,7 @@ class RepositoryModule {
     fun provideUserRepository(
         api: VistiApi,
         preferenceDataSource: PreferenceDataSource
-    ): UserRepository {
-        return UserRepositoryImpl(api, preferenceDataSource)
+    ): MemberRepository {
+        return MemberRepositoryImpl(api, preferenceDataSource)
     }
 }
