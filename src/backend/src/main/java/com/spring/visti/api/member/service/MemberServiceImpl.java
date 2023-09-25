@@ -91,6 +91,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<String> verifyMember(String email, String type) {
         log.info("===== 사용자 인증 진행 =============");
         if (!isValidEmail(email)) {
@@ -105,6 +106,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<String> verifyAuthNum(AuthDTO authInfo) {
         /*
         example
@@ -206,6 +208,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
         Member _member = getMember(email, memberRepository);
@@ -220,6 +223,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> changePassword(String email, String newPW) {
 //        Member member = getMemberBySecurity();
         Member member = getMember(email, memberRepository);
@@ -237,6 +241,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
         Member _member = getMember(email, memberRepository);
