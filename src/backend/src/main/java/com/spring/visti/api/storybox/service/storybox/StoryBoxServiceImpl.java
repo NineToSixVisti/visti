@@ -160,12 +160,11 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
 
-        LocalDateTime localDateTime = LocalDateTime.now();
+        
 
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
-                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
-                .sorted((sb1, sb2) -> sb1.getFinishedAt().compareTo(sb2.getFinishedAt())) // 오름차순 정렬
+                .sorted((sb1, sb2) -> sb2.getCreatedAt().compareTo(sb1.getCreatedAt())) // 내림차순 정렬
                 .limit(forMainPage)
                 .map(StoryBoxExposedDTO::of)
                 .toList();
