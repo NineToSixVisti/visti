@@ -134,7 +134,6 @@ public class Member extends BaseEntity{
     private static String appendTimestampForDeletion(String email) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String timestamp = LocalDateTime.now().format(formatter);
-        String[] parts = email.split("@");
-        return parts[0] + "_dt" + timestamp + "@" + parts[1];
+        return timestamp + "_dt_" + email;
     }
 }
