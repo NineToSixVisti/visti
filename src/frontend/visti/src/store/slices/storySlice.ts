@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface StorySlice {
-  encryptedId : string | null
+  encryptedId : string
 };
 
 const initialState : StorySlice = {
-  encryptedId : null,
+  encryptedId : '',
 }
 
 const storySlice = createSlice({
