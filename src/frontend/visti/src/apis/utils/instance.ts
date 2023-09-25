@@ -36,7 +36,5 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
   });
 }
 
-
-export const baseInstance: AxiosInstance = baseAPI('https://j9d102.p.ssafy.io/api/');
-export const authInstance: AxiosInstance = authAPI('https://j9d102.p.ssafy.io/api/');
-
+export const baseInstance: AxiosInstance = baseAPI('http://j9d102.p.ssafy.io:8080/api/');
+export const authInstance: AxiosInstance = authAPI('http://j9d102.p.ssafy.io:8080/api/');

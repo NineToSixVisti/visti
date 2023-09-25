@@ -98,7 +98,7 @@ const StoryboxDetail: React.FC = () => {
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
           <p>
           {storyboxInfo.name.length > 10 ? `${storyboxInfo.name.substring(0, 10)}...` : storyboxInfo.name}</p>
-          { storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join")}}/> } 
+          { storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join", {state : { storyboxId : id }})}}/> } 
         </FirstTop>
         <TopMian>
           <BgImageDiv bgImage={storyboxInfo.boxImgPath}></BgImageDiv>

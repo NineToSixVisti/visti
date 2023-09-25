@@ -11,14 +11,17 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CheckModal from './CheckModal';
 import { authInstance } from '../../../apis/utils/instance';
 dayjs.locale('ko');
 
 const StoryboxCreate = () => { 
   const navigate = useNavigate();
-  
+  const location = useLocation(); // navigate로 보낸 stoyryboxId를 받기 위해 사용
+  const storyboxId = location.state ? location.state.storyboxId : null;
+  const isEditMode = !!storyboxId
+
   const [groupImage, setGroupImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null); 
   const [value, setValue] = React.useState<Dayjs | null>(null);
@@ -69,6 +72,24 @@ const StoryboxCreate = () => {
   const postStorybox = useCallback(async (formData: FormData) => {
     try {
       const response = await authInstance.post('story-box/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      if (response.data.statusCode === 200) {
+        console.log('스토리박스가 성공적으로 생성되었습니다.');
+      } else {
+        console.log('스토리박스 생성 실패:');
+      }
+    } catch (err) {
+      console.log('스토리박스 POST 중 에러 발생:', err);
+    }
+  }, []);
+
+  // 수정을 진행하는 함수
+  const putStorybox = useCallback(async (formData: FormData) => {
+    try {
+      const response = await authInstance.put('story-box/setting', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -150,10 +171,36 @@ const StoryboxCreate = () => {
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
 
     // console.log(formDataToObject(formData));
-    postStorybox(formData);
+
+    // post / put 의 차이로 다른 제출 
+    isEditMode ? putStorybox(formData) : postStorybox(formData);
     setIsModalOpen(false);
     navigate('/storybox')
   }
+
+  // 수정하는 경우 기존의 박스 내용을 동기화
+  const getStoryboxInfo = useCallback(async () => {
+    try {
+      const data = await authInstance.get(`story-box/${storyboxId}/info`)
+    if (data){
+      // console.log(data.data.detail);
+      const Info = data.data.detail
+      setGroupImage(Info.boxImgPath);
+      setGroupName(Info.name);
+      setGroupDetail(Info.detail);
+      setValue(dayjs(Info.finishedAt));
+      setDisclosure(Info.blind);
+    }
+    }
+    catch (err) {
+      console.log('스토리박스 Info GET 중 에러 발생', err);
+    }
+  },[storyboxId]);
+
+  // getStoryboxInfo를 통해 찍어볼 수 있게
+  useEffect(()=>{
+    getStoryboxInfo();
+  },[getStoryboxInfo])
 
   return (
     <Wrap>
@@ -163,6 +210,7 @@ const StoryboxCreate = () => {
         formDataToObject={formDataToObject} file={file}
         groupDetail={groupDetail} groupName={groupName}
         disclosure={disclosure} value={value}
+        isEditMode={isEditMode}
         />
       <LogoWrap>
         <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
@@ -192,14 +240,24 @@ const StoryboxCreate = () => {
                   value={value} 
                   onChange={(newValue) => setValue(newValue)} 
                   format="YYYY년 MM월 DD일"
+                  className={isEditMode ? 'disabled-datepicker' : ''}
               />
           </DemoContainer>
       </LocalizationProvider>
 
         <Title>선택사항</Title>
-        <Label><input onChange={()=>setDisclosure(!disclosure)} checked={disclosure} type="checkbox"/><div>끝나는 기간까지 스토리 비공개 하기</div></Label>
-
-        <RequestBtn onClick={OpenModal}>완료</RequestBtn>
+        <Label>
+          <input 
+            onChange={() => !isEditMode && setDisclosure(!disclosure)}  
+            checked={disclosure} 
+            type="checkbox" 
+            className={isEditMode ? 'disabled-checkbox' : ''} />
+          <div className={isEditMode ? 'disabled-div' : ''}>
+            끝나는 기간까지 스토리 비공개 하기
+          </div></Label>
+        <RequestBtn onClick={OpenModal}>
+          {isEditMode ? `수정` : `완료`}
+        </RequestBtn>
       </MainWrap>
     </Wrap>
   )

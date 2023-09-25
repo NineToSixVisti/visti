@@ -10,3 +10,24 @@
   padding-top: 0 !important;
   padding-bottom: 10px !important;
 }
+
+.disabled-datepicker {
+  background-color: #f0f0f0; /* 회색 배경 */
+  pointer-events: none; /* 마우스 이벤트 비활성화 */
+}
+
+.disabled-checkbox:checked {
+  background-color: #E03C31;
+  /* border-color: ; */
+}
+
+.disabled-checkbox {
+  background-color: #E03C31;
+  /* border-color: ; */
+  pointer-events: none; /* 마우스 이벤트 비활성화 */
+}
+
+.disabled-div {
+  color: #929292;
+  font-weight: 600;
+}
