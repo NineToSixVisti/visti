@@ -40,8 +40,8 @@ public class StoryBoxExposedDTO {
 
     public static StoryBoxExposedDTO of(StoryBox storyBox){
         String encryptedId = SecurePathUtil.encryptAndEncode(String.valueOf(storyBox.getId()));
-        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
-        System.out.println("이거를 확인해주세요" + isDecrypted);
+//        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
+//        System.out.println("이거를 확인해주세요" + isDecrypted);
         return StoryBoxExposedDTO.builder()
                 .id(storyBox.getId())
                 .encryptedId(encryptedId)

@@ -151,7 +151,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
         Member member = getMember(email, memberRepository);
@@ -174,7 +174,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -191,7 +191,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -207,7 +207,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
                 200, myStoryBoxes);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -222,7 +222,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -239,7 +239,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -264,7 +264,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -286,7 +286,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -296,7 +296,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<StoryBoxDetailDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email) {
         Member member = getMember(email, memberRepository);
 
