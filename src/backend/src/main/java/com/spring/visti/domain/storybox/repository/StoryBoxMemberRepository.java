@@ -15,11 +15,15 @@ import java.util.Optional;
 
 public interface StoryBoxMemberRepository extends JpaRepository<StoryBoxMember, Long> {
 
+    @Query("SELECT sbm FROM StoryBoxMember sbm JOIN FETCH sbm.storyBox WHERE sbm.member = :member")
     Page<StoryBoxMember> findByMember(Member member, Pageable pageable);
 
     @Query("SELECT sbm.storyBox FROM StoryBoxMember sbm WHERE sbm.member = :member AND sbm.storyBox.name LIKE %:keyword%")
     Page<StoryBox> findJoinedByMemberAndKeyword(Member member, String keyword, Pageable pageable);
 
+    @Query("SELECT sbm FROM StoryBoxMember sbm " +
+            "LEFT JOIN FETCH sbm.storyBox " +
+            "WHERE sbm.member = :member AND sbm.position = :position")
     Page<StoryBoxMember> findByMemberAndPosition(Member member, Position position, Pageable pageable);
 
     Optional<StoryBoxMember> findByStoryBoxIdAndMember(Long storyBoxId, Member member);
