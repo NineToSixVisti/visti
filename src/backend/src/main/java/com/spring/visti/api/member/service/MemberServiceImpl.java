@@ -211,9 +211,9 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
-//        Member _member = getMember(email, memberRepository);
+        Member _member = getMember(email, memberRepository);
 
-        Member _member = getMemberBySecurity();
+//        Member _member = getMemberBySecurity();
 
         MemberMyInfoDTO member = MemberMyInfoDTO.of(_member);
 
@@ -244,8 +244,8 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
-        Member _member = getMemberBySecurity();
-//        Member _member = getMember(email, memberRepository);
+//        Member _member = getMemberBySecurity();
+        Member _member = getMember(email, memberRepository);
         MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
         log.info("Member info: " + member);
 
