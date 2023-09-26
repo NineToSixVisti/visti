@@ -140,7 +140,8 @@ public class StoryBoxController {
             @RequestParam(name= "keyword", required = false) String keyword
     ){
         String email = getEmail();
-        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.searchStoryBoxes(PageRequest.of(page,size), email,keyword);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.searchStoryBoxes(pageRequest, email,keyword);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
