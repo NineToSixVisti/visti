@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Member {
-     public final static String email = "ssollida94@gmail.com";
-     public final static String accountPassWord = "NineToSixVisti2357!";
+     public final static String email = "tncks097@naver.com";
+     public final static String accountPassWord = "Qwert1234!";
      public final static String nickname = "테스트 닉네임";
      public static String profilePath;
      public static String refreshToken;
