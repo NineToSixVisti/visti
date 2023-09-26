@@ -89,7 +89,7 @@ const StoryboxCreate = () => {
   // 수정을 진행하는 함수
   const putStorybox = useCallback(async (formData: FormData) => {
     try {
-      const response = await authInstance.put('story-box/setting', formData, {
+      const response = await authInstance.put(`story-box/${storyboxId}/setting`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -102,7 +102,7 @@ const StoryboxCreate = () => {
     } catch (err) {
       console.log('스토리박스 POST 중 에러 발생:', err);
     }
-  }, []);
+  }, [storyboxId]);
 
   // 스토리 박스 생성할때의 조건
   const checkData = () => {
@@ -150,6 +150,22 @@ const StoryboxCreate = () => {
     return object;
   };
 
+  const fetchImageAndSetFile = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const imageBlob: Blob = await response.blob();
+  
+      // Blob을 파일로 변환
+      const imageFile = new File([imageBlob], "filename.jpg", { type: imageBlob.type });
+  
+      // 파일 상태 업데이트
+      setFile(imageFile);
+    } catch (error) {
+      console.error("Error fetching the image:", error);
+    }
+  };
+  
+
   // 파일 제출 시 해야 되는 구조
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -167,15 +183,15 @@ const StoryboxCreate = () => {
       json.finishedAt = value.format('YYYY-MM-DD');
     }
 
-    // console.log(json);
+    console.log(json);  
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
 
-    // console.log(formDataToObject(formData));
+    console.log(formDataToObject(formData));
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
     setIsModalOpen(false);
-    navigate('/storybox')
+    navigate('/storybox', { replace : true })
   }
 
   // 수정하는 경우 기존의 박스 내용을 동기화
@@ -185,6 +201,7 @@ const StoryboxCreate = () => {
     if (data){
       // console.log(data.data.detail);
       const Info = data.data.detail
+      fetchImageAndSetFile(Info.boxImgPath);
       setGroupImage(Info.boxImgPath);
       setGroupName(Info.name);
       setGroupDetail(Info.detail);
@@ -201,6 +218,10 @@ const StoryboxCreate = () => {
   useEffect(()=>{
     getStoryboxInfo();
   },[getStoryboxInfo])
+
+  useEffect(()=>{
+    console.log(groupImage);
+  },[groupImage])
 
   return (
     <Wrap>
