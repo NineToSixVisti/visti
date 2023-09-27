@@ -273,35 +273,35 @@ fun SignInScreen(
                 }
             }
             Box(modifier = Modifier.padding(5.dp))
-            SignInButton(
-                "네이버 로그인",
-                Color(0xFF03C75A),
-                Color.White,
-                R.drawable.naver,
-                30.dp
-            ) {
-                val oauthLoginCallback = object : OAuthLoginCallback {
-                    override fun onSuccess() {
-                        // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
-                        Log.e("로그인 성공", "")
-                        Log.e("AccessToken ->", NaverIdLoginSDK.getAccessToken().toString())
-                        signInViewModel.socialSignIn(
-                            "naver",
-                            NaverIdLoginSDK.getAccessToken().toString()
-                        )
-                    }
-
-                    override fun onFailure(httpStatus: Int, message: String) {
-                        val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                        val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                    }
-
-                    override fun onError(errorCode: Int, message: String) {
-                        onFailure(errorCode, message)
-                    }
-                }
-                NaverIdLoginSDK.authenticate(context, oauthLoginCallback)
-            }
+//            SignInButton(
+//                "네이버 로그인",
+//                Color(0xFF03C75A),
+//                Color.White,
+//                R.drawable.naver,
+//                30.dp
+//            ) {
+//                val oauthLoginCallback = object : OAuthLoginCallback {
+//                    override fun onSuccess() {
+//                        // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
+//                        Log.e("로그인 성공", "")
+//                        Log.e("AccessToken ->", NaverIdLoginSDK.getAccessToken().toString())
+//                        signInViewModel.socialSignIn(
+//                            "naver",
+//                            NaverIdLoginSDK.getAccessToken().toString()
+//                        )
+//                    }
+//
+//                    override fun onFailure(httpStatus: Int, message: String) {
+//                        val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+//                        val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+//                    }
+//
+//                    override fun onError(errorCode: Int, message: String) {
+//                        onFailure(errorCode, message)
+//                    }
+//                }
+//                NaverIdLoginSDK.authenticate(context, oauthLoginCallback)
+//            }
         }
     }
 }

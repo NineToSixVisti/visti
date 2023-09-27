@@ -46,7 +46,7 @@ class WebViewViewModel @Inject constructor(
 
     val webViewState = WebViewState(
         WebContent.Url(
-            url = "http://j9d102.p.ssafy.io:3000/storybox",
+            url = "https://j9d102.p.ssafy.io/storybox",
             additionalHttpHeaders = emptyMap()
 
         )

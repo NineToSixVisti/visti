@@ -1,16 +1,17 @@
 package com.ssafy.presentation.ui.common
 
 import android.content.Context
-import android.util.Log
+import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ssafy.presentation.MainNav
-import com.ssafy.presentation.MainScreen
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
@@ -32,7 +33,9 @@ import com.ssafy.presentation.ui.user.SignInScreen
 fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
-    context: Context
+    context: Context,
+    pickImageLauncher: ActivityResultLauncher<String>,
+    selectedImageUri: MutableState<Uri?>
     ) {
     NavHost(
         modifier = Modifier,
@@ -43,7 +46,7 @@ fun MainNavHost(
             HomeScreen()
         }
         composable(MainNav.Memory.route) {
-            StoryScreen()
+            StoryScreen(pickImageLauncher = pickImageLauncher, selectedImageUri = selectedImageUri)
         }
         composable(MainNav.Like.route) {
             LikeListScreen()
