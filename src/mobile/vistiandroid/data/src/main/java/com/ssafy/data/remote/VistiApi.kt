@@ -52,5 +52,8 @@ interface VistiApi {
     @GET("/api/story-box/lateststorybox")
     suspend fun getHomeLastStoryBox(): HomeLastStoryBoxResponse
 
+    @POST("/fcmtoken/gettoken")
+    suspend fun uploadFcmToken(@Body fcmToken: String)
+
 
 }

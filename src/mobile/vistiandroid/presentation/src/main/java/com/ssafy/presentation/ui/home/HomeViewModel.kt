@@ -1,14 +1,22 @@
 package com.ssafy.presentation.ui.home
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.home.HomeLastStoryBox
+import com.ssafy.domain.usecase.fcm.FcmUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeLastStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
@@ -31,6 +39,7 @@ class HomeViewModel @Inject constructor(
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
     private val getHomeLastStoryBoxUseCase: GetHomeLastStoryBoxUseCase,
+    private val fcmUseCase: FcmUseCase
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
@@ -86,7 +95,31 @@ class HomeViewModel @Inject constructor(
         getHomeStoryBox()
         getMemberInformation()
         getHomeLastStoryBox()
+        getFcmToken()
     }
+
+
+    fun getFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            // token log 남기기
+            if (task.result != null) {
+                Log.e("TAG", "getFcmToken: ${task.result}", )
+                uploadFcmToken(task.result!!)
+            }
+        })
+//        createNotificationChannel(channel_id, "ecoMate")
+    }
+
+    fun uploadFcmToken(fcmToken: String){
+        viewModelScope.launch {
+            fcmUseCase.uploadFcmToken(fcmToken)
+        }
+    }
+
+
 
     private fun getHomeStory() {
         getHomeStoryUseCase().onEach { result ->
