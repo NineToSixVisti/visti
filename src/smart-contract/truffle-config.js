@@ -47,7 +47,8 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
       // gas: 8500000, // Default gas limit. You can increase or decrease it.
       // gasPrice: 20000000000, // Default is 20 gwei. You can increase or decrease it.
-      websocket: true
+      websocket: true,
+      // from : "put your wallet address for pay gas"
      },
     // Another network with more advanced options...
     // advanced: {
