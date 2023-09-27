@@ -165,7 +165,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
                 .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
-                .sorted((sb1, sb2) -> sb2.getFinishedAt().compareTo(sb1.getFinishedAt())) // 내림차순 정렬
+                .sorted((sb1, sb2) -> sb1.getFinishedAt().compareTo(sb2.getFinishedAt())) // 내림차순 정렬
                 .limit(forMainPage)
                 .map(StoryBoxExposedDTO::of)
                 .toList();
