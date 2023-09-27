@@ -10,7 +10,6 @@ import { ReactComponent as CreateBox } from "../../assets/images/storybox-create
 import { ReactComponent as SearchIcon } from '../../assets/images/search_button.svg'
 import Loading from '../Common/Loading';
 
-
 interface Storybox {
   id: number;
   encryptedId: string;
@@ -29,15 +28,23 @@ const StoryboxHome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
-  const [search, setSerch] = useState("");
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
   const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
   const observer = useRef<IntersectionObserver | null>(null);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSerch(e.target.value)
+    setSearch(e.target.value)
+  }
+
+  // 페이지 초기화, 스토리 박스 초기화, 검색중이라는 true
+  const onSearch = () => {
+    setPage(0); 
+    setStoryboxList(null); 
+    setIsSearching(true);
   }
 
   const lastBoxElementRef = useCallback(
@@ -52,35 +59,65 @@ const StoryboxHome = () => {
     },
     [hasMore]
   );
-  
-  const getStoryboxList = useCallback(async () => {
-    if (page === 0){
-      setIsLoading(true);
-    }
-    try {
-      const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
-      console.log("Returned data:", data);
-      
-      setStoryboxList((prevStoryboxList) => {
+
+    // 스토리 박스 리스트 
+    const getStoryboxList = useCallback(async () => {
+      if (page === 0){
+        setIsLoading(true);
+      }
+      try {
+        const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
+        console.log("스토리 박스 리스트:", data);
+        
+        setStoryboxList((prevStoryboxList) => {
+          if (prevStoryboxList === null) {
+            return [...data.detail.content];
+          } else {
+            return [...prevStoryboxList, ...data.detail.content];
+          }
+        });
+        setHasMore(!data.detail.last);
+      } catch (err) {
+        console.log('스토리박스 GET 중 에러 발생:', err);
+      } finally {
+       if (page === 0){
+        setIsLoading(false);
+       }
+      }
+    }, [page]);
+    
+    // 검색된 스토리 박스 리스트
+    const getSearchStoryboxList = useCallback(async (search : string) => {
+      if (page === 0) {
+        setIsLoading(true);
+      }
+      try {
+        const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
+        console.log("검색된 스토리 박스:", data);
+        if (page ===0) {
+          const newContent = [...data.detail.content];
+          setStoryboxList(newContent);
+        }
+        setStoryboxList((prevStoryboxList) => {
         if (prevStoryboxList === null) {
           return [...data.detail.content];
         } else {
-          return [...prevStoryboxList, ...data.detail.content];
+          // 중복 데이터 제거
+        const newContent = data.detail.content.filter(
+            (item : any) => !prevStoryboxList.some((prevItem) => prevItem.encryptedId === item.encryptedId)
+          );
+          return [...prevStoryboxList, ...newContent];
         }
       });
       setHasMore(!data.detail.last);
     } catch (err) {
-      console.log('스토리박스 GET 중 에러 발생:', err);
-    } finally {
-     if (page === 0){
-      setIsLoading(false);
-     }
-    }
-  }, [page]);
-  
-  useEffect(() => {
-    getStoryboxList();
-  }, [getStoryboxList, page]);
+        console.log('검색된 스토리박스 GET 중 에러 발생:', err);
+      } finally {
+        if (page === 0) {
+          setIsLoading(false);
+        }
+      }
+    }, [page]);
 
   useEffect(() => {
     console.log("Current storyboxList:", storyboxList); 
@@ -94,6 +131,14 @@ const StoryboxHome = () => {
     console.log("Has more:", hasMore); 
   }, [hasMore]);
 
+  useEffect(()=>{
+    if (isSearching) {
+      getSearchStoryboxList(search);
+    } else {
+      getStoryboxList();
+    }
+  },[getStoryboxList, getSearchStoryboxList, page, isSearching, search])
+
   return (
     <StoryboxWWrap>
       <LogoWrap>
@@ -103,7 +148,7 @@ const StoryboxHome = () => {
         <CreateBoxSvg onClick={()=>{navigate("/storybox/join")}}/>
         <SearchWrap>
           <input type="text" value={search} onChange={onChange} />
-          <SearchSvg/>
+          <SearchSvg onClick={onSearch}/>
         </SearchWrap>
       </TopWrap>
       {

@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     const requestInterceptor = authInstance.interceptors.request.use(function (req) {
-      console.log('인터셉터 시작')
+      // console.log('인터셉터 시작')
       setLoading(true);
       return req;
     }, function (error) {
@@ -27,7 +27,7 @@ function App() {
     });
   
     const responseInterceptor = authInstance.interceptors.response.use(function (res) {      
-      console.log('인터셉터 완려')
+      // console.log('인터셉터 완료')
       setLoading(false);
       return res;
     }, function (error) {
@@ -45,7 +45,7 @@ function App() {
   
 
   useEffect(()=>{
-    console.log('loading :', loading);
+    // console.log('loading :', loading);
   },[loading])
 
   return (    
