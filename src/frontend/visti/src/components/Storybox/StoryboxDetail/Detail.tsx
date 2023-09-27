@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
+import { useNavigate } from 'react-router-dom';
 
 interface storyboxDetail {
   name : string;
@@ -17,8 +18,8 @@ interface boxDetailProps {
 }
 
 const Detail : React.FC<boxDetailProps> = ({id}) => {
-
-    const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
+  const navigate = useNavigate();
+  const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
 
   const getStoryboxDetail = useCallback(async () => {
     try{
@@ -32,6 +33,20 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
       console.log('스토리박스 Detial GET 중 에러 발생', err)
     }
   },[id])
+
+  const deleteStorybox = useCallback(async ()=> {
+    try {
+      await authInstance.delete(`story-box/${id}/delete`)
+      console.log('성공적으로 삭제가 완료되었습니다.')
+    } catch(err) {
+      console.log('스토리박스 나가기 중 에러발생', err);
+    } 
+  },[id])
+
+  const storyboxOut = () => {
+    deleteStorybox();
+    navigate('/storybox', { replace : true })
+  }
 
   useEffect(()=>{
     getStoryboxDetail();
@@ -55,6 +70,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
         </p>
        </ExplainBox>
        <LinkCreate>링크 생성</LinkCreate>
+       <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
     </DetailWrap>
   )
 }
@@ -151,11 +167,17 @@ const LinkCreate = styled.div`
   cursor: pointer;
 `
 
-// const LinkBox = styled.div`
-//   margin-top: 20px;
-//   width: 100%;
-//   height: 30px;
-//   background-color: lightblue;
-// `
+const BoxOut = styled.div`
+  margin-top : 20px;
+  width: 100%;
+  height: 44px;
+  border-radius: 6px;
+  background-color: #717070;
+  color : #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`
 
 export default Detail

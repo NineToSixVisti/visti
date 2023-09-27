@@ -24,7 +24,6 @@ type DivProps = {
   bgImage ?: string;
 }
 
-
 const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{id:string}>();
