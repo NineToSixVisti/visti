@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 interface storyboxDetail {
   name : string;
@@ -21,12 +22,43 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   const navigate = useNavigate();
   const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
 
+  const [encryptedText, setEncryptedText] = useState('');
+
+  // 만료 날짜를 가져오기 위함 함수
+  const getExpirationData = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2);
+    
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+
+  // 링크에 포함되어야 하는 정보
+  const data = {
+    storyboxId : id,
+    expirationDay : getExpirationData()
+  }
+
+  const salt = process.env.REACT_APP_SECRET_KEY!;
+
+  // 암호화
+  const encrypt = (data : any) => {
+    if (!data) return '';
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), salt).toString(); 
+    // console.log(encrypted);
+    setEncryptedText(encrypted);
+    return encrypted
+  }
+  
   const getStoryboxDetail = useCallback(async () => {
     try{
       const data = await authInstance.get(`story-box/${id}/detail`)
       if (data) {
         setStoryboxDetail(data.data.detail);
-        console.log(data.data.detail);
+        // console.log(data.data.detail);
       }
     }
     catch (err) {
@@ -43,8 +75,6 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
       console.log('스토리박스 나가기 중 에러발생', err);
     } 
   },[id])
-
-  //
 
   const storyboxOut = () => {
     deleteStorybox();
@@ -72,7 +102,21 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
           {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
         </p>
        </ExplainBox>
-       <LinkCreate>링크 생성</LinkCreate>
+       <StoryboxLink>
+        <p>
+          {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`}
+          {(() => {
+            console.log(`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`);
+            return null;
+          })()} */}
+          {`http://localhost:3000/invite/${encryptedText}`}
+          {(() => {
+            console.log(`http://localhost:3000/invite/${encryptedText}`);
+            return null;
+          })()}
+        </p>
+       </StoryboxLink>
+       <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
        <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
     </DetailWrap>
   )
@@ -144,16 +188,29 @@ const StoryBox = styled.div`
 const ExplainBox = styled.div`
   margin-top: 20px;
   width: 100%;
-  /* height: 73px; */
   border-radius: 10px;
   border: 2px solid #DBDBDB;
   white-space: pre-line;
-  /* background-color: lightsalmon; */
 
   >p {
     margin: 0;
     padding: 10px;
     font-size: 16px;
+  }
+`
+const StoryboxLink = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  border-bottom: 2px solid #DBDBDB;
+  white-space: pre-line;
+
+  >p {
+    margin: 0;
+    padding: 10px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `
 

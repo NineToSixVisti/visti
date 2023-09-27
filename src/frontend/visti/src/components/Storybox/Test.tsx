@@ -7,16 +7,19 @@ const Test = () => {
     const [decryptText, setDecryptText] = useState('');
 
     const data = {
-      id : '8Zh7RQ5VanVkALmBxBYBxw',
+      storyboxId : '8Zh7RQ5VanVkALmBxBYBxw',
       expirationDay : '2023-09-30'
     }
-  
-    const salt = 'secret key';
+    
+    // Non-null assertion operator (!) 사용
+    // 이 연산자는 해당 값이 절대 null 또는 undefined가 아님을 단언
+    const salt = process.env.REACT_APP_SECRET_KEY!;
   
     // 암호화
     const encrypt = (data : any) => {
       if (!data) return '';
       const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), salt).toString(); 
+      console.log(encrypted);
       setEncryptedText(encrypted);
       return encrypted
     }
@@ -31,7 +34,8 @@ const Test = () => {
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
         const parseData = JSON.parse(decrypted); 
         setDecryptText(parseData);
-        console.log(decryptText);
+        // setDecryptText(decrypted);
+        console.log(parseData);
         return parseData;
       } catch (err) {
         console.log('복호화시 에러', err);
