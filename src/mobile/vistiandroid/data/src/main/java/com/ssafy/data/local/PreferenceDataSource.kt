@@ -16,6 +16,7 @@ class PreferenceDataSource @Inject constructor(
         const val COMPLETED_ATTENDANCE_TIME = "attendance"
         const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
+        const val MEMBER_TYPE = "member_type"
     }
 
     private fun getPreference(context: Context): SharedPreferences {

@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.setting
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.kakao.sdk.user.UserApiClient
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiDialog
 import com.ssafy.presentation.ui.setting.component.BackToolbar
@@ -82,22 +80,13 @@ fun MemberAccountScreen(
                     onConfirmation = {
                         signOutState.value = false
                         viewModel.deleteMember()
-                        viewModel.removeToken()
 
-                        UserApiClient.instance.unlink { error ->
-                            if (error != null) {
-                                Log.e("Unlink Error", "로그아웃 실패", error)
-                            } else {
-                                Log.i("Unlink Success", "로그아웃 성공. 다시 로그인 해야 합니다.")
-                            }
-                        }
-
-                        navController.navigate(SignInNav.SignIn.route) {
-                            popUpTo(navController.graph.id) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+//                        navController.navigate(SignInNav.SignIn.route) {
+//                            popUpTo(navController.graph.id) {
+//                                inclusive = true
+//                            }
+//                            launchSingleTop = true
+//                        }
                     },
                     "회원 탈퇴하시겠습니까?",
                     isDarkTheme

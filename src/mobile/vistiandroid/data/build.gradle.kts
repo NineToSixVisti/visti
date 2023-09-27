@@ -57,4 +57,10 @@ dependencies {
     val pagingVersion = "3.1.1"
     implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+
+    //카카오 로그인
+    implementation(Dependencies.KAKAO)
+
+    //네이버 로그인
+    implementation(Dependencies.NAVER)
 }

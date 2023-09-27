@@ -53,6 +53,6 @@ interface VistiApi {
     @GET("/api/story-box/lateststorybox")
     suspend fun getHomeLastStoryBox(): HomeLastStoryBoxResponse
 
-    @GET("/api/member/withdraw")
+    @POST("/api/member/withdraw")
     suspend fun signOut(): BaseResponse
 }
