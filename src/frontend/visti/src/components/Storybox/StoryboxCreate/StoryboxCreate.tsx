@@ -150,6 +150,7 @@ const StoryboxCreate = () => {
     return object;
   };
 
+  // 이미지를 file 형태로 변경
   const fetchImageAndSetFile = async (imageUrl: string) => {
     try {
       const response = await fetch(imageUrl);
@@ -219,9 +220,9 @@ const StoryboxCreate = () => {
     getStoryboxInfo();
   },[getStoryboxInfo])
 
-  useEffect(()=>{
-    console.log(groupImage);
-  },[groupImage])
+  // useEffect(()=>{
+  //   console.log(groupImage);
+  // },[groupImage])
 
   return (
     <Wrap>

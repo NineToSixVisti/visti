@@ -29,9 +29,9 @@ const StoryboxDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{id:string}>();
   const [tap, setTap] = useState<string>('story');
-  
-  const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
   const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
 
   useEffect(() => {
@@ -62,15 +62,17 @@ const StoryboxDetail: React.FC = () => {
   }, [storyboxInfo.finishedAt]);
 
   const getStoryboxInfo = useCallback(async () => {
+    setIsLoading(true);
     try  {
       const data = await authInstance.get(`story-box/${id}/info`)
       if (data) {
         setStoryboxInfo(data.data.detail);
-        console.log(data.data.detail)
+        // console.log(data.data.detail);
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.log('스토리박스 Info GET 중 에러 발생', err)
+    } finally {
+      setIsLoading(false);
     }
   }, [id]);
 
@@ -97,17 +99,24 @@ const StoryboxDetail: React.FC = () => {
         <FirstTop>
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
           <p>
-          {storyboxInfo.name.length > 14 ? `${storyboxInfo.name.substring(0, 14)}...` : storyboxInfo.name}</p>
+          {storyboxInfo.name.length > 12 ? `${storyboxInfo.name.substring(0, 12)}...` : storyboxInfo.name}</p>
           { storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join", {state : { storyboxId : id }})}}/> } 
-        </FirstTop>
-        <TopMian>
-          <BgImageDiv bgImage={storyboxInfo.boxImgPath}></BgImageDiv>
-          <div>
-            <p>스토리 생성 가능 시간</p>
-            <p>{remainingTime}</p>
-            <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
-          </div>
-        </TopMian>
+        </FirstTop> 
+          <TopMian>
+            <BgImageDiv bgImage={storyboxInfo.boxImgPath}></BgImageDiv>
+            {
+              isLoading ? 
+              <LoadingWrap>
+                <p>Loading...</p>
+              </LoadingWrap>
+              :
+              <div>
+                <p>스토리 생성 가능 시간</p>
+                <p>{remainingTime}</p>
+                <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
+              </div>
+            }
+          </TopMian>
       </TopWrap>
       <MainWrap>
         <Tap 
@@ -194,6 +203,18 @@ const GoBackSvg = styled(GoBack)`
 
 const ModifySvg = styled(Modify)`
   margin-right: 10px;
+`
+
+const LoadingWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #000;
+  font-weight: 600;
+  font-size: 30px;
+  z-index: 999;
 `
 
 export default StoryboxDetail
