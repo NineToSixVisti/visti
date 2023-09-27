@@ -30,7 +30,7 @@ const StoryboxHome = () => {
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSearching, setIsSearching] = useState(true);
+  // const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
   const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
@@ -44,7 +44,7 @@ const StoryboxHome = () => {
   const onSearch = () => {
     setPage(0); 
     setStoryboxList(null); 
-    setIsSearching(true);
+    // setIsSearching(true);
   }
 
   const lastBoxElementRef = useCallback(
@@ -61,30 +61,30 @@ const StoryboxHome = () => {
   );
 
     // 스토리 박스 리스트 
-    const getStoryboxList = useCallback(async () => {
-      if (page === 0){
-        setIsLoading(true);
-      }
-      try {
-        const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
-        console.log("스토리 박스 리스트:", data);
+    // const getStoryboxList = useCallback(async () => {
+    //   if (page === 0){
+    //     setIsLoading(true);
+    //   }
+    //   try {
+    //     const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
+    //     console.log("스토리 박스 리스트:", data);
         
-        setStoryboxList((prevStoryboxList) => {
-          if (prevStoryboxList === null) {
-            return [...data.detail.content];
-          } else {
-            return [...prevStoryboxList, ...data.detail.content];
-          }
-        });
-        setHasMore(!data.detail.last);
-      } catch (err) {
-        console.log('스토리박스 GET 중 에러 발생:', err);
-      } finally {
-       if (page === 0){
-        setIsLoading(false);
-       }
-      }
-    }, [page]);
+    //     setStoryboxList((prevStoryboxList) => {
+    //       if (prevStoryboxList === null) {
+    //         return [...data.detail.content];
+    //       } else {
+    //         return [...prevStoryboxList, ...data.detail.content];
+    //       }
+    //     });
+    //     setHasMore(!data.detail.last);
+    //   } catch (err) {
+    //     console.log('스토리박스 GET 중 에러 발생:', err);
+    //   } finally {
+    //    if (page === 0){
+    //     setIsLoading(false);
+    //    }
+    //   }
+    // }, [page]);
     
     // 검색된 스토리 박스 리스트
     const getSearchStoryboxList = useCallback(async (search : string) => {
@@ -132,12 +132,8 @@ const StoryboxHome = () => {
   }, [hasMore]);
 
   useEffect(()=>{
-    if (isSearching) {
       getSearchStoryboxList(search);
-    } else {
-      getStoryboxList();
-    }
-  },[getStoryboxList, getSearchStoryboxList, page, isSearching, search])
+  },[getSearchStoryboxList, page, search])
 
   return (
     <StoryboxWWrap>

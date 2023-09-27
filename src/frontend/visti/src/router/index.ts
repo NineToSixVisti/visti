@@ -5,6 +5,8 @@ import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetail
 import StoryHome from "../components/Story/StoryCreate/StoryHome";
 import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 import StoryDetail from "../components/Story/StoryDetail/StoryDetail";
+import test from "../components/Storybox/Test";
+
 
 const routes = [
   {
@@ -30,6 +32,10 @@ const routes = [
   {
     path : "/storydetail/:id",
     Component : StoryDetail
+  },
+  {
+    path : "/test",
+    Component : test,
   }
 ]
 

@@ -34,6 +34,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
     }
   },[id])
 
+  // 스토리 박스 나가기
   const deleteStorybox = useCallback(async ()=> {
     try {
       await authInstance.delete(`story-box/${id}/delete`)
@@ -42,6 +43,8 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
       console.log('스토리박스 나가기 중 에러발생', err);
     } 
   },[id])
+
+  //
 
   const storyboxOut = () => {
     deleteStorybox();
