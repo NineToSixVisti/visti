@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import CryptoJS from 'crypto-js';
+import { ReactComponent as Visti } from "../../assets/images/Visti-lightpink.svg"
 
 const InviteCheck = () => {
   // 비구조화 할당으로 파리미터 값 가져옴.
   const { encryptedData } = useParams();
-  console.log(encryptedData);
+  const decodedData = (window.atob as any)(encryptedData); // 디코딩
+ // 디코딩을 진행
+  console.log(decodedData);
 
   const [decryptText, setDecryptText] = useState('');
   const salt = process.env.REACT_APP_SECRET_KEY!;
@@ -52,15 +55,22 @@ const InviteCheck = () => {
   }
 
   return (
-    <Wrap>
-      <button onClick={()=>{checkAndNavigate(encryptedData)}}>확인</button>
+    <Wrap>  
+      <button onClick={()=>{checkAndNavigate(decodedData)}}>확인</button>
+      <Vistisvg/>
     </Wrap>
   )
 }
 
 const Wrap = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FFF1F0;
+`
+
+const Vistisvg = styled(Visti)`
+  width: 232px;
+  height: 107px;
 `
 
 export default InviteCheck

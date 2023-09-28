@@ -48,8 +48,9 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   const encrypt = (data : any) => {
     if (!data) return '';
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), salt).toString(); 
+    const baseEnrypted = btoa(encrypted) // base64로 인코딩 (특수기호(/) 때문에)
     // console.log(encrypted);
-    setEncryptedText(encrypted);
+    setEncryptedText(baseEnrypted);
     return encrypted
   }
   
@@ -85,6 +86,10 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
     getStoryboxDetail();
   },[getStoryboxDetail])
 
+  useEffect(()=>{
+    console.log(`http://localhost:3000/invite/${encryptedText}`);
+  },[encryptedText])
+
   return (
     <DetailWrap>
        <MemberStoryWrap>
@@ -102,20 +107,16 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
           {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
         </p>
        </ExplainBox>
-       <StoryboxLink>
-        <p>
-          {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`}
-          {(() => {
-            console.log(`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`);
-            return null;
-          })()} */}
-          {`http://localhost:3000/invite/${encryptedText}`}
-          {(() => {
-            console.log(`http://localhost:3000/invite/${encryptedText}`);
-            return null;
-          })()}
-        </p>
-       </StoryboxLink>
+       {
+        encryptedText ? 
+          <StoryboxLink>
+            <p>
+              {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`} */}
+              {`http://localhost:3000/invite/${encryptedText}`}
+            </p>
+          </StoryboxLink>
+        : null
+       }
        <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
        <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
     </DetailWrap>
