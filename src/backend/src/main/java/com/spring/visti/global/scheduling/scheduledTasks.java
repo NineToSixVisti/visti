@@ -8,6 +8,7 @@ import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.global.fcm.service.FcmService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static java.time.LocalDate.now;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class scheduledTasks {
 
     private final StoryBoxRepository storyBoxRepository;
@@ -29,11 +31,11 @@ public class scheduledTasks {
     private final FcmService fcmService;
 
     @Transactional
-    @Scheduled(cron = "0 40 * * * ?") // 매일 자정에 실행
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
-        
+
         // 블라인드 여부 업데이트
         LocalDate now = now();
 
