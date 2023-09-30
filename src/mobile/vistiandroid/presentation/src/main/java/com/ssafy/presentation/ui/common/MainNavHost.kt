@@ -1,6 +1,7 @@
 package com.ssafy.presentation.ui.common
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,9 +35,9 @@ fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
     context: Context,
-    pickImageLauncher: ActivityResultLauncher<String>,
-    selectedImageUri: MutableState<Uri?>
-    ) {
+    pickImageLauncher: ActivityResultLauncher<Intent>,
+    selectedImageUri: Uri?
+) {
     NavHost(
         modifier = Modifier,
         navController = navController,

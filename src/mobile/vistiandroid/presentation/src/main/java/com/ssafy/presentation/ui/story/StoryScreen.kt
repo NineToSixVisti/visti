@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.provider.MediaStore
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.web.AccompanistWebChromeClient
@@ -26,8 +26,8 @@ import com.google.accompanist.web.WebView
 @Composable
 fun StoryScreen(
     viewModel: WebViewViewModel = hiltViewModel(),
-    pickImageLauncher: ActivityResultLauncher<String>,
-    selectedImageUri: MutableState<Uri?>
+    pickImageLauncher: ActivityResultLauncher<Intent>,
+    selectedImageUri: Uri?
 ) {
 
     Scaffold { innerPadding ->
@@ -53,34 +53,20 @@ fun StoryScreen(
                             loadWithOverviewMode = true
                         }
 
-                        webChromeClient = object : WebChromeClient() {
-                            override fun onShowFileChooser(
-                                webView: WebView,
-                                filePathCallback: ValueCallback<Array<Uri>>,
-                                fileChooserParams: FileChooserParams
-                            ): Boolean {
-                                try {
-                                    pickImageLauncher.launch("image/*")
-                                    selectedImageUri.value?.let {
-                                        filePathCallback.onReceiveValue(arrayOf(it))
-                                    } ?: run {
-                                        filePathCallback.onReceiveValue(null)
-                                    }
-                                    selectedImageUri.value =
-                                        null  // Reset the state after using the URI
-                                } catch (e: ActivityNotFoundException) {
-                                    filePathCallback.onReceiveValue(null)
-                                    return false
-                                }
-                                return true
-                            }
-                        }
-
                         addJavascriptInterface(
                             object {
                                 @JavascriptInterface
                                 fun getToken(): String {
                                     return viewModel.accessToken.value.accessToken
+                                }
+
+                                @JavascriptInterface
+                                fun openGallery() {
+                                    // 갤러리 화면을 열기 위한 Intent를 생성
+                                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+                                    // 결과 처리를 위한 ActivityResultLauncher를 호출하여 갤러리 화면을 엽니다.
+                                    pickImageLauncher.launch(intent)
                                 }
                             },
                             "Android"

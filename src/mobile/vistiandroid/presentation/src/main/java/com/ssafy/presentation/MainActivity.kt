@@ -1,7 +1,9 @@
 package com.ssafy.presentation
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -33,12 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val pickImageContract =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            selectedImageUri.value = uri
-        }
-
-    val selectedImageUri = mutableStateOf<Uri?>(null)
+    private var selectedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     }
-                    MainScreen(this, pickImageContract, selectedImageUri)
+                    MainScreen(this, galleryLauncher, selectedImageUri)
                 }
             }
         }
@@ -79,13 +76,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // 파일 선택 결과 처리를 위한 ActivityResultLauncher
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedImageUri = data?.data
+        }
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    context: Context, pickImageLauncher: ActivityResultLauncher<String>,
-    selectedImageUri: MutableState<Uri?>
+    context: Context, pickImageLauncher: ActivityResultLauncher<Intent>,
+    selectedImageUri: Uri?
 ) {
     val mainNavController = rememberNavController()
 
