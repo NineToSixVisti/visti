@@ -9,15 +9,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.ui.theme.NavigationBackgroundColor
 import com.ssafy.presentation.ui.theme.SecondaryColor
@@ -25,15 +24,17 @@ import com.ssafy.presentation.ui.theme.White
 
 
 @Composable
-fun MainBottomNavigationBar(navController: NavHostController) {
+fun MainBottomNavigationBar(
+    navController: NavHostController,
+    navBackStackEntry: NavBackStackEntry?
+) {
     val bottomNavigationItems = listOf(
         MainNav.Home,
         MainNav.Memory,
         MainNav.Like,
         MainNav.Profile,
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+
 
     NavigationBar(
         tonalElevation = 0.dp,
@@ -60,7 +61,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
                 ),
                 label = { Text(text = item.title) },
                 icon = { Icon(painter = painterResource(id = item.icon), item.route) },
-                selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = {
                     navController.navigate(item.route)
                 },
