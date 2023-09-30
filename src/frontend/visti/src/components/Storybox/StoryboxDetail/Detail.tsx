@@ -48,7 +48,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   const encrypt = (data : any) => {
     if (!data) return '';
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), salt).toString(); 
-    const baseEnrypted = btoa(encrypted) // base64로 인코딩 (특수기호(/) 때문에)
+    const baseEnrypted = btoa(encrypted) // base64로 인코딩(특수기호(/) 때문에)
     // console.log(encrypted);
     setEncryptedText(baseEnrypted);
     return encrypted

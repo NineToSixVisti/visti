@@ -16,6 +16,15 @@ import CheckModal from './CheckModal';
 import { authInstance } from '../../../apis/utils/instance';
 dayjs.locale('ko');
 
+// window 객체 타입 확장
+interface MyWindow extends Window {
+  Android?: {
+    openGallery: () => void;
+  };
+}
+
+declare var window: MyWindow;
+
 const StoryboxCreate = () => { 
   const navigate = useNavigate();
   const location = useLocation(); // navigate로 보낸 stoyryboxId를 받기 위해 사용
@@ -40,9 +49,22 @@ const StoryboxCreate = () => {
 
   // 사진을 클릭했을때 input 창 반응
   const ImageClick = () => {
-    const inputElement = document.getElementById("ImageInput");
-    inputElement?.click();
-  }
+    if (window.Android) {
+        if (window.Android.openGallery) {
+          window.Android.openGallery();
+          console.log('openGallety 호출 잘됨')
+        } else {
+          const inputElement = document.getElementById("ImageInput");
+          inputElement?.click();
+          console.log('openGallety 호출 안됨')
+        }
+    } else {
+      const inputElement = document.getElementById("ImageInput");
+      inputElement?.click();
+      console.log('안드로이드 접근 안됨')
+    }
+}
+
 
   // 이미지를 변경할 때의 로직
   const ImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
