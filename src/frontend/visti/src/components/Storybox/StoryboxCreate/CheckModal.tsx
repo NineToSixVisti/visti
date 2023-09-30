@@ -9,14 +9,15 @@ interface CheckModalProps {
   groupDetail: string;
   disclosure: boolean;
   value: Dayjs | null;
+  isEditMode : boolean;
   CloseModal: () => void;
   handleSubmit: () => Promise<void>;
   postStorybox: (formData: FormData) => Promise<void>;
   formDataToObject: (formData: FormData) => any;
 }
 
-const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, groupDetail, disclosure, value,
-    CloseModal, handleSubmit, postStorybox}) => {
+const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, groupDetail, disclosure, value, isEditMode,
+    CloseModal, handleSubmit}) => {
   if (!isModalOpen) return null;
 
   return (
@@ -24,7 +25,13 @@ const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, g
       <ModalContainer>
         <MainModal>
           <img src={process.env.PUBLIC_URL +"/assets/Visti_icon.png"} alt="Visti Logo"/>
-          <p>스토리 박스를 생성하시겠습니까?</p>
+          <p>
+            {
+              isEditMode ? 
+              `스토리 박스를 수정하시겠습니까?` :
+              `스토리 박스를 생성하시겠습니까?` 
+            }
+          </p>
         </MainModal>
         <FootModal>
           <div onClick={CloseModal}>취소</div>

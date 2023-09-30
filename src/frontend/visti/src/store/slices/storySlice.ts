@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface StorySlice {
-  encryptedId : string
+  encryptedId : string;
+  file : Blob | null;
 };
 
 const initialState : StorySlice = {
   encryptedId : '',
+  file : null,
 }
 
 const storySlice = createSlice({
@@ -15,8 +17,11 @@ const storySlice = createSlice({
     setStoryboxId : (state, action : PayloadAction<string>) => {
       state.encryptedId = action.payload;
     },
+    setStoryboxFile : (state, action : PayloadAction<Blob>) => {
+      state.file = action.payload
+    }
   },
 });
 
-export const { setStoryboxId } = storySlice.actions;
+export const { setStoryboxId, setStoryboxFile } = storySlice.actions;
 export default storySlice.reducer;
