@@ -1,7 +1,19 @@
 package com.ssafy.presentation.ui.common
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -36,6 +48,7 @@ import com.ssafy.presentation.ui.theme.SecondaryColor
 import com.ssafy.presentation.ui.theme.White
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainBottomNavigationBar(
     navController: NavHostController,
@@ -50,7 +63,11 @@ fun MainBottomNavigationBar(
 
     var visibleBottomBar by remember { mutableStateOf(false) }
 
-    if (visibleBottomBar) {
+    AnimatedVisibility(
+        visible = visibleBottomBar,
+        enter = scaleIn(),
+        exit = scaleOut()
+    ) {
         NavigationBar(
             tonalElevation = 0.dp,
             modifier = Modifier
@@ -103,7 +120,12 @@ fun MainBottomNavigationBar(
                 selected = false
             )// 종료 네비게이션 아이템
         }
-    } else {
+    }
+    AnimatedVisibility(
+        visible = !visibleBottomBar,
+        enter = scaleIn(),
+        exit = scaleOut()
+    ) {
         Column(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom,
@@ -126,5 +148,81 @@ fun MainBottomNavigationBar(
             }
         }
     }
+//    if (visibleBottomBar) {
+//        NavigationBar(
+//            tonalElevation = 0.dp,
+//            modifier = Modifier
+//                .padding(15.dp)
+//                .navigationBarsPadding()
+//                .graphicsLayer {
+//                    shape = RoundedCornerShape(
+//                        40.dp
+//                    )
+//                    clip = true
+//                    shadowElevation = 10f
+//                },
+//            containerColor = NavigationBackgroundColor
+//        ) {
+//            bottomNavigationItems.forEach { item ->
+//                NavigationBarItem(
+//                    colors = NavigationBarItemDefaults.colors(
+//                        selectedIconColor = SecondaryColor,
+//                        selectedTextColor = SecondaryColor,
+//                        unselectedIconColor = White,
+//                        unselectedTextColor = White,
+//                        indicatorColor = Color.Transparent
+//                    ),
+//                    label = { Text(text = item.title) },
+//                    icon = { Icon(painter = painterResource(id = item.icon), item.route) },
+//                    selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true,
+//                    onClick = {
+//                        navController.navigate(item.route)
+//                    },
+//                    alwaysShowLabel = false
+//                )
+//            }
+//            NavigationBarItem(
+//                colors = NavigationBarItemDefaults.colors(
+//                    selectedIconColor = SecondaryColor,
+//                    selectedTextColor = SecondaryColor,
+//                    unselectedIconColor = White,
+//                    unselectedTextColor = White,
+//                    indicatorColor = Color.Transparent
+//                ),
+//                icon = {
+//                    Icon(
+//                        imageVector = Icons.Default.Close,
+//                        contentDescription = "navigation close"
+//                    )
+//                },
+//                onClick = {
+//                    visibleBottomBar = !visibleBottomBar
+//                },
+//                selected = false
+//            )// 종료 네비게이션 아이템
+//        }
+//    } else {
+//        Column(
+//            horizontalAlignment = Alignment.End,
+//            verticalArrangement = Arrangement.Bottom,
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            FloatingActionButton(
+//                containerColor = PrimaryColor,
+//                contentColor = White,
+//                onClick = { visibleBottomBar = !visibleBottomBar },
+//                modifier = Modifier
+//                    .padding(15.dp)
+//                    .navigationBarsPadding(),
+//                shape = RoundedCornerShape(40.dp)
+//            ) {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.baseline_category_24),
+//                    contentDescription = "navigation",
+//                    modifier = Modifier.padding(25.dp)
+//                )
+//            }
+//        }
+//    }
 
 }
