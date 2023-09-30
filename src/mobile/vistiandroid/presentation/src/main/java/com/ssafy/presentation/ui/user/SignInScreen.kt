@@ -65,13 +65,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val TAG = "SignInScreen"
-
-@Composable
-fun UserScreen() {
-
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(

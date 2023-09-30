@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
     fun startTimer() = viewModelScope.launch {
         val updateIntervalMillis = 1000L
         while (true) {
-            val sdf = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+            val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             val currentTimeString = sdf.format(Calendar.getInstance().time)
             timerText.value = currentTimeString
             delay(updateIntervalMillis)
