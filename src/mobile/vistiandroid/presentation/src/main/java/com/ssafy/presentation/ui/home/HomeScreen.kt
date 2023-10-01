@@ -286,7 +286,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
 //                    .aspectRatio(3f / 2f)
 //                    .fillMaxSize()
 //            )
-            loadImage(homeLastStoryBox.boxImgPath)
+
             Image(
                 painter = loadImage(imageUrl = memberInformation.profilePath.toString()),
                 contentDescription = "home profile image",
@@ -295,7 +295,6 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                     .clip(CircleShape)
                     .size(40.dp)
                     .border(2.dp, Color.Black, CircleShape)
-
             )
             Row() {
                 Image(
