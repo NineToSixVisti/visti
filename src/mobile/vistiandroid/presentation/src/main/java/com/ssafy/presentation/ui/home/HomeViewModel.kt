@@ -126,11 +126,7 @@ class HomeViewModel @Inject constructor(
                             targetCalendar.timeInMillis - currentCalendar.timeInMillis
 
                         initialTotalTimeInMillis = timeDiffInMillis
-
-                        if (timeDiffInMillis < 0) {
-                            timeDiffInMillis = 0
-                        }
-                        if (initialTotalTimeInMillis > 345600000) {//4일
+                        if (initialTotalTimeInMillis > 345600000 || initialTotalTimeInMillis < 0) {//4일
                             startTimer()
                         } else {
                             _homeLastStoryBoxState.value =
