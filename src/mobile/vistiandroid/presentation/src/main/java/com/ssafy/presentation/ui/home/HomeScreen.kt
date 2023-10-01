@@ -303,7 +303,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                     contentDescription = "home toolbar pencil"
                 )
                 Text(text = "x", color = Color.Black)
-                Text(text = memberInformation.dailyStory, color = Color.Black)
+                Text(text = memberInformation.dailyStory.toString(), color = Color.Black)
             }
         }
         Text(
