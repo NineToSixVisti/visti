@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.home.HomeLastStoryBox
-import com.ssafy.domain.usecase.memberinformation.GetHomeLastStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
@@ -30,7 +29,6 @@ class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
-    private val getHomeLastStoryBoxUseCase: GetHomeLastStoryBoxUseCase,
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
@@ -66,7 +64,7 @@ class HomeViewModel @Inject constructor(
             override fun onFinish() {
                 timerText.value = initialTotalTimeInMillis.timeFormat()
                 isPlaying.value = false
-                getHomeLastStoryBox()
+                getHomeStoryBox()
             }
         }.start()
     }
@@ -77,6 +75,9 @@ class HomeViewModel @Inject constructor(
             val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             val currentTimeString = sdf.format(Calendar.getInstance().time)
             timerText.value = currentTimeString
+            // TODO 만약에 밤 12시가 지나면 다시 호출해야할지도?
+            if (currentTimeString == "00:00:00")
+                getHomeStoryBox()
             delay(updateIntervalMillis)
         }
     }
@@ -85,7 +86,7 @@ class HomeViewModel @Inject constructor(
         getHomeStory()
         getHomeStoryBox()
         getMemberInformation()
-        getHomeLastStoryBox()
+
     }
 
     private fun getHomeStory() {
@@ -113,6 +114,37 @@ class HomeViewModel @Inject constructor(
                 is Resource.Success -> {
                     _homeStoryBoxState.value =
                         HomeStoryBoxState(storyBoxList = result.data ?: emptyList())
+
+                    if (_homeStoryBoxState.value.storyBoxList.isNotEmpty()) {
+                        val lastStoryBox = _homeStoryBoxState.value.storyBoxList[0]
+                        val currentCalendar = Calendar.getInstance()
+                        val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+                        val targetCalendar = Calendar.getInstance()
+                        targetCalendar.time =
+                            sdf.parse(lastStoryBox.finishAt) ?: Calendar.getInstance().time
+                        var timeDiffInMillis =
+                            targetCalendar.timeInMillis - currentCalendar.timeInMillis
+
+                        initialTotalTimeInMillis = timeDiffInMillis
+
+                        if (timeDiffInMillis < 0) {
+                            timeDiffInMillis = 0
+                        }
+                        if (initialTotalTimeInMillis > 345600000) {//4일
+                            startTimer()
+                        } else {
+                            _homeLastStoryBoxState.value =
+                                HomeLastStoryBoxState(
+                                    storyBox = HomeLastStoryBox(
+                                        id = lastStoryBox.id,
+                                        name = lastStoryBox.name
+                                    )
+                                )
+                            startCountDownTimer()
+                        }
+                    } else {
+                        startTimer()
+                    }
                 }
 
                 is Resource.Error -> {
@@ -126,32 +158,63 @@ class HomeViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+//    suspend fun getHomeLastStoryBox(): HomeLastStoryBox {
+//        val response = api.getHomeStoryBox().detail
+//
+//        val currentCalendar = Calendar.getInstance()
+//        if (response.size!=0) {
+//            val lastStoryBoxDto = response[0]// TODO 하드코딩 고치기
+//            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//            val targetCalendar = Calendar.getInstance()
+//            targetCalendar.time = sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
+//
+//            var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
+//
+//            if (timeDiffInMillis < 0) {
+//                timeDiffInMillis = 0
+//            }
+//
+//            return HomeLastStoryBox(
+//                lastStoryBoxDto.id,
+//                lastStoryBoxDto.encryptedId,
+//                lastStoryBoxDto.boxImgPath,
+//                lastStoryBoxDto.name,
+//                lastStoryBoxDto.createdAt,
+//                timeDiffInMillis,
+//                lastStoryBoxDto.blind
+//            )
+//        }
+//
+//        currentCalendar.timeInMillis
+//
+//        return HomeLastStoryBox(finishAt = currentCalendar.timeInMillis)
+//    }
 
-    private fun getHomeLastStoryBox() {
-        getHomeLastStoryBoxUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _homeLastStoryBoxState.value =
-                        HomeLastStoryBoxState(storyBox = result.data ?: HomeLastStoryBox())
-                    initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
-                    if (result.data!!.id != -1)
-                        startCountDownTimer()
-                    else
-                        startTimer()
-
-                }
-
-                is Resource.Error -> {
-                    _homeLastStoryBoxState.value =
-                        HomeLastStoryBoxState(error = result.message ?: "An error occurred")
-                }
-
-                is Resource.Loading -> {
-                    _homeLastStoryBoxState.value = HomeLastStoryBoxState(isLoading = true)
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
+//    private fun getHomeLastStoryBox() {
+//        getHomeLastStoryBoxUseCase().onEach { result ->
+//            when (result) {
+//                is Resource.Success -> {
+//                    _homeLastStoryBoxState.value =
+//                        HomeLastStoryBoxState(storyBox = result.data ?: HomeLastStoryBox())
+//                    initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
+//                    if (result.data!!.id != -1)
+//                        startCountDownTimer()
+//                    else
+//                        startTimer()
+//
+//                }
+//
+//                is Resource.Error -> {
+//                    _homeLastStoryBoxState.value =
+//                        HomeLastStoryBoxState(error = result.message ?: "An error occurred")
+//                }
+//
+//                is Resource.Loading -> {
+//                    _homeLastStoryBoxState.value = HomeLastStoryBoxState(isLoading = true)
+//                }
+//            }
+//        }.launchIn(viewModelScope)
+//    }
 
 
     private fun getMemberInformation() {

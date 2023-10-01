@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,6 +59,7 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
@@ -67,6 +69,7 @@ fun HomeScreen(
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
+
 
     when {
         homeStorySate.error.isNotBlank() -> {
@@ -90,6 +93,7 @@ fun HomeScreen(
                 toolbar = {
                     Box(
                         modifier = Modifier
+
                             .fillMaxSize()
                             .height(540.dp),
                     ) {
@@ -262,7 +266,10 @@ fun HomeContentDes(memberInformation: Member) {
 }
 
 @Composable
-fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeViewModel) {
+fun HomeToolBar(
+    progress: CollapsingToolbarScaffoldState,
+    homeViewModel: HomeViewModel,
+) {
 
     val homeLastStoryBox = homeViewModel.homeLastStoryBoxState.value.storyBox
     val memberInformation = homeViewModel.memberInformation.value.memberInformation

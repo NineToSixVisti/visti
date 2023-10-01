@@ -49,8 +49,4 @@ interface VistiApi {
     @GET("/api/story-box/mainpage")
     suspend fun getHomeStoryBox(): HomeStoryBoxResponse
 
-    @GET("/api/story-box/lateststorybox")
-    suspend fun getHomeLastStoryBox(): HomeLastStoryBoxResponse
-
-
 }

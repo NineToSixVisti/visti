@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(mainNavController, this, MainNav.Home.route)
                         }
                     }
-                    // MainScreen(this)
+
                 }
             }
         }
