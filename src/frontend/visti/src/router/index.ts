@@ -5,8 +5,9 @@ import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetail
 import StoryHome from "../components/Story/StoryCreate/StoryHome";
 import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 import StoryDetail from "../components/Story/StoryDetail/StoryDetail";
-import test from "../components/Storybox/Test";
-import InviteCheck from "../components/Storybox/InviteCheck";
+import Test from "../components/Storybox/StoryboxDetail/LinkCheck/Test";
+import InviteCheck from "../components/Storybox/StoryboxDetail/LinkCheck/InviteCheck";
+
 
 
 
@@ -36,13 +37,13 @@ const routes = [
     Component : StoryDetail
   },
   {
-    path : "/test",
-    Component : test
+    path : '/',
+    Component : Test
   },
   {
     path : "/invite/:encryptedData",
     Component : InviteCheck
-  }
+  },
 ]
 
 export default routes;
