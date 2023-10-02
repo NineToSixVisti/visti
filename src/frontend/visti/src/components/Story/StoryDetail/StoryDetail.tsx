@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { authInstance } from "../../../apis/utils/instance";
 import styled from "styled-components";
 import { ReactComponent as BackButtonIcon } from "../../../assets/images/storydetailclose_button.svg";
+import { ReactComponent as HeartButton } from "../../../assets/images/heartbutton.svg";
+import { ReactComponent as Heartwhite } from "../../../assets/images/heartwhite.svg";
 import { useNavigate } from "react-router-dom";
 import BasicModal from "./ReportButton";
 
@@ -11,6 +13,7 @@ interface StoryData {
   encryptedId: string;
   mainFileType: string;
   mainFilePath: string;
+  like: boolean;
   createdAt: string;
   member: {
     nickname: string;
@@ -18,6 +21,13 @@ interface StoryData {
     status: boolean;
   };
 }
+const HeartButtonContainer = styled.div`
+  position: absolute;
+  bottom: 4%;
+  right: 10%;
+  display: flex;
+  align-items: center;
+`;
 
 const InfoContainer = styled.div`
   display: flex;
@@ -48,7 +58,6 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #d3d3d3;
 `;
 
 const MainImage = styled.img`
@@ -94,8 +103,24 @@ function StoryDetail() {
   const { id } = useParams<{ id?: string }>();
   const [storyData, setStoryData] = useState<StoryData | null>(null);
   const navigate = useNavigate();
+
+  const [like, setLike] = useState(storyData?.like || false);
+
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleLike = () => {
+    if (!id) return;
+    authInstance
+      .get(`story/${id}/like`)
+      .then((response) => {
+        console.log("Successfully liked the story:", response.data);
+        setLike((prev) => !prev);
+      })
+      .catch((error) => {
+        console.error("Failed to like the story:", error);
+      });
   };
 
   useEffect(() => {
@@ -105,6 +130,7 @@ function StoryDetail() {
       .get(`story/${id}`)
       .then((response) => {
         setStoryData(response.data.detail);
+        setLike(response.data.detail.like);
       })
       .catch((error) => {
         console.error("Failed to fetch story data:", error);
@@ -139,6 +165,13 @@ function StoryDetail() {
           <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
         </InfoContainer>
       </ProfileContainer>
+      <HeartButtonContainer>
+        {like ? (
+          <HeartButton onClick={handleLike} />
+        ) : (
+          <Heartwhite onClick={handleLike} />
+        )}
+      </HeartButtonContainer>
     </Container>
   );
 }
