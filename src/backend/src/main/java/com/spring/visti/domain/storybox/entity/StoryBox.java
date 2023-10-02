@@ -35,7 +35,7 @@ public class StoryBox extends BaseEntity {
     @Column
     private String detail;
 
-    @Column(updatable = false)
+    @Column
     private Boolean blind;
 
     @Column(updatable = false, name="finished_at")
