@@ -38,6 +38,7 @@ class TestRunner {
 	public static GTest test1
 	public static GTest test2
 	public static GTest test3
+	public static GTest test4
 	public static HTTPRequest requestForJson
 	public static HTTPRequest requestForMultipart
 	public static Map<String, String> headersForJson = [:]
@@ -63,9 +64,10 @@ class TestRunner {
 public static void beforeProcess() {
     HTTPRequestControl.setConnectionTimeout(300000);
     
-    test1 = new GTest(1, "172.27.192.1 - login");
-    test2 = new GTest(2, "172.27.192.1 - mainpage");
-    test3 = new GTest(3, "172.27.192.1 - createBox");
+    test1 = new GTest(1, "login");
+    test2 = new GTest(2, "mainpage");
+	test3 = new GTest(3, "StoryBoxPage");
+    test4 = new GTest(4, "createBox");
 
     // Create request for JSON
     requestForJson = new HTTPRequest();
@@ -86,6 +88,7 @@ public static void beforeProcess() {
 		test1.record(this, "test1")
 		test2.record(this, "test2")
 		test3.record(this, "test3")
+		test4.record(this, "test4")
 		grinder.statistics.delayReports = true
 		grinder.logger.info("before thread.")
 	}
@@ -105,7 +108,7 @@ public static void beforeProcess() {
 		HTTPResponse loginResponse = requestForJson.POST(url+"/api/member/signin", testUser1)
 
 		if (loginResponse.statusCode == 301 || loginResponse.statusCode == 302) {
-			grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", response.statusCode)
+			grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", loginResponse.statusCode)
 		} else {
 			assertThat(loginResponse.statusCode, is(200))
 			accessToken = loginResponse.getBody(toJSON).detail.grantType + " " + loginResponse.getBody(toJSON).detail.accessToken
@@ -125,7 +128,7 @@ public static void beforeProcess() {
 
 		HTTPResponse storyResponse = requestForJson.GET(url+"/api/story/mainpage")
 		HTTPResponse storyBoxResponse = requestForJson.GET(url+"/api/story-box/mainpage")
-
+		HTTPResponse latestStoryBox = requestForJson.GET(url+"/api/story-box/lateststorybox")
 		HTTPResponse MyInfoResponse = requestForJson.GET(url+"/api/member/inform")
 		
 // 1. 응답 본문을 얻음
@@ -143,7 +146,7 @@ StoryBoxInfo = details
 		grinder.logger.info("===="+StoryBoxInfo)
 		
 		if (storyResponse.statusCode == 301 || storyResponse.statusCode == 302) {
-			grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", response.statusCode)
+			grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", storyResponse.statusCode)
 		} else {
 			assertThat(storyResponse.statusCode, is(200))
 		}
@@ -152,9 +155,22 @@ StoryBoxInfo = details
 		
 	}
 	
-	
 	@Test
 	public void test3() {
+		HTTPResponse storyBoxResponse = requestForJson.GET(url+"/api/story-box/storybox")
+
+		if (storyBoxResponse.statusCode == 301 || storyBoxResponse.statusCode == 302) {
+			grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", storyBoxResponse.statusCode)
+		} else {
+			assertThat(storyBoxResponse.statusCode, is(200))
+			
+		}
+		
+
+	}
+
+	@Test
+	public void test4() {
 
    // Convert randomStoryBox map to JSON string
     def jsonPayload = new groovy.json.JsonBuilder(randomStoryBox).toPrettyString();
