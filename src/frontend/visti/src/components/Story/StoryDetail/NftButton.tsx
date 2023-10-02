@@ -1,13 +1,12 @@
 import React from "react";
 import { ethers } from "ethers";
-import contractData from "../../../assets/VistiNFT.json"; // visitnft.json 파일의 경로를 지정하세요.
-
+import contractData from "../../../assets/VistiNFT.json";
+import { ReactComponent as NFTOFF } from "../../../assets/images/nft-offbutton.svg";
 interface NFTButtonProps {
   imageURI: string;
 }
 
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
-  // 메인넷에 연결된 기본 제공자를 사용합니다.
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
   const contractAddress = "0x124927F5bEEE825697F2E5e1c2Aa0C87ef4a6CCf";
@@ -17,13 +16,27 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     signer
   );
 
+  async function uploadToIPFS(imagePath: string): Promise<string> {
+    const data = new FormData();
+    data.append('file', imagePath);
+
+    const response = await fetch("http://j9d110.p.ssafy.io:5001/api/v0/add", {
+      method: 'POST',
+      body: data
+    });
+
+    const result = await response.json();
+    console.log("CID:", result.Hash);
+    return result.Hash; 
+  }
+
   const createAndSendNFT = async () => {
     try {
-      const tx = await contract.create(imageURI);
+      const cid = await uploadToIPFS(imageURI);
+      const tx = await contract.create(cid);
       await tx.wait();
 
       const tokenId = await contract.current();
-
       const userAddress = await signer.getAddress();
       const transferTx = await contract.transfer(userAddress, tokenId);
       await transferTx.wait();
@@ -34,7 +47,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     }
   };
 
-  return <button onClick={createAndSendNFT}>Create NFT</button>;
+  return <button onClick={createAndSendNFT}><NFTOFF/></button>;
 };
 
 export default NFTButton;
