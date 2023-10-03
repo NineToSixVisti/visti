@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
+import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "../../../store"
+import { setTrigger } from "../../../store/slices/storySlice"
 
 interface storyboxDetail {
   name : string;
@@ -17,15 +22,49 @@ interface boxDetailProps {
 }
 
 const Detail : React.FC<boxDetailProps> = ({id}) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const trigger = useSelector((state : RootState) => state.story.trigger);
 
-    const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
+  const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
+  const [encryptedText, setEncryptedText] = useState('');
 
+  // 만료 날짜를 가져오기 위함 함수
+  const getExpirationData = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2);
+    
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+
+  // 링크에 포함되어야 하는 정보
+  const data = {
+    storyboxId : id,
+    expirationDay : getExpirationData()
+  }
+
+  const salt = process.env.REACT_APP_SECRET_KEY!;
+
+  // 암호화
+  const encrypt = (data : any) => {
+    if (!data) return '';
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), salt).toString(); 
+    const baseEnrypted = btoa(encrypted) // base64로 인코딩(특수기호(/) 때문에)
+    // console.log(encrypted);
+    setEncryptedText(baseEnrypted);
+    return encrypted
+  }
+  
   const getStoryboxDetail = useCallback(async () => {
     try{
       const data = await authInstance.get(`story-box/${id}/detail`)
       if (data) {
         setStoryboxDetail(data.data.detail);
-        console.log(data.data.detail);
+        // console.log(data.data.detail);
       }
     }
     catch (err) {
@@ -33,9 +72,30 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
     }
   },[id])
 
+  // 스토리 박스 나가기
+  const deleteStorybox = useCallback(async ()=> {
+    try {
+      await authInstance.delete(`story-box/${id}/delete`)
+      console.log('성공적으로 삭제가 완료되었습니다.')
+      dispatch(setTrigger(true));
+    } catch(err) {
+      console.log('스토리박스 나가기 중 에러발생', err);
+    } 
+  },[id, dispatch])
+
+  const storyboxOut = () => {
+    deleteStorybox();
+    dispatch(setTrigger(false));
+    navigate('/storybox', { replace : true })
+  }
+
   useEffect(()=>{
     getStoryboxDetail();
   },[getStoryboxDetail])
+
+  useEffect(()=>{
+    console.log(`http://localhost:3000/invite/${encryptedText}`);
+  },[encryptedText])
 
   return (
     <DetailWrap>
@@ -51,10 +111,26 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
        </MemberStoryWrap>
        <ExplainBox>
         <p>
+          {storyboxDetail ? `${storyboxDetail.name}` : 'Loading...'} 
+        </p>
+       </ExplainBox>
+       <ExplainBox>
+        <p>
           {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
         </p>
        </ExplainBox>
-       <LinkCreate>링크 생성</LinkCreate>
+       {
+        encryptedText ? 
+          <StoryboxLink>
+            <p>
+              {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`} */}
+              {`http://localhost:3000/invite/${encryptedText}`}
+            </p>
+          </StoryboxLink>
+        : null
+       }
+       <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
+       <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
     </DetailWrap>
   )
 }
@@ -122,19 +198,50 @@ const StoryBox = styled.div`
   }
 `
 
+const NameBox = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  border-radius: 10px;
+  border: 2px solid #DBDBDB;
+  padding: 10px;
+
+  >p:first-child {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  >p:nth-child(2) {
+    font-size: 20px;
+    font-weight: 600;
+  }
+`;
+
 const ExplainBox = styled.div`
   margin-top: 20px;
   width: 100%;
-  /* height: 73px; */
   border-radius: 10px;
   border: 2px solid #DBDBDB;
   white-space: pre-line;
-  /* background-color: lightsalmon; */
 
   >p {
     margin: 0;
     padding: 10px;
     font-size: 16px;
+  }
+`
+const StoryboxLink = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  border-bottom: 2px solid #DBDBDB;
+  white-space: pre-line;
+
+  >p {
+    margin: 0;
+    padding: 10px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `
 
@@ -151,11 +258,17 @@ const LinkCreate = styled.div`
   cursor: pointer;
 `
 
-// const LinkBox = styled.div`
-//   margin-top: 20px;
-//   width: 100%;
-//   height: 30px;
-//   background-color: lightblue;
-// `
+const BoxOut = styled.div`
+  margin-top : 20px;
+  width: 100%;
+  height: 44px;
+  border-radius: 6px;
+  background-color: #717070;
+  color : #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`
 
 export default Detail

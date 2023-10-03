@@ -1,23 +1,15 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Dayjs } from 'dayjs';
 
 interface CheckModalProps {
   isModalOpen: boolean;
-  file: File | null;
-  groupName: string;
-  groupDetail: string;
-  disclosure: boolean;
-  value: Dayjs | null;
-  isEditMode : boolean;
-  CloseModal: () => void;
-  handleSubmit: () => Promise<void>;
-  postStorybox: (formData: FormData) => Promise<void>;
-  formDataToObject: (formData: FormData) => any;
+  setIsModalOpen : (value: boolean) => void;
+  checkAndNavigate : (value: string) => void;
+  decodedData : string;
 }
 
-const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, groupDetail, disclosure, value, isEditMode,
-    CloseModal, handleSubmit}) => {
+const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, setIsModalOpen, checkAndNavigate, decodedData}) => {
+  
   if (!isModalOpen) return null;
 
   return (
@@ -26,16 +18,11 @@ const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, file, groupName, g
         <MainModal>
           <img src={process.env.PUBLIC_URL +"/assets/Visti_icon.png"} alt="Visti Logo"/>
           <p>
-            {
-              isEditMode ? 
-              `스토리 박스를 수정하시겠습니까?` :
-              `스토리 박스를 생성하시겠습니까?` 
-            }
+            스토리 박스에 들어올래?
           </p>
         </MainModal>
         <FootModal>
-          <div onClick={CloseModal}>취소</div>
-          <div onClick={()=>{handleSubmit();}}>확인</div>
+          <div onClick={()=>{checkAndNavigate(decodedData);}}>확인</div>
         </FootModal>
       </ModalContainer>
     </Overay>
@@ -96,12 +83,7 @@ const FootModal = styled.div`
   }
 
   >:first-child {
-    width: 50%;
-    height: 100%;
-  }
-
-  >:nth-child(2) {
-    width: 50%;
+    width: 100%;
     height: 100%;
     background-color: #E03C31;
     border-bottom-right-radius: 8px;

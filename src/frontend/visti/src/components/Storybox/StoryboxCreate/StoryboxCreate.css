@@ -10,3 +10,22 @@
   padding-top: 0 !important;
   padding-bottom: 10px !important;
 }
+
+.disabled-datepicker {
+  background-color: #f0f0f0; 
+  pointer-events: none; 
+}
+
+.disabled-checkbox:checked {
+  background-color: #E03C31;
+}
+
+.disabled-checkbox {
+  background-color: #E03C31;
+  pointer-events: none;
+}
+
+.disabled-div {
+  color: #929292;
+  font-weight: 600;
+}
