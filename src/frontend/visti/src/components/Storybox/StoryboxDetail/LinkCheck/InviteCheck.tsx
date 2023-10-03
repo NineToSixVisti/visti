@@ -2,18 +2,20 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import CryptoJS from 'crypto-js';
-import { ReactComponent as Visti } from "../../assets/images/Visti-lightpink.svg"
+import { ReactComponent as Visti } from "../../../../assets/images/Visti-lightpink.svg";
+import CheckModal from './CheckModal';
 
 const InviteCheck = () => {
   // 비구조화 할당으로 파리미터 값 가져옴.
   const { encryptedData } = useParams();
-  const decodedData = (window.atob as any)(encryptedData); // 디코딩
- // 디코딩을 진행
+  const decodedData = (window.atob as any)(encryptedData); // 디코딩을 진행
   console.log(decodedData);
 
   const [decryptText, setDecryptText] = useState('');
   const salt = process.env.REACT_APP_SECRET_KEY!;
   const navigate = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   // 복호화
   const decrypt = (data : any) => {
@@ -55,8 +57,13 @@ const InviteCheck = () => {
   }
 
   return (
-    <Wrap>  
-      <button onClick={()=>{checkAndNavigate(decodedData)}}>확인</button>
+    <Wrap>
+      <CheckModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        checkAndNavigate={checkAndNavigate}
+        decodedData={decodedData}
+      />    
       <Vistisvg/>
     </Wrap>
   )
@@ -66,11 +73,15 @@ const Wrap = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #FFF1F0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 `
 
 const Vistisvg = styled(Visti)`
   width: 232px;
   height: 107px;
+  margin-top: 50%;
 `
 
 export default InviteCheck
