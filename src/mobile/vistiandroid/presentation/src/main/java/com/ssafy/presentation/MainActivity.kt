@@ -83,7 +83,6 @@ class MainActivity : ComponentActivity() {
             selectedImageUri = data?.data
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
