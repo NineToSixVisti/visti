@@ -7,6 +7,7 @@ import { ReactComponent as HeartButton } from "../../../assets/images/heartbutto
 import { ReactComponent as Heartwhite } from "../../../assets/images/heartwhite.svg";
 import { useNavigate } from "react-router-dom";
 import BasicModal from "./ReportButton";
+import NFTButton from "./NftButton";
 
 interface StoryData {
   id: number;
@@ -165,6 +166,8 @@ function StoryDetail() {
           <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
         </InfoContainer>
       </ProfileContainer>
+      <NFTButton imageURI={storyData.mainFilePath} />
+    
       <HeartButtonContainer>
         {like ? (
           <HeartButton onClick={handleLike} />
