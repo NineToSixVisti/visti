@@ -2,10 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { setStoryboxId, setTrigger } from '../../store/slices/storySlice';
 
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
 import { ReactComponent as SearchIcon } from '../../assets/images/search_button.svg'
+import Loading from '../Common/Loading';
 
 interface Storybox {
   id: number;
@@ -21,18 +25,28 @@ type BoxWrapProps = {
   bgImage: string;
 };
 
-const StoryboxHome = () => {
+const StoryboxHome = () => {  
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const trigger = useSelector((state : RootState) => state.story.trigger);
+  const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // const [isSearching, setIsSearching] = useState(true);
 
-  const [storyboxList, setStoryboxList] = useState<Storybox[]>([]);
-  const [search, setSerch] = useState("");
-  
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
   const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
   const observer = useRef<IntersectionObserver | null>(null);
-  
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSerch(e.target.value)
+    setSearch(e.target.value)
+  }
+
+  // 페이지 초기화, 스토리 박스 초기화, 검색중이라는 true
+  const onSearch = () => {
+    setPage(0); 
+    setStoryboxList(null); 
+    // setIsSearching(true);
   }
 
   const lastBoxElementRef = useCallback(
@@ -47,36 +61,57 @@ const StoryboxHome = () => {
     },
     [hasMore]
   );
-  
-  const getStoryboxList = useCallback(async () => {
-    try {
-      const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
-      console.log("Returned data:", data);
-      setStoryboxList((prevStoryboxList) => [
-        ...prevStoryboxList,
-        ...data.detail.content,
-      ]);
+    
+    // 검색된 스토리 박스 리스트
+    const getSearchStoryboxList = useCallback(async (search : string) => {
+      if (page === 0) {
+        setIsLoading(true);
+      }
+      try {
+        const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
+        // console.log("검색된 스토리 박스:", data);
+        if (page ===0) {
+          const newContent = [...data.detail.content];
+          setStoryboxList(newContent);
+        }
+        setStoryboxList((prevStoryboxList) => {
+        if (prevStoryboxList === null) {
+          return [...data.detail.content];
+        } else {
+          // 중복 데이터 제거
+        const newContent = data.detail.content.filter(
+            (item : any) => !prevStoryboxList.some((prevItem) => prevItem.encryptedId === item.encryptedId)
+          );
+          return [...prevStoryboxList, ...newContent];
+        }
+      });
       setHasMore(!data.detail.last);
     } catch (err) {
-      console.log('스토리박스 GET 중 에러 발생:', err);
-    }
-  }, [page]);
-  
-  useEffect(() => {
-    getStoryboxList();
-  }, [getStoryboxList, page]);
+        console.log('검색된 스토리박스 GET 중 에러 발생:', err);
+      } finally {
+        if (page === 0) {
+          setIsLoading(false);
+        }
+      }
+    }, [page]);
 
   useEffect(() => {
-    console.log("Current storyboxList:", storyboxList); 
+    // console.log("Current storyboxList:", storyboxList); 
   }, [storyboxList]);
   
   useEffect(() => {
-    console.log("Current page:", page);  
+    // console.log("Current page:", page);  
   }, [page]);
 
   useEffect(() => {
-    console.log("Has more:", hasMore); 
+    // console.log("Has more:", hasMore); 
   }, [hasMore]);
+
+  useEffect(()=>{
+    getSearchStoryboxList(search);
+    dispatch(setTrigger(false));
+    // console.log('트리거 :', trigger);
+  },[getSearchStoryboxList, page, search, dispatch, trigger])
 
   return (
     <StoryboxWWrap>
@@ -87,10 +122,12 @@ const StoryboxHome = () => {
         <CreateBoxSvg onClick={()=>{navigate("/storybox/join")}}/>
         <SearchWrap>
           <input type="text" value={search} onChange={onChange} />
-          <SearchSvg/>
+          <SearchSvg onClick={onSearch}/>
         </SearchWrap>
       </TopWrap>
       {
+         storyboxList === null ?  
+         <Loading isLoading={isLoading}/> :
         storyboxList.length > 0 ? 
           <MainBoxWrap>
             {
@@ -100,7 +137,9 @@ const StoryboxHome = () => {
                   key={storybox.encryptedId}
                   bgImage={storybox.boxImgPath}
                   onClick={() => {
-                  navigate(`/storybox/detail/${storybox.encryptedId}`);}}>
+                  navigate(`/storybox/detail/${storybox.encryptedId}`);
+                  // console.log(storybox.encryptedId);
+                  dispatch(setStoryboxId(storybox.encryptedId));}}>
                 <NameWrap>
                   <p>
                     {storybox.name.length > 15 ? `${storybox.name.substring(0, 15)}...` : storybox.name}
@@ -109,7 +148,7 @@ const StoryboxHome = () => {
                 </NameWrap>
                 </BoxWrap>
               ))
-            }            
+            }
           </MainBoxWrap> :
           <MainWrap>
             <img src="/assets/storybox-no.svg" alt="" />
@@ -152,7 +191,7 @@ const TopWrap = styled.div`
 
 const SearchWrap = styled.div`
   /* flex-grow: 1;  */
-  width: 250px;
+  width: calc(100vw - 110px);
   height: 35px;
   position: relative; 
 

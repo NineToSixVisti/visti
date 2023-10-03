@@ -32,7 +32,7 @@ const ImageContainer = styled.div`
 
   background-image: ${({ backgroundImage }: { backgroundImage: string }) => `url(${backgroundImage})`};
   @media (min-width: 768px) {
-   ;  // 패드에서의 margin-top 값을 조정
+   ;  
   }
 `;
 
