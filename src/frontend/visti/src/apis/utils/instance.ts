@@ -36,7 +36,7 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
   });
 }
 
+const SERVER_URL = process.env.REACT_APP_SERVER
 
-export const baseInstance: AxiosInstance = baseAPI('http://j9d102.p.ssafy.io:8080/api/');
-export const authInstance: AxiosInstance = authAPI('http://j9d102.p.ssafy.io:8080/api/');
-
+export const baseInstance: AxiosInstance = baseAPI(`${SERVER_URL}/api/`);
+export const authInstance: AxiosInstance = authAPI(`${SERVER_URL}/api/`);
