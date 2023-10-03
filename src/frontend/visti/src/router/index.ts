@@ -5,6 +5,7 @@ import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetail
 import StoryHome from "../components/Story/StoryCreate/StoryHome";
 import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 import StoryDetail from "../components/Story/StoryDetail/StoryDetail";
+import LetterCreator from "../components/Story/StoryCreate/LetterCreator"
 
 const routes = [
   {
@@ -30,7 +31,12 @@ const routes = [
   {
     path : "/storydetail/:id",
     Component : StoryDetail
+  },
+  {
+    path : "/lettercreator",
+    Component : LetterCreator
   }
 ]
+ 
 
 export default routes;

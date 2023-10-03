@@ -22,7 +22,7 @@ function CreatePostButton() {
     };
 
     const handleTextClick = () => {
-       
+        navigate('/LetterCreator');
         setIsMenuOpen(false);
     };
 
@@ -39,8 +39,8 @@ function CreatePostButton() {
             </Fab>
             {isMenuOpen && (
                 <div style={{ position: 'absolute', top: '60px', background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 1 }}>
-                    <button style={{ display: 'block', width: '100%', padding: '8px', border: 'none', background: 'none', textAlign: 'left' }} onClick={handleGalleryClick}>사진 작성</button>
-                    <button style={{ display: 'block', width: '100%', padding: '8px', border: 'none', background: 'none', textAlign: 'left' }} onClick={handleTextClick}>글 작성</button>
+                    <button style={{ display: 'block', width: '100%', padding: '8px', border: 'none', background: 'none', textAlign: 'left' }} onClick={handleGalleryClick}>사진 편집</button>
+                    <button style={{ display: 'block', width: '100%', padding: '8px', border: 'none', background: 'none', textAlign: 'left' }} onClick={handleTextClick}>글쓰기</button>
                 </div>
             )}
             <PhotoUploader ref={fileInputRef} onImageUpload={handleImageUpload} />
