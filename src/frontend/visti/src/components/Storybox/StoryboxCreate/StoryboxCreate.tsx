@@ -226,6 +226,7 @@ const StoryboxCreate = () => {
 
   // 수정하는 경우 기존의 박스 내용을 동기화
   const getStoryboxInfo = useCallback(async () => {
+    if (!isEditMode) return;
     try {
       const data = await authInstance.get(`story-box/${storyboxId}/info`)
     if (data){
@@ -242,7 +243,7 @@ const StoryboxCreate = () => {
     catch (err) {
       console.log('스토리박스 Info GET 중 에러 발생', err);
     }
-  },[storyboxId]);
+  },[storyboxId, isEditMode]);
 
   // getStoryboxInfo를 통해 찍어볼 수 있게
   useEffect(()=>{
@@ -314,6 +315,12 @@ const StoryboxCreate = () => {
 const Wrap  = styled.div`
   width: 100%;
   height: 100%;
+
+  overflow-y: scroll; 
+  scrollbar-width: none; // 파이어폭스
+  &::-webkit-scrollbar { // 크롬, 사파리
+    display: none;
+  }
 ` 
 
 const LogoWrap = styled.div`
@@ -341,11 +348,11 @@ const MainWrap = styled.div`
   height: calc(100vh - 30px);
   margin : 10px 20px;
 
-  overflow-y: auto; 
+  /* overflow-y: scroll; 
   scrollbar-width: none; // 파이어폭스
   &::-webkit-scrollbar { // 크롬, 사파리
     display: none;
-  }
+  } */
 `
 
 const Title = styled.div`
@@ -406,6 +413,7 @@ const GroupDescription = styled.textarea`
 
 const RequestBtn = styled.button`
   border-radius: 1rem;
+  border: none;
   font-size: 1.5rem;
   width: calc(100vw - 40px);
   height: 3rem;

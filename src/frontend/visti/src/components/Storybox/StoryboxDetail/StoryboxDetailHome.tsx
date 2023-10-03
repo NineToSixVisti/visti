@@ -75,7 +75,6 @@ const StoryboxDetail: React.FC = () => {
     }
   }, [id]);
 
-
   useEffect(()=>{
     getStoryboxInfo();
   }, [getStoryboxInfo]);
