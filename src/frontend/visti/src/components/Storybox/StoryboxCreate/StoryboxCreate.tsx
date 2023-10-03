@@ -14,6 +14,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckModal from './CheckModal';
 import { authInstance } from '../../../apis/utils/instance';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTrigger } from '../../../store/slices/storySlice';
+import { RootState } from '../../../store';
 dayjs.locale('ko');
 
 // window 객체 타입 확장
@@ -27,6 +30,8 @@ declare var window: MyWindow;
 
 const StoryboxCreate = () => { 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); 
+  const trigger = useSelector((state : RootState) => state.story.trigger)
   const location = useLocation(); // navigate로 보낸 stoyryboxId를 받기 위해 사용
   const storyboxId = location.state ? location.state.storyboxId : null;
   const isEditMode = !!storyboxId
@@ -213,6 +218,8 @@ const StoryboxCreate = () => {
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
+    dispatch(setTrigger(true)); // 리랜더링 하기 위해
+    console.log(trigger); 
     setIsModalOpen(false);
     navigate('/storybox', { replace : true })
   }
@@ -241,10 +248,6 @@ const StoryboxCreate = () => {
   useEffect(()=>{
     getStoryboxInfo();
   },[getStoryboxInfo])
-
-  // useEffect(()=>{
-  //   console.log(groupImage);
-  // },[groupImage])
 
   return (
     <Wrap>

@@ -9,6 +9,7 @@ interface CheckModalProps {
 }
 
 const CheckModal : React.FC<CheckModalProps> = ({isModalOpen, setIsModalOpen, checkAndNavigate, decodedData}) => {
+  
   if (!isModalOpen) return null;
 
   return (
