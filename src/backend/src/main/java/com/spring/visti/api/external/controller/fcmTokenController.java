@@ -1,19 +1,24 @@
-package com.spring.visti.api.external;
+package com.spring.visti.api.external.controller;
 
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
+import com.spring.visti.api.external.service.fcmTokenService;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.global.fcm.dto.FCMToMemberDTO;
+import com.spring.visti.global.fcm.entity.FireBaseMessage;
 import com.spring.visti.global.fcm.service.FcmService;
 import com.spring.visti.utils.exception.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.spring.visti.utils.exception.ErrorCode.NO_INVITATION_STORY_BOX;
 import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
@@ -25,6 +30,7 @@ import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
 public class fcmTokenController {
 
     private final FcmService fcmService;
+    private final fcmTokenService fcmMessageService;
 
     @PostMapping("/gettoken")
     @Operation(summary = "스토리박스 숏링크 수집", description = "스토리박스에 접속가능한 링크를 제공해줍니다.")
@@ -35,6 +41,15 @@ public class fcmTokenController {
         String email = getEmail();
 
         BaseResponseDTO<String> response = fcmService.linkFCMTokenToMember(fcmToMemberDTO, email);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/getMessage")
+    @Operation(summary = "알림 메시지 리스트업", description = "알림 메시지 리스트업.")
+    ResponseEntity<? extends BaseResponseDTO<List<FireBaseMessage>>> redirect(){
+
+        BaseResponseDTO<List<FireBaseMessage>> response = fcmMessageService.getMessage();
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

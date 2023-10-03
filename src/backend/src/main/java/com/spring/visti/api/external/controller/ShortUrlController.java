@@ -1,4 +1,4 @@
-package com.spring.visti.api.external;
+package com.spring.visti.api.external.controller;
 
 import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.api.storybox.service.storybox.StoryBoxService;
