@@ -5,15 +5,12 @@ import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetail
 import StoryHome from "../components/Story/StoryCreate/StoryHome";
 import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 import StoryDetail from "../components/Story/StoryDetail/StoryDetail";
-<<<<<<< HEAD
 import LetterCreator from "../components/Story/StoryCreate/LetterCreator"
-=======
 import Test from "../components/Storybox/StoryboxDetail/LinkCheck/Test";
 import InviteCheck from "../components/Storybox/StoryboxDetail/LinkCheck/InviteCheck";
 
 
 
->>>>>>> 404f0d8c88391110c30d7f1e9c7eb87619a2c84c
 
 const routes = [
   {
@@ -41,11 +38,10 @@ const routes = [
     Component : StoryDetail
   },
   {
-<<<<<<< HEAD
     path : "/lettercreator",
     Component : LetterCreator
-  }
-=======
+  },
+  {
     path : '/',
     Component : Test
   },
@@ -53,7 +49,6 @@ const routes = [
     path : "/invite/:encryptedData",
     Component : InviteCheck
   },
->>>>>>> 404f0d8c88391110c30d7f1e9c7eb87619a2c84c
 ]
  
 
