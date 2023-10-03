@@ -69,7 +69,7 @@ const StoryboxHome = () => {
       }
       try {
         const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
-        // console.log("검색된 스토리 박스:", data);
+        console.log("검색된 스토리 박스:", data);
         if (page ===0) {
           const newContent = [...data.detail.content];
           setStoryboxList(newContent);
@@ -112,6 +112,10 @@ const StoryboxHome = () => {
     dispatch(setTrigger(false));
     // console.log('트리거 :', trigger);
   },[getSearchStoryboxList, page, search, dispatch, trigger])
+
+  useEffect(()=>{
+    console.log("SERVER_URL:", process.env.REACT_APP_SERVER);
+  },[])
 
   return (
     <StoryboxWWrap>
