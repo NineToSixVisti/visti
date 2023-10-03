@@ -1,7 +1,6 @@
 package com.spring.visti.domain.storybox.repository;
 
 import com.spring.visti.domain.member.entity.Member;
-import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.storybox.constant.Position;
 import com.spring.visti.domain.storybox.entity.StoryBox;
 import com.spring.visti.domain.storybox.entity.StoryBoxMember;
