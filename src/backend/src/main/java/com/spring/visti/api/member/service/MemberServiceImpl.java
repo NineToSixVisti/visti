@@ -121,7 +121,6 @@ public class MemberServiceImpl implements MemberService{
         // 인증 코드 조회
         String authCode = authService.getAuthCode(email);
         if (!Objects.equals(authCode, authInfo.getAuthNum())){
-
             throw new ApiException(EMAIL_INPUT_ERROR);
         }
 
@@ -203,7 +202,7 @@ public class MemberServiceImpl implements MemberService{
 
         memberRepository.save(member);
         log.info("===== "+ member.getEmail() + " 회원 탈퇴 완료 =============");
-        return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
+        return new BaseResponseDTO<>("회원 탈퇴가 완료되었습니다.", 200);
     }
 
 
