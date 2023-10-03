@@ -53,10 +53,26 @@ const CreateImageComponentStyle = styled.div`
   z-Index: 100;
 `;
 const LetterOption = styled.img`
-  width: 100px;
+  width: 90px;
   height: 150px;
-  margin: 10px;
+  margin: 5px;
   cursor: pointer;
+`;
+const LetterOptionContainer = styled.div`
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+`;
+
+const LetterOptionText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size : 12px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
 `;
 
 
@@ -77,28 +93,37 @@ function LetterCompose() {
     };
 
     return (
-        <MainContainer>
-          <NewStoryBar />
-          <StoryCreatorWrap>
-            {!selectedLetter && (
-              <div>
+      <MainContainer>
+        <NewStoryBar />
+        <StoryCreatorWrap>
+          {!selectedLetter && (
+            <div>
+              <LetterOptionContainer>
+                <LetterOptionText>배경 선택</LetterOptionText>
                 <LetterOption src={BackGround1} onClick={() => handleLetterSelect(BackGround1)} alt="Background 1" />
+              </LetterOptionContainer>
+              <LetterOptionContainer>
+                <LetterOptionText>배경 선택</LetterOptionText>
                 <LetterOption src={BackGround2} onClick={() => handleLetterSelect(BackGround2)} alt="Background 2" />
+              </LetterOptionContainer>
+              <LetterOptionContainer>
+                <LetterOptionText>배경 선택</LetterOptionText>
                 <LetterOption src={BackGround3} onClick={() => handleLetterSelect(BackGround3)} alt="Background 3" />
-              </div>
-            )}
-            {selectedLetter && (
-              <ImageContainer id="image-container" backgroundImage={selectedLetter}>
-                <TextEditorStyle>
-                  <TextEditor onEditorOpen={handleEditorOpen} onEditorClose={handleEditorClose} />
-                </TextEditorStyle>
-              </ImageContainer>
-            )}
-            <CreateImageComponentStyle>
-              <CreateImageComponent />
-            </CreateImageComponentStyle>  
-          </StoryCreatorWrap>
-        </MainContainer>
-      );
-  }
+              </LetterOptionContainer>
+            </div>
+          )}
+          {selectedLetter && (
+            <ImageContainer id="image-container" backgroundImage={selectedLetter}>
+              <TextEditorStyle>
+                <TextEditor onEditorOpen={handleEditorOpen} onEditorClose={handleEditorClose} />
+              </TextEditorStyle>
+            </ImageContainer>
+          )}
+          <CreateImageComponentStyle>
+            <CreateImageComponent />
+          </CreateImageComponentStyle>  
+        </StoryCreatorWrap>
+      </MainContainer>
+    );
+}
 export default LetterCompose;
