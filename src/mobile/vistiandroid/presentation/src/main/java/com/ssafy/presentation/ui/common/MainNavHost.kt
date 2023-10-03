@@ -1,7 +1,6 @@
 package com.ssafy.presentation.ui.common
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ssafy.presentation.MainNav
-import com.ssafy.presentation.MainScreen
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
@@ -32,12 +30,13 @@ import com.ssafy.presentation.ui.user.SignInScreen
 fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
-    context: Context
-    ) {
+    context: Context,
+    route: String
+) {
     NavHost(
         modifier = Modifier,
         navController = navController,
-        startDestination = SignInNav.SignIn.route,
+        startDestination = route,
     ) {
         composable(MainNav.Home.route) {
             HomeScreen()
@@ -78,13 +77,17 @@ fun NavGraphBuilder.settingsGraph(
     }
 }
 
+
 fun NavGraphBuilder.signupGraph(
     navController: NavHostController,
     context: Context
 ) {
     composable(route = SignInNav.SignIn.route) {
-        SignInScreen(navController = navController, context)
+        SignInScreen(navController, context)
     }
+//    composable(route = SignInNav.Main.route) {
+//        MainScreen(mainNavController, context)
+//    }
 
     composable(route = SignInNav.FindPassword.route) {
         FindPasswordScreen(navController = navController)

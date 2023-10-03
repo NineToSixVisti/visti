@@ -58,12 +58,14 @@ class MemberInformationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getHomeLastStoryBox(): HomeLastStoryBox {
-        val response = api.getHomeLastStoryBox().detail
+        val response = api.getHomeStoryBox().detail
+
         val currentCalendar = Calendar.getInstance()
-        if (response != null) {
+        if (response.size!=0) {
+            val lastStoryBoxDto = response[0]// TODO 하드코딩 고치기
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val targetCalendar = Calendar.getInstance()
-            targetCalendar.time = sdf.parse(response.finishedAt) ?: Calendar.getInstance().time
+            targetCalendar.time = sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
 
             var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
 
@@ -72,13 +74,13 @@ class MemberInformationRepositoryImpl @Inject constructor(
             }
 
             return HomeLastStoryBox(
-                response.id,
-                response.encryptedId,
-                response.boxImgPath,
-                response.name,
-                response.createdAt,
+                lastStoryBoxDto.id,
+                lastStoryBoxDto.encryptedId,
+                lastStoryBoxDto.boxImgPath,
+                lastStoryBoxDto.name,
+                lastStoryBoxDto.createdAt,
                 timeDiffInMillis,
-                response.blind
+                lastStoryBoxDto.blind
             )
         }
 
