@@ -2,37 +2,40 @@ import React from "react";
 import { ethers } from "ethers";
 import contractData from "../../../assets/VistiNFT.json";
 import { ReactComponent as NFTOFF } from "../../../assets/images/nft-offbutton.svg";
+import { create } from 'ipfs-http-client';
+
 interface NFTButtonProps {
   imageURI: string;
 }
 
+const ipfs = create({
+  host: 'j9d102.p.ssafy.io',
+  port: 5001,
+  protocol: 'http'
+});
+
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
-  const contractAddress = "0x124927F5bEEE825697F2E5e1c2Aa0C87ef4a6CCf";
+  const contractAddress = "0x68A975819b5120836dcC2CD73684F9b4e71F6Bc3";
   const contract = new ethers.Contract(
     contractAddress,
     contractData.abi,
     signer
   );
 
-  async function uploadToIPFS(imagePath: string): Promise<string> {
-    const data = new FormData();
-    data.append('file', imagePath);
-
-    const response = await fetch("http://j9d110.p.ssafy.io:5001/api/v0/add", {
-      method: 'POST',
-      body: data
-    });
-
-    const result = await response.json();
-    console.log("CID:", result.Hash);
-    return result.Hash; 
+  async function uploadImageToIPFS(imageURL: string): Promise<string> {
+    const response = await fetch(imageURL);
+    const imageData = await response.blob();
+    const added = await ipfs.add(imageData);
+    console.log("Uploaded to IPFS with CID:", added.path);
+    return added.path;
   }
 
   const createAndSendNFT = async () => {
     try {
-      const cid = await uploadToIPFS(imageURI);
+      const cid = await uploadImageToIPFS(imageURI);
+
       const tx = await contract.create(cid);
       await tx.wait();
 
