@@ -153,7 +153,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
             when (selectedTabIndex) {
                 0 -> StoryLazyVerticalGrid(
                     myStories,
-                    memberInformation.stories
+                    memberInformation.stories,
+                    navController
                 )
 
                 1 -> StoryBoxLazyColumn(

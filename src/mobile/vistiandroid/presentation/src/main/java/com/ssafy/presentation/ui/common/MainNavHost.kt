@@ -45,7 +45,7 @@ fun MainNavHost(
             StoryScreen()
         }
         composable(MainNav.Like.route) {
-            LikeListScreen()
+            LikeListScreen(navController = navController)
         }
         composable(MainNav.Profile.route) {
             ProfileScreen(navController = navController)

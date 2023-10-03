@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -12,20 +13,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.ModifierLocalReadScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssafy.domain.model.Story
+import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun StoryItem(
-    story: Story
+    story: Story, navController: NavController
 ) {
-    Box {
+    Box(modifier = Modifier.clickable {
+        navController.navigate(MainNav.Memory.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }) {
         val placedHolder = if (!isSystemInDarkTheme()) {
             R.drawable.placeholder
         } else {
