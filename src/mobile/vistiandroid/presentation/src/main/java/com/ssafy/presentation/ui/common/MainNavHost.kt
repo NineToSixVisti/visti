@@ -20,6 +20,7 @@ import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
+import com.ssafy.presentation.ui.like.LikeListScreen
 import com.ssafy.presentation.ui.profile.ProfileScreen
 import com.ssafy.presentation.ui.setting.InformationScreen
 import com.ssafy.presentation.ui.setting.NotificationSettingScreen
@@ -37,12 +38,13 @@ import com.ssafy.presentation.ui.user.SignInScreen
 fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
-    context: Context
+    context: Context,
+    route: String
 ) {
     NavHost(
         modifier = Modifier,
         navController = navController,
-        startDestination = SignInNav.SignIn.route,
+        startDestination = route,
     ) {
         composable(MainNav.Home.route) {
             HomeScreen()
@@ -51,7 +53,7 @@ fun MainNavHost(
             StoryScreen()
         }
         composable(MainNav.Memory.route){
-            StoryScreen()
+            LikeListScreen()
         }
         composable(
             MainNav.Memory.route, deepLinks = listOf(navDeepLink {
@@ -104,13 +106,17 @@ fun NavGraphBuilder.settingsGraph(
     }
 }
 
+
 fun NavGraphBuilder.signupGraph(
     navController: NavHostController,
     context: Context
 ) {
     composable(route = SignInNav.SignIn.route) {
-        SignInScreen(navController = navController, context)
+        SignInScreen(navController, context)
     }
+//    composable(route = SignInNav.Main.route) {
+//        MainScreen(mainNavController, context)
+//    }
 
     composable(route = SignInNav.FindPassword.route) {
         FindPasswordScreen(navController = navController)
