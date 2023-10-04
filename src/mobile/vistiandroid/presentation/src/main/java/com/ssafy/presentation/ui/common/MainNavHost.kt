@@ -3,12 +3,8 @@ package com.ssafy.presentation.ui.common
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -47,28 +43,28 @@ fun MainNavHost(
         navController = navController,
         startDestination = route,
     ) {
+
         composable(MainNav.Home.route) {
             HomeScreen()
         }
 //        composable(MainNav.Memory.route) {
 //            StoryScreen()
 //        }
-        composable(MainNav.Like.route){
+        composable(MainNav.Like.route) {
             LikeListScreen()
         }
         composable(
             MainNav.Memory.route, deepLinks = listOf(navDeepLink {
-                uriPattern = "https://www.visti.com/{id}"
+                uriPattern = "visti://deeplink/{id}"
                 action = Intent.ACTION_VIEW
             }),
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType
                 defaultValue = ""
             })
-        ) {
-            entry ->
+        ) { entry ->
             val id = entry.arguments?.getString("id")
-            Log.e("entry",id.toString())
+            Log.e("entry", id.toString())
             StoryScreen(id.toString())
         }
 
