@@ -13,15 +13,15 @@ FROM openjdk:17.0-slim
 WORKDIR /app
 
 # 빌더 이미지에서 jar 파일만 복사
-COPY --from=builder /build/build/libs/demo-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /build/build/libs/visti-0.0.1-SNAPSHOT.jar .
 
 EXPOSE 8080
 # root 대신 nobody 권한으로 실행
-USER nobody
+USER root
 CMD [ \
     "java", \
     "-jar", \
     "-Djava.security.egd=file:/dev/./urandom", \
     "-Dsun.net.inetaddr.ttl=0", \
-    "demo-0.0.1-SNAPSHOT.jar"\
+    "visti-0.0.1-SNAPSHOT.jar"\
 ]
