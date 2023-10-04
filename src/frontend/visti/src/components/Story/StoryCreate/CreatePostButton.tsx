@@ -22,7 +22,7 @@ function CreatePostButton() {
     };
 
     const handleTextClick = () => {
-       
+        navigate('/LetterCreator');
         setIsMenuOpen(false);
     };
 

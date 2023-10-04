@@ -1,25 +1,51 @@
 package com.spring.visti.api.storybox.service.storybox;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
-import com.spring.visti.domain.member.dto.MemberJoinDTO;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxBuildDTO;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxInfoDTO;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxSetDTO;
-import jakarta.servlet.http.HttpServletRequest;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
+import com.spring.visti.api.common.service.DefaultService;
+import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
+import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-public interface StoryBoxService {
-    BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO memberInfo, HttpServletRequest httpServletRequest);
+import java.io.IOException;
+import java.util.List;
 
-    BaseResponseDTO<String> joinStoryBox(Long id, HttpServletRequest httpServletRequest);
+public interface StoryBoxService extends DefaultService {
+    @Transactional
+    BaseResponseDTO<String> createStoryBox(StoryBoxBuildDTO storyBoxBuildDTO, String email, MultipartFile multipartFile);
 
-    BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<String> enterStoryBox(Long id, String email);
 
-    BaseResponseDTO<String> readStoryBoxInfo(StoryBoxInfoDTO memberInfo);
+    BaseResponseDTO<String> setStoryBox(Long id, StoryBoxSetDTO storyBoxSetDTO, String email, MultipartFile multipartFile) throws IOException;
 
-    BaseResponseDTO<String> readMemberOfStoryBox(MemberJoinDTO memberInfo);
+    BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email);
 
-    BaseResponseDTO<String> readMyStoryBoxes(MemberJoinDTO memberInfo);
+    BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email);
 
-    BaseResponseDTO<String> leaveStoryBox(Long id, HttpServletRequest httpServletRequest);
+    BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email);
+
+    BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword);
+
+    BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email);
+
+    BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email);
+
+    BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email);
+
+    BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email);
+
+    BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email);
+
+    BaseResponseDTO<String> generateStoryBoxLink(Long id, String email);
+
+    BaseResponseDTO<String> validateStoryBoxLink(String token, String email);
+
+    BaseResponseDTO<String> leaveStoryBox(Long id, String email);
+
 
 }
