@@ -97,12 +97,18 @@ const StoryboxCreate = () => {
 
   // 이미지 base64 전달(안드->웹)
   const onImageSelected = (base64Image: string) => {
-    if (base64Image) {
-        setGroupImage(base64Image);
-        const imageFile = base64ToFile(base64Image, "boxImage.jpg");
-        setFile(imageFile);
+    try {
+        if (base64Image) {
+            console.log('onImageSelected() 실행됨');
+            setGroupImage(base64Image);
+            const imageFile = base64ToFile(base64Image, "boxImage.jpg");
+            setFile(imageFile);
+        }
+    } catch (error) {
+        console.error("onImageSelected 에러 발생:", error);
     }
   }
+
 
   const OpenModal = () => {
     if (checkData()){
@@ -268,6 +274,11 @@ const StoryboxCreate = () => {
   useEffect(()=>{
     getStoryboxInfo();
   },[getStoryboxInfo])
+
+  // 체크
+  useEffect(()=>{
+    console.log(groupImage);
+  },[groupImage])
 
   return (
     <Wrap>
