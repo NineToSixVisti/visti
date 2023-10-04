@@ -5,6 +5,7 @@ import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
 import { useNavigate } from 'react-router-dom';
 import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
 import { authInstance } from '../../../apis/utils/instance';
+import Loading from '../../Common/Loading';
 
 interface StoryList {
   id: number;
@@ -27,10 +28,9 @@ interface StoryProps {
   id ?: string
 };
 
-
 const Story : React.FC<StoryProps> = ({id}) => {
   const navigate = useNavigate();
-  
+  const [isLoading, setIsLoading] = useState(true);
   const [storyList, setStoryList] = useState<StoryList[]>([]);
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -49,6 +49,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
   );
 
   const getStoryList = useCallback(async () => {
+    setIsLoading(true);
     try {
       const { data } = await authInstance.get(`story-box/${id}/story-list?page=${page}&size=12`)
       // console.log("Returned data:", data)
@@ -62,6 +63,8 @@ const Story : React.FC<StoryProps> = ({id}) => {
     }
     catch (err) {
       console.log('스토리List GET 중 에러 발생', err);
+    } finally {
+      setIsLoading(false);
     }
   }, [id, page])
 
@@ -89,6 +92,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
   return (
     <>
       {
+        isLoading ? <Loading isLoading={isLoading}/> :
         storyList.length === 0 ? (
           <EmptyWrap>
             <Empty />

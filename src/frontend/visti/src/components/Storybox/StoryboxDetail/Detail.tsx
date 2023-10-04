@@ -6,6 +6,7 @@ import CryptoJS from 'crypto-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../../store"
 import { setTrigger } from "../../../store/slices/storySlice"
+import Loading from '../../Common/Loading';
 
 interface storyboxDetail {
   name : string;
@@ -25,6 +26,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const trigger = useSelector((state : RootState) => state.story.trigger);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
   const [encryptedText, setEncryptedText] = useState('');
@@ -60,6 +62,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   }
   
   const getStoryboxDetail = useCallback(async () => {
+    setIsLoading(true);
     try{
       const data = await authInstance.get(`story-box/${id}/detail`)
       if (data) {
@@ -69,6 +72,8 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
     }
     catch (err) {
       console.log('스토리박스 Detial GET 중 에러 발생', err)
+    } finally {
+      setIsLoading(false);
     }
   },[id])
 
@@ -98,40 +103,46 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   },[encryptedText])
 
   return (
-    <DetailWrap>
-       <MemberStoryWrap>
-          <MemberBox>
-            <p>멤버 수</p>
-            <p>{storyboxDetail ? `${storyboxDetail.memberNum}/30` : 'Loading...'}</p>
-          </MemberBox>
-          <StoryBox>
-            <p>스토리 수</p>
-            <p>{storyboxDetail ? `${storyboxDetail.storyNum}/100` : 'Loading...'}</p>
-          </StoryBox>
-       </MemberStoryWrap>
-       <ExplainBox>
-        <p>
-          {storyboxDetail ? `${storyboxDetail.name}` : 'Loading...'} 
-        </p>
-       </ExplainBox>
-       <ExplainBox>
-        <p>
-          {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
-        </p>
-       </ExplainBox>
-       {
-        encryptedText ? 
-          <StoryboxLink>
+    <>
+      {
+        isLoading ? <Loading isLoading={isLoading}/> :
+        <DetailWrap>
+          <MemberStoryWrap>
+              <MemberBox>
+                <p>멤버 수</p>
+                <p>{storyboxDetail ? `${storyboxDetail.memberNum}/30` : 'Loading...'}</p>
+              </MemberBox>
+              <StoryBox>
+                <p>스토리 수</p>
+                <p>{storyboxDetail ? `${storyboxDetail.storyNum}/100` : 'Loading...'}</p>
+              </StoryBox>
+          </MemberStoryWrap>
+          <ExplainBox>
             <p>
-              {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`} */}
-              {`http://localhost:3000/invite/${encryptedText}`}
+              {storyboxDetail ? `${storyboxDetail.name}` : 'Loading...'} 
             </p>
-          </StoryboxLink>
-        : null
-       }
-       <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
-       <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
-    </DetailWrap>
+          </ExplainBox>
+          <ExplainBox>
+            <p>
+              {storyboxDetail ? `${storyboxDetail.detail}` : 'Loading...'} 
+            </p>
+          </ExplainBox>
+          {
+            encryptedText ? 
+              <StoryboxLink>
+                <p>
+                  {/* {`${process.env.REACT_APP_SERVER}/invite/${encryptedText}`} */}
+                  {`http://localhost:3000/invite/${encryptedText}`}
+                </p>
+              </StoryboxLink>
+            : null
+          }
+          <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
+          <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
+        </DetailWrap>
+
+      }
+    </>
   )
 }
 

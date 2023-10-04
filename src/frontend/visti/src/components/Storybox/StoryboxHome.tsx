@@ -31,7 +31,7 @@ const StoryboxHome = () => {
   const trigger = useSelector((state : RootState) => state.story.trigger);
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
   const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
