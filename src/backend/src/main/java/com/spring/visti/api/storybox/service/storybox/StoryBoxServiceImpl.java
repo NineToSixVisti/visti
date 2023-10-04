@@ -64,6 +64,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
+
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
 
@@ -93,17 +94,55 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     @Override
     @Transactional
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
-        Member member = getMember(email, memberRepository);
-//        Member member = getMemberBySecurity();
+//        Member _member = getMember(email, memberRepository);
+        Member _member = getMemberBySecurity();
+
+        if (email == null){
+            return new BaseResponseDTO<>("회원가입이 되어있지 않습니다?.", 200);
+        }
+
+        Optional<StoryBox> _storyBox = storyBoxRepository.findById(storyBoxId);
+
+        if (_storyBox.isEmpty()){
+            throw new ApiException(NO_STORY_BOX_ERROR);
+        }
+
+        if (_storyBox.get().getStoryBoxMembers().size() >= 30){
+            throw new ApiException(MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX);
+        }
 
         // 이미 가입된 스토리 박스인지 확인
-        List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
-        boolean isAlreadyJoined = storyBoxes.stream()
-                .anyMatch(storyBoxMember -> storyBoxMember.getStoryBox().getId().equals(storyBoxId));
+        StoryBox storyBox = _storyBox.get();
 
-        if (!isAlreadyJoined) {
-            throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
+        List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
+
+        boolean isMemberAlreadyJoin = _storyBoxMembers.stream()
+                .map(StoryBoxMember::getMember)
+                .anyMatch(member -> email.equals(member.getEmail()));
+
+        if (isMemberAlreadyJoin){
+            throw new ApiException(ALREADY_JOIN_ERROR);
         }
+
+        // FCM 전송
+        String nickname = _member.getNickname();
+
+        _storyBoxMembers.forEach(
+                member -> {
+                    String fcmToken = member.getMember().getFcmToken();
+                    try {
+                        fcmService.sendMessageTo(fcmToken, "Visti",
+                                nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",
+                                "",
+                                "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        // 방 참가 완료
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(_member, storyBox, Position.GUEST);
+        storyBoxMemberRepository.save(newStoryBoxMember);
 
         return new BaseResponseDTO<>("스토리-박스에 참가하셨습니다.", 200);
     }

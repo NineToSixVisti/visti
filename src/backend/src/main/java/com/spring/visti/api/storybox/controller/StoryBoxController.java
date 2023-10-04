@@ -50,10 +50,10 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{storyBoxIds}/enter")
+    @PostMapping("/enter")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
-            @PathVariable String storyBoxIds
+            @RequestBody String storyBoxIds
     ) {
         String email = getEmail();
 
@@ -215,19 +215,19 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/{storyBoxIds}/generate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.")
-    public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
-            @PathVariable String storyBoxIds
-    ) {
-        String email = getEmail();
-
-        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
-        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
-
-        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(decryptedStoryId, email);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
+//    @GetMapping("/{storyBoxIds}/generate")
+//    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.")
+//    public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
+//            @PathVariable String storyBoxIds
+//    ) {
+//        String email = getEmail();
+//
+//        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+//        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
+//
+//        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(decryptedStoryId, email);
+//        return ResponseEntity.status(response.getStatusCode()).body(response);
+//    }
 
 /*
     @GetMapping("/validate")
