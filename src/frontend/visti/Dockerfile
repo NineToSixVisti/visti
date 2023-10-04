@@ -19,7 +19,7 @@ COPY ./privkey.pem /etc/letsencrypt/live/j9d102.p.ssafy.io/privkey.pem
 
 COPY ./nginx.conf /etc/nginx/conf.d/react.conf
 
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html/frontend
 
 EXPOSE 3000
 
