@@ -64,7 +64,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_NAME_ERROR);
         }
 
-
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
 
@@ -79,7 +78,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         }
 
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member, imageUrl);
-
 
         storyBoxRepository.save(storyBox);
 
@@ -107,13 +105,13 @@ public class StoryBoxServiceImpl implements StoryBoxService {
             throw new ApiException(NO_STORY_BOX_ERROR);
         }
 
-        if (_storyBox.get().getStoryBoxMembers().size() >= 30){
+        StoryBox storyBox = _storyBox.get();
+
+        if (storyBox.getStoryBoxMembers().size() >= 30){
             throw new ApiException(MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX);
         }
 
         // 이미 가입된 스토리 박스인지 확인
-        StoryBox storyBox = _storyBox.get();
-
         List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
 
         boolean isMemberAlreadyJoin = _storyBoxMembers.stream()
