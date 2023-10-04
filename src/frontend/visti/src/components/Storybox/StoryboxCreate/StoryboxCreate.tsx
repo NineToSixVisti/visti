@@ -97,17 +97,20 @@ const StoryboxCreate = () => {
   // 이미지 base64 전달(안드->웹)
   const onImageSelected = (base64Image: string | null) => {
     try {
+      console.log('1. 함수실행은 된다!.!')
         if (base64Image) {
             console.log('onImageSelected() 실행됨');
             setGroupImage(base64Image);
             const imageFile = base64ToFile(base64Image, "boxImage.jpg");
             setFile(imageFile);
         }
+        else {
+          console.log('2. 함수실행은 된다!.!')
+        }
     } catch (error) {
         console.error("onImageSelected 에러 발생:", error);
     }
   }
-
 
   const OpenModal = () => {
     if (checkData()){
