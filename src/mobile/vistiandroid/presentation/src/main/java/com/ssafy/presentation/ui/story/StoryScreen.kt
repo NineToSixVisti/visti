@@ -74,7 +74,7 @@ fun StoryScreen(
                                 }
 
                                 @JavascriptInterface
-                                fun getSelectedImage(): Bitmap? {
+                                fun getSelectedImage(): String? {
                                     Log.d(TAG, "openGallery: $selectedImageUri")
 
                                     if (selectedImageUri != null) {
@@ -93,7 +93,11 @@ fun StoryScreen(
                                             }
                                         }
 
-                                        return bitmap
+                                        Log.d(TAG, "openGallery: $bitmap")
+                                        if(bitmap != null) {
+                                            val byteArray = bitmapToByteArray(bitmap)
+                                            return "data:image/jpeg;base64,${Base64.encodeToString(byteArray, Base64.DEFAULT)}"
+                                        }
                                     }
 
                                     return null
@@ -110,7 +114,7 @@ fun StoryScreen(
 
 fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
     val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
     return byteArrayOutputStream.toByteArray()
 }
 
