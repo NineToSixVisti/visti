@@ -98,7 +98,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         Member _member = getMemberBySecurity();
 
         if (email == null){
-            return new BaseResponseDTO<>("회원가입이 되어있지 않습니다?.", 200);
+            throw new ApiException(NO_MEMBER_ERROR);
         }
 
         Optional<StoryBox> _storyBox = storyBoxRepository.findById(storyBoxId);
