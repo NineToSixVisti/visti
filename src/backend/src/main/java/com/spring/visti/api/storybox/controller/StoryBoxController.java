@@ -6,6 +6,7 @@ import com.spring.visti.api.storybox.service.storybox.StoryBoxService;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxEnterDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
 import com.spring.visti.utils.exception.ApiException;
@@ -53,11 +54,12 @@ public class StoryBoxController {
     @PostMapping("/enter")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
-            @RequestBody String storyBoxIds
+            @RequestBody StoryBoxEnterDTO storyBoxIds
     ) {
         String email = getEmail();
 
-        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        String encryptedId = storyBoxIds.getEncryptedId();
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(encryptedId);
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
         BaseResponseDTO<String> response = storyBoxService.enterStoryBox(decryptedStoryId, email);
