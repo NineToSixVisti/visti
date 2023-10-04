@@ -49,7 +49,9 @@ const Story : React.FC<StoryProps> = ({id}) => {
   );
 
   const getStoryList = useCallback(async () => {
-    setIsLoading(true);
+    if (page === 0){
+      setIsLoading(true);
+    }
     try {
       const { data } = await authInstance.get(`story-box/${id}/story-list?page=${page}&size=12`)
       // console.log("Returned data:", data)

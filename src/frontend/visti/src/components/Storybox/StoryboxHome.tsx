@@ -100,7 +100,7 @@ const StoryboxHome = () => {
   }, [storyboxList]);
   
   useEffect(() => {
-    console.log("Current page:", page);  
+    // console.log("Current page:", page);
   }, [page]);
 
   useEffect(() => {
