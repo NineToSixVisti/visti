@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
@@ -63,12 +65,19 @@ public class StoryServiceImpl implements StoryService{
 
         StoryBox storyBox = getStoryBox(decryptedStoryBoxId, storyBoxRepository);
 
+        LocalDateTime finishedAt =  storyBox.getFinishedAt();
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(finishedAt)){
+            throw new ApiException(TIME_FINISHED_ERROR);
+        }
+
         int storiesInStoryBox = storyBox.getStories().size();
 
         if (storiesInStoryBox >= 100){
             throw new ApiException(MAX_STORY_QUOTA_REACHED_STORYBOX);
         }
-
+        
         // S3 파일 저장
         String postCategory = "story";
         String imageUrl;
