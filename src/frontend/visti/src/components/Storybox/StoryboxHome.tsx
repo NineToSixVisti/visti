@@ -31,7 +31,7 @@ const StoryboxHome = () => {
   const trigger = useSelector((state : RootState) => state.story.trigger);
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
   const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
@@ -69,7 +69,7 @@ const StoryboxHome = () => {
       }
       try {
         const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
-        console.log("검색된 스토리 박스:", data);
+        // console.log("검색된 스토리 박스:", data);
         if (page ===0) {
           const newContent = [...data.detail.content];
           setStoryboxList(newContent);
@@ -100,7 +100,7 @@ const StoryboxHome = () => {
   }, [storyboxList]);
   
   useEffect(() => {
-    // console.log("Current page:", page);  
+    console.log("Current page:", page);  
   }, [page]);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const StoryboxHome = () => {
   },[getSearchStoryboxList, page, search, dispatch, trigger])
 
   useEffect(()=>{
-    console.log("SERVER_URL:", process.env.REACT_APP_SERVER);
+    // console.log("SERVER_URL:", process.env.REACT_APP_SERVER);
   },[])
 
   return (

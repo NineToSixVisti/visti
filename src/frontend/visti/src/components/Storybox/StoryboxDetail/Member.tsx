@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
+import Loading from '../../Common/Loading';
 
 interface MemberList {
   nickname: string;
@@ -14,19 +15,22 @@ interface MemberProps {
 }
 
 const Member : React.FC<MemberProps> = ({id}) => {
-
+  const [isLoading, setIsLoading] = useState(true);
   const [memberList, setMemberList] = useState<MemberList[]>([]);
 
   const getMemberList = useCallback(async () => {
+    setIsLoading(true);
     try{
       const data = await authInstance.get(`story-box/${id}/members`)
       if (data) {
         setMemberList(data.data.detail);
-        console.log(data.data.detail);
+        // console.log(data.data.detail);
       }
     }
     catch (err) {
       console.log('스토리박스 Member GET 중 에러 발생', err)
+    } finally {
+      setIsLoading(false);
     }
   },[id])
 
@@ -35,16 +39,21 @@ const Member : React.FC<MemberProps> = ({id}) => {
   },[getMemberList])
 
   return (
-    <MemberWrap>
+    <>
       {
-        memberList.map((member, index) => (
-          <MemberDiv key={index}>
-            <ProfileImg bgImage={member.profilePath}/>
-            <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
-          </MemberDiv>
-        ))
+        isLoading ? <Loading isLoading={isLoading}/> :
+        <MemberWrap>
+          {
+            memberList.map((member, index) => (
+              <MemberDiv key={index}>
+                <ProfileImg bgImage={member.profilePath}/>
+                <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
+              </MemberDiv>
+            ))
+          }
+        </MemberWrap>
       }
-    </MemberWrap>
+  </>
   )
 }
 

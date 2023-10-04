@@ -221,6 +221,7 @@ const BoxInfo = styled.div`
   >p {
     font-weight: 600;
     margin : 10px 0;
+    line-height: 32px;
   }
 
   >p:first-child {
