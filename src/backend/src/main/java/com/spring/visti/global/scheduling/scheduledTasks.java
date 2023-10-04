@@ -49,7 +49,7 @@ public class scheduledTasks {
     }
 
 
-    @Scheduled(cron = "0 0 22 * * ?")
+    @Scheduled(cron = "0 0 22 * * ?", zone = "Asia/Seoul")
     public void sendMessageToUserAt22Clock() { // 매일 22시에 실행
         // 모든 회원 중 dailyStoryCounts 가 채워지지 않은 사람들에게 메시지 보냄
 
@@ -71,7 +71,7 @@ public class scheduledTasks {
                 });
     }
 
-    @Scheduled(cron = "0 0 18 * * ?")
+    @Scheduled(cron = "0 0 18 * * ?", zone = "Asia/Seoul")
     public void sendMessageBeforeClose() { // 매일 18시에 실행
         // 모슽 스토리 박스들 중 해당 날짜에 종료가 되는 스토리박스에게 알림이감
 
