@@ -12,6 +12,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ssafy.presentation.MainActivity.Companion.selectedImageUri
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
@@ -35,8 +36,7 @@ fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
     context: Context,
-    pickImageLauncher: ActivityResultLauncher<Intent>,
-    selectedImageUri: Uri?
+    pickImageLauncher: ActivityResultLauncher<Intent>
 ) {
     NavHost(
         modifier = Modifier,
@@ -47,7 +47,7 @@ fun MainNavHost(
             HomeScreen()
         }
         composable(MainNav.Memory.route) {
-            StoryScreen(pickImageLauncher = pickImageLauncher, selectedImageUri = selectedImageUri)
+            StoryScreen(pickImageLauncher = pickImageLauncher)
         }
         composable(MainNav.Like.route) {
             LikeListScreen()

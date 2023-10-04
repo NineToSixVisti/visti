@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.navercorp.nid.NaverIdLoginSDK
+import com.ssafy.presentation.MainActivity.Companion.selectedImageUri
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
@@ -35,7 +36,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private var selectedImageUri: Uri? = null
+    companion object {
+        var selectedImageUri: Uri? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     }
-                    MainScreen(this, galleryLauncher, selectedImageUri)
+                    MainScreen(this, galleryLauncher)
                 }
             }
         }
@@ -88,8 +91,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    context: Context, pickImageLauncher: ActivityResultLauncher<Intent>,
-    selectedImageUri: Uri?
+    context: Context, pickImageLauncher: ActivityResultLauncher<Intent>
 ) {
     val mainNavController = rememberNavController()
 
@@ -99,7 +101,7 @@ fun MainScreen(
             MainBottomNavigationBar(navController = mainNavController)
         },
     ) {
-        MainNavHost(it, navController = mainNavController, context = context, pickImageLauncher, selectedImageUri)
+        MainNavHost(it, navController = mainNavController, context = context, pickImageLauncher)
     }
 }
 
