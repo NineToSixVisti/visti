@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
 import Loading from '../../Common/Loading';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 interface MemberList {
   nickname: string;
@@ -49,8 +49,7 @@ const Member : React.FC<MemberProps> = ({id}) => {
             memberList.map((member, index) => (
               <MemberDiv key={index}>
                 <ProfileImg bgImage={member.profilePath}/>
-                <p>{member.nickname}{member.position === 'HOST' &&
-                   `(<FontAwesomeIcon icon="fa-duotone fa-crown" style={{"--fa-primary-color": "#fced65", "--fa-secondary-color": "#005eff", "--fa-secondary-opacity": "0.5",}} />)`}</p>
+                <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
               </MemberDiv>
             ))
           }
