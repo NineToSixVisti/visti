@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
 //        Member _member = getMember(email, memberRepository);
         Member _member = getMemberBySecurity();
