@@ -23,6 +23,7 @@ dayjs.locale('ko');
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
+    getSelectedImageUri: () => object | null;
   };
 }
 
@@ -57,6 +58,14 @@ const StoryboxCreate = () => {
     if (window.Android) {
         if (window.Android.openGallery) {
           window.Android.openGallery();
+          // 갤러리를 열고 난 후 선택된 이미지 URI 검색
+          const selectedImageUri = window.Android.getSelectedImageUri();
+          if (selectedImageUri) {
+            console.log(selectedImageUri);
+            console.log(typeof(selectedImageUri));
+            // 컴포넌트에서 selectedImageUri 사용할 때 어떤 데이터를 가져와야되는지 찍어봐야됨
+            // setGroupImage(selectedImageUri);
+          }
           console.log('openGallety 호출 잘됨')
         } else {
           const inputElement = document.getElementById("ImageInput");
@@ -69,6 +78,7 @@ const StoryboxCreate = () => {
       console.log('안드로이드 접근 안됨')
     }
 }
+
 
 
   // 이미지를 변경할 때의 로직
