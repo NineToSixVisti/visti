@@ -17,31 +17,31 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const requestInterceptor = authInstance.interceptors.request.use(function (req) {
-      // console.log('인터셉터 시작')
-      setLoading(true);
-      return req;
-    }, function (error) {
-      return Promise.reject(error);
-    });
+  // useEffect(() => {
+  //   const requestInterceptor = authInstance.interceptors.request.use(function (req) {
+  //     // console.log('인터셉터 시작')
+  //     setLoading(true);
+  //     return req;
+  //   }, function (error) {
+  //     return Promise.reject(error);
+  //   });
   
-    const responseInterceptor = authInstance.interceptors.response.use(function (res) {      
-      // console.log('인터셉터 완료')
-      setLoading(false);
-      return res;
-    }, function (error) {
-      console.log('인터셉터 에러 ')
-      setLoading(false);
-      return Promise.reject(error);
-    });
+  //   const responseInterceptor = authInstance.interceptors.response.use(function (res) {      
+  //     // console.log('인터셉터 완료')
+  //     setLoading(false);
+  //     return res;
+  //   }, function (error) {
+  //     console.log('인터셉터 에러 ')
+  //     setLoading(false);
+  //     return Promise.reject(error);
+  //   });
   
-    // 컴포넌트 언마운트 시 인터셉터 제거
-    return () => {
-      authInstance.interceptors.request.eject(requestInterceptor);
-      authInstance.interceptors.response.eject(responseInterceptor);
-    };
-  }, []);
+  //   // 컴포넌트 언마운트 시 인터셉터 제거
+  //   return () => {
+  //     authInstance.interceptors.request.eject(requestInterceptor);
+  //     authInstance.interceptors.response.eject(responseInterceptor);
+  //   };
+  // }, []);
   
 
   useEffect(()=>{

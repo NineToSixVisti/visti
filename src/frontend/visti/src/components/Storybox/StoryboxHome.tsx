@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authInstance } from '../../apis/utils/instance'
-import { useDispatch } from 'react-redux';
-import { setStoryboxId } from '../../store/slices/storySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { setStoryboxId, setTrigger } from '../../store/slices/storySlice';
 
 import { ReactComponent as Lock } from "../../assets/images/lock_white_fill.svg"
 import { ReactComponent as CreateBox } from "../../assets/images/storybox-create.svg"
@@ -27,9 +28,10 @@ type BoxWrapProps = {
 const StoryboxHome = () => {  
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const trigger = useSelector((state : RootState) => state.story.trigger);
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
   const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
@@ -59,32 +61,6 @@ const StoryboxHome = () => {
     },
     [hasMore]
   );
-
-    // 스토리 박스 리스트 
-    // const getStoryboxList = useCallback(async () => {
-    //   if (page === 0){
-    //     setIsLoading(true);
-    //   }
-    //   try {
-    //     const { data } = await authInstance.get(`story-box/storybox?page=${page}&size=4`);
-    //     console.log("스토리 박스 리스트:", data);
-        
-    //     setStoryboxList((prevStoryboxList) => {
-    //       if (prevStoryboxList === null) {
-    //         return [...data.detail.content];
-    //       } else {
-    //         return [...prevStoryboxList, ...data.detail.content];
-    //       }
-    //     });
-    //     setHasMore(!data.detail.last);
-    //   } catch (err) {
-    //     console.log('스토리박스 GET 중 에러 발생:', err);
-    //   } finally {
-    //    if (page === 0){
-    //     setIsLoading(false);
-    //    }
-    //   }
-    // }, [page]);
     
     // 검색된 스토리 박스 리스트
     const getSearchStoryboxList = useCallback(async (search : string) => {
@@ -93,7 +69,7 @@ const StoryboxHome = () => {
       }
       try {
         const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
-        console.log("검색된 스토리 박스:", data);
+        // console.log("검색된 스토리 박스:", data);
         if (page ===0) {
           const newContent = [...data.detail.content];
           setStoryboxList(newContent);
@@ -120,20 +96,26 @@ const StoryboxHome = () => {
     }, [page]);
 
   useEffect(() => {
-    console.log("Current storyboxList:", storyboxList); 
+    // console.log("Current storyboxList:", storyboxList); 
   }, [storyboxList]);
   
   useEffect(() => {
-    console.log("Current page:", page);  
+    // console.log("Current page:", page);
   }, [page]);
 
   useEffect(() => {
-    console.log("Has more:", hasMore); 
+    // console.log("Has more:", hasMore); 
   }, [hasMore]);
 
   useEffect(()=>{
-      getSearchStoryboxList(search);
-  },[getSearchStoryboxList, page, search])
+    getSearchStoryboxList(search);
+    dispatch(setTrigger(false));
+    // console.log('트리거 :', trigger);
+  },[getSearchStoryboxList, page, search, dispatch, trigger])
+
+  useEffect(()=>{
+    // console.log("SERVER_URL:", process.env.REACT_APP_SERVER);
+  },[])
 
   return (
     <StoryboxWWrap>

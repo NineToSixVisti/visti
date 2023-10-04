@@ -32,6 +32,34 @@ const StoryboxDetail: React.FC = () => {
 
   const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
   const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
+  
+  const getStoryboxInfo = useCallback(async () => {
+    setIsLoading(true);
+    try  {
+      const data = await authInstance.get(`story-box/${id}/info`)
+      if (data) {
+        setStoryboxInfo(data.data.detail);
+        // console.log(data.data.detail);
+      }
+    } catch (err) {
+      console.log('스토리박스 Info GET 중 에러 발생', err)
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+  
+  
+  const formatDate = (dateStr: string, includeYear: boolean = true): string => {
+    const date = new Date(dateStr);
+    const year = String(date.getFullYear()).slice(-2);    
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return includeYear ? `${year}.${month}.${day}` : `${year}.${month}.${day}`;
+  }
+  
+  const formatRange = (start: string, end: string): string => {
+    return `${formatDate(start)} ~ ${formatDate(end, false)}`;
+  }
 
   useEffect(() => {
     const updateRemainingTime = () => {
@@ -59,39 +87,12 @@ const StoryboxDetail: React.FC = () => {
       clearInterval(intervalId);
     };
   }, [storyboxInfo.finishedAt]);
-
-  const getStoryboxInfo = useCallback(async () => {
-    setIsLoading(true);
-    try  {
-      const data = await authInstance.get(`story-box/${id}/info`)
-      if (data) {
-        setStoryboxInfo(data.data.detail);
-        // console.log(data.data.detail);
-      }
-    } catch (err) {
-      console.log('스토리박스 Info GET 중 에러 발생', err)
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
-
-
+  
   useEffect(()=>{
     getStoryboxInfo();
   }, [getStoryboxInfo]);
-
-  const formatDate = (dateStr: string, includeYear: boolean = true): string => {
-    const date = new Date(dateStr);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return includeYear ? `${year}.${month}.${day}` : `${month}.${day}`;
-  }
   
-  const formatRange = (start: string, end: string): string => {
-    return `${formatDate(start)} ~ ${formatDate(end, false)}`;
-  }
-
+  
   return (
     <>
       <TopWrap>
@@ -99,7 +100,7 @@ const StoryboxDetail: React.FC = () => {
           <GoBackSvg onClick={()=>{navigate("/storybox")}}/>
           <p>
           {storyboxInfo.name.length > 12 ? `${storyboxInfo.name.substring(0, 12)}...` : storyboxInfo.name}</p>
-          { storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join", {state : { storyboxId : id }})}}/> } 
+          {storyboxInfo.isHost && <ModifySvg onClick={()=>{navigate("/storybox/join", {state : { storyboxId : id }})}}/> } 
         </FirstTop> 
           <TopMian>
             <BgImageDiv bgImage={storyboxInfo.boxImgPath}></BgImageDiv>
@@ -109,11 +110,17 @@ const StoryboxDetail: React.FC = () => {
                 <p>Loading...</p>
               </LoadingWrap>
               :
-              <div>
+              remainingTime !== "00:00:00" ?
+              <TLBoxInfo>
                 <p>스토리 생성 가능 시간</p>
                 <p>{remainingTime}</p>
                 <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
-              </div>
+              </TLBoxInfo> :
+              <BoxInfo>
+                <p>"인생은 단 한번의 추억여행이야"</p>
+                {/* <p>추억 시간</p> */}
+                <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
+              </BoxInfo>
             }
           </TopMian>
       </TopWrap>
@@ -160,24 +167,7 @@ const FirstTop = styled.div`
 const TopMian = styled.div`
   width: 100%;
   height: 70%;
-  /* background-color: lightgreen; */
   display: flex;
-
-  >div:nth-child(2) {
-    width: 50%;
-    height: 100%;
-    margin: 0 10px ;
-    text-align: center;
-  
-  >p {
-    font-weight: 600;
-    margin : 10px 0;
-  }
-
-  >p:nth-child(2) {
-    font-size: 30px;
-  }
-  }
 `
 
 const BgImageDiv = styled.div<DivProps>`
@@ -188,6 +178,40 @@ const BgImageDiv = styled.div<DivProps>`
   background-position: center;
   border-radius: 12px;
   display: flex;
+`
+
+const TLBoxInfo = styled.div`
+  width: 50%;
+  height: 100%;
+  margin: 0 10px ;
+  text-align: center;
+
+  >p {
+    font-weight: 600;
+    margin : 10px 0;
+  }
+
+  >p:nth-child(2) {
+    font-size: 30px;
+  }
+`
+
+const BoxInfo = styled.div`
+  width: 50%;
+  height: 100%;
+  margin: 0 10px ;
+  text-align: center;
+
+  >p {
+    font-weight: 600;
+    margin : 10px 0;
+    line-height: 32px;
+  }
+
+  >p:first-child {
+    background-color: rgba(255, 235, 230, 0.7);
+    font-size: 18px;
+  }
 `
 
 const MainWrap = styled.div`
@@ -201,7 +225,7 @@ const GoBackSvg = styled(GoBack)`
 `
 
 const ModifySvg = styled(Modify)`
-  margin-right: 10px;
+  padding: 10px;
 `
 
 const LoadingWrap = styled.div`
