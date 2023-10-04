@@ -77,7 +77,7 @@ public class StoryServiceImpl implements StoryService{
         if (storiesInStoryBox >= 100){
             throw new ApiException(MAX_STORY_QUOTA_REACHED_STORYBOX);
         }
-        
+
         // S3 파일 저장
         String postCategory = "story";
         String imageUrl;

@@ -121,7 +121,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
                 .anyMatch(member -> email.equals(member.getEmail()));
 
         if (isMemberAlreadyJoin){
-            throw new ApiException(ALREADY_JOIN_ERROR);
+            return new BaseResponseDTO<>("스토리-박스에 이미 참여 한 스토리박스입니다.", 200);
         }
 
         // FCM 전송
