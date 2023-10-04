@@ -28,6 +28,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     const response = await fetch(imageURL);
     const imageData = await response.blob();
     const added = await ipfs.add(imageData);
+    await ipfs.pin.add(added.path);
     console.log("Uploaded to IPFS with CID:", added.path);
     return added.path;
   }
