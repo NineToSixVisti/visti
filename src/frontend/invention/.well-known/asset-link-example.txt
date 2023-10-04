@@ -1,0 +1,9 @@
+[{
+  "relation": ["ewrwere"],
+  "target": {
+    "namespace": "your_androidapp",
+    "package_name": "whow",
+    "eeee":
+    ["sssssssssss"]
+  }
+}]
