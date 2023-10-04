@@ -98,7 +98,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         Member _member = getMemberBySecurity();
 
         if (email == null){
-            return new BaseResponseDTO<>("회원가입이 되어있지 않습니다?.", 200);
+            throw new ApiException(NO_MEMBER_ERROR);
         }
 
         Optional<StoryBox> _storyBox = storyBoxRepository.findById(storyBoxId);
@@ -121,7 +121,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
                 .anyMatch(member -> email.equals(member.getEmail()));
 
         if (isMemberAlreadyJoin){
-            throw new ApiException(ALREADY_JOIN_ERROR);
+            return new BaseResponseDTO<>("스토리-박스에 이미 참여 한 스토리박스입니다.", 200);
         }
 
         // FCM 전송

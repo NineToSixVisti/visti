@@ -215,41 +215,6 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-//    @GetMapping("/{storyBoxIds}/generate")
-//    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.")
-//    public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
-//            @PathVariable String storyBoxIds
-//    ) {
-//        String email = getEmail();
-//
-//        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
-//        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
-//
-//        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(decryptedStoryId, email);
-//        return ResponseEntity.status(response.getStatusCode()).body(response);
-//    }
-
-/*
-    @GetMapping("/validate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.")
-    public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
-            @RequestParam String token
-    ) {
-        String email;
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() != null) {
-            email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        }else{
-            email = null;
-        }
-
-        BaseResponseDTO<String> response = storyBoxService.validateStoryBoxLink(token, email);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-*/
-
     private long getDecryptedStoryBoxId(String isDecryptedStoryId){
         try {
             return Long.parseLong(isDecryptedStoryId);
