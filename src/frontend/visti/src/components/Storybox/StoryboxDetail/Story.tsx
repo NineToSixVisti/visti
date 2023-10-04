@@ -51,7 +51,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
   const getStoryList = useCallback(async () => {
     try {
       const { data } = await authInstance.get(`story-box/${id}/story-list?page=${page}&size=12`)
-      console.log("Returned data:", data)
+      // console.log("Returned data:", data)
       if (data) {
         setStoryList((prevStoryList) => [
           ...prevStoryList,
@@ -70,16 +70,21 @@ const Story : React.FC<StoryProps> = ({id}) => {
   }, [getStoryList, page]); // page가 바꿔도 다시 함수를 불러야 한다.
   
   useEffect(()=>{
-    console.log("Current storyList:", storyList);
+    // console.log("Current storyList:", storyList);
   },[storyList]);
 
   useEffect(()=>{
-    console.log("Current page:", page)
+    // console.log("Current page:", page)
   },[page]);
   
   useEffect(()=>{
-    console.log("hasMore:", hasMore)
+    // console.log("hasMore:", hasMore)
   },[hasMore]);
+
+  // 페이지 전환 시 스크롤 위치 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -89,6 +94,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
             <Empty />
             <p>스토리가 하나도 없어요</p>
             <p>추억을 저장해 볼까요?</p>
+            <CreatePostButton/>
           </EmptyWrap>
         ) : (
           <StoryWrap>

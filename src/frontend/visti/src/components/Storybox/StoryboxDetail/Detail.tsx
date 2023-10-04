@@ -94,7 +94,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
   },[getStoryboxDetail])
 
   useEffect(()=>{
-    console.log(`http://localhost:3000/invite/${encryptedText}`);
+    // console.log(`http://localhost:3000/invite/${encryptedText}`);
   },[encryptedText])
 
   return (

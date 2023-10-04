@@ -22,7 +22,7 @@ const Member : React.FC<MemberProps> = ({id}) => {
       const data = await authInstance.get(`story-box/${id}/members`)
       if (data) {
         setMemberList(data.data.detail);
-        console.log(data.data.detail);
+        // console.log(data.data.detail);
       }
     }
     catch (err) {
