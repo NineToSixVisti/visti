@@ -48,6 +48,15 @@
                 <data android:scheme="http"
                     android:host="www.visti.com" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="visti"
+                    android:host="deeplink" />
+            </intent-filter>
 
         </activity>
         <activity

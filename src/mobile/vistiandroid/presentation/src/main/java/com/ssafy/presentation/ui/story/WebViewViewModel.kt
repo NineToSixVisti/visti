@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.story
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
@@ -44,11 +45,23 @@ class WebViewViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    val webViewState = WebViewState(
-        WebContent.Url(
-            url = "https://j9d102.p.ssafy.io/storybox/",
-            additionalHttpHeaders = emptyMap()
+    fun setWebViewState(id: String): WebViewState {
+        Log.e("setWebview","https://j9d102.p.ssafy.io/storybox/detail/$id")
+        if (id.isNotBlank()) {
+            return WebViewState(
+                WebContent.Url(
+                    url = "https://j9d102.p.ssafy.io/storybox/detail/$id",
+                    additionalHttpHeaders = emptyMap()
+                )
+            )
+        }
+        return WebViewState(
+            WebContent.Url(
+                url = "https://j9d102.p.ssafy.io/storybox",
+                additionalHttpHeaders = emptyMap()
+            )
         )
-    )
+    }
+
     val webViewNavigator = WebViewNavigator(viewModelScope)
 }

@@ -2,6 +2,7 @@ package com.ssafy.presentation.ui.common
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,10 +50,10 @@ fun MainNavHost(
         composable(MainNav.Home.route) {
             HomeScreen()
         }
-        composable(MainNav.Memory.route) {
-            StoryScreen()
-        }
-        composable(MainNav.Memory.route){
+//        composable(MainNav.Memory.route) {
+//            StoryScreen()
+//        }
+        composable(MainNav.Like.route){
             LikeListScreen()
         }
         composable(
@@ -64,16 +65,11 @@ fun MainNavHost(
                 type = NavType.StringType
                 defaultValue = ""
             })
-
         ) {
             entry ->
             val id = entry.arguments?.getString("id")
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "The id is $id")
-            }
+            Log.e("entry",id.toString())
+            StoryScreen(id.toString())
         }
 
         composable(MainNav.Profile.route) {

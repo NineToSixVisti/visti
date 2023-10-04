@@ -12,13 +12,16 @@ import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 
 @Composable
-fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel()) {
+fun StoryScreen(
+    id: String,
+    viewModel: WebViewViewModel = hiltViewModel()
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            val webViewState = viewModel.webViewState
+            val webViewState = viewModel.setWebViewState(id)
             val webViewNavigator = viewModel.webViewNavigator
 
             WebView(
@@ -32,13 +35,15 @@ fun StoryScreen(viewModel: WebViewViewModel = hiltViewModel()) {
                             domStorageEnabled = true
                             javaScriptCanOpenWindowsAutomatically = false
                         }
-                        addJavascriptInterface(object {
-                            @JavascriptInterface
-                            fun getToken(): String {
-                                return viewModel.accessToken.value.accessToken
-                            }
-                        },
-                            "Android" )
+                        addJavascriptInterface(
+                            object {
+                                @JavascriptInterface
+                                fun getToken(): String {
+                                    return viewModel.accessToken.value.accessToken
+                                }
+                            },
+                            "Android"
+                        )
                     }
                 }
             )
