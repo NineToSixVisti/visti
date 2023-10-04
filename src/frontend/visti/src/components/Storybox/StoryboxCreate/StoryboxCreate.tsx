@@ -53,6 +53,18 @@ const StoryboxCreate = () => {
     finishedAt?: string;
   };
 
+  const base64ToFile = (base64: string, filename: string): File => {
+    const arr = base64.split(',');
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const byteCharacters = atob(arr[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new File([byteArray], filename, { type: mime });
+  };
+
   // 사진을 클릭했을때 input 창 반응
   const ImageClick = () => {
     if (window.Android) {
@@ -61,20 +73,23 @@ const StoryboxCreate = () => {
           // 갤러리를 열고 난 후 선택된 이미지 URI 검색
           const selectedImageUri = window.Android.getSelectedImage();
           if (selectedImageUri) {
-            console.log(selectedImageUri);
-            // 컴포넌트에서 selectedImageUri 사용할 때 어떤 데이터를 가져와야되는지 찍어봐야됨
+            // console.log(selectedImageUri);
             setGroupImage(selectedImageUri);
+
+            // base64 문자열을 File 객체로 변환
+            const imageFile = base64ToFile(selectedImageUri, "selectedImage.jpg");
+            setFile(imageFile);  // File 객체 저장
           }
           // console.log('openGallety 호출 잘됨')
         } else {
           const inputElement = document.getElementById("ImageInput");
           inputElement?.click();
-          console.log('openGallety 호출 안됨')
+          // console.log('openGallety 호출 안됨')
         }
     } else {
       const inputElement = document.getElementById("ImageInput");
       inputElement?.click();
-      console.log('안드로이드 접근 안됨')
+      // console.log('안드로이드 접근 안됨')
     }
 }
 
