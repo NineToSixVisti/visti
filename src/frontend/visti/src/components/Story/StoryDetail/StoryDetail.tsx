@@ -166,8 +166,6 @@ function StoryDetail() {
           <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
         </InfoContainer>
       </ProfileContainer>
-      {/* <NFTButton imageURI={storyData.mainFilePath} /> */}
-
       <HeartButtonContainer>
         {like ? (
           <HeartButton onClick={handleLike} />
@@ -175,6 +173,7 @@ function StoryDetail() {
           <Heartwhite onClick={handleLike} />
         )}
       </HeartButtonContainer>
+      <NFTButton imageURI={storyData.mainFilePath} />
     </Container>
   );
 }

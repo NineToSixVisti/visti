@@ -2,22 +2,22 @@ import React from "react";
 import { ethers } from "ethers";
 import contractData from "../../../assets/VistiNFT.json";
 import { ReactComponent as NFTOFF } from "../../../assets/images/nft-offbutton.svg";
-import { create } from 'ipfs-http-client';
+import { create } from "ipfs-http-client";
 
 interface NFTButtonProps {
   imageURI: string;
 }
 
 const ipfs = create({
-  host: 'j9d102.p.ssafy.io',
+  host: "j9d102.p.ssafy.io",
   port: 5001,
-  protocol: 'http'
+  protocol: "http",
 });
 
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
-  const contractAddress = "0x68A975819b5120836dcC2CD73684F9b4e71F6Bc3";
+  const contractAddress = "0xE67Af4B30a1ebE1845f2042C3870b8DDc40A3963";
   const contract = new ethers.Contract(
     contractAddress,
     contractData.abi,
@@ -51,7 +51,11 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     }
   };
 
-  return <button onClick={createAndSendNFT}><NFTOFF/></button>;
+  return (
+    <button onClick={createAndSendNFT}>
+      <NFTOFF />
+    </button>
+  );
 };
 
 export default NFTButton;
