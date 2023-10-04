@@ -16,9 +16,10 @@ import com.ssafy.presentation.ui.common.StoryItem
 import com.ssafy.presentation.ui.like.component.EmptyItemView
 import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.LoadingView
+import com.ssafy.presentation.ui.profile.ProfileViewModel
 
 @Composable
-fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, navController: NavController) {
+fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, navController: NavController, viewModel: ProfileViewModel) {
     when {
         stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())
@@ -51,7 +52,7 @@ fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, n
         this.items(stories.itemCount) { index ->
             val image = stories[index]
             if (image != null) {
-                StoryItem(image, navController)
+                StoryItem(image, navController, viewModel)
             }
         }
     }

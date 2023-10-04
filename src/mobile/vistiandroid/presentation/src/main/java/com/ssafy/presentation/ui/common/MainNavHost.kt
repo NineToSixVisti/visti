@@ -13,6 +13,7 @@ import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
 import com.ssafy.presentation.ui.like.LikeListScreen
+import com.ssafy.presentation.ui.profile.MyStoryScreen
 import com.ssafy.presentation.ui.profile.ProfileScreen
 import com.ssafy.presentation.ui.setting.InformationScreen
 import com.ssafy.presentation.ui.setting.NotificationSettingScreen
@@ -60,6 +61,10 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     context: Context
 ) {
+    composable(route = SettingNav.MyStory.route) {
+        MyStoryScreen()
+    }
+
     composable(route = SettingNav.Notification.route) {
         NotificationSettingScreen(navController = navController)
     }

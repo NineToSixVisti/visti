@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.common
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -24,14 +25,22 @@ import coil.request.ImageRequest
 import com.ssafy.domain.model.Story
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SettingNav
+import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.theme.PrimaryColor
+
+private const val TAG = "StoryItem"
 
 @Composable
 fun StoryItem(
-    story: Story, navController: NavController
+    story: Story, navController: NavController, viewModel: ProfileViewModel
 ) {
     Box(modifier = Modifier.clickable {
-        navController.navigate(MainNav.Memory.route) {
+        Log.d(TAG, "StoryItem: ${story.encryptedId}")
+
+        viewModel.setWebViewState(story.encryptedId)
+
+        navController.navigate(SettingNav.MyStory.route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
@@ -68,6 +77,5 @@ fun StoryItem(
                     .align(Alignment.TopEnd)
             )
         }
-
     }
 }
