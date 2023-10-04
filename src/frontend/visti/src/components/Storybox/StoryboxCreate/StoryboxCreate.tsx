@@ -23,7 +23,6 @@ dayjs.locale('ko');
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
-    onImageSelected: (base64Image: string) => void;
   };
 }
 
