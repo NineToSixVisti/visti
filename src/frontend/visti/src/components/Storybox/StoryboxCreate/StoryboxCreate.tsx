@@ -95,7 +95,7 @@ const StoryboxCreate = () => {
   };
 
   // 이미지 base64 전달(안드->웹)
-  const onImageSelected = (base64Image: string) => {
+  const onImageSelected = (base64Image: string | null) => {
     try {
         if (base64Image) {
             console.log('onImageSelected() 실행됨');
