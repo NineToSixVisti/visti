@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import contractData from "../../../assets/VistiNFT.json";
 import { ReactComponent as NFTOFF } from "../../../assets/images/nft-offbutton.svg";
 import { create } from "ipfs-http-client";
+import NftButton from "../../../assets/images/nftoffbutton2.png";
 
 interface NFTButtonProps {
   imageURI: string;
@@ -17,7 +18,7 @@ const ipfs = create({
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
-  const contractAddress = "0xE67Af4B30a1ebE1845f2042C3870b8DDc40A3963";
+  const contractAddress = "0x7424AA05747A46c5057DF5325dA04211a5c46643";
   const contract = new ethers.Contract(
     contractAddress,
     contractData.abi,
@@ -30,7 +31,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     const added = await ipfs.add(imageData);
     await ipfs.pin.add(added.path);
     console.log("Uploaded to IPFS with CID:", added.path);
-    return added.path;
+    return added.path;  
   }
 
   const createAndSendNFT = async () => {
@@ -52,8 +53,26 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   };
 
   return (
-    <button onClick={createAndSendNFT}>
-      <NFTOFF />
+    <button 
+      style={{
+        backgroundColor: 'transparent', 
+        border: 'none', 
+        padding: 0, 
+        width: '40px', 
+        height: '40px', 
+        cursor: 'pointer', 
+        outline: 'none' 
+      }}
+      onClick={createAndSendNFT}
+    >
+      <img 
+        src={NftButton} 
+        alt="NFT Button" 
+        style={{
+          width: '90%', 
+          height: '90%' 
+        }}
+      />
     </button>
   );
 };
