@@ -1,6 +1,6 @@
 package com.spring.visti.external.oauth.service;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.global.jwt.dto.TokenDTO;
@@ -30,7 +30,7 @@ public class LoginService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // JWT 토큰 생성
-        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
+        TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication, member.getRole());
 
         // refreshToken을 DB에 저장
         member.updateMemberToken(tokenDTO.getRefreshToken());

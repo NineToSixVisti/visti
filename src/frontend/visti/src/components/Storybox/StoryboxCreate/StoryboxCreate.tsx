@@ -14,12 +14,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckModal from './CheckModal';
 import { authInstance } from '../../../apis/utils/instance';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTrigger } from '../../../store/slices/storySlice';
+import { RootState } from '../../../store';
 dayjs.locale('ko');
 
 // window 객체 타입 확장
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
+    getSelectedImageUri: () => object | null;
   };
 }
 
@@ -27,6 +31,8 @@ declare var window: MyWindow;
 
 const StoryboxCreate = () => { 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); 
+  const trigger = useSelector((state : RootState) => state.story.trigger)
   const location = useLocation(); // navigate로 보낸 stoyryboxId를 받기 위해 사용
   const storyboxId = location.state ? location.state.storyboxId : null;
   const isEditMode = !!storyboxId
@@ -52,6 +58,14 @@ const StoryboxCreate = () => {
     if (window.Android) {
         if (window.Android.openGallery) {
           window.Android.openGallery();
+          // 갤러리를 열고 난 후 선택된 이미지 URI 검색
+          const selectedImageUri = window.Android.getSelectedImageUri();
+          if (selectedImageUri) {
+            console.log(selectedImageUri);
+            console.log(typeof(selectedImageUri));
+            // 컴포넌트에서 selectedImageUri 사용할 때 어떤 데이터를 가져와야되는지 찍어봐야됨
+            // setGroupImage(selectedImageUri);
+          }
           console.log('openGallety 호출 잘됨')
         } else {
           const inputElement = document.getElementById("ImageInput");
@@ -64,6 +78,7 @@ const StoryboxCreate = () => {
       console.log('안드로이드 접근 안됨')
     }
 }
+
 
 
   // 이미지를 변경할 때의 로직
@@ -213,12 +228,15 @@ const StoryboxCreate = () => {
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
+    dispatch(setTrigger(true)); // 리랜더링 하기 위해
+    console.log(trigger); 
     setIsModalOpen(false);
     navigate('/storybox', { replace : true })
   }
 
   // 수정하는 경우 기존의 박스 내용을 동기화
   const getStoryboxInfo = useCallback(async () => {
+    if (!isEditMode) return;
     try {
       const data = await authInstance.get(`story-box/${storyboxId}/info`)
     if (data){
@@ -235,16 +253,12 @@ const StoryboxCreate = () => {
     catch (err) {
       console.log('스토리박스 Info GET 중 에러 발생', err);
     }
-  },[storyboxId]);
+  },[storyboxId, isEditMode]);
 
   // getStoryboxInfo를 통해 찍어볼 수 있게
   useEffect(()=>{
     getStoryboxInfo();
   },[getStoryboxInfo])
-
-  // useEffect(()=>{
-  //   console.log(groupImage);
-  // },[groupImage])
 
   return (
     <Wrap>
@@ -311,6 +325,12 @@ const StoryboxCreate = () => {
 const Wrap  = styled.div`
   width: 100%;
   height: 100%;
+
+  overflow-y: scroll; 
+  scrollbar-width: none; // 파이어폭스
+  &::-webkit-scrollbar { // 크롬, 사파리
+    display: none;
+  }
 ` 
 
 const LogoWrap = styled.div`
@@ -338,11 +358,11 @@ const MainWrap = styled.div`
   height: calc(100vh - 30px);
   margin : 10px 20px;
 
-  overflow-y: auto; 
+  /* overflow-y: scroll; 
   scrollbar-width: none; // 파이어폭스
   &::-webkit-scrollbar { // 크롬, 사파리
     display: none;
-  }
+  } */
 `
 
 const Title = styled.div`
@@ -403,6 +423,7 @@ const GroupDescription = styled.textarea`
 
 const RequestBtn = styled.button`
   border-radius: 1rem;
+  border: none;
   font-size: 1.5rem;
   width: calc(100vw - 40px);
   height: 3rem;
