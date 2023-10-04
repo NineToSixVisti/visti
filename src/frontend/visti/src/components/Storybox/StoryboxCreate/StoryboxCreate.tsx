@@ -23,7 +23,7 @@ dayjs.locale('ko');
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
-    getSelectedImageUri: () => string | null;
+    getSelectedImage: () => string | null;
   };
 }
 
@@ -59,7 +59,7 @@ const StoryboxCreate = () => {
         if (window.Android.openGallery) {
           window.Android.openGallery();
           // 갤러리를 열고 난 후 선택된 이미지 URI 검색
-          const selectedImageUri = window.Android.getSelectedImageUri();
+          const selectedImageUri = window.Android.getSelectedImage();
           if (selectedImageUri) {
             console.log(selectedImageUri);
             // 컴포넌트에서 selectedImageUri 사용할 때 어떤 데이터를 가져와야되는지 찍어봐야됨
