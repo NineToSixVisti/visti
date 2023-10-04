@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StoryBoxExposedDTO {
 
-    private Long id;
     private String encryptedId;
 
     private String boxImgPath;
@@ -25,11 +24,10 @@ public class StoryBoxExposedDTO {
     private Boolean blind;
 
     @Builder
-    public StoryBoxExposedDTO(Long id, String encryptedId,
+    public StoryBoxExposedDTO(String encryptedId,
                               String boxImgPath, String name,
                               LocalDateTime createdAt, LocalDateTime finishedAt,
                               Boolean blind){
-        this.id = id;
         this.encryptedId = encryptedId;
         this.boxImgPath = boxImgPath;
         this.name = name;
@@ -43,7 +41,6 @@ public class StoryBoxExposedDTO {
 //        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
 //        System.out.println("이거를 확인해주세요" + isDecrypted);
         return StoryBoxExposedDTO.builder()
-                .id(storyBox.getId())
                 .encryptedId(encryptedId)
                 .boxImgPath(storyBox.getBoxImgPath())
                 .name(storyBox.getName())
