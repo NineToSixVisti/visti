@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { authInstance } from "../../../apis/utils/instance";
 import styled from "styled-components";
-import { ReactComponent as BackButtonIcon } from "../../../assets/images/storydetailclose_button.svg";
+import { ReactComponent as BackButtonIcon } from "../../../assets/images/closeblack-button.svg";
 import { ReactComponent as HeartButton } from "../../../assets/images/heartbutton.svg";
 import { ReactComponent as Heartwhite } from "../../../assets/images/heartwhite.svg";
 import { useNavigate } from "react-router-dom";
@@ -23,14 +23,13 @@ interface StoryData {
   };
 }
 
-
 const HeartButtonContainer = styled.div`
   position: absolute;
   bottom: 4%;
   right: 10%;
   display: flex;
   align-items: center;
-  gap: 10px;  // 간격을 추가하여 버튼 사이에 공간을 만듭니다.
+  gap: 10px; // 간격을 추가하여 버튼 사이에 공간을 만듭니다.
 `;
 
 const InfoContainer = styled.div`
@@ -119,12 +118,9 @@ function StoryDetail() {
     authInstance
       .get(`story/${id}/like`)
       .then((response) => {
-        console.log("Successfully liked the story:", response.data);
         setLike((prev) => !prev);
       })
-      .catch((error) => {
-        console.error("Failed to like the story:", error);
-      });
+      .catch((error) => {});
   };
 
   useEffect(() => {
@@ -136,12 +132,10 @@ function StoryDetail() {
         setStoryData(response.data.detail);
         setLike(response.data.detail.like);
       })
-      .catch((error) => {
-        console.error("Failed to fetch story data:", error);
-      });
+      .catch((error) => {});
   }, [id]);
 
-  if (!storyData) return <div>Loading...</div>;
+  if (!storyData) return <div>로딩중이 맞습니까?...</div>;
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -154,7 +148,6 @@ function StoryDetail() {
   return (
     <Container>
       <ButtonContainer>
-  
         <BasicModal storyId={id} />
         <BackButton onClick={handleBack}>
           <BackButtonIcon />
@@ -177,15 +170,13 @@ function StoryDetail() {
         </InfoContainer>
       </ProfileContainer>
       <HeartButtonContainer>
-      <NFTButton imageURI={storyData.mainFilePath} />
+        <NFTButton imageURI={storyData.mainFilePath} />
         {like ? (
           <HeartButton onClick={handleLike} />
         ) : (
           <Heartwhite onClick={handleLike} />
         )}
-       
       </HeartButtonContainer>
-    
     </Container>
   );
 }
