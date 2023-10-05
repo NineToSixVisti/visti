@@ -135,7 +135,7 @@ function StoryDetail() {
       .catch((error) => {});
   }, [id]);
 
-  if (!storyData) return <div>Loading...</div>;
+  if (!storyData) return <div>로딩중이 맞습니까?...</div>;
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
