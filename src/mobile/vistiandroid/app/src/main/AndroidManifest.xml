@@ -13,7 +13,7 @@
 
     <application
         android:name="com.ssafy.visti.di.ApplicationClass"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,6 +24,13 @@
         android:theme="@style/Theme.Vistiandroid"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+<!--        <activity-->
+<!--            android:name="com.ssafy.presentation.BridgeActivity"-->
+<!--            android:exported="true"-->
+<!--            android:launchMode="singleTask"-->
+<!--            tools:replace="android:exported"-->
+<!--            android:theme="@style/Theme.Vistiandroid"-->
+<!--            android:windowSoftInputMode="adjustResize">-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -35,17 +42,76 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <data android:scheme="https"-->
+<!--                    android:host="www.visti.com" />-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="http"-->
+<!--                    android:host="www.visti.com" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="visti"-->
+<!--                    android:host="deeplink" />-->
+<!--            </intent-filter>-->
+
+<!--        </activity>-->
         <activity
             android:name="com.ssafy.presentation.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Vistiandroid"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <data android:scheme="https"
+                android:host="www.visti.com" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http"
+                    android:host="www.visti.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="visti"
+                    android:host="deeplink" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

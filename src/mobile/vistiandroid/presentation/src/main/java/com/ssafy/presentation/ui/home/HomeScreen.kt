@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -59,9 +60,11 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberScrollState()
@@ -92,6 +95,7 @@ fun HomeScreen(
                 toolbar = {
                     Box(
                         modifier = Modifier
+
                             .fillMaxSize()
                             .height(540.dp),
                     ) {
@@ -133,7 +137,7 @@ fun HomeScreen(
                     HomeContent(
                         homeStorySate.stories,
                         homeStoryBoxState.storyBoxList,
-                        memberInformation
+                        memberInformation, navController
                     )
                 }
             }
@@ -145,7 +149,8 @@ fun HomeScreen(
 fun HomeContent(
     homeStoryList: List<HomeStory>,
     homeStoryBoxList: List<StoryBox>,
-    memberInformation: Member
+    memberInformation: Member,
+    navController: NavController
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -184,7 +189,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryBoxList) { homeStoryBox ->
-                HomeStoryBoxItem(homeStoryBox)
+                HomeStoryBoxItem(homeStoryBox, navController)
             }
         }
     }
@@ -216,7 +221,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryList) { homeStory ->
-                HomeStoryItem(homeStory)
+                HomeStoryItem(homeStory, navController)
             }
         }
     }
@@ -264,7 +269,10 @@ fun HomeContentDes(memberInformation: Member) {
 }
 
 @Composable
-fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeViewModel) {
+fun HomeToolBar(
+    progress: CollapsingToolbarScaffoldState,
+    homeViewModel: HomeViewModel,
+) {
 
     val homeLastStoryBox = homeViewModel.homeLastStoryBoxState.value.storyBox
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
@@ -288,7 +296,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
 //                    .aspectRatio(3f / 2f)
 //                    .fillMaxSize()
 //            )
-            loadImage(homeLastStoryBox.boxImgPath)
+
             Image(
                 painter = loadImage(imageUrl = memberInformation.profilePath.toString()),
                 contentDescription = "home profile image",
@@ -297,7 +305,6 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                     .clip(CircleShape)
                     .size(40.dp)
                     .border(2.dp, Color.Black, CircleShape)
-
             )
             Row() {
                 Image(
@@ -305,7 +312,7 @@ fun HomeToolBar(progress: CollapsingToolbarScaffoldState, homeViewModel: HomeVie
                     contentDescription = "home toolbar pencil"
                 )
                 Text(text = "x", color = Color.Black)
-                Text(text = memberInformation.dailyStory, color = Color.Black)
+                Text(text = memberInformation.dailyStory.toString(), color = Color.Black)
             }
         }
         Text(

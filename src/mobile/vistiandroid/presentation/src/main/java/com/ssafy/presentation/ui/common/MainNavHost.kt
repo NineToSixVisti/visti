@@ -2,17 +2,18 @@ package com.ssafy.presentation.ui.common
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ssafy.presentation.MainActivity.Companion.selectedImageUri
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
@@ -36,22 +37,41 @@ fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
     context: Context,
+    route: String,
     pickImageLauncher: ActivityResultLauncher<Intent>
+
 ) {
     NavHost(
         modifier = Modifier,
         navController = navController,
-        startDestination = SignInNav.SignIn.route,
+        startDestination = route,
     ) {
+
         composable(MainNav.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
-        composable(MainNav.Memory.route) {
-            StoryScreen(pickImageLauncher = pickImageLauncher)
+        composable(
+            MainNav.Memory.route, deepLinks = listOf(navDeepLink {
+                uriPattern = "visti://deeplink/{id}"
+                action = Intent.ACTION_VIEW
+            }),
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { entry ->
+            val id = entry.arguments?.getString("id")
+            Log.e("entry", id.toString())
+            StoryScreen(id.toString(), pickImageLauncher)
         }
+//        composable(MainNav.Memory.route) {
+//            StoryScreen()
+//        }
         composable(MainNav.Like.route) {
-            LikeListScreen()
+            LikeListScreen(navController = navController)
         }
+
+
         composable(MainNav.Profile.route) {
             ProfileScreen(navController = navController)
         }
@@ -65,6 +85,24 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     context: Context
 ) {
+    composable(route = "${SettingNav.WebView.route}/{id}/{mode}",
+        arguments = listOf(navArgument("id") {
+            type = NavType.StringType
+            defaultValue = ""
+        },
+            navArgument("mode") {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+
+        )) { entry ->
+        val id = entry.arguments?.getString("id")
+        Log.e("entry", id.toString())
+        val mode = entry.arguments?.getString("mode")
+        Log.e("entry", mode.toString())
+        WebViewScreen(id.toString(), mode.toString())
+    }
+
     composable(route = SettingNav.Notification.route) {
         NotificationSettingScreen(navController = navController)
     }
@@ -82,13 +120,17 @@ fun NavGraphBuilder.settingsGraph(
     }
 }
 
+
 fun NavGraphBuilder.signupGraph(
     navController: NavHostController,
     context: Context
 ) {
     composable(route = SignInNav.SignIn.route) {
-        SignInScreen(navController = navController, context)
+        SignInScreen(navController, context)
     }
+//    composable(route = SignInNav.Main.route) {
+//        MainScreen(mainNavController, context)
+//    }
 
     composable(route = SignInNav.FindPassword.route) {
         FindPasswordScreen(navController = navController)

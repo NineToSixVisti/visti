@@ -1,26 +1,27 @@
-package com.ssafy.presentation
+package com.ssafy.presentation.ui.story
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ssafy.domain.model.Member
+import com.google.accompanist.web.WebContent
+import com.google.accompanist.web.WebViewNavigator
+import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
-import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.domain.usecase.story.StoryUseCase
-import com.ssafy.presentation.ui.home.component.MemberState
-import com.ssafy.presentation.ui.story.StoryState
+import com.ssafy.domain.usecase.storybox.StoryBoxUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class StoryViewModel @Inject constructor(
     private val storyUseCase: StoryUseCase,
+    private val storyBoxUseCase: StoryBoxUseCase
 ) : ViewModel() {
     private val _accessToken = MutableStateFlow<StoryState>(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
@@ -28,6 +29,13 @@ class MainViewModel @Inject constructor(
     init {
         getToken()
     }
+
+    fun enterStoryBox(storyBoxId: String) {
+        viewModelScope.launch {
+            storyBoxUseCase.enterStoryBox(storyBoxId)
+        }
+    }
+
 
     private fun getToken() {
         storyUseCase().onEach { result ->
@@ -47,4 +55,24 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    fun setWebViewState(id: String): WebViewState {
+        Log.e("setWebview", "https://j9d102.p.ssafy.io/storybox/detail/$id")
+        if (id.isNotBlank()) {
+            enterStoryBox(id)
+            return WebViewState(
+                WebContent.Url(
+                    url = "https://j9d102.p.ssafy.io/storybox/detail/$id",
+                    additionalHttpHeaders = emptyMap()
+                )
+            )
+        }
+        return WebViewState(
+            WebContent.Url(
+                url = "https://j9d102.p.ssafy.io/storybox",
+                additionalHttpHeaders = emptyMap()
+            )
+        )
+    }
+
+    val webViewNavigator = WebViewNavigator(viewModelScope)
 }

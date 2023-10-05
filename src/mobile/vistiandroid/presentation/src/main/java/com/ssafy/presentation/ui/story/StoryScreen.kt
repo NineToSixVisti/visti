@@ -26,16 +26,30 @@ private const val TAG = "StoryScreen"
 
 @Composable
 fun StoryScreen(
-    viewModel: WebViewViewModel = hiltViewModel(),
-    pickImageLauncher: ActivityResultLauncher<Intent>
+    id: String,
+    pickImageLauncher: ActivityResultLauncher<Intent>,
+    viewModel: StoryViewModel = hiltViewModel()
 ) {
-
+//    val accessTokenState = viewModel.accessToken.collectAsState()
+//    Log.e("accessTokenState",accessTokenState.value.accessToken.toString())
+//    if(accessTokenState.value.accessToken=="accessToken")
+//    {
+//        navController.navigate(route = SignInNav.SignIn.route) {
+//            popUpTo(navController.graph.id) {
+//                inclusive = true
+//            }
+//        }
+//
+//    }
+//    else
+//    {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            val webViewState = viewModel.webViewState
+            val webViewState = viewModel.setWebViewState(id)
+            val webViewNavigator = viewModel.webViewNavigator
 
             WebView(
                 state = webViewState,
@@ -92,14 +106,20 @@ fun StoryScreen(
                                             }
                                         }
 
-                                        if(bitmap != null) {
+                                        if (bitmap != null) {
                                             val byteArray = bitmapToByteArray(bitmap)
-                                            return "data:image/jpeg;base64,${Base64.encodeToString(byteArray, Base64.DEFAULT)}"
+                                            return "data:image/jpeg;base64,${
+                                                Base64.encodeToString(
+                                                    byteArray,
+                                                    Base64.DEFAULT
+                                                )
+                                            }"
                                         }
                                     }
 
                                     return null
                                 }
+
                             },
                             "Android"
                         )
@@ -108,6 +128,8 @@ fun StoryScreen(
             )
         }
     }
+    //  }
+
 }
 
 fun bitmapToByteArray(bitmap: Bitmap): ByteArray {

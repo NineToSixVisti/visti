@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -68,7 +68,8 @@ private const val TAG = "SignInScreen"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    navController: NavHostController, @ApplicationContext context: Context,
+    navController: NavController,
+    @ApplicationContext context: Context,
     signInViewModel: SignInViewModel = hiltViewModel()
 
 ) {
@@ -86,27 +87,6 @@ fun SignInScreen(
         SnackbarHost(snackbarHostState)
     }) {
         it
-        when {
-            name.error.isNotBlank() -> {
-            }
-            state.isLoading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            name.memberInformation.nickname.isNotBlank() -> {
-                navController.navigate(route = MainNav.Home.route) {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
-                    }
-                }
-                signInViewModel.delete()
-            }
-        }
 
         when {
             state.error.isNotBlank() -> {
@@ -203,7 +183,6 @@ fun SignInScreen(
                     )
                 }
             }
-
 
             Box(modifier = Modifier.padding(15.dp))
             SignInButton(
