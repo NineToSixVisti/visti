@@ -42,7 +42,7 @@ app.get("/visti/invite/:storyboxid", (req, res) => {
         const data = {
             modalText: '스토리 박스에 들어올래?',
             buttonText: '확인',
-            apiEndpoint : process.env.API_ENDPOINT_FRESH + `?storyboxId=${storyboxId}`
+            apiEndpoint : "visti://deeplink/" + `${storyboxId}`
         };
 
         res.render('template', data);
@@ -72,6 +72,9 @@ const decrypt = (data) => {
     try {
       const bytes = CryptoJS.AES.decrypt(data, salt); // 복호화 시도
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+
+
       const parseData = JSON.parse(decrypted); 
 
       return parseData;
