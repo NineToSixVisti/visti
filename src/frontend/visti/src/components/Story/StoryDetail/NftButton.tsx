@@ -16,6 +16,12 @@ const ipfs = create({
 });
 
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
+  const ethereum = (window as any).ethereum;
+
+  if (!ethereum) {
+    console.error("Ethereum provider not found. Please install MetaMask.");
+    return null; // 또는 사용자에게 메시지를 표시하는 컴포넌트를 반환하십시오.
+  }
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
   const contractAddress = "0x7424AA05747A46c5057DF5325dA04211a5c46643";
@@ -31,7 +37,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     const added = await ipfs.add(imageData);
     await ipfs.pin.add(added.path);
     console.log("Uploaded to IPFS with CID:", added.path);
-    return added.path;  
+    return added.path;
   }
 
   const createAndSendNFT = async () => {
@@ -53,24 +59,24 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   };
 
   return (
-    <button 
+    <button
       style={{
-        backgroundColor: 'transparent', 
-        border: 'none', 
-        padding: 0, 
-        width: '40px', 
-        height: '40px', 
-        cursor: 'pointer', 
-        outline: 'none' 
+        backgroundColor: "transparent",
+        border: "none",
+        padding: 0,
+        width: "40px",
+        height: "40px",
+        cursor: "pointer",
+        outline: "none",
       }}
       onClick={createAndSendNFT}
     >
-      <img 
-        src={NftButton} 
-        alt="NFT Button" 
+      <img
+        src={NftButton}
+        alt="NFT Button"
         style={{
-          width: '90%', 
-          height: '90%' 
+          width: "90%",
+          height: "90%",
         }}
       />
     </button>
