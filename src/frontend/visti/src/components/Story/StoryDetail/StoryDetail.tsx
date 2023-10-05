@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { authInstance } from "../../../apis/utils/instance";
 import styled from "styled-components";
-import { ReactComponent as BackButtonIcon } from "../../../assets/images/storydetailclose_button.svg";
+import { ReactComponent as BackButtonIcon } from "../../../assets/images/closeblack-button.svg";
 import { ReactComponent as HeartButton } from "../../../assets/images/heartbutton.svg";
 import { ReactComponent as Heartwhite } from "../../../assets/images/heartwhite.svg";
 import { useNavigate } from "react-router-dom";
