@@ -108,7 +108,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
               storyList.map((story, index) => (
                 <StoryDiv 
                   ref={index === storyList.length -1 ? lastBoxElementRef : null}
-                  key={story.id} 
+                  key={story.encryptedId} 
                   index={index} 
                   isPrivate={story.blind} 
                   storyImg={story.mainFilePath}
