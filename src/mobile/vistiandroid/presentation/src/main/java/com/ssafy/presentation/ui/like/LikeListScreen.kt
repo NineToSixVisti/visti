@@ -138,7 +138,7 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel(),
                     }
 
                     this.items(group) { story ->
-//                        StoryItem(story, navController, viewModel)
+                        StoryItem(story, navController)
                     }
                 }
             }

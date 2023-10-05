@@ -31,7 +31,7 @@ private const val TAG = "StoryItem"
 
 @Composable
 fun StoryItem(
-    story: Story, navController: NavController, viewModel: ProfileViewModel
+    story: Story, navController: NavController
 ) {
     Box(modifier = Modifier.clickable {
         Log.d(TAG, "StoryItem: ${story.encryptedId}")

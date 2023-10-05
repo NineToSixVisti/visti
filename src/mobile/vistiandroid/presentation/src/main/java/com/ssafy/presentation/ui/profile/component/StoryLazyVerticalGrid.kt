@@ -52,7 +52,7 @@ fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, n
         this.items(stories.itemCount) { index ->
             val image = stories[index]
             if (image != null) {
-                StoryItem(image, navController, viewModel)
+                StoryItem(image, navController)
             }
         }
     }
