@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
 //                            }
 //                        }
 
-                        mainState.value.accessToken.isBlank() -> {
+                        mainState.value.accessToken=="accessToken" -> {
                             MainScreen(mainNavController, this, SignInNav.SignIn.route)
                         }
 
