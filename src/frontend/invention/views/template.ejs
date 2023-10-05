@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modal</title>
     <link rel="stylesheet" href="<%= process.env.NODE_ENV === 'production' ? '/link/styles.css' : '/styles.css' %>">
+    <link rel="icon" href="/visti-logo.png" type="image/png">
 </head>
 <body>
     <div class="overlay">
         <div class="modal-container">
             <div class="main-modal">
-                <img src="/link/visti-logo.png" alt="Visti Logo">
+                <img src="/visti-logo.png" alt="Visti Logo">
                 <p><%= modalText %></p> <!-- 이부분이 변경됩니다. -->
             </div>
             
