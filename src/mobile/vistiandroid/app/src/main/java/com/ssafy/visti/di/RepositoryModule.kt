@@ -2,11 +2,13 @@ package com.ssafy.visti.di
 
 import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
+import com.ssafy.data.repository.FcmRepositoryImpl
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
 import com.ssafy.data.repository.MemberInformationRepositoryImpl
 import com.ssafy.data.repository.StoryBoxRepositoryImpl
 import com.ssafy.data.repository.TokenRepositoryImpl
 import com.ssafy.data.repository.UserRepositoryImpl
+import com.ssafy.domain.repository.FcmRepository
 import com.ssafy.domain.repository.LikedStoryRepository
 import com.ssafy.domain.repository.MemberInformationRepository
 import com.ssafy.domain.repository.StoryBoxRepository
@@ -51,6 +53,11 @@ class RepositoryModule {
         return UserRepositoryImpl(api, preferenceDataSource)
     }
 
+    @Provides
+    @Singleton
+    fun provideFcmRepository(api: VistiApi): FcmRepository {
+        return FcmRepositoryImpl(api)
+    }
     @Provides
     @Singleton
     fun storyBoxRepository(

@@ -3,6 +3,7 @@ package com.ssafy.presentation.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -49,7 +53,6 @@ import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
-import com.ssafy.presentation.ui.common.loadImage
 import com.ssafy.presentation.ui.home.component.HomeStoryBoxItem
 import com.ssafy.presentation.ui.home.component.HomeStoryItem
 import com.ssafy.presentation.ui.theme.Black20
@@ -296,15 +299,24 @@ fun HomeToolBar(
 //                    .aspectRatio(3f / 2f)
 //                    .fillMaxSize()
 //            )
+            val placedHolder = if (!isSystemInDarkTheme()) {
+                R.drawable.placeholder
+            } else {
+                R.drawable.placeholder_dark
+            }
 
-            Image(
-                painter = loadImage(imageUrl = memberInformation.profilePath.toString()),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(memberInformation.profilePath.toString())
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(placedHolder),
                 contentDescription = "home profile image",
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(40.dp)
-                    .border(2.dp, Color.Black, CircleShape)
+                    .border(2.dp, Color.Black, CircleShape),
+                contentScale = ContentScale.Crop
             )
             Row() {
                 Image(
