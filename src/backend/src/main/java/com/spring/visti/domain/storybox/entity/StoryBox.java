@@ -2,7 +2,7 @@ package com.spring.visti.domain.storybox.entity;
 
 import com.spring.visti.domain.common.entity.BaseEntity;
 import com.spring.visti.domain.member.entity.Member;
-import com.spring.visti.domain.storybox.dto.storybox.StoryBoxSetDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,57 +24,60 @@ public class StoryBox extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member creator;
 
-    @Column
-    private String box_img_path;
+    @Column(columnDefinition = "LONGTEXT")
+    private String boxImgPath;
 
-    @Column
-    private String storybox_url;
-
-    @Column
+    @Column(length = 32)
     private String name;
 
     @Column
     private String detail;
 
-    @Column
+    @Column(updatable = false)
     private Boolean blind;
 
-    @Column(updatable = false)
-    private LocalDateTime finish_at;
+    @Column(updatable = false, name="finished_at")
+    private LocalDateTime finishedAt;
 
-    @OneToMany(mappedBy = "storybox")
+    @Column
+    private String token;
+
+    @Column
+    private LocalDateTime expireTime;
+
+    @OneToMany(mappedBy = "storyBox")
     private List<Story> stories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "storybox")
+    @OneToMany(mappedBy = "storyBox")
     private List<StoryBoxMember> storyBoxMembers = new ArrayList<>();
 
     @Builder
-    public StoryBox(Member creator, String box_img_path, String storybox_url, String name, String detail, Boolean blind, LocalDateTime finish_at){
+    public StoryBox(Member creator, String boxImgPath, String name, String detail, Boolean blind, LocalDateTime finishedAt){
         this.creator = creator;
-        this.box_img_path = box_img_path;
-        this.storybox_url = storybox_url;
+        this.boxImgPath = boxImgPath;
         this.name = name;
         this.detail = detail;
         this.blind = blind;
-        this.finish_at = finish_at;
+        this.finishedAt = finishedAt;
     }
 
-    public void updateStoryBox(StoryBoxSetDTO storyBoxSetDTO) {
-        if(storyBoxSetDTO.getBox_img_path() != null) {
-            this.box_img_path = storyBoxSetDTO.getBox_img_path();
-        }
-        if(storyBoxSetDTO.getStorybox_url() != null) {
-            this.storybox_url = storyBoxSetDTO.getStorybox_url();
-        }
+    public void updateStoryBox(StoryBoxSetDTO storyBoxSetDTO, String boxImgPath) {
         if(storyBoxSetDTO.getName() != null) {
             this.name = storyBoxSetDTO.getName();
         }
         if(storyBoxSetDTO.getDetail() != null) {
             this.detail = storyBoxSetDTO.getDetail();
         }
-        if(storyBoxSetDTO.getBlind() != null) {
-            this.blind = storyBoxSetDTO.getBlind();
-        }
+        this.boxImgPath = boxImgPath;
+    }
+
+    public void updateBlind(Boolean blind){
+        this.blind = blind;
+    }
+
+    public void updateToken(String token, LocalDateTime expireTime){
+        this.token = token;
+        this.expireTime = expireTime;
     }
 
 }

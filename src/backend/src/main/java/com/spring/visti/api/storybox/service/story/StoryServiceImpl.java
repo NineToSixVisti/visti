@@ -1,24 +1,33 @@
 package com.spring.visti.api.storybox.service.story;
 
-import com.spring.visti.api.dto.BaseResponseDTO;
+import com.spring.visti.api.common.dto.BaseResponseDTO;
 import com.spring.visti.domain.member.entity.Member;
 import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
-import com.spring.visti.domain.member.repository.MemberStoryRepository;
-import com.spring.visti.domain.storybox.dto.story.StoryBuildDTO;
+import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
+import com.spring.visti.domain.storybox.entity.StoryBox;
+import com.spring.visti.domain.storybox.entity.StoryBoxMember;
+import com.spring.visti.domain.storybox.repository.StoryBoxMemberRepository;
+import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.domain.storybox.repository.StoryRepository;
-import com.spring.visti.global.jwt.service.TokenProvider;
 
+import com.spring.visti.global.s3.S3UploadService;
 import com.spring.visti.utils.exception.ApiException;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.spring.visti.utils.urlutils.SecurePathUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
 
@@ -28,77 +37,177 @@ import static com.spring.visti.utils.exception.ErrorCode.*;
 public class StoryServiceImpl implements StoryService{
 
     private final MemberRepository memberRepository;
-    private final MemberStoryRepository memberStoryRepository;
+    private final MemberLikeStoryRepository memberLikeStoryRepository;
     private final StoryRepository storyRepository;
-    private final TokenProvider tokenProvider;
-    @Override
-    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    private final StoryBoxRepository storyBoxRepository;
+    private final StoryBoxMemberRepository storyBoxMemberRepository;
+    private final S3UploadService s3UploadService;
 
-        Story story = storyBuildDTO.toEntity(member);
+
+    @Override
+    @Transactional
+    public BaseResponseDTO<String> createStory(StoryBuildDTO storyBuildDTO, String email, MultipartFile multipartFile) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
+
+        int writtenStory = member.getDailyStoryCount();
+        int canWriteStory = member.dailyStoryMaximum();
+        if (!(writtenStory < canWriteStory)){ throw new ApiException(MAX_STORY_QUOTA_REACHED_MEMBER); }
+
+        String isDecryptedStoryBoxId = SecurePathUtil.decodeAndDecrypt(storyBuildDTO.getStoryBoxId());
+        long decryptedStoryBoxId = getDecryptedId(isDecryptedStoryBoxId);
+
+        Optional<StoryBoxMember> storyBoxMember = storyBoxMemberRepository.findByStoryBoxIdAndMember(decryptedStoryBoxId, member);
+        if (storyBoxMember.isEmpty()){throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);}
+
+        StoryBox storyBox = getStoryBox(decryptedStoryBoxId, storyBoxRepository);
+
+        int storiesInStoryBox = storyBox.getStories().size();
+
+        if (storiesInStoryBox >= 100){
+            throw new ApiException(MAX_STORY_QUOTA_REACHED_STORYBOX);
+        }
+
+        // S3 파일 저장
+        String postCategory = "story";
+        String imageUrl;
+
+        try {
+            imageUrl = s3UploadService.S3Upload(multipartFile, postCategory);
+        } catch (IOException e) {
+            throw new ApiException(FILE_TYPE_ERROR);
+        }
+
+        Story story = storyBuildDTO.toEntity(member, storyBox, imageUrl);
         storyRepository.save(story);
+
+        member.updateDailyStoryCount(writtenStory+1);
 
         return new BaseResponseDTO<>("스토리 생성이 완료되었습니다.", 200);
     }
 
     @Override
-    public BaseResponseDTO<String> createNFT4Story(Long storyId, HttpServletRequest httpServletRequest) {
+    public BaseResponseDTO<String> createNFT4Story(Long storyId, String email) {
         return null;
     }
 
     @Override
-    public BaseResponseDTO<Story> readStory(Long storyId) {
+    @Transactional
+    public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
-        Story story = getStory(storyId);
+        Story _story = getStory(storyId, storyRepository);
 
-        return new BaseResponseDTO<Story>("스토리 생성이 완료되었습니다.", 200, story);
+        List<MemberLikeStory> memberLikeStories = _story.getMembersLiked();
+        boolean isMemberLikeStory = memberLikeStories.stream()
+                .anyMatch(ml -> ml.getMember().getId().equals(member.getId()));
+
+        StoryExposedDTO story = StoryExposedDTO.of(_story, isMemberLikeStory);
+
+        return new BaseResponseDTO<StoryExposedDTO>("스토리 조회가 완료되었습니다.", 200, story);
+    }
+
+
+    @Override
+    @Transactional
+    public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
+
+        List<MemberLikeStory> _memberLikeStory = member.getMemberLikedStories();
+
+        List<Long> likedStoryIds = _memberLikeStory.stream()
+                .map(like -> like.getStory().getId())
+                .toList();
+
+        Page<Story> pagedStories = storyRepository.findByMember(member, pageable);
+
+        Page<StoryExposedDTO> pagedMyStories = pagedStories.map(story -> StoryExposedDTO.of(story, likedStoryIds.contains(story.getId())));
+
+        return new BaseResponseDTO<Page<StoryExposedDTO>>( pageable.getPageNumber() + "페이지 조회가 완료되었습니다.", 200, pagedMyStories);
     }
 
     @Override
-    public BaseResponseDTO<List<Story>> readMyStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
+    @Transactional
+    public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
-        List<Story> myStories = member.getMemberStories();
-        return new BaseResponseDTO<List<Story>>("자신이 작성한 스토리 조회가 완료되었습니다.", 200, myStories);
+        List<Story> stories = member.getMemberStories();
+        int storiesSize = stories.size();
+        int forMainPage = 10;
+
+        List<StoryExposedDTO> responseStories = new ArrayList<>();
+
+        if (storiesSize <= forMainPage){
+            Collections.shuffle(stories);
+
+            responseStories = stories.stream()
+                    .map(story -> StoryExposedDTO.of(story, true))
+                    .toList();
+        }else{
+            responseStories = sortList4MainPage(stories, storiesSize, forMainPage);
+        }
+
+        return new BaseResponseDTO<List<StoryExposedDTO>>("메인페이지 용 셔플 스토리 제공되었습니다.", 200, responseStories);
     }
 
     @Override
-    public BaseResponseDTO<String> likeStory(Long storyId, HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
-        Story story = getStory(storyId);
-        Optional<MemberLikeStory> isMemberLike = memberStoryRepository.findByMemberAndStory(member, story);
+    @Transactional
+    public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
-        if(isMemberLike.isPresent()){
-            memberStoryRepository.delete(isMemberLike.get());
+        Page<MemberLikeStory> _memberLikedStories = memberLikeStoryRepository.findByMember(member, pageable);
+
+        Page<StoryExposedDTO> memberLikedStories = _memberLikedStories
+                .map(MemberLikeStory::getStory)
+                .map(LikedStory -> StoryExposedDTO.of(LikedStory, true));
+
+//        // MemberStory 리스트에서 Story 리스트를 추출
+//        List<StoryExposedDTO> stories = memberStories.stream()
+//                .map(MemberLikeStory::getStory)
+//                .map(LikedStory -> StoryExposedDTO.of(LikedStory, true))
+//                .toList();
+
+        return new BaseResponseDTO<Page<StoryExposedDTO>>(
+                "좋아요한 스토리" +pageable.getPageNumber()+ "페이지 조회가 완료되었습니다.",
+                200,
+                memberLikedStories
+        );
+    }
+
+
+    @Override
+    @Transactional
+    public BaseResponseDTO<String> likeStory(Long storyId, String email) {
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
+        Story story = getStory(storyId, storyRepository);
+        boolean isMemberLike = memberLikeStoryRepository.existsByMemberIdAndStoryId(member.getId(), storyId);
+
+        if(isMemberLike){
+            memberLikeStoryRepository.deleteByMemberIdAndStoryId(member.getId(), storyId);
             return new BaseResponseDTO<>("스토리를 '좋아요 취소' 했습니다", 200);
         }
 
-        MemberLikeStory memberLikeThis = new MemberLikeStory().likeThis(member, story);
-        memberStoryRepository.save(memberLikeThis);
+        MemberLikeStory memberLikeThis = MemberLikeStory.likeThis(member, story);
+        memberLikeStoryRepository.save(memberLikeThis);
         return new BaseResponseDTO<>("스토리를 '좋아요' 했습니다", 200);
     }
 
-    @Override
-    public BaseResponseDTO<List<Story>> readLikedStories(HttpServletRequest httpServletRequest) {
-        Member member = getEmail(httpServletRequest);
-        List<MemberLikeStory> memberStories = member.getMemberLikedStories();
-
-        // MemberStory 리스트에서 Story 리스트를 추출
-        List<Story> stories = memberStories.stream()
-                .map(MemberLikeStory::getStory)
-                .toList();
-
-        return new BaseResponseDTO<List<Story>>("좋아요한 스토리 조회가 완료되었습니다.", 200, stories);
-    }
 
     @Override
-    public BaseResponseDTO<String> deleteStory(Long storyId, HttpServletRequest httpServletRequest) {
+    @Transactional
+    public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 
         // 사용자 조회
-        Member member = getEmail(httpServletRequest);
+        Member member = getMember(email, memberRepository);
+//        Member member = getMemberBySecurity();
 
         // 스토리 조회
-        Story story = getStory(storyId);
+        Story story = getStory(storyId, storyRepository);
         Long storyWriter = story.getMember().getId();
 
         // 스토리 작성자가 사용자인지 조회
@@ -115,24 +224,51 @@ public class StoryServiceImpl implements StoryService{
         return new BaseResponseDTO<>("스토리 삭제가 완료되었습니다.", 200);
     }
 
-    public Member getEmail(HttpServletRequest httpServletRequest) {
-
-        String email = tokenProvider.getHeaderToken(httpServletRequest, "Access");
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-
-        if (optionalMember.isEmpty()){ throw new ApiException(NO_MEMBER_ERROR); }
-
-        return optionalMember.get();
+    private List<StoryExposedDTO> sortStories(List<StoryExposedDTO> stories, String sorting_option) {
+        switch (sorting_option) {
+            case "ascend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreatedAt));
+            case "descend" -> stories.sort(Comparator.comparing(StoryExposedDTO::getCreatedAt).reversed());
+            case "shuffle" -> Collections.shuffle(stories);
+            default -> throw new IllegalArgumentException("Invalid sorting option: " + sorting_option);
+        }
+        return stories;
     }
 
-    public Story getStory(Long storyId) {
+    private List<StoryExposedDTO> sortList4MainPage(List<Story> stories, Integer storiesSize, Integer forMainPage) {
+            if (storiesSize < 50){
+                Collections.shuffle(stories);
+                List<Story> selectedIndices = stories.subList(0, forMainPage);
 
-        Optional<Story> optionalStory = storyRepository.findById(storyId);
+                return selectedIndices.stream()
+                        .map(story -> {
+                            return StoryExposedDTO.of(story, false);
+                        })
+                        .toList();
 
-        if (optionalStory.isEmpty()){ throw new ApiException(NO_STORY_ERROR); }
+            }else{
 
-        return optionalStory.get();
+                Set<Story> selectedIndices = new HashSet<>();
+                Random rand = new Random();
+
+                while (selectedIndices.size() < forMainPage) {
+                    int randomIndex = rand.nextInt(storiesSize); // 0 (inclusive) to storiesSize (exclusive)
+                    selectedIndices.add(stories.get(randomIndex));
+                }
+
+                return selectedIndices.stream()
+                        .map(story -> {
+                            return StoryExposedDTO.of(story, false);
+                        })
+                        .toList();
+
+            }
+    }
+    private long getDecryptedId(String isDecryptedId){
+        try {
+            return Long.parseLong(isDecryptedId);
+        } catch (NumberFormatException e) {
+            throw new ApiException(NO_STORY_BOX_ERROR);
+        }
     }
 }
 

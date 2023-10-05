@@ -168,22 +168,6 @@ const TopMian = styled.div`
   width: 100%;
   height: 70%;
   display: flex;
-
-  /* >div:nth-child(2) {
-    width: 50%;
-    height: 100%;
-    margin: 0 10px ;
-    text-align: center;
-  
-  >p {
-    font-weight: 600;
-    margin : 10px 0;
-  }
-
-  >p:nth-child(2) {
-    font-size: 30px;
-  }
-  } */
 `
 
 const BgImageDiv = styled.div<DivProps>`
@@ -221,6 +205,7 @@ const BoxInfo = styled.div`
   >p {
     font-weight: 600;
     margin : 10px 0;
+    line-height: 32px;
   }
 
   >p:first-child {
@@ -240,7 +225,7 @@ const GoBackSvg = styled(GoBack)`
 `
 
 const ModifySvg = styled(Modify)`
-  margin-right: 10px;
+  padding: 10px;
 `
 
 const LoadingWrap = styled.div`
