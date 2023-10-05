@@ -101,7 +101,7 @@ const BackButton = styled.button`
 const BasicModalStyled = styled(BasicModal)`
   background-color: transparent;
 `;
-
+const DefaultImage = "/assets/profile_image.png";
 function StoryDetail() {
   const { id } = useParams<{ id?: string }>();
   const [storyData, setStoryData] = useState<StoryData | null>(null);
@@ -156,7 +156,13 @@ function StoryDetail() {
       <MainImage src={storyData.mainFilePath} alt="Story" />
       <ProfileContainer>
         {storyData.member.profilePath && (
-          <ProfileImage src={storyData.member.profilePath} alt="Profile" />
+          <ProfileImage 
+          src={storyData.member.profilePath || DefaultImage} 
+          alt="Profile" 
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              e.currentTarget.src = DefaultImage;
+          }}
+      />
         )}
         <InfoContainer>
           <Nickname>{storyData.member.nickname}</Nickname>
