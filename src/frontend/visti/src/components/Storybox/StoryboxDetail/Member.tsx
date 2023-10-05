@@ -48,7 +48,12 @@ const Member : React.FC<MemberProps> = ({id}) => {
           {
             memberList.map((member, index) => (
               <MemberDiv key={index}>
-                <ProfileImg bgImage={member.profilePath}/>
+                <ProfileImg 
+                  src={member.profilePath} 
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    e.currentTarget.src = DefaultImage;
+                  }}
+                />
                 <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
               </MemberDiv>
             ))
@@ -82,18 +87,19 @@ const MemberDiv = styled.div`
   }
 `
 
-type BoxWrapProps = {
-  bgImage : string;
-};
+// type BoxWrapProps = {
+//   bgImage : string;
+// };
 
-const ProfileImg = styled.div<BoxWrapProps>`
+const DefaultImage = "/assets/profile_image.png";
+
+const ProfileImg = styled.img`
   width: 14vw;
   height: 14vw;
   border-radius: 42px;
-  background-image: url(${props => props.bgImage});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-`
+`;
 
 export default Member
