@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { ReactComponent as GoBack } from '../../../assets/images/back_button.svg'
 import { ReactComponent as Modify } from '../../../assets/images/modify_button(pen).svg'
-
 import Tap from './Tap'
 import Story from './Story';
 import Member from './Member';
@@ -29,17 +28,16 @@ const StoryboxDetail: React.FC = () => {
   const { id } = useParams<{id:string}>();
   const [tap, setTap] = useState<string>('story');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
   const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
   
+  // 기본 정보 가져오기
   const getStoryboxInfo = useCallback(async () => {
     setIsLoading(true);
     try  {
       const data = await authInstance.get(`story-box/${id}/info`)
       if (data) {
         setStoryboxInfo(data.data.detail);
-        // console.log(data.data.detail);
       }
     } catch (err) {
       console.log('스토리박스 Info GET 중 에러 발생', err)
@@ -47,7 +45,6 @@ const StoryboxDetail: React.FC = () => {
       setIsLoading(false);
     }
   }, [id]);
-  
   
   const formatDate = (dateStr: string, includeYear: boolean = true): string => {
     const date = new Date(dateStr);
@@ -65,7 +62,7 @@ const StoryboxDetail: React.FC = () => {
     const updateRemainingTime = () => {
       const now = new Date();
       const finishDate = new Date(storyboxInfo.finishedAt);
-      finishDate.setUTCHours(15); 
+      finishDate.setUTCHours(15); // 한국 자정에 맞게 변환
       const diff = finishDate.getTime() - now.getTime();
       
       if (diff <= 0) {
@@ -76,7 +73,6 @@ const StoryboxDetail: React.FC = () => {
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
       const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       setRemainingTime(formattedTime);
     };
@@ -92,7 +88,6 @@ const StoryboxDetail: React.FC = () => {
   useEffect(()=>{
     getStoryboxInfo();
   }, [getStoryboxInfo]);
-  
   
   return (
     <>

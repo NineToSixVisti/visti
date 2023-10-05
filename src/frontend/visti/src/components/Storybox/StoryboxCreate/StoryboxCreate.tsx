@@ -244,18 +244,21 @@ const StoryboxCreate = () => {
       json.finishedAt = value.format('YYYY-MM-DD');
     }
 
-    console.log(json);  
+    // console.log(json);  
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
 
-    console.log(formDataToObject(formData));
+    // console.log(formDataToObject(formData));
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
     dispatch(setTrigger(true)); // 리랜더링 하기 위해
-    console.log(trigger); 
     setIsModalOpen(false);
     navigate('/storybox', { replace : true })
   }
+
+  useEffect(()=>{
+    console.log(trigger);
+  },[trigger])
 
   // 수정하는 경우 기존의 박스 내용을 동기화
   const getStoryboxInfo = useCallback(async () => {
@@ -310,7 +313,8 @@ const StoryboxCreate = () => {
         onChange={(e) => setGroupName(e.target.value)}/>
         
         <Title>그룹소개글</Title>
-        <GroupDescription placeholder={`9기 버니즈의 추억을 위한 공간입니다. OOO하기위해 OOOO ~~ 매일 한개씩 업로드 필수입니다!`}
+        <GroupDescription placeholder={`SSAFY 10기 구미 1반 D102팀 추억 저장을 위한 공간이야! 
+잊을 수 없는 추억을 만들어보자~~`}
          rows={3} value={groupDetail}
          onChange={(e) => setGroupDetail(e.target.value)}/>
 
