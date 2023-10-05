@@ -11,6 +11,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.home.HomeLastStoryBox
@@ -38,8 +40,6 @@ class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
-
-    private val getHomeLastStoryBoxUseCase: GetHomeLastStoryBoxUseCase,
     private val fcmUseCase: FcmUseCase
 ) : ViewModel() {
 

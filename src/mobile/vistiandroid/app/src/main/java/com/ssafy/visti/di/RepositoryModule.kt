@@ -58,7 +58,8 @@ class RepositoryModule {
     fun provideFcmRepository(api: VistiApi): FcmRepository {
         return FcmRepositoryImpl(api)
     }
-
+    @Provides
+    @Singleton
     fun storyBoxRepository(
         api: VistiApi,
     ): StoryBoxRepository {
