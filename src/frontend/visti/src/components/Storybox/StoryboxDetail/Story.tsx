@@ -113,7 +113,9 @@ const Story : React.FC<StoryProps> = ({id}) => {
                   isPrivate={story.blind} 
                   storyImg={story.mainFilePath}
                   onClick={()=>{
-                    navigate(`/storydetail/${story.encryptedId}`)}}>
+                    if (!story.blind) {
+                      navigate(`/storydetail/${story.encryptedId}`)}}
+                    }>
                   {story.blind && <PrivateImg src={process.env.PUBLIC_URL + "/assets/Visti_icon.png"} alt='보호된 이미지' />}
                   {!story.blind && story.like && <FavoriteSvg />}
                 </StoryDiv>
