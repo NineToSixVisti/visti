@@ -1,4 +1,4 @@
-package com.ssafy.presentation.ui.story
+package com.ssafy.presentation.ui.common
 
 import android.webkit.JavascriptInterface
 import androidx.compose.foundation.layout.Column
@@ -11,31 +11,19 @@ import com.google.accompanist.web.AccompanistWebChromeClient
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 
+
 @Composable
-fun StoryScreen(
-    id: String,
-    viewModel: StoryViewModel = hiltViewModel()
+fun WebViewScreen(
+    id: String, mode: String,
+    viewModel: WebViewViewModel = hiltViewModel()
 ) {
-//    val accessTokenState = viewModel.accessToken.collectAsState()
-//    Log.e("accessTokenState",accessTokenState.value.accessToken.toString())
-//    if(accessTokenState.value.accessToken=="accessToken")
-//    {
-//        navController.navigate(route = SignInNav.SignIn.route) {
-//            popUpTo(navController.graph.id) {
-//                inclusive = true
-//            }
-//        }
-//
-//    }
-//    else
-//    {
+    //  Log.d(TAG, "MyStoryScreen hilt viewModel id: ${viewModel.hashCode()}")
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            val webViewState = viewModel.setWebViewState(id)
-            val webViewNavigator = viewModel.webViewNavigator
+            val webViewState = viewModel.setWebViewState(id, mode)
 
             WebView(
                 state = webViewState,
@@ -62,8 +50,6 @@ fun StoryScreen(
             )
         }
     }
-    //  }
-
 }
 
 val webViewClient = AccompanistWebViewClient()

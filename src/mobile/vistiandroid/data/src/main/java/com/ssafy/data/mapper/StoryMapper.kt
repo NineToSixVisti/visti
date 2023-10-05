@@ -60,7 +60,7 @@ fun PageableDto.toDomain(): Pageable {
 }
 
 fun StoryDto.toDomain(): Story {
-    return Story(id, storyBoxId, fileType, filePath, blind, createdAt, finishAt, like)
+    return Story(id, encryptedId, storyBoxId, fileType, filePath, blind, createdAt, finishAt, like)
 }
 
 fun StoryListDto.toDomain(): StoryList {

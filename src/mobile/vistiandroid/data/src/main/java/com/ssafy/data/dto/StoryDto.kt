@@ -12,6 +12,7 @@ data class StoryResponse(
 data class StoryDto(
     @SerializedName("id") val id: Int = 0,
     @SerializedName("storyBoxId") val storyBoxId: Int = 0,
+    @SerializedName("encryptedId") val encryptedId: String = "",
     @SerializedName("mainFileType") val fileType: String = "",
     @SerializedName("mainFilePath") val filePath: String = "",
     @SerializedName("blind") val blind: Boolean = false,

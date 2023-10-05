@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -62,6 +63,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
@@ -135,7 +137,7 @@ fun HomeScreen(
                     HomeContent(
                         homeStorySate.stories,
                         homeStoryBoxState.storyBoxList,
-                        memberInformation
+                        memberInformation, navController
                     )
                 }
             }
@@ -147,7 +149,8 @@ fun HomeScreen(
 fun HomeContent(
     homeStoryList: List<HomeStory>,
     homeStoryBoxList: List<StoryBox>,
-    memberInformation: Member
+    memberInformation: Member,
+    navController: NavController
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -186,7 +189,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryBoxList) { homeStoryBox ->
-                HomeStoryBoxItem(homeStoryBox)
+                HomeStoryBoxItem(homeStoryBox, navController)
             }
         }
     }
@@ -218,7 +221,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryList) { homeStory ->
-                HomeStoryItem(homeStory)
+                HomeStoryItem(homeStory, navController)
             }
         }
     }
