@@ -68,6 +68,10 @@ public class StoryServiceImpl implements StoryService{
         LocalDateTime finishedAt =  storyBox.getFinishedAt();
         LocalDateTime now = LocalDateTime.now();
 
+        log.info("만료시간 = " + finishedAt);
+        log.info("현재 시간 = " + now);
+
+
         if (now.isAfter(finishedAt)){
             throw new ApiException(TIME_FINISHED_ERROR);
         }
