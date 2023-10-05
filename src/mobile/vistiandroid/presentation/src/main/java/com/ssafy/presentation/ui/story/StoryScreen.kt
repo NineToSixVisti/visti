@@ -36,7 +36,6 @@ fun StoryScreen(
                 .padding(innerPadding)
         ) {
             val webViewState = viewModel.webViewState
-            val webViewNavigator = viewModel.webViewNavigator
 
             WebView(
                 state = webViewState,
@@ -93,7 +92,6 @@ fun StoryScreen(
                                             }
                                         }
 
-                                        Log.d(TAG, "openGallery: $bitmap")
                                         if(bitmap != null) {
                                             val byteArray = bitmapToByteArray(bitmap)
                                             return "data:image/jpeg;base64,${Base64.encodeToString(byteArray, Base64.DEFAULT)}"
