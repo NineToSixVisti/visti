@@ -53,6 +53,7 @@ const StoryboxCreate = () => {
     finishedAt?: string;
   };
 
+  // base64 파일을 File 객체로 변환
   const base64ToFile = (base64: string, filename: string): File => {
     const arr = base64.split(',');
     const mime = arr[0].match(/:(.*?);/)?.[1];
