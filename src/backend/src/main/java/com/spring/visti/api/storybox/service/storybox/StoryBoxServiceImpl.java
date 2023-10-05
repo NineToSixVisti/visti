@@ -129,6 +129,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         _storyBoxMembers.forEach(
                 member -> {
                     String fcmToken = member.getMember().getFcmToken();
+                    log.info(fcmToken + "===" + member.getMember().getEmail());
                     try {
                         fcmService.sendMessageTo(fcmToken, "Visti",
                                 nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",
