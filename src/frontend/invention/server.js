@@ -72,6 +72,9 @@ const decrypt = (data) => {
     try {
       const bytes = CryptoJS.AES.decrypt(data, salt); // 복호화 시도
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+
+
       const parseData = JSON.parse(decrypted); 
 
       return parseData;
