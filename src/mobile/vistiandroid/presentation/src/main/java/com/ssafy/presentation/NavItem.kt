@@ -58,7 +58,7 @@ sealed class MainNav(
     companion object {
         fun isMainRoute(route: String?): Boolean {
             return when (route) {
-                MAIN_HOME, MAIN_MEMORY, MAIN_LIKE, MAIN_PROFILE -> true
+                MAIN_HOME, MAIN_LIKE, MAIN_PROFILE -> true
                 else -> false
             }
         }

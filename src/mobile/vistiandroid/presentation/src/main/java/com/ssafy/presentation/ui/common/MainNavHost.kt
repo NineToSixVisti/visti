@@ -1,13 +1,18 @@
 package com.ssafy.presentation.ui.common
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
@@ -39,15 +44,31 @@ fun MainNavHost(
         navController = navController,
         startDestination = route,
     ) {
+
         composable(MainNav.Home.route) {
             HomeScreen()
         }
-        composable(MainNav.Memory.route) {
-            StoryScreen()
-        }
+//        composable(MainNav.Memory.route) {
+//            StoryScreen()
+//        }
         composable(MainNav.Like.route) {
             LikeListScreen(navController = navController)
         }
+        composable(
+            MainNav.Memory.route, deepLinks = listOf(navDeepLink {
+                uriPattern = "visti://deeplink/{id}"
+                action = Intent.ACTION_VIEW
+            }),
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { entry ->
+            val id = entry.arguments?.getString("id")
+            Log.e("entry", id.toString())
+            StoryScreen(id.toString())
+        }
+
         composable(MainNav.Profile.route) {
             ProfileScreen(navController = navController)
         }

@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,22 +49,22 @@ class MainActivity : ComponentActivity() {
                 ) {
                     WindowCompat.setDecorFitsSystemWindows(window, false)
                     val mainNavController = rememberNavController()
-                    val mainState = mainViewModel.memberInformation.value
+                    val mainState = mainViewModel.accessToken.collectAsState()
                     when {
-                        mainState.isLoading -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
+//                        mainState.value.isLoading -> {
+//                            Box(
+//                                modifier = Modifier.fillMaxSize(),
+//                                contentAlignment = Alignment.Center
+//                            ) {
+//                                CircularProgressIndicator()
+//                            }
+//                        }
 
-                        mainState.error.isNotBlank() -> {
+                        mainState.value.accessToken.isBlank() -> {
                             MainScreen(mainNavController, this, SignInNav.SignIn.route)
                         }
 
-                        mainState.memberInformation.nickname.isNotBlank() -> {
+                        mainState.value.accessToken.isNotBlank() -> {
                             MainScreen(mainNavController, this, MainNav.Home.route)
                         }
                     }
