@@ -22,12 +22,15 @@ interface StoryData {
     status: boolean;
   };
 }
+
+
 const HeartButtonContainer = styled.div`
   position: absolute;
   bottom: 4%;
   right: 10%;
   display: flex;
   align-items: center;
+  gap: 10px;  // 간격을 추가하여 버튼 사이에 공간을 만듭니다.
 `;
 
 const InfoContainer = styled.div`
@@ -151,6 +154,7 @@ function StoryDetail() {
   return (
     <Container>
       <ButtonContainer>
+  
         <BasicModal storyId={id} />
         <BackButton onClick={handleBack}>
           <BackButtonIcon />
@@ -166,15 +170,16 @@ function StoryDetail() {
           <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
         </InfoContainer>
       </ProfileContainer>
-      {/* <NFTButton imageURI={storyData.mainFilePath} /> */}
-
       <HeartButtonContainer>
+      <NFTButton imageURI={storyData.mainFilePath} />
         {like ? (
           <HeartButton onClick={handleLike} />
         ) : (
           <Heartwhite onClick={handleLike} />
         )}
+       
       </HeartButtonContainer>
+    
     </Container>
   );
 }

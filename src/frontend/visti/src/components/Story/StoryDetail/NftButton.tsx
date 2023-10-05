@@ -2,22 +2,29 @@ import React from "react";
 import { ethers } from "ethers";
 import contractData from "../../../assets/VistiNFT.json";
 import { ReactComponent as NFTOFF } from "../../../assets/images/nft-offbutton.svg";
-import { create } from 'ipfs-http-client';
+import { create } from "ipfs-http-client";
+import NftButton from "../../../assets/images/nftoffbutton2.png";
 
 interface NFTButtonProps {
   imageURI: string;
 }
 
 const ipfs = create({
-  host: 'j9d102.p.ssafy.io',
+  host: "j9d102.p.ssafy.io",
   port: 5001,
-  protocol: 'http'
+  protocol: "http",
 });
 
 const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
+  const ethereum = (window as any).ethereum;
+
+  if (!ethereum) {
+    console.error("Ethereum provider not found. Please install MetaMask.");
+    return null; // 또는 사용자에게 메시지를 표시하는 컴포넌트를 반환하십시오.
+  }
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
-  const contractAddress = "0x68A975819b5120836dcC2CD73684F9b4e71F6Bc3";
+  const contractAddress = "0x7424AA05747A46c5057DF5325dA04211a5c46643";
   const contract = new ethers.Contract(
     contractAddress,
     contractData.abi,
@@ -51,7 +58,29 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
     }
   };
 
-  return <button onClick={createAndSendNFT}><NFTOFF/></button>;
+  return (
+    <button
+      style={{
+        backgroundColor: "transparent",
+        border: "none",
+        padding: 0,
+        width: "40px",
+        height: "40px",
+        cursor: "pointer",
+        outline: "none",
+      }}
+      onClick={createAndSendNFT}
+    >
+      <img
+        src={NftButton}
+        alt="NFT Button"
+        style={{
+          width: "90%",
+          height: "90%",
+        }}
+      />
+    </button>
+  );
 };
 
 export default NFTButton;
