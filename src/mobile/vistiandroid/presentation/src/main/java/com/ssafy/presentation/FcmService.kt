@@ -18,8 +18,8 @@ import javax.inject.Inject
 private const val TAG = "FcmService"
 class FcmService : FirebaseMessagingService() {
     // 새로운 토큰이 생성될 때 마다 해당 콜백이 호출된다.
-    @Inject
-    lateinit var fcmUseCase: FcmUseCase
+//    @Inject
+//    lateinit var fcmUseCase: FcmUseCase
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -29,7 +29,7 @@ class FcmService : FirebaseMessagingService() {
         CoroutineScope(Dispatchers.IO).launch {
             Log.e(TAG, "하위")
 //            RetrofitUtil.chatApi.uploadToken(FcmToken(token))
-            fcmUseCase.uploadFcmToken(token)
+         //   fcmUseCase.uploadFcmToken(token)
         }
     }
 
