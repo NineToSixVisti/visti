@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.ModifierLocalReadScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssafy.domain.model.Story
-import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.profile.ProfileViewModel
@@ -40,7 +38,7 @@ fun StoryItem(
 
         viewModel.setWebViewState(story.encryptedId)
 
-        navController.navigate(SettingNav.MyStory.route) {
+        navController.navigate(SettingNav.WebView.route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

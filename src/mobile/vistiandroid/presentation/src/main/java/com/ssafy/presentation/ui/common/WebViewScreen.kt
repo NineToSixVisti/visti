@@ -1,6 +1,6 @@
-package com.ssafy.presentation.ui.profile
+package com.ssafy.presentation.ui.common
 
-import android.util.Log
+import android.webkit.JavascriptInterface
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -11,31 +11,40 @@ import com.google.accompanist.web.AccompanistWebChromeClient
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 
-private const val TAG = "MyStoryScreen"
 
 @Composable
-fun MyStoryScreen(viewModel: ProfileViewModel = hiltViewModel()) {
-    Log.d(TAG, "MyStoryScreen hilt viewModel id: ${viewModel.hashCode()}")
+fun WebViewScreen(
+    id: String, mode: String,
+    viewModel: WebViewViewModel = hiltViewModel()
+) {
+    //  Log.d(TAG, "MyStoryScreen hilt viewModel id: ${viewModel.hashCode()}")
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            val webViewState = viewModel.webViewState
+            val webViewState = viewModel.setWebViewState(id, mode)
 
             WebView(
                 state = webViewState,
                 client = webViewClient,
                 chromeClient = webChromeClient,
                 onCreated = { webView ->
-                    Log.d(TAG, "MyStoryScreen: ${webViewState.content.getCurrentUrl()}")
-
                     with(webView) {
                         settings.run {
                             javaScriptEnabled = true
                             domStorageEnabled = true
                             javaScriptCanOpenWindowsAutomatically = false
                         }
+                        addJavascriptInterface(
+                            object {
+                                @JavascriptInterface
+                                fun getToken(): String {
+                                    return viewModel.accessToken.value.accessToken
+                                }
+                            },
+                            "Android"
+                        )
                     }
                 }
             )

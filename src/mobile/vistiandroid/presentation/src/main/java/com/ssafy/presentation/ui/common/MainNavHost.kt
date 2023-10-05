@@ -18,7 +18,6 @@ import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.home.HomeScreen
 import com.ssafy.presentation.ui.like.LikeListScreen
-import com.ssafy.presentation.ui.profile.MyStoryScreen
 import com.ssafy.presentation.ui.profile.ProfileScreen
 import com.ssafy.presentation.ui.setting.InformationScreen
 import com.ssafy.presentation.ui.setting.NotificationSettingScreen
@@ -46,7 +45,7 @@ fun MainNavHost(
     ) {
 
         composable(MainNav.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 //        composable(MainNav.Memory.route) {
 //            StoryScreen()
@@ -82,8 +81,22 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     context: Context
 ) {
-    composable(route = SettingNav.MyStory.route) {
-        MyStoryScreen()
+    composable(route = "${SettingNav.WebView.route}/{id}/{mode}",
+        arguments = listOf(navArgument("id") {
+            type = NavType.StringType
+            defaultValue = ""
+        },
+            navArgument("mode") {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+
+        )) { entry ->
+        val id = entry.arguments?.getString("id")
+        Log.e("entry", id.toString())
+        val mode = entry.arguments?.getString("mode")
+        Log.e("entry", mode.toString())
+        WebViewScreen(id.toString(), mode.toString())
     }
 
     composable(route = SettingNav.Notification.route) {
