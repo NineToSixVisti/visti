@@ -3,6 +3,7 @@ package com.ssafy.presentation.ui.common
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,7 +37,9 @@ fun MainNavHost(
     innerPaddings: PaddingValues,
     navController: NavHostController,
     context: Context,
-    route: String
+    route: String,
+    pickImageLauncher: ActivityResultLauncher<Intent>
+
 ) {
     NavHost(
         modifier = Modifier,
@@ -46,12 +49,6 @@ fun MainNavHost(
 
         composable(MainNav.Home.route) {
             HomeScreen(navController = navController)
-        }
-//        composable(MainNav.Memory.route) {
-//            StoryScreen()
-//        }
-        composable(MainNav.Like.route) {
-            LikeListScreen(navController = navController)
         }
         composable(
             MainNav.Memory.route, deepLinks = listOf(navDeepLink {
@@ -65,8 +62,15 @@ fun MainNavHost(
         ) { entry ->
             val id = entry.arguments?.getString("id")
             Log.e("entry", id.toString())
-            StoryScreen(id.toString())
+            StoryScreen(id.toString(), pickImageLauncher)
         }
+//        composable(MainNav.Memory.route) {
+//            StoryScreen()
+//        }
+        composable(MainNav.Like.route) {
+            LikeListScreen(navController = navController)
+        }
+
 
         composable(MainNav.Profile.route) {
             ProfileScreen(navController = navController)

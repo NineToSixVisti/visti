@@ -1,12 +1,20 @@
 package com.ssafy.presentation
 
+
+import android.Manifest
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,10 +37,17 @@ import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    companion object {
+        var selectedImageUri: Uri? = null
+        const val CHANNEL_ID = "visti_channel"
+        const val CHANNEL_NAME = "visti"
+    }
 
     val mainViewModel: MainViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +60,20 @@ class MainActivity : ComponentActivity() {
             "iytWOxmTy8",
             "Visti"
         )
+
         setContent {
             VistiAndroidTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
                     WindowCompat.setDecorFitsSystemWindows(window, false)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        checkPermission(Manifest.permission.READ_MEDIA_IMAGES)
+                    } else {
+                        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+
                     val mainNavController = rememberNavController()
                     val mainState = mainViewModel.accessToken.collectAsState()
                     when {
@@ -62,11 +87,16 @@ class MainActivity : ComponentActivity() {
 //                        }
 
                         mainState.value.accessToken.isBlank() || mainState.value.accessToken == "accessToken" -> {
-                            MainScreen(mainNavController, this, SignInNav.SignIn.route)
+                            MainScreen(
+                                mainNavController,
+                                this,
+                                SignInNav.SignIn.route,
+                                galleryLauncher
+                            )
                         }
 
                         mainState.value.accessToken.isNotBlank() -> {
-                            MainScreen(mainNavController, this, MainNav.Home.route)
+                            MainScreen(mainNavController, this, MainNav.Home.route, galleryLauncher)
                         }
                     }
 
@@ -74,6 +104,30 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
+    private fun checkPermission(permissionId: String) {
+        if (ContextCompat.checkSelfPermission(this, permissionId)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 권한이 허용되지 않은 경우 권한 요청
+            ActivityCompat.requestPermissions(
+                this, arrayOf<String>(permissionId),
+                REQUEST_PERMISSION
+            )
+        } else {
+
+        }
+    }
+
+    // 파일 선택 결과 처리를 위한 ActivityResultLauncher
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                selectedImageUri = data?.data
+            }
+        }
 
     private fun createNotificationChannel(id: String, name: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -85,17 +139,16 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-    companion object {
-        const val CHANNEL_ID = "visti_channel"
-        const val CHANNEL_NAME = "visti"
-    }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainNavController: NavHostController, context: Context, route: String) {
+fun MainScreen(
+    mainNavController: NavHostController,
+    context: Context,
+    route: String,
+    pickImageLauncher: ActivityResultLauncher<Intent>
+) {
 
     val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -110,8 +163,14 @@ fun MainScreen(mainNavController: NavHostController, context: Context, route: St
             }
         },
     ) {
-        MainNavHost(it, navController = mainNavController, context = context, route)
+        MainNavHost(
+            it,
+            navController = mainNavController,
+            context = context,
+            route,
+            pickImageLauncher
+        )
     }
 }
 
-
+private const val REQUEST_PERMISSION = 1

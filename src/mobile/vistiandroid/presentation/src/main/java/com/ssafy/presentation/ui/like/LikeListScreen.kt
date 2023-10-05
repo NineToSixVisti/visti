@@ -198,7 +198,7 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel(), 
                     }
 
                     this.items(group) { story ->
-//                        StoryItem(story, navController, viewModel)
+                        StoryItem(story, navController)
                     }
                 }
             }
@@ -239,7 +239,7 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel(), 
                 this.items(lazyLikedStories.itemCount) { index ->
                     val story = lazyLikedStories[index]
                     if (story != null) {
-//                        StoryItem(story, navController, viewModel)
+                        StoryItem(story, navController)
                     }
                 }
             }
