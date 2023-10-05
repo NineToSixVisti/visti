@@ -19,8 +19,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
   const ethereum = (window as any).ethereum;
 
   if (!ethereum) {
-    console.error("Ethereum provider not found. Please install MetaMask.");
-    return null; // 또는 사용자에게 메시지를 표시하는 컴포넌트를 반환하십시오.
+    return null;
   }
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
   const signer = provider.getSigner();
@@ -51,11 +50,7 @@ const NFTButton: React.FC<NFTButtonProps> = ({ imageURI }) => {
       const userAddress = await signer.getAddress();
       const transferTx = await contract.transfer(userAddress, tokenId);
       await transferTx.wait();
-
-      console.log("NFT successfully created and sent!");
-    } catch (error) {
-      console.error("Error creating or sending NFT:", error);
-    }
+    } catch (error) {}
   };
 
   return (
