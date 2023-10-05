@@ -65,7 +65,7 @@ const StoryboxDetail: React.FC = () => {
     const updateRemainingTime = () => {
       const now = new Date();
       const finishDate = new Date(storyboxInfo.finishedAt);
-      finishDate.setUTCHours(-9); 
+      finishDate.setUTCHours(15); 
       const diff = finishDate.getTime() - now.getTime();
       
       if (diff <= 0) {

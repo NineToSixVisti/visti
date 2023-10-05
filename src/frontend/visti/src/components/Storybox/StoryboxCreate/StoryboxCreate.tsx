@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
@@ -154,31 +155,40 @@ const StoryboxCreate = () => {
     }
   }, [storyboxId]);
 
+  const showErrorAlert = (text: string): void => {
+    Swal.fire({
+      icon: 'error',
+      title: text,
+      confirmButtonText: '확인'
+    });
+  }
+  
+
   // 스토리 박스 생성할때의 조건
   const checkData = () => {
     if (!groupName.trim()) {
-      alert('그룹 이름을 입력해주세요!')
+      showErrorAlert('그룹 이름을 \n입력해주세요!');
       return false;
     }
     if (groupName.length >= 20) {
-      alert('그룹 이름은 18자 이하로 입력해주세요!')
+      showErrorAlert('그룹 이름은 18자 이하로 입력해주세요!')
       return false;
     }
     if (!groupDetail.trim()) {
-      alert("그룹 소개글을 입력해주세요.");
+      showErrorAlert("그룹 소개글을 \n입력해주세요!");
       return false;
     } 
     if (groupDetail.trim().length >= 100) {
-      alert("그룹 소개글은 100자 이하로 입력해주세요.");
+      showErrorAlert("그룹 소개글은 100자 이하로 입력해주세요!");
       return false;
     }
     if (!value) {
-      alert("종료일자를 설정해주세요.");
+      showErrorAlert("종료일자를 \n설정해주세요!");
       return false;
     }
     const today = dayjs();
     if (value.isBefore(today, 'day') || value.isSame(today, 'day')) {
-      alert("종료시간은 오늘 날짜 이후여야 합니다.");
+      showErrorAlert("종료시간은 오늘 \n날짜 이후여야 합니다!");
       return false;
     }
     return true;
