@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -136,7 +135,7 @@ fun MainBottomNavigationBar(
                 contentColor = White,
                 onClick = { visibleBottomBar = !visibleBottomBar },
                 modifier = Modifier
-                    .padding(15.dp)
+                    .padding(18.dp)
                     .navigationBarsPadding(),
                 shape = RoundedCornerShape(40.dp)
             ) {

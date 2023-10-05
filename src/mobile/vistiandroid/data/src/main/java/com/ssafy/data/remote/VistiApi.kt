@@ -48,7 +48,11 @@ interface VistiApi {
     @GET("/api/story-box/mainpage")
     suspend fun getHomeStoryBox(): HomeStoryBoxResponse
 
+
+    @POST("/fcmtoken/gettoken")
+    suspend fun uploadFcmToken(@Body fcmToken: String)
+
+
     @POST("/api/story-box/enter")
     suspend fun enterStoryBox(@Body storyBoxId: String)
-
 }

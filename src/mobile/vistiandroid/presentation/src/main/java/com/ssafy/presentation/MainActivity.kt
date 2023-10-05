@@ -1,7 +1,10 @@
 package com.ssafy.presentation
 
+
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,6 +31,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.navercorp.nid.NaverIdLoginSDK
 import com.ssafy.presentation.ui.common.MainBottomNavigationBar
 import com.ssafy.presentation.ui.common.MainNavHost
 import com.ssafy.presentation.ui.theme.VistiAndroidTheme
@@ -36,10 +40,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
     companion object {
         var selectedImageUri: Uri? = null
+        const val CHANNEL_ID = "visti_channel"
+        const val CHANNEL_NAME = "visti"
     }
 
     val mainViewModel: MainViewModel by viewModels()
@@ -47,12 +51,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        NaverIdLoginSDK.initialize(
-//            this@MainActivity,
-//            "mE50MSQqCj6GYFbT2CVW",
-//            "iytWOxmTy8",
-//            "Visti"
-//        )
+
+        createNotificationChannel(CHANNEL_ID, CHANNEL_NAME)
+
+        NaverIdLoginSDK.initialize(
+            this@MainActivity,
+            "mE50MSQqCj6GYFbT2CVW",
+            "iytWOxmTy8",
+            "Visti"
+        )
+
         setContent {
             VistiAndroidTheme {
                 Surface(
@@ -78,7 +86,7 @@ class MainActivity : ComponentActivity() {
 //                            }
 //                        }
 
-                        mainState.value.accessToken.isBlank() -> {
+                        mainState.value.accessToken.isBlank() || mainState.value.accessToken == "accessToken" -> {
                             MainScreen(
                                 mainNavController,
                                 this,
@@ -96,6 +104,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
     private fun checkPermission(permissionId: String) {
         if (ContextCompat.checkSelfPermission(this, permissionId)
@@ -119,6 +128,17 @@ class MainActivity : ComponentActivity() {
                 selectedImageUri = data?.data
             }
         }
+
+    private fun createNotificationChannel(id: String, name: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(id, name, importance)
+
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
