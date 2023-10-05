@@ -42,7 +42,7 @@ app.get("/visti/invite/:storyboxid", (req, res) => {
         const data = {
             modalText: '스토리 박스에 들어올래?',
             buttonText: '확인',
-            apiEndpoint : process.env.API_ENDPOINT_FRESH + `?storyboxId=${storyboxId}`
+            apiEndpoint : "visti://deeplink/" + `${storyboxId}`
         };
 
         res.render('template', data);

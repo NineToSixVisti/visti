@@ -38,5 +38,7 @@ const authAPI = (url: string, options?: AxiosRequestConfig): AxiosInstance => {
 
 const SERVER_URL = process.env.REACT_APP_SERVER
 
+
 export const baseInstance: AxiosInstance = baseAPI(`${SERVER_URL}/api/`);
 export const authInstance: AxiosInstance = authAPI(`${SERVER_URL}/api/`);
+

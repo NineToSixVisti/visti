@@ -11,9 +11,11 @@ visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
 assetlinks.json
 .env
 
+
 node_modules
 build
 visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
+assetlinks.json
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

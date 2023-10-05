@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modal</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="<%= process.env.NODE_ENV === 'production' ? '/link/styles.css' : '/styles.css' %>">
 </head>
 <body>
     <div class="overlay">
@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <script src="/button.js"></script>
+    <script src="<%= process.env.NODE_ENV === 'production' ? '/link/button.js' : '/button.js' %>"></script>
 </body>
 </html>
 
