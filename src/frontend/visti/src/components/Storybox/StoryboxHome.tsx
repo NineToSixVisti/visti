@@ -113,7 +113,7 @@ const StoryboxHome = () => {
     const timer = setTimeout(() => {
       getSearchStoryboxList(search);
       dispatch(setTrigger(false));
-    }, 500); // 1000ms = 1초
+    }, 1000); // 1000ms = 1초
   
     // useEffect의 cleanup 함수에서 타이머를 해제합니다.
     return () => clearTimeout(timer);
