@@ -33,13 +33,13 @@ function CreatePostButton() {
     };
     
     return (
-      <div style={{ position: 'fixed', left: '10px', bottom: '10px', zIndex: 1000 }}>
+      <div style={{ position: 'fixed', right: '10px', bottom: '10px', zIndex: 1000 }}>
         <div style={{ position: 'relative' }}>
-          <Fab style={{ backgroundColor: '#F09E98', zIndex: 2, position: 'relative' }} aria-label="add" onClick={handleMenuToggle}>
+          <Fab style={{ backgroundColor: '#F09E98', zIndex: 2, position: 'relative', width : '70px', height: '70px' }} aria-label="add" onClick={handleMenuToggle}>
               <AddIcon style={{ color: '#FFFFFF' }} />
           </Fab>
           {isMenuOpen && (
-              <div style={{ position: 'absolute', bottom: '60px', width: '68px', background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 1 }}>
+              <div style={{ position: 'absolute', bottom: '72px', width: '68px', background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 1 }}>
                 <button style={{ display: 'block', width: '100%', padding: '8px 4px', border: 'none', background: 'none', textAlign: 'left', fontSize: '14px'}} onClick={handleGalleryClick}>사진 작성</button>
                 <button style={{ display: 'block', width: '100%', padding: '8px 4px', border: 'none', background: 'none', textAlign: 'left',  fontSize: '14px'}} onClick={handleTextClick}>글 작성</button>
               </div>

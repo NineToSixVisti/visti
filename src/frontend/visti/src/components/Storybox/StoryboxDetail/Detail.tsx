@@ -245,14 +245,15 @@ const StoryboxLink = styled.div`
   width: 100%;
   border-bottom: 2px solid #DBDBDB;
   white-space: pre-line;
+  word-wrap: break-word;
 
   >p {
     margin: 0;
     padding: 10px;
     font-size: 16px;
-    overflow: hidden;
+    /* overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: nowrap; */
   }
 `
 
