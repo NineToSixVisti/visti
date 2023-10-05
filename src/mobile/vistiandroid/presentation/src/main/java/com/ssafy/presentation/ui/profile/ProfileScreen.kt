@@ -165,7 +165,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
 
                 1 -> StoryBoxLazyColumn(
                     lazyPagingItems,
-                    memberInformation.storyBoxes
+                    memberInformation.storyBoxes,
+                    navController
                 )
             }
         }

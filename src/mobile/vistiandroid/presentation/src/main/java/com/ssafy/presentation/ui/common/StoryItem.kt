@@ -36,14 +36,7 @@ fun StoryItem(
     Box(modifier = Modifier.clickable {
         Log.d(TAG, "StoryItem: ${story.encryptedId}")
 
-        viewModel.setWebViewState(story.encryptedId)
-
-        navController.navigate(SettingNav.WebView.route) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
+        navController.navigate("${SettingNav.WebView.route}/${story.encryptedId}/story") {
         }
     }) {
         val placedHolder = if (!isSystemInDarkTheme()) {
