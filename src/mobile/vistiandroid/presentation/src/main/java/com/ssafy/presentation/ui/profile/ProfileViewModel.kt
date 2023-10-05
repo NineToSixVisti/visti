@@ -1,9 +1,12 @@
 package com.ssafy.presentation.ui.profile
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.accompanist.web.WebContent
+import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.repository.MemberInformationRepository
@@ -18,6 +21,8 @@ class ProfileViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     repository: MemberInformationRepository,
 ) : ViewModel() {
+
+    private var myStoryLink = "http://j9d102.p.ssafy.io/storydetail/"
 
     private val _memberInformation = mutableStateOf(ProfileState())
     val memberInformation: State<ProfileState> = _memberInformation
@@ -50,5 +55,22 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    var webViewState = WebViewState(
+        WebContent.Url(
+            url = "",
+            additionalHttpHeaders = emptyMap()
+        )
+    )
+
+    fun setWebViewState(id: String) {
+        Log.e("setWebView", id)
+        webViewState =  WebViewState(
+            WebContent.Url(
+                url = "$myStoryLink$id",
+                additionalHttpHeaders = emptyMap()
+            )
+        )
     }
 }

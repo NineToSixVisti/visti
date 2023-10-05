@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieAnimation
@@ -53,7 +53,6 @@ import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.home.HomeStory
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.LoadLottie
-import com.ssafy.presentation.ui.common.loadImage
 import com.ssafy.presentation.ui.home.component.HomeStoryBoxItem
 import com.ssafy.presentation.ui.home.component.HomeStoryItem
 import com.ssafy.presentation.ui.theme.Black20
@@ -67,6 +66,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
@@ -140,7 +140,7 @@ fun HomeScreen(
                     HomeContent(
                         homeStorySate.stories,
                         homeStoryBoxState.storyBoxList,
-                        memberInformation
+                        memberInformation, navController
                     )
                 }
             }
@@ -152,7 +152,8 @@ fun HomeScreen(
 fun HomeContent(
     homeStoryList: List<HomeStory>,
     homeStoryBoxList: List<StoryBox>,
-    memberInformation: Member
+    memberInformation: Member,
+    navController: NavController
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -191,7 +192,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryBoxList) { homeStoryBox ->
-                HomeStoryBoxItem(homeStoryBox)
+                HomeStoryBoxItem(homeStoryBox, navController)
             }
         }
     }
@@ -223,7 +224,7 @@ fun HomeContent(
     } else {
         LazyRow {
             items(homeStoryList) { homeStory ->
-                HomeStoryItem(homeStory)
+                HomeStoryItem(homeStory, navController)
             }
         }
     }

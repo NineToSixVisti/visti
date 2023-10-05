@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,16 +20,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.ssafy.domain.model.StoryBox
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.White
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoryBoxItem(storyBox: StoryBox) {
+fun StoryBoxItem(storyBox: StoryBox, navController: NavController) {
     Card(
+        onClick = {
+            navController.navigate("${SettingNav.WebView.route}/${storyBox.encryptedId}/storyBox") {
+            }
+        },
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
     ) {
         Box {

@@ -45,13 +45,13 @@ fun MainNavHost(
     ) {
 
         composable(MainNav.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 //        composable(MainNav.Memory.route) {
 //            StoryScreen()
 //        }
         composable(MainNav.Like.route) {
-            LikeListScreen()
+            LikeListScreen(navController = navController)
         }
         composable(
             MainNav.Memory.route, deepLinks = listOf(navDeepLink {
@@ -81,6 +81,24 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     context: Context
 ) {
+    composable(route = "${SettingNav.WebView.route}/{id}/{mode}",
+        arguments = listOf(navArgument("id") {
+            type = NavType.StringType
+            defaultValue = ""
+        },
+            navArgument("mode") {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+
+        )) { entry ->
+        val id = entry.arguments?.getString("id")
+        Log.e("entry", id.toString())
+        val mode = entry.arguments?.getString("mode")
+        Log.e("entry", mode.toString())
+        WebViewScreen(id.toString(), mode.toString())
+    }
+
     composable(route = SettingNav.Notification.route) {
         NotificationSettingScreen(navController = navController)
     }

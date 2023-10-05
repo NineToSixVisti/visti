@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,13 +18,20 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.ssafy.domain.model.StoryBox
+import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.common.VistiImage
 import com.ssafy.presentation.ui.theme.Black20
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeStoryBoxItem(homeStoryBox: StoryBox) {
+fun HomeStoryBoxItem(homeStoryBox: StoryBox, navController: NavController) {
     Card(
+        onClick = {
+            navController.navigate("${SettingNav.WebView.route}/${homeStoryBox.encryptedId}/storyBox") {
+            }
+        },
         modifier = Modifier
             .padding(end = 10.dp), shape = RoundedCornerShape(12.dp)
     ) {
