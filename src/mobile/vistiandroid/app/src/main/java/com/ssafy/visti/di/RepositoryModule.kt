@@ -5,11 +5,13 @@ import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.repository.FcmRepositoryImpl
 import com.ssafy.data.repository.LikedStoryRepositoryImpl
 import com.ssafy.data.repository.MemberInformationRepositoryImpl
+import com.ssafy.data.repository.StoryBoxRepositoryImpl
 import com.ssafy.data.repository.TokenRepositoryImpl
 import com.ssafy.data.repository.UserRepositoryImpl
 import com.ssafy.domain.repository.FcmRepository
 import com.ssafy.domain.repository.LikedStoryRepository
 import com.ssafy.domain.repository.MemberInformationRepository
+import com.ssafy.domain.repository.StoryBoxRepository
 import com.ssafy.domain.repository.TokenRepository
 import com.ssafy.domain.repository.UserRepository
 import dagger.Module
@@ -55,5 +57,11 @@ class RepositoryModule {
     @Singleton
     fun provideFcmRepository(api: VistiApi): FcmRepository {
         return FcmRepositoryImpl(api)
+    }
+
+    fun storyBoxRepository(
+        api: VistiApi,
+    ): StoryBoxRepository {
+        return StoryBoxRepositoryImpl(api)
     }
 }
