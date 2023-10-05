@@ -32,7 +32,6 @@ const StoryboxHome = () => {
   const [storyboxList, setStoryboxList] = useState<Storybox[] | null>(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  // const [isSearching, setIsSearching] = useState(true);
 
   const [page, setPage] = useState<number>(0);  // 현재 페이지 번호
   const [hasMore, setHasMore] = useState<boolean>(true);  // 더 가져올 데이터가 있는지
@@ -46,9 +45,9 @@ const StoryboxHome = () => {
   const onSearch = () => {
     setPage(0); 
     setStoryboxList(null); 
-    // setIsSearching(true);
   }
 
+  // 스크롤에 따라 페이지 이동
   const lastBoxElementRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
@@ -69,7 +68,6 @@ const StoryboxHome = () => {
       }
       try {
         const { data } = await authInstance.get(`story-box/searchstorybox?page=${page}&size=4&keyword=${search}`);
-        // console.log("검색된 스토리 박스:", data);
         if (page ===0) {
           const newContent = [...data.detail.content];
           setStoryboxList(newContent);
@@ -78,7 +76,7 @@ const StoryboxHome = () => {
         if (prevStoryboxList === null) {
           return [...data.detail.content];
         } else {
-          // 중복 데이터 제거
+          // 중복되는 데이터 제거
         const newContent = data.detail.content.filter(
             (item : any) => !prevStoryboxList.some((prevItem) => prevItem.encryptedId === item.encryptedId)
           );
@@ -108,14 +106,18 @@ const StoryboxHome = () => {
   }, [hasMore]);
 
   useEffect(()=>{
-    getSearchStoryboxList(search);
-    dispatch(setTrigger(false));
-    // console.log('트리거 :', trigger);
-  },[getSearchStoryboxList, page, search, dispatch, trigger])
+    console.log(trigger)
+  },[trigger])
 
-  useEffect(()=>{
-    // console.log("SERVER_URL:", process.env.REACT_APP_SERVER);
-  },[])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      getSearchStoryboxList(search);
+      dispatch(setTrigger(false));
+    }, 500); // 1000ms = 1초
+  
+    // useEffect의 cleanup 함수에서 타이머를 해제합니다.
+    return () => clearTimeout(timer);
+  }, [getSearchStoryboxList, page, search, dispatch, trigger]);
 
   return (
     <StoryboxWWrap>
@@ -142,7 +144,6 @@ const StoryboxHome = () => {
                   bgImage={storybox.boxImgPath}
                   onClick={() => {
                   navigate(`/storybox/detail/${storybox.encryptedId}`);
-                  // console.log(storybox.encryptedId);
                   dispatch(setStoryboxId(storybox.encryptedId));}}>
                 <NameWrap>
                   <p>
@@ -155,7 +156,7 @@ const StoryboxHome = () => {
             }
           </MainBoxWrap> :
           <MainWrap>
-            <img src="/assets/storybox-no.svg" alt="" />
+            <img src="/assets/storybox-no.svg" alt=""/>
             <p>스토리박스가<br/>하나도 없어요.</p>
           </MainWrap>
         }      
@@ -194,7 +195,6 @@ const TopWrap = styled.div`
 `;
 
 const SearchWrap = styled.div`
-  /* flex-grow: 1;  */
   width: calc(100vw - 110px);
   height: 35px;
   position: relative; 
@@ -211,13 +211,11 @@ const SearchWrap = styled.div`
 
 const MainWrap = styled.div`
   width: 100%;
-  /* height: calc(100% - 200px); */
   height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* padding: 5px; */
 
 >img {
   width: 103px;
@@ -234,7 +232,6 @@ const MainWrap = styled.div`
 
 const MainBoxWrap = styled.div`
   width: 100%;
-  /* height: calc(100vh - 121px); */
   display: flex;
   flex-direction: column;
 
@@ -244,7 +241,6 @@ const MainBoxWrap = styled.div`
     display: none;
   }
 `
-
 const BoxWrap = styled.div<BoxWrapProps>`
   height: 220px;
   background-image: url(${props => props.bgImage ? props.bgImage : '/assets/box_Image_input.svg'});
