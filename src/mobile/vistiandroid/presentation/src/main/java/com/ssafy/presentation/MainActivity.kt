@@ -8,10 +8,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,8 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
@@ -66,7 +61,7 @@ class MainActivity : ComponentActivity() {
 //                            }
 //                        }
 
-                        mainState.value.accessToken=="accessToken" -> {
+                        mainState.value.accessToken.isBlank() || mainState.value.accessToken == "accessToken" -> {
                             MainScreen(mainNavController, this, SignInNav.SignIn.route)
                         }
 
@@ -79,6 +74,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     private fun createNotificationChannel(id: String, name: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -89,6 +85,7 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
     companion object {
         const val CHANNEL_ID = "visti_channel"
         const val CHANNEL_NAME = "visti"
