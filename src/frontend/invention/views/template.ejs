@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modal</title>
     <link rel="stylesheet" href="<%= process.env.NODE_ENV === 'production' ? '/link/styles.css' : '/styles.css' %>">
-    <link rel="icon" href="/visti-logo.png" type="image/png">
+    <link rel="icon" href="/link/visti-logo.png" type="image/png">
 </head>
 <body>
-    <div class="overlay">
-        <div class="modal-container">
-            <div class="main-modal">
-                <img src="/visti-logo.png" alt="Visti Logo">
-                <p><%= modalText %></p> <!-- 이부분이 변경됩니다. -->
-            </div>
-            
-            <div class="foot-modal">
-                <div class="confirm-button" data-api-endpoint="<%= apiEndpoint %>"><%= buttonText %></div> <!-- 이부분이 변경됩니다. -->
+    <div class="background" >
+        <img class="logo" src="link/Visti-lightpink.svg" alt="visti-lightpink">
+        <div class="overlay">
+            <div class="modal-container">
+                <div class="main-modal">
+                    <img src="/link/visti-logo.png" alt="Visti Logo">
+                    <p><%= modalText %></p> <!-- 이부분이 변경됩니다. -->
+                </div>
+                
+                <div class="foot-modal">
+                    <div class="confirm-button" data-api-endpoint="<%= apiEndpoint %>"><%= buttonText %></div> <!-- 이부분이 변경됩니다. -->
+                </div>
             </div>
         </div>
     </div>
-
+        
     <script src="<%= process.env.NODE_ENV === 'production' ? '/link/button.js' : '/button.js' %>"></script>
 </body>
 </html>

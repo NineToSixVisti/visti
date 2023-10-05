@@ -9,8 +9,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // import invitation from './lib/invitation'
 
-let counter = 0
-
 const app = express();
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
@@ -26,12 +24,11 @@ app.get('/rot', function (req, res) {
 })
 
 app.get("/visti/invite/:storyboxid", (req, res) => {
-    counter ++;
-    console.log("호출 카운팅",counter);
+
     // 유효기간 + 아이디가 암호화 해서 전달이됨.
     const encodeData = req.params.storyboxid;    
     const storyBoxInfo = atob(encodeData);
-    console.log("1==",storyBoxInfo);
+
 
     const {expirationDay, storyboxId} = decrypt(storyBoxInfo);
     
