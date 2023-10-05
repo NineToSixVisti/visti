@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../../assets/images/plus_button_red.svg"
-// import { ReactComponent as Calendar } from "../../../assets/images/calendar.svg"
 import './StoryboxCreate.css';
 
 import dayjs, { Dayjs } from 'dayjs';
@@ -171,7 +170,7 @@ const StoryboxCreate = () => {
       return false;
     }
     if (groupName.length >= 20) {
-      showErrorAlert('그룹 이름은 18자 이하로 입력해주세요!')
+      showErrorAlert('그룹 이름은 18자 \n이하로 입력해주세요!')
       return false;
     }
     if (!groupDetail.trim()) {
@@ -179,7 +178,7 @@ const StoryboxCreate = () => {
       return false;
     } 
     if (groupDetail.trim().length >= 100) {
-      showErrorAlert("그룹 소개글은 100자 이하로 입력해주세요!");
+      showErrorAlert("그룹 소개글은 100자 \n이하로 입력해주세요!");
       return false;
     }
     if (!value) {
@@ -246,8 +245,6 @@ const StoryboxCreate = () => {
 
     // console.log(json);  
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
-
-    // console.log(formDataToObject(formData));
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
@@ -384,12 +381,6 @@ const GoBackSvg = styled(GoBack)`
 const MainWrap = styled.div`
   height: calc(100vh - 30px);
   margin : 10px 20px;
-
-  /* overflow-y: scroll; 
-  scrollbar-width: none; // 파이어폭스
-  &::-webkit-scrollbar { // 크롬, 사파리
-    display: none;
-  } */
 `
 
 const Title = styled.div`

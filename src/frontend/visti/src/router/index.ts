@@ -42,7 +42,7 @@ const routes = [
     Component : LetterCreator
   },
   {
-    path : '/',
+    path : '/test',
     Component : Test
   },
   {
