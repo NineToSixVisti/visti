@@ -23,6 +23,7 @@ dayjs.locale('ko');
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
+    getSelectedImage: () => string | null;
   };
 }
 
@@ -69,16 +70,29 @@ const StoryboxCreate = () => {
   const ImageClick = () => {
     if (window.Android) {
         if (window.Android.openGallery) {
-            window.Android.openGallery();
+          window.Android.openGallery();
+          // 갤러리를 열고 난 후 선택된 이미지 URI 검색
+          const selectedImageUri = window.Android.getSelectedImage();
+          if (selectedImageUri) {
+            // console.log(selectedImageUri);
+            setGroupImage(selectedImageUri);
+
+            // base64 문자열을 File 객체로 변환
+            const imageFile = base64ToFile(selectedImageUri, "selectedImage.jpg");
+            setFile(imageFile);  // File 객체 저장
+          }
+          // console.log('openGallety 호출 잘됨')
         } else {
-            const inputElement = document.getElementById("ImageInput");
-            inputElement?.click();
+          const inputElement = document.getElementById("ImageInput");
+          inputElement?.click();
+          // console.log('openGallety 호출 안됨')
         }
     } else {
-        const inputElement = document.getElementById("ImageInput");
-        inputElement?.click();
+      const inputElement = document.getElementById("ImageInput");
+      inputElement?.click();
+      // console.log('안드로이드 접근 안됨')
     }
-  }
+}
 
   // 이미지를 변경할 때의 로직
   const ImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,24 +107,6 @@ const StoryboxCreate = () => {
       setFile(fileBlob);  // 원본 파일 저장
     }
   };
-
-  // 이미지 base64 전달(안드->웹)
-  const onImageSelected = (base64Image: string | null) => {
-    try {
-      console.log('1. 함수실행은 된다!.!')
-        if (base64Image) {
-            console.log('onImageSelected() 실행됨');
-            setGroupImage(base64Image);
-            const imageFile = base64ToFile(base64Image, "boxImage.jpg");
-            setFile(imageFile);
-        }
-        else {
-          console.log('2. 함수실행은 된다!.!')
-        }
-    } catch (error) {
-        console.error("onImageSelected 에러 발생:", error);
-    }
-  }
 
   const OpenModal = () => {
     if (checkData()){
@@ -211,7 +207,7 @@ const StoryboxCreate = () => {
       const imageBlob: Blob = await response.blob();
   
       // Blob을 파일로 변환
-      const imageFile = new File([imageBlob], "boxImage.jpg", { type: imageBlob.type });
+      const imageFile = new File([imageBlob], "filename.jpg", { type: imageBlob.type });
   
       // 파일 상태 업데이트
       setFile(imageFile);
@@ -276,11 +272,6 @@ const StoryboxCreate = () => {
   useEffect(()=>{
     getStoryboxInfo();
   },[getStoryboxInfo])
-
-  // 체크
-  useEffect(()=>{
-    console.log(groupImage);
-  },[groupImage])
 
   return (
     <Wrap>
