@@ -5,6 +5,12 @@ import StoryboxDetail from "../components/Storybox/StoryboxDetail/StoryboxDetail
 import StoryHome from "../components/Story/StoryCreate/StoryHome";
 import StoryCreator from "../components/Story/StoryCreate/StoryCreator";
 import StoryDetail from "../components/Story/StoryDetail/StoryDetail";
+import LetterCreator from "../components/Story/StoryCreate/LetterCreator"
+import Test from "../components/Storybox/StoryboxDetail/LinkCheck/Test";
+import InviteCheck from "../components/Storybox/StoryboxDetail/LinkCheck/InviteCheck";
+
+
+
 
 const routes = [
   {
@@ -30,7 +36,20 @@ const routes = [
   {
     path : "/storydetail/:id",
     Component : StoryDetail
-  }
+  },
+  {
+    path : "/lettercreator",
+    Component : LetterCreator
+  },
+  {
+    path : '/test',
+    Component : Test
+  },
+  {
+    path : "/invite/:encryptedData",
+    Component : InviteCheck
+  },
 ]
+ 
 
 export default routes;
