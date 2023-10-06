@@ -15,7 +15,7 @@ data class Member(
     val profilePath: String? = null,
     val role: MemberType = MemberType.USER,
     val memberType: String = "",
-    val dailyStory: String = "",
+    val dailyStory: Int = 0,
     val status: Boolean = true,
     val storyBoxes: String = "",
     val stories: String = ""
