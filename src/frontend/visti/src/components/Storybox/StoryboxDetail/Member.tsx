@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
+import Loading from '../../Common/Loading';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+
 
 interface MemberList {
   nickname: string;
@@ -14,19 +18,22 @@ interface MemberProps {
 }
 
 const Member : React.FC<MemberProps> = ({id}) => {
-
+  const [isLoading, setIsLoading] = useState(true);
   const [memberList, setMemberList] = useState<MemberList[]>([]);
 
   const getMemberList = useCallback(async () => {
+    setIsLoading(true);
     try{
       const data = await authInstance.get(`story-box/${id}/members`)
       if (data) {
         setMemberList(data.data.detail);
-        console.log(data.data.detail);
+        // console.log(data.data.detail);
       }
     }
     catch (err) {
       console.log('스토리박스 Member GET 중 에러 발생', err)
+    } finally {
+      setIsLoading(false);
     }
   },[id])
 
@@ -35,16 +42,26 @@ const Member : React.FC<MemberProps> = ({id}) => {
   },[getMemberList])
 
   return (
-    <MemberWrap>
+    <>
       {
-        memberList.map((member, index) => (
-          <MemberDiv key={index}>
-            <ProfileImg bgImage={member.profilePath}/>
-            <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
-          </MemberDiv>
-        ))
+        isLoading ? <Loading isLoading={isLoading}/> :
+        <MemberWrap>
+          {
+            memberList.map((member, index) => (
+              <MemberDiv key={index}>
+                <ProfileImg 
+                  src={member.profilePath} 
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    e.currentTarget.src = DefaultImage;
+                  }}
+                />
+                <p>{member.nickname}{member.position === 'HOST' && <StyledIcon icon={faCrown}/>}</p>
+              </MemberDiv>
+            ))
+          }
+        </MemberWrap>
       }
-    </MemberWrap>
+  </>
   )
 }
 
@@ -58,7 +75,6 @@ const MemberWrap = styled.div`
 
 const MemberDiv = styled.div`
   height: 12%;
-  /* background-color: lightblue; */
   display: flex;
   align-items: center;
   padding: 0 35px;
@@ -67,22 +83,25 @@ const MemberDiv = styled.div`
   >p {
     margin-left: 35px;
     font-size: 20px;
-    /* font-weight: 600; */
   }
 `
 
-type BoxWrapProps = {
-  bgImage : string;
-};
+const DefaultImage = "/assets/profile_image.png";
 
-const ProfileImg = styled.div<BoxWrapProps>`
+const ProfileImg = styled.img`
   width: 14vw;
   height: 14vw;
   border-radius: 42px;
-  background-image: url(${props => props.bgImage});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+`;
+
+const StyledIcon = styled(FontAwesomeIcon)`
+  color: #fba38db3;
+  margin-left: 6px;
+  width: 24px;
+  height: 24px;
 `
 
 export default Member

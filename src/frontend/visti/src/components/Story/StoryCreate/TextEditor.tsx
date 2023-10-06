@@ -87,7 +87,7 @@ const TextEditor: React.FC<{ onEditorOpen: () => void, onEditorClose: () => void
         {!editorVisible && (
             <Draggable 
               onStop={(e, data) => {
-                console.log(`X: ${data.x}, Y: ${data.y}`);
+                // console.log(`X: ${data.x}, Y: ${data.y}`);
                 dispatch(setPosition({ x: data.x, y: data.y }));
               }}
             >
