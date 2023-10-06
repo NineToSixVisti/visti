@@ -1,10 +1,13 @@
 package com.spring.visti.domain.member.entity;
 
+import com.spring.visti.domain.common.entity.BaseEntity;
 import com.spring.visti.domain.storybox.entity.Story;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,15 +26,25 @@ public class MemberLikeStory {
     @JoinColumn(name = "story_id")
     private Story story;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Builder
-    public MemberLikeStory(Member member, Story story){
+    public MemberLikeStory(Member member, Story story, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.member = member;
         this.story = story;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public MemberLikeStory likeThis(Member member, Story story){
+    public static MemberLikeStory likeThis(Member member, Story story){
         return MemberLikeStory.builder()
                 .member(member)
+                .createdAt(story.getCreatedAt())
+                .updatedAt(story.getUpdatedAt())
                 .story(story)
                 .build();
     }
