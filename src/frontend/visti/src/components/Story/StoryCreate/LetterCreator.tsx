@@ -70,7 +70,7 @@ const LetterOptionText = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   color: black;
-  font-size : 12px;
+  font-size : 10px;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
 `;
