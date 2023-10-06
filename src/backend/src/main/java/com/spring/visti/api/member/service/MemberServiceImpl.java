@@ -91,6 +91,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<String> verifyMember(String email, String type) {
         log.info("===== 사용자 인증 진행 =============");
         if (!isValidEmail(email)) {
@@ -105,6 +106,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<String> verifyAuthNum(AuthDTO authInfo) {
         /*
         example
@@ -119,7 +121,6 @@ public class MemberServiceImpl implements MemberService{
         // 인증 코드 조회
         String authCode = authService.getAuthCode(email);
         if (!Objects.equals(authCode, authInfo.getAuthNum())){
-
             throw new ApiException(EMAIL_INPUT_ERROR);
         }
 
@@ -201,11 +202,12 @@ public class MemberServiceImpl implements MemberService{
 
         memberRepository.save(member);
         log.info("===== "+ member.getEmail() + " 회원 탈퇴 완료 =============");
-        return new BaseResponseDTO<>("로그아웃이 완료되었습니다.", 200);
+        return new BaseResponseDTO<>("회원 탈퇴가 완료되었습니다.", 200);
     }
 
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoDTO> getInfo(String email) {
 
         Member _member = getMember(email, memberRepository);
@@ -220,9 +222,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public BaseResponseDTO<String> changePassword(String email, String newPW) {
-//        Member member = getMemberBySecurity();
-        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
+//        Member member = getMember(email, memberRepository);
         log.info("===== " + member.getEmail() + " 비밀번호 변경 진행 =============");
         if (!isValidPassword(newPW)) {
             throw new ApiException(INVALID_PASSWORD_FORMAT);
@@ -237,8 +240,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<MemberMyInfoProfileDTO> getMyData(String email) {
 
+//        Member _member = getMemberBySecurity();
         Member _member = getMember(email, memberRepository);
         MemberMyInfoProfileDTO member = MemberMyInfoProfileDTO.of(_member);
         log.info("Member info: " + member);
@@ -249,7 +254,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public BaseResponseDTO<String> changeProfile(String email, MemberChangeProfileDTO memberChangeProfileDTO, MultipartFile multipartFile) throws IOException {
-        Member member = getMember(email, memberRepository);
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
+
         String newEmail = memberChangeProfileDTO.getNewEmail();
         String nickname = memberChangeProfileDTO.getNickname();
         if (!isValidEmail(newEmail)) {
