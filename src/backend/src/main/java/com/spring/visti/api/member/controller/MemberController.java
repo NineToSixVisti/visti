@@ -31,8 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.spring.visti.utils.exception.ErrorCode.NOT_VALID_TYPE4SEND_MAIL;
-import static com.spring.visti.utils.exception.ErrorCode.NO_MEMBER_ERROR;
+import static com.spring.visti.utils.exception.ErrorCode.*;
 
 @RestController
 @RequestMapping("/api/member")
@@ -140,7 +139,8 @@ public class MemberController {
     ){
 
         String email = getEmail();
-        String access_token = tokenProvider.getHeaderToken(request, "Access");
+        String bearer_access_token = tokenProvider.getHeaderToken(request, "Access");
+        String access_token = extractTokenFromHeader(bearer_access_token);
 
         BaseResponseDTO<String> response = memberService.signOut(email, access_token);
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -153,7 +153,8 @@ public class MemberController {
     ){
 
         String email = getEmail();
-        String access_token = tokenProvider.getHeaderToken(request, "Access");
+        String bearer_access_token = tokenProvider.getHeaderToken(request, "Access");
+        String access_token = extractTokenFromHeader(bearer_access_token);
 
         BaseResponseDTO<String> response = memberService.withdrawalUser(email, access_token);
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -166,6 +167,19 @@ public class MemberController {
             return ((UserDetails) authentication.getPrincipal()).getUsername();
         }
         throw new ApiException(NO_MEMBER_ERROR);
+    }
+    private static final String BEARER_PREFIX = "Bearer ";
+
+    private String extractTokenFromHeader(String headerValue) {
+        if (headerValue == null) {
+            throw new ApiException(NO_TOKEN_HEADER);
+        }
+
+        if (headerValue.trim().toLowerCase().startsWith(BEARER_PREFIX.toLowerCase())) {
+            return headerValue.trim().substring(BEARER_PREFIX.length()).trim();
+        }
+
+        return headerValue.trim();
     }
 
 }

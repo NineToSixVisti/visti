@@ -14,6 +14,10 @@ application-test.properties
 visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
 assetlinks.json
 .env
+<<<<<<< HEAD
+=======
+.env.*
+>>>>>>> b2624d2aaa9ede6aa67d254e00e7c38824954202
 
 <<<<<<< HEAD
 
