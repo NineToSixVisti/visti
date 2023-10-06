@@ -5,17 +5,24 @@ HELP.md
 .gradle
 application.properties
 application-oauth.properties
+<<<<<<< HEAD
+=======
+application.properties
+>>>>>>> aeadfff296e598df2e9f43220e4e12cfd21b985a
 application-test.properties
 /*.properties
 visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
 assetlinks.json
 .env
 
+<<<<<<< HEAD
 
 node_modules
 build
 visti-e32d0-firebase-adminsdk-nefcc-1a705a8042.json
 assetlinks.json
+=======
+>>>>>>> aeadfff296e598df2e9f43220e4e12cfd21b985a
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

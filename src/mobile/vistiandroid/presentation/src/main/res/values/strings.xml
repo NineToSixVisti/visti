@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">presentation</string>
+    <string name="log_in_logo_description">로그인 로고</string>
+    <string name="email">이메일</string>
+    <string name="empty_liked_story">좋아요한 스토리가 없어요</string>
+    <string name="empty_story_box">만든 스토리 박스가 없어요</string>
+    <string name="empty_story">만든 스토리가 없어요</string>
+</resources>
