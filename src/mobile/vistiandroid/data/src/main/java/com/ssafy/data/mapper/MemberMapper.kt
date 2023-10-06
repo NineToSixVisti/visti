@@ -32,4 +32,4 @@ fun mapMemberTypeToEnum(userTypeStr: String): MemberType {
     }
 }
 
-const val MAX_STORY = 5
+const val MAX_STORY = 20
