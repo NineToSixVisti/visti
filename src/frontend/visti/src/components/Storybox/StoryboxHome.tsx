@@ -106,7 +106,7 @@ const StoryboxHome = () => {
   }, [hasMore]);
 
   useEffect(()=>{
-    console.log(trigger)
+    // console.log(trigger)
   },[trigger])
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const StoryboxHome = () => {
       dispatch(setTrigger(false));
     }, 1000); // 1000ms = 1초
   
-    // useEffect의 cleanup 함수에서 타이머를 해제합니다.
+    // useEffect의 cleanup 함수에서 타이머 해체
     return () => clearTimeout(timer);
   }, [getSearchStoryboxList, page, search, dispatch, trigger]);
 

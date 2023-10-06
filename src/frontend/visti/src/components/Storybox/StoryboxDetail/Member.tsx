@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { authInstance } from '../../../apis/utils/instance';
 import Loading from '../../Common/Loading';
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+
 
 interface MemberList {
   nickname: string;
@@ -54,7 +55,7 @@ const Member : React.FC<MemberProps> = ({id}) => {
                     e.currentTarget.src = DefaultImage;
                   }}
                 />
-                <p>{member.nickname}{member.position === 'HOST' && `(방장)`}</p>
+                <p>{member.nickname}{member.position === 'HOST' && <StyledIcon icon={faCrown}/>}</p>
               </MemberDiv>
             ))
           }
@@ -74,7 +75,6 @@ const MemberWrap = styled.div`
 
 const MemberDiv = styled.div`
   height: 12%;
-  /* background-color: lightblue; */
   display: flex;
   align-items: center;
   padding: 0 35px;
@@ -83,13 +83,8 @@ const MemberDiv = styled.div`
   >p {
     margin-left: 35px;
     font-size: 20px;
-    /* font-weight: 600; */
   }
 `
-
-// type BoxWrapProps = {
-//   bgImage : string;
-// };
 
 const DefaultImage = "/assets/profile_image.png";
 
@@ -101,5 +96,10 @@ const ProfileImg = styled.img`
   background-position: center;
   background-repeat: no-repeat;
 `;
+
+const StyledIcon = styled(FontAwesomeIcon)`
+  color: #fba38db3;
+
+`
 
 export default Member

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components';
-import { authInstance } from '../../../apis/utils/instance';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import CryptoJS from 'crypto-js';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from "../../../store"
+import { authInstance } from '../../../apis/utils/instance';
+import { useDispatch } from 'react-redux';
+// import { RootState } from "../../../store"
 import { setTrigger } from "../../../store/slices/storySlice"
 import Loading from '../../Common/Loading';
 
@@ -25,7 +25,7 @@ interface boxDetailProps {
 const Detail : React.FC<boxDetailProps> = ({id}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const trigger = useSelector((state : RootState) => state.story.trigger);
+  // const trigger = useSelector((state : RootState) => state.story.trigger);
   const [isLoading, setIsLoading] = useState(true);
 
   const [storyboxDetail, setStoryboxDetail] = useState<storyboxDetail>();
@@ -98,10 +98,6 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
     getStoryboxDetail();
   },[getStoryboxDetail])
 
-  useEffect(()=>{
-    // console.log(`http://localhost:3000/invite/${encryptedText}`);
-  },[encryptedText])
-
   return (
     <>
       {
@@ -140,7 +136,6 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
           <LinkCreate onClick={() => {encrypt(data)}}>링크 생성</LinkCreate>
           <BoxOut onClick={storyboxOut}>박스 나가기</BoxOut>
         </DetailWrap>
-
       }
     </>
   )
@@ -165,7 +160,6 @@ const MemberBox = styled.div`
   border-radius: 10px;
   border: 2px solid #DBDBDB;
   position: relative;
-  /* background-color: lightblue; */
 
  >p{
   margin: 0px;
@@ -190,7 +184,6 @@ const StoryBox = styled.div`
   border-radius: 10px;
   border: 2px solid #DBDBDB;
   position: relative;
-  /* background-color: lightgreen; */
 
   >p{
   margin: 0px;
@@ -208,24 +201,6 @@ const StoryBox = styled.div`
     right: 25px;
   }
 `
-
-const NameBox = styled.div`
-  margin-top: 20px;
-  width: 100%;
-  border-radius: 10px;
-  border: 2px solid #DBDBDB;
-  padding: 10px;
-
-  >p:first-child {
-    font-size: 12px;
-    margin-bottom: 5px;
-  }
-
-  >p:nth-child(2) {
-    font-size: 20px;
-    font-weight: 600;
-  }
-`;
 
 const ExplainBox = styled.div`
   margin-top: 20px;
@@ -251,9 +226,6 @@ const StoryboxLink = styled.div`
     margin: 0;
     padding: 10px;
     font-size: 16px;
-    /* overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; */
   }
 `
 

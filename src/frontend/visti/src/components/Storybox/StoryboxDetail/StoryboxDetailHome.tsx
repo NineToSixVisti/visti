@@ -79,7 +79,6 @@ const StoryboxDetail: React.FC = () => {
 
     updateRemainingTime();
     const intervalId = setInterval(updateRemainingTime, 1000);
-
     return () => {
       clearInterval(intervalId);
     };
@@ -114,7 +113,6 @@ const StoryboxDetail: React.FC = () => {
               </TLBoxInfo> :
               <BoxInfo>
                 <p>"인생은 단 한번의 추억여행이야"</p>
-                {/* <p>추억 시간</p> */}
                 <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
               </BoxInfo>
             }
@@ -213,7 +211,6 @@ const BoxInfo = styled.div`
 const MainWrap = styled.div`
   width: 100%;
   height: calc(100vh - 191px);
-  /* background-color: lightsalmon; */
 `
 
 const GoBackSvg = styled(GoBack)`
