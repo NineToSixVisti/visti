@@ -103,6 +103,7 @@ public class StoryController {
     @Operation(summary = "메인페이지에 제공 될 랜덤한 스토리들", description = "셔플 된 랜텀 스토리를 제공합니다.")
     public ResponseEntity<? extends BaseResponseDTO<List<StoryExposedDTO>>> readMyStories() {
         String email = getEmail();
+//        String email = "ssollida94@gmail.com";
         BaseResponseDTO<List<StoryExposedDTO>> response = storyService.readMainPageStories(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

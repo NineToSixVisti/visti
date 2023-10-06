@@ -8,6 +8,7 @@ import com.spring.visti.domain.storybox.repository.StoryBoxRepository;
 import com.spring.visti.global.fcm.service.FcmService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static java.time.LocalDate.now;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class scheduledTasks {
 
     private final StoryBoxRepository storyBoxRepository;
@@ -29,11 +31,11 @@ public class scheduledTasks {
     private final FcmService fcmService;
 
     @Transactional
-    @Scheduled(cron = "0 40 * * * ?") // 매일 자정에 실행
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") // 매일 자정에 실행
     public void resetDailyStoryCounts() {
         // 모든 회원의 dailyStoryCounts 를 0으로 설정하는 로직
         memberRepository.resetAllDailyStoryCounts();
-        
+
         // 블라인드 여부 업데이트
         LocalDate now = now();
 
@@ -47,7 +49,7 @@ public class scheduledTasks {
     }
 
 
-    @Scheduled(cron = "0 0 22 * * ?")
+    @Scheduled(cron = "0 0 22 * * ?", zone = "Asia/Seoul")
     public void sendMessageToUserAt22Clock() { // 매일 22시에 실행
         // 모든 회원 중 dailyStoryCounts 가 채워지지 않은 사람들에게 메시지 보냄
 
@@ -69,7 +71,7 @@ public class scheduledTasks {
                 });
     }
 
-    @Scheduled(cron = "0 0 18 * * ?")
+    @Scheduled(cron = "0 0 18 * * ?", zone = "Asia/Seoul")
     public void sendMessageBeforeClose() { // 매일 18시에 실행
         // 모슽 스토리 박스들 중 해당 날짜에 종료가 되는 스토리박스에게 알림이감
 
