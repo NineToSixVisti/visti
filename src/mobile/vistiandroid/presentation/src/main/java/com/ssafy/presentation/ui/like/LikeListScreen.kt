@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,7 +47,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LikeListScreen() {
+fun LikeListScreen(navController: NavController) {
     var selectedSortOption by remember {
         mutableStateOf(LikeSortType.DOWN)
     }
@@ -70,15 +71,15 @@ fun LikeListScreen() {
         ) {
             when (selectedSortOption) {
                 LikeSortType.DOWN -> {
-                    DisplayLikedStoriesByDescend()
+                    DisplayLikedStoriesByDescend(navController = navController)
                 }
 
                 LikeSortType.UP -> {
-                    DisplayLikedStoriesByAscend()
+                    DisplayLikedStoriesByAscend(navController = navController)
                 }
 
                 LikeSortType.RANDOM -> {
-                    DisplayLikedStoriesByRandom()
+                    DisplayLikedStoriesByRandom(navController = navController)
                 }
             }
         }
@@ -86,7 +87,7 @@ fun LikeListScreen() {
 }
 
 @Composable
-fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel()) {
+fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
     val likedStories = viewModel.likedStoriesByDescend
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -137,7 +138,7 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel())
                     }
 
                     this.items(group) { story ->
-                        StoryItem(story)
+                        StoryItem(story, navController)
                     }
                 }
             }
@@ -146,7 +147,7 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel())
 }
 
 @Composable
-fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel()) {
+fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
     val likedStories = viewModel.likedStoriesByAscend
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -197,7 +198,7 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel()) 
                     }
 
                     this.items(group) { story ->
-                        StoryItem(story)
+                        StoryItem(story, navController)
                     }
                 }
             }
@@ -206,7 +207,7 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel()) 
 }
 
 @Composable
-fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) {
+fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
     val likedStories = viewModel.likedStoriesByRandom
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -238,7 +239,7 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel()) 
                 this.items(lazyLikedStories.itemCount) { index ->
                     val story = lazyLikedStories[index]
                     if (story != null) {
-                        StoryItem(story)
+                        StoryItem(story, navController)
                     }
                 }
             }

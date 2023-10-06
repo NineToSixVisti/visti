@@ -1,5 +1,7 @@
 package com.ssafy.presentation.ui.common
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,17 +17,28 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssafy.domain.model.Story
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SettingNav
+import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.theme.PrimaryColor
+
+private const val TAG = "StoryItem"
 
 @Composable
 fun StoryItem(
-    story: Story
+    story: Story, navController: NavController
 ) {
-    Box {
+    Box(modifier = Modifier.clickable {
+        Log.d(TAG, "StoryItem: ${story.encryptedId}")
+
+        navController.navigate("${SettingNav.WebView.route}/${story.encryptedId}/story") {
+        }
+    }) {
         val placedHolder = if (!isSystemInDarkTheme()) {
             R.drawable.placeholder
         } else {
@@ -55,6 +68,5 @@ fun StoryItem(
                     .align(Alignment.TopEnd)
             )
         }
-
     }
 }

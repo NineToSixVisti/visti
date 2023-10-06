@@ -1,6 +1,7 @@
 package com.ssafy.presentation.ui.profile
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,10 +50,14 @@ import com.ssafy.presentation.ui.profile.component.StoryLazyVerticalGrid
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
 import com.ssafy.presentation.ui.theme.LightBackgroundColor
 
+private const val TAG = "ProfileScreen"
+
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
+    Log.d(TAG, "ProfileScreen hilt viewModel id: ${viewModel.hashCode()}")
+
     val myStories = viewModel.myStories.collectAsLazyPagingItems()
     val lazyPagingItems = viewModel.myStoryBoxes.collectAsLazyPagingItems()
 
@@ -153,12 +158,15 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
             when (selectedTabIndex) {
                 0 -> StoryLazyVerticalGrid(
                     myStories,
-                    memberInformation.stories
+                    memberInformation.stories,
+                    navController,
+                    viewModel
                 )
 
                 1 -> StoryBoxLazyColumn(
                     lazyPagingItems,
-                    memberInformation.storyBoxes
+                    memberInformation.storyBoxes,
+                    navController
                 )
             }
         }
