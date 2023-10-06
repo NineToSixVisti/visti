@@ -58,7 +58,7 @@ public class Story extends BaseEntity {
     public Story(Member member,
                  StoryType mainFileType, String mainFilePath,
                  StoryType subFileType, String subFilePath,
-                 StoryBox storyBox
+                 StoryBox storyBox, Integer reportedCount
     ){
         this.member = member;
         this.storyBox = storyBox;
@@ -69,7 +69,7 @@ public class Story extends BaseEntity {
         this.subFileType = subFileType;
         this.subFilePath = subFilePath;
 
-        this.reportedCount = 0;
+        this.reportedCount = (reportedCount != null) ? reportedCount : 0;
     }
 
     public void makeNFT(String secretKey, String nftHash){

@@ -24,5 +24,4 @@ public class FireBaseMessage extends BaseEntity {
     @Column
     private String detail;
 
-
 }
