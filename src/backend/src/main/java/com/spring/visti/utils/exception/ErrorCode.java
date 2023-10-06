@@ -42,6 +42,7 @@ public enum ErrorCode {
     MAX_STORY_QUOTA_REACHED_MEMBER(HttpStatus.FORBIDDEN, "STORY003", "사용자의 스토리 작성 할당량이 초과되었습니다."),
     NOT_DEFINED_SORTING_ACTION(HttpStatus.FORBIDDEN, "STORY004", "정의된 정렬방식이 아닙니다."),
     MAX_STORY_QUOTA_REACHED_STORYBOX(HttpStatus.FORBIDDEN, "STORY005", "스토리박스의 스토리 작성 할당량이 초과되었습니다."),
+    TIME_FINISHED_ERROR(HttpStatus.BAD_REQUEST, "STORY006", "스토리를 작성할 수 있는 시간이 지났습니다."),
 
     // Story Box Part
     NO_STORY_BOX_ERROR(HttpStatus.NOT_FOUND, "SBOX001", "스토리 박스 정보가 없습니다."),

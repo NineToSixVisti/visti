@@ -16,6 +16,9 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
 
     Page<Story> findByStoryBox(StoryBox storyBox, Pageable pageable);
 
+    @Query(value = "SELECT * FROM story s WHERE s.member_id = :memberId ORDER BY RAND() LIMIT :count", nativeQuery = true)
+    List<Story> findRandomStoriesForMember(@Param("memberId") Long memberId, @Param("count") int count);
+
     @Query("SELECT COUNT(s) FROM Story s WHERE s.member.id = :memberId AND DATE(s.createdAt) = CURRENT_DATE")
     int countTodayStoriesByMemberId(@Param("memberId") Long memberId);
 }
