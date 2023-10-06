@@ -1,0 +1,50 @@
+# #  Dockerfile
+# FROM node:18 as builder
+
+# WORKDIR /app
+
+# COPY ./package*.json ./
+
+# RUN npm install
+
+# COPY . .
+
+# RUN npm run build
+
+# # FROM nginx 
+
+# # COPY ./nginx.conf /etc/nginx/conf.d
+# # COPY ./nginx.conf /etc/nginx/sites-available/
+
+# COPY --from=builder /app/build /usr/share/nginx/html
+
+# EXPOSE 3000
+
+# # CMD ["nginx", "-g", "daemon off;"]
+# CMD [ "npm", "start"]
+# Builder stage
+# Builder stage
+FROM node:18 as builder
+
+WORKDIR /app
+
+COPY ./package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+# Runner stage
+FROM node:18-alpine 
+
+WORKDIR /app
+
+COPY --from=builder /app .
+
+EXPOSE 3000
+
+CMD [ "npm", "start"]
+
