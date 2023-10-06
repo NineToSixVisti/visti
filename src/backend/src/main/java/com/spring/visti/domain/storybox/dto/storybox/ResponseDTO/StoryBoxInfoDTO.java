@@ -17,16 +17,18 @@ public class StoryBoxInfoDTO {
     private String name;
     private Boolean blind;
     private Boolean isHost;
+    private String detail;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
     private LocalDateTime finishedAt;
 
     @Builder
-    public StoryBoxInfoDTO(String boxImgPath, boolean isHost,
+    public StoryBoxInfoDTO(String boxImgPath, boolean isHost, String detail,
                            String name, Boolean blind, LocalDateTime createdAt, LocalDateTime finishedAt){
         this.boxImgPath = boxImgPath;
         this.isHost = isHost;
+        this.detail = detail;
         this.name = name;
         this.blind = blind;
         this.createdAt = createdAt;
@@ -36,6 +38,7 @@ public class StoryBoxInfoDTO {
     public static StoryBoxInfoDTO toResponse(StoryBox storyBox, boolean isHost){
         return StoryBoxInfoDTO.builder()
                 .boxImgPath(storyBox.getBoxImgPath())
+                .detail(storyBox.getDetail())
                 .isHost(isHost)
                 .name(storyBox.getName())
                 .blind(storyBox.getBlind())

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class StoryExposedDTO {
-    private Long id;
+
     private String encryptedId;
 
     private Long storyBoxId;
@@ -39,13 +39,13 @@ public class StoryExposedDTO {
     private LocalDateTime finishedAt;
 
     @Builder
-    public StoryExposedDTO(Long id, String encryptedId,
+    public StoryExposedDTO(String encryptedId,
                            Long storyBoxId,  String encryptedStoryBoxId,
                            Member member,
                            StoryType mainFileType, String mainFilePath,
                            Boolean blind, LocalDateTime createdAt, LocalDateTime finishedAt, Boolean like
                         ){
-        this.id = id;
+
         this.encryptedId = encryptedId;
 
         this.storyBoxId = storyBoxId;
@@ -62,16 +62,15 @@ public class StoryExposedDTO {
 
     public static StoryExposedDTO of(Story story, Boolean like){
         String encryptedId = SecurePathUtil.encryptAndEncode(String.valueOf(story.getId()));
-        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
-        System.out.println("이거를 확인해주세요" + isDecrypted);
+//        String isDecrypted = SecurePathUtil.decodeAndDecrypt(encryptedId);
+//        System.out.println("이거를 확인해주세요" + isDecrypted);
 
 
         String encryptedStoryBoxId = SecurePathUtil.encryptAndEncode(String.valueOf(story.getStoryBox().getId()));
-        String isDecryptedStoryBox = SecurePathUtil.decodeAndDecrypt(encryptedStoryBoxId);
-        System.out.println("이거를 확인해주세요" + isDecryptedStoryBox);
+//        String isDecryptedStoryBox = SecurePathUtil.decodeAndDecrypt(encryptedStoryBoxId);
+//        System.out.println("이거를 확인해주세요" + isDecryptedStoryBox);
 
         return StoryExposedDTO.builder()
-                .id(story.getId())
                 .encryptedId(encryptedId)
                 .storyBoxId(story.getStoryBox().getId())
                 .encryptedStoryBoxId(encryptedStoryBoxId)

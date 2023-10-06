@@ -6,6 +6,7 @@ import com.spring.visti.api.storybox.service.storybox.StoryBoxService;
 import com.spring.visti.domain.member.dto.ResponseDTO.MemberStoryBoxExposedDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxBuildDTO;
+import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxEnterDTO;
 import com.spring.visti.domain.storybox.dto.storybox.RequestDTO.StoryBoxSetDTO;
 import com.spring.visti.domain.storybox.dto.storybox.ResponseDTO.*;
 import com.spring.visti.utils.exception.ApiException;
@@ -50,14 +51,15 @@ public class StoryBoxController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/{storyBoxIds}/enter")
+    @PostMapping("/enter")
     @Operation(summary = "스토리-박스에 참여합니다.", description = "스토리 박스에 참여합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> enterStoryBox(
-            @PathVariable String storyBoxIds
+            @RequestBody StoryBoxEnterDTO storyBoxIds
     ) {
         String email = getEmail();
 
-        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
+        String encryptedId = storyBoxIds.getEncryptedId();
+        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(encryptedId);
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
 
         BaseResponseDTO<String> response = storyBoxService.enterStoryBox(decryptedStoryId, email);
@@ -65,14 +67,15 @@ public class StoryBoxController {
     }
 
 
-    @PostMapping(value = "/{storyBoxIds}/setting" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "스토리-박스 설정", description = "스토리-박스를 설정을 합니다.")
+    @PutMapping(value = "/{storyBoxIds}/setting", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "스토리-박스 설정 및 수정", description = "스토리-박스를 설정을 합니다.")
     public ResponseEntity<? extends BaseResponseDTO<String>> setStoryBox(
             @PathVariable String storyBoxIds,
             @RequestPart("storyBoxInfo") StoryBoxSetDTO storyBoxInfo,
             @RequestPart("file") MultipartFile multipartfile
     ) throws IOException {
         String email = getEmail();
+
         String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
 
         long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
@@ -139,7 +142,8 @@ public class StoryBoxController {
             @RequestParam(name= "keyword", required = false) String keyword
     ){
         String email = getEmail();
-        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.searchStoryBoxes(PageRequest.of(page,size), email,keyword);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        BaseResponseDTO<Page<StoryBoxExposedDTO>> response = storyBoxService.searchStoryBoxes(pageRequest, email,keyword);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -212,41 +216,6 @@ public class StoryBoxController {
         BaseResponseDTO<StoryBoxDetailDTO> response = storyBoxService.readStoryBoxDetail(decryptedStoryId, email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
-    @GetMapping("/{storyBoxIds}/generate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 숏링크를 제공해줍니다.")
-    public ResponseEntity<? extends BaseResponseDTO<String>> generateStoryBoxLink(
-            @PathVariable String storyBoxIds
-    ) {
-        String email = getEmail();
-
-        String isDecryptedStoryId = SecurePathUtil.decodeAndDecrypt(storyBoxIds);
-        long decryptedStoryId = getDecryptedStoryBoxId(isDecryptedStoryId);
-
-        BaseResponseDTO<String> response = storyBoxService.generateStoryBoxLink(decryptedStoryId, email);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-
-/*
-    @GetMapping("/validate")
-    @Operation(summary = "스토리박스 URL 제공", description = "스토리박스에 접속가능한 링크를 판단합니다.")
-    public ResponseEntity<? extends BaseResponseDTO<String>> validateStoryBoxLink(
-            @RequestParam String token
-    ) {
-        String email;
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() != null) {
-            email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        }else{
-            email = null;
-        }
-
-        BaseResponseDTO<String> response = storyBoxService.validateStoryBoxLink(token, email);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-*/
 
     private long getDecryptedStoryBoxId(String isDecryptedStoryId){
         try {
