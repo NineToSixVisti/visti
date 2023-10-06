@@ -7,7 +7,7 @@ import { ReactComponent as CompleteButton } from "../../../assets/images/complet
 import { setImage, setCID } from "../../../store/slices/MergeImageSlice";
 import { authInstance } from "../../../apis/utils/instance";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const CompleteButtonStyled = styled.button`
   background: transparent;
@@ -72,20 +72,20 @@ const CreateImageComponent: React.FC = () => {
                 );
                 if (response.status === 200) {
                   Swal.fire({
-                    icon: 'success',
-                    title: '스토리가 생성되었습니다.',
+                    icon: "success",
+                    title: "스토리 생성 완료",
                     showConfirmButton: false,
-                    timer: 2000
+                    timer: 2000,
                   });
                   navigate(-1);
                 } else {
                 }
-              } catch (error) { Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                footer: '<a href="">Why do I have this issue?</a>'
-              });}
+              } catch (error) {
+                Swal.fire({
+                  icon: "error",
+                  title: "스토리 생성 실패",
+                });
+              }
             };
             reader.readAsDataURL(blob);
           }

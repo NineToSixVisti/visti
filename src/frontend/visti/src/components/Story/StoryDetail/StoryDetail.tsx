@@ -135,7 +135,7 @@ function StoryDetail() {
       .catch((error) => {});
   }, [id]);
 
-  if (!storyData) return <div>로딩중이 맞습니까?...</div>;
+  if (!storyData) return <div></div>;
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -156,13 +156,13 @@ function StoryDetail() {
       <MainImage src={storyData.mainFilePath} alt="Story" />
       <ProfileContainer>
         {storyData.member.profilePath && (
-          <ProfileImage 
-          src={storyData.member.profilePath || DefaultImage} 
-          alt="Profile" 
-          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+          <ProfileImage
+            src={storyData.member.profilePath || DefaultImage}
+            alt="Profile"
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
               e.currentTarget.src = DefaultImage;
-          }}
-      />
+            }}
+          />
         )}
         <InfoContainer>
           <Nickname>{storyData.member.nickname}</Nickname>
