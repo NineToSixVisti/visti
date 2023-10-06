@@ -99,7 +99,9 @@ const ProfileImg = styled.img`
 
 const StyledIcon = styled(FontAwesomeIcon)`
   color: #fba38db3;
-
+  margin-left: 6px;
+  width: 24px;
+  height: 24px;
 `
 
 export default Member

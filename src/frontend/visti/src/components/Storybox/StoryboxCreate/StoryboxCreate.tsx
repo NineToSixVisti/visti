@@ -310,7 +310,7 @@ const StoryboxCreate = () => {
         onChange={(e) => setGroupName(e.target.value)}/>
         
         <Title>그룹소개글</Title>
-        <GroupDescription placeholder={`SSAFY 10기 구미 1반 D102팀 추억 저장을 위한 공간이야! 
+        <GroupDescription placeholder={`SSAFY 9기 구미 1반 D102팀 추억 저장을 위한 공간이야! 
 잊을 수 없는 추억을 만들어보자~~`}
          rows={3} value={groupDetail}
          onChange={(e) => setGroupDetail(e.target.value)}/>
