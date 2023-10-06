@@ -1,10 +1,6 @@
 package com.ssafy.presentation.ui.home
 
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.compose.runtime.State
@@ -16,10 +12,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.model.home.HomeLastStoryBox
-
 import com.ssafy.domain.usecase.fcm.FcmUseCase
-import com.ssafy.domain.usecase.memberinformation.GetHomeLastStoryBoxUseCase
-
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryBoxUseCase
 import com.ssafy.domain.usecase.memberinformation.GetHomeStoryUseCase
 import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
@@ -109,22 +102,21 @@ class HomeViewModel @Inject constructor(
             }
             // token log 남기기
             if (task.result != null) {
-                Log.e("TAG", "getFcmToken: ${task.result}", )
+                Log.e("TAG", "getFcmToken: ${task.result}")
                 uploadFcmToken(task.result!!)
             }
         })
 //        createNotificationChannel(channel_id, "ecoMate")
     }
 
-    fun uploadFcmToken(fcmToken: String){
+    fun uploadFcmToken(fcmToken: String) {
         viewModelScope.launch {
             fcmUseCase.uploadFcmToken(fcmToken)
         }
     }
 
 
-
-    private fun getHomeStory() {
+    fun getHomeStory() {
         getHomeStoryUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -143,7 +135,7 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getHomeStoryBox() {
+    fun getHomeStoryBox() {
         getHomeStoryBoxUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -248,7 +240,7 @@ class HomeViewModel @Inject constructor(
 //    }
 
 
-    private fun getMemberInformation() {
+    fun getMemberInformation() {
         getMemberInformUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {

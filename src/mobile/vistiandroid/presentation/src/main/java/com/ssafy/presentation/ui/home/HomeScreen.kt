@@ -26,7 +26,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,12 +37,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -74,7 +80,30 @@ fun HomeScreen(
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
+    val lifecycleOwner = LocalLifecycleOwner.current
 
+    // LifecycleObserver를 사용하여 onResume 이벤트 처리
+    val observer = remember {
+        object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+            fun onResume() {
+                // onResume 이벤트가 발생할 때마다 데이터 다시 로드
+                homeViewModel.getHomeStory()
+                homeViewModel.getHomeStoryBox()
+                // 추가적으로 필요한 데이터 로드 함수들도 호출
+            }
+        }
+    }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    // LifecycleObserver를 등록
+    DisposableEffect(Unit) {
+        // LifecycleObserver를 등록
+        lifecycle.addObserver(observer)
+        // DisposableEffect가 해제될 때 LifecycleObserver를 제거
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 
     when {
         homeStorySate.error.isNotBlank() -> {
@@ -103,7 +132,7 @@ fun HomeScreen(
                             .height(540.dp),
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.image_backgroud_sky),
+                            painter = painterResource(id = R.drawable.image_background_autumn),
                             contentDescription = "toolbar background",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -323,14 +352,14 @@ fun HomeToolBar(
                     painter = painterResource(id = R.drawable.ic_pencil),
                     contentDescription = "home toolbar pencil"
                 )
-                Text(text = "x", color = Color.Black)
-                Text(text = memberInformation.dailyStory.toString(), color = Color.Black)
+                Text(text = "x", color = Color.White)
+                Text(text = memberInformation.dailyStory.toString(), color = Color.White)
             }
         }
         Text(
             text = homeViewModel.timerText.value,
             fontSize = 60.sp,
-            color = Color.Black,
+            color = Color.White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -340,14 +369,14 @@ fun HomeToolBar(
         if (homeViewModel.homeLastStoryBoxState.value.storyBox.id == -1) {
             Text(
                 text = "추억은 삶의 스케치북입니다.",
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 25.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         } else {
             Text(
                 text = "마감까지 남은 시간이에요!",
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 25.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
