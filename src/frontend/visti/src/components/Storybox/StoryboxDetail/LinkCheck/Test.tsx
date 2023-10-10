@@ -58,7 +58,6 @@ const Test = () => {
         value={encryptedText} onChange={(e) => {setEncryptedText(e.target.value)}}/>
       <button onClick={() => decrypt(encryptedText)}>복호화</button>
 
-
       <div>
         decrypted :  {JSON.stringify(decryptText)}
       </div>

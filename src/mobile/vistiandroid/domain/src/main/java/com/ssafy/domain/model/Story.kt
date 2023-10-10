@@ -1,8 +1,8 @@
 package com.ssafy.domain.model
 
-
 data class Story(
     val id: Int = 0,
+    val encryptedId: String = "",
     val storyBoxId: Int = 0,
     val mainFileType: String = "",
     val mainFilePath: String = "",
@@ -28,6 +28,7 @@ data class StoryList(
 
 data class StoryBox(
     val id: Int = 0,
+    val encryptedId: String = "",
     val boxImgPath: String = "",
     val name: String = "",
     val createdAt: String = "",

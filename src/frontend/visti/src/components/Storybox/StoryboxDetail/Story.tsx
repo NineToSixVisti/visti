@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Empty } from '../../../assets/images/story_empty.svg'
 import { ReactComponent as Favorite } from '../../../assets/images/favorite.svg'
-import { useNavigate } from 'react-router-dom';
-import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
 import { authInstance } from '../../../apis/utils/instance';
+import CreatePostButton from '../../Story/StoryCreate/CreatePostButton';
+import Loading from '../../Common/Loading';
 
 interface StoryList {
   id: number;
@@ -27,10 +28,9 @@ interface StoryProps {
   id ?: string
 };
 
-
 const Story : React.FC<StoryProps> = ({id}) => {
   const navigate = useNavigate();
-  
+  const [isLoading, setIsLoading] = useState(true);
   const [storyList, setStoryList] = useState<StoryList[]>([]);
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -49,9 +49,12 @@ const Story : React.FC<StoryProps> = ({id}) => {
   );
 
   const getStoryList = useCallback(async () => {
+    if (page === 0){
+      setIsLoading(true);
+    }
     try {
       const { data } = await authInstance.get(`story-box/${id}/story-list?page=${page}&size=12`)
-      console.log("Returned data:", data)
+      // console.log("Returned data:", data)
       if (data) {
         setStoryList((prevStoryList) => [
           ...prevStoryList,
@@ -62,6 +65,8 @@ const Story : React.FC<StoryProps> = ({id}) => {
     }
     catch (err) {
       console.log('스토리List GET 중 에러 발생', err);
+    } finally {
+      setIsLoading(false);
     }
   }, [id, page])
 
@@ -70,25 +75,32 @@ const Story : React.FC<StoryProps> = ({id}) => {
   }, [getStoryList, page]); // page가 바꿔도 다시 함수를 불러야 한다.
   
   useEffect(()=>{
-    console.log("Current storyList:", storyList);
+    // console.log("Current storyList:", storyList);
   },[storyList]);
 
   useEffect(()=>{
-    console.log("Current page:", page)
+    // console.log("Current page:", page)
   },[page]);
   
   useEffect(()=>{
-    console.log("hasMore:", hasMore)
+    // console.log("hasMore:", hasMore)
   },[hasMore]);
+
+  // 페이지 전환 시 스크롤 위치 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
       {
+        isLoading ? <Loading isLoading={isLoading}/> :
         storyList.length === 0 ? (
           <EmptyWrap>
             <Empty />
             <p>스토리가 하나도 없어요</p>
             <p>추억을 저장해 볼까요?</p>
+            <CreatePostButton/>
           </EmptyWrap>
         ) : (
           <StoryWrap>
@@ -96,12 +108,14 @@ const Story : React.FC<StoryProps> = ({id}) => {
               storyList.map((story, index) => (
                 <StoryDiv 
                   ref={index === storyList.length -1 ? lastBoxElementRef : null}
-                  key={story.id} 
+                  key={story.encryptedId} 
                   index={index} 
                   isPrivate={story.blind} 
                   storyImg={story.mainFilePath}
                   onClick={()=>{
-                    navigate(`/storydetail/${story.encryptedId}`)}}>
+                    if (!story.blind) {
+                      navigate(`/storydetail/${story.encryptedId}`)}}
+                    }>
                   {story.blind && <PrivateImg src={process.env.PUBLIC_URL + "/assets/Visti_icon.png"} alt='보호된 이미지' />}
                   {!story.blind && story.like && <FavoriteSvg />}
                 </StoryDiv>

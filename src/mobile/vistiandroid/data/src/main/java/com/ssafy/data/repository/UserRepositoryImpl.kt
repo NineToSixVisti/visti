@@ -27,5 +27,4 @@ class UserRepositoryImpl @Inject constructor(
         preferenceDataSource.putString(REFRESH_TOKEN, response.refreshToken)
         return response
     }
-
 }

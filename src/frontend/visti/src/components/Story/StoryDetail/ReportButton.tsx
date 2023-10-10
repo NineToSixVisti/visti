@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as ReportButton } from "../../../assets/images/report_button.svg";
+import { ReactComponent as ReportButton } from "../../../assets/images/report-blackbutton.svg";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -25,7 +25,7 @@ const style = {
   height: 190,
   bgcolor: "background.paper",
   border: "2px solid #000",
-  boxShadow: 24,
+
   p: 4,
   borderRadius: 8,
 };

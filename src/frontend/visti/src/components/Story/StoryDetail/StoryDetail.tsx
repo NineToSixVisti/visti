@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { authInstance } from "../../../apis/utils/instance";
 import styled from "styled-components";
-import { ReactComponent as BackButtonIcon } from "../../../assets/images/storydetailclose_button.svg";
+import { ReactComponent as BackButtonIcon } from "../../../assets/images/closeblack-button.svg";
 import { ReactComponent as HeartButton } from "../../../assets/images/heartbutton.svg";
 import { ReactComponent as Heartwhite } from "../../../assets/images/heartwhite.svg";
 import { useNavigate } from "react-router-dom";
@@ -22,12 +22,14 @@ interface StoryData {
     status: boolean;
   };
 }
+
 const HeartButtonContainer = styled.div`
   position: absolute;
   bottom: 4%;
   right: 10%;
   display: flex;
   align-items: center;
+  gap: 10px; // 간격을 추가하여 버튼 사이에 공간을 만듭니다.
 `;
 
 const InfoContainer = styled.div`
@@ -99,7 +101,7 @@ const BackButton = styled.button`
 const BasicModalStyled = styled(BasicModal)`
   background-color: transparent;
 `;
-
+const DefaultImage = "/assets/profile_image.png";
 function StoryDetail() {
   const { id } = useParams<{ id?: string }>();
   const [storyData, setStoryData] = useState<StoryData | null>(null);
@@ -116,12 +118,9 @@ function StoryDetail() {
     authInstance
       .get(`story/${id}/like`)
       .then((response) => {
-        console.log("Successfully liked the story:", response.data);
         setLike((prev) => !prev);
       })
-      .catch((error) => {
-        console.error("Failed to like the story:", error);
-      });
+      .catch((error) => {});
   };
 
   useEffect(() => {
@@ -133,12 +132,10 @@ function StoryDetail() {
         setStoryData(response.data.detail);
         setLike(response.data.detail.like);
       })
-      .catch((error) => {
-        console.error("Failed to fetch story data:", error);
-      });
+      .catch((error) => {});
   }, [id]);
 
-  if (!storyData) return <div>Loading...</div>;
+  if (!storyData) return <div></div>;
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -159,16 +156,21 @@ function StoryDetail() {
       <MainImage src={storyData.mainFilePath} alt="Story" />
       <ProfileContainer>
         {storyData.member.profilePath && (
-          <ProfileImage src={storyData.member.profilePath} alt="Profile" />
+          <ProfileImage
+            src={storyData.member.profilePath || DefaultImage}
+            alt="Profile"
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              e.currentTarget.src = DefaultImage;
+            }}
+          />
         )}
         <InfoContainer>
           <Nickname>{storyData.member.nickname}</Nickname>
           <CreatedAt>{formatDate(storyData.createdAt)}</CreatedAt>
         </InfoContainer>
       </ProfileContainer>
-      {/* <NFTButton imageURI={storyData.mainFilePath} /> */}
-
       <HeartButtonContainer>
+        <NFTButton imageURI={storyData.mainFilePath} />
         {like ? (
           <HeartButton onClick={handleLike} />
         ) : (

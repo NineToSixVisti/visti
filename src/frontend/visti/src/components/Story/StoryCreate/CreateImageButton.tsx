@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { ReactComponent as CompleteButton } from "../../../assets/images/complete_button.svg";
 import { setImage, setCID } from "../../../store/slices/MergeImageSlice";
 import { authInstance } from "../../../apis/utils/instance";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CompleteButtonStyled = styled.button`
   background: transparent;
@@ -18,6 +20,7 @@ const CreateImageComponent: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedImage } = useSelector((state: RootState) => state.image);
   const storyBoxId = useSelector((state: RootState) => state.story.encryptedId);
+  const navigate = useNavigate();
 
   const handleCreateImage = async () => {
     const node = document.getElementById("image-container");
@@ -68,12 +71,20 @@ const CreateImageComponent: React.FC = () => {
                   }
                 );
                 if (response.status === 200) {
-                  console.log("이미지가 성공적으로 업로드되었습니다.");
+                  Swal.fire({
+                    icon: "success",
+                    title: "스토리 생성 완료",
+                    showConfirmButton: false,
+                    timer: 2000,
+                  });
+                  navigate(-1);
                 } else {
-                  console.error("이미지 업로드에 실패했습니다.");
                 }
               } catch (error) {
-                console.error("API 요청 중 오류가 발생했습니다:", error);
+                Swal.fire({
+                  icon: "error",
+                  title: "스토리 생성 실패",
+                });
               }
             };
             reader.readAsDataURL(blob);
@@ -88,9 +99,7 @@ const CreateImageComponent: React.FC = () => {
       }
     }
   };
-  useEffect(() => {
-    console.log(storyBoxId);
-  }, [storyBoxId]);
+  useEffect(() => {}, [storyBoxId]);
   return (
     <CompleteButtonStyled onClick={handleCreateImage}>
       <CompleteButton />

@@ -13,6 +13,7 @@ import com.ssafy.presentation.NavigationRouteName.MAIN_LIKE
 import com.ssafy.presentation.NavigationRouteName.MAIN_MEMORY
 import com.ssafy.presentation.NavigationRouteName.MAIN_PROFILE
 import com.ssafy.presentation.NavigationRouteName.SETTING_INFORMATION
+import com.ssafy.presentation.NavigationRouteName.WEB_VIEW
 import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
 import com.ssafy.presentation.NavigationRouteName.SETTING_SUBSCRIPTION
 import com.ssafy.presentation.NavigationRouteName.SETTING_USER_ACCOUNT
@@ -24,6 +25,7 @@ object NavigationRouteName {
     const val MAIN_LIKE = "좋아요"
     const val MAIN_PROFILE = "프로필"
     const val SETTING_NOTIFICATION = "알림 설정"
+    const val WEB_VIEW = "웹뷰"
     const val SETTING_INFORMATION = "정보"
     const val SETTING_USER_ACCOUNT = "계정"
     const val SETTING_SUBSCRIPTION = "구독"
@@ -56,7 +58,7 @@ sealed class MainNav(
     companion object {
         fun isMainRoute(route: String?): Boolean {
             return when (route) {
-                MAIN_HOME, MAIN_MEMORY, MAIN_LIKE, MAIN_PROFILE -> true
+                MAIN_HOME, MAIN_LIKE, MAIN_PROFILE -> true
                 else -> false
             }
         }
@@ -67,6 +69,7 @@ sealed class SettingNav(
     override val route: String,
     override val title: String
 ) : Destination {
+    object WebView : SettingNav(WEB_VIEW, WEB_VIEW)
     object Notification : SettingNav(SETTING_NOTIFICATION, SETTING_NOTIFICATION)
     object Information : SettingNav(SETTING_INFORMATION, SETTING_INFORMATION)
     object UserAccount :

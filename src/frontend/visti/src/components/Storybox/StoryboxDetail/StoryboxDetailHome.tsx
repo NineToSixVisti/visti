@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { ReactComponent as GoBack } from '../../../assets/images/back_button.svg'
 import { ReactComponent as Modify } from '../../../assets/images/modify_button(pen).svg'
-
 import Tap from './Tap'
 import Story from './Story';
 import Member from './Member';
@@ -29,17 +28,16 @@ const StoryboxDetail: React.FC = () => {
   const { id } = useParams<{id:string}>();
   const [tap, setTap] = useState<string>('story');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [storyboxInfo, setStoryboxInfo] = useState<StoryboxInfo>({name : '',createdAt : ' ', finishedAt : ' '});
   const [remainingTime, setRemainingTime] = useState<string>(''); // 종료시간까지의 타이머 시간
   
+  // 기본 정보 가져오기
   const getStoryboxInfo = useCallback(async () => {
     setIsLoading(true);
     try  {
       const data = await authInstance.get(`story-box/${id}/info`)
       if (data) {
         setStoryboxInfo(data.data.detail);
-        // console.log(data.data.detail);
       }
     } catch (err) {
       console.log('스토리박스 Info GET 중 에러 발생', err)
@@ -47,7 +45,6 @@ const StoryboxDetail: React.FC = () => {
       setIsLoading(false);
     }
   }, [id]);
-  
   
   const formatDate = (dateStr: string, includeYear: boolean = true): string => {
     const date = new Date(dateStr);
@@ -65,8 +62,9 @@ const StoryboxDetail: React.FC = () => {
     const updateRemainingTime = () => {
       const now = new Date();
       const finishDate = new Date(storyboxInfo.finishedAt);
+      finishDate.setUTCHours(15); // 한국 자정에 맞게 변환
       const diff = finishDate.getTime() - now.getTime();
-
+      
       if (diff <= 0) {
         setRemainingTime('00:00:00');
         return;
@@ -75,14 +73,12 @@ const StoryboxDetail: React.FC = () => {
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
       const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       setRemainingTime(formattedTime);
     };
 
     updateRemainingTime();
     const intervalId = setInterval(updateRemainingTime, 1000);
-
     return () => {
       clearInterval(intervalId);
     };
@@ -91,7 +87,6 @@ const StoryboxDetail: React.FC = () => {
   useEffect(()=>{
     getStoryboxInfo();
   }, [getStoryboxInfo]);
-  
   
   return (
     <>
@@ -118,7 +113,6 @@ const StoryboxDetail: React.FC = () => {
               </TLBoxInfo> :
               <BoxInfo>
                 <p>"인생은 단 한번의 추억여행이야"</p>
-                {/* <p>추억 시간</p> */}
                 <p>{formatRange(storyboxInfo.createdAt, storyboxInfo.finishedAt)}</p>
               </BoxInfo>
             }
@@ -168,22 +162,6 @@ const TopMian = styled.div`
   width: 100%;
   height: 70%;
   display: flex;
-
-  /* >div:nth-child(2) {
-    width: 50%;
-    height: 100%;
-    margin: 0 10px ;
-    text-align: center;
-  
-  >p {
-    font-weight: 600;
-    margin : 10px 0;
-  }
-
-  >p:nth-child(2) {
-    font-size: 30px;
-  }
-  } */
 `
 
 const BgImageDiv = styled.div<DivProps>`
@@ -221,6 +199,7 @@ const BoxInfo = styled.div`
   >p {
     font-weight: 600;
     margin : 10px 0;
+    line-height: 32px;
   }
 
   >p:first-child {
@@ -232,7 +211,6 @@ const BoxInfo = styled.div`
 const MainWrap = styled.div`
   width: 100%;
   height: calc(100vh - 191px);
-  /* background-color: lightsalmon; */
 `
 
 const GoBackSvg = styled(GoBack)`
@@ -240,7 +218,7 @@ const GoBackSvg = styled(GoBack)`
 `
 
 const ModifySvg = styled(Modify)`
-  margin-right: 10px;
+  padding: 10px;
 `
 
 const LoadingWrap = styled.div`

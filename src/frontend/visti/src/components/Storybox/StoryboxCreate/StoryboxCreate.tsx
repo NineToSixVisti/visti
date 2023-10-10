@@ -1,8 +1,8 @@
+import Swal from 'sweetalert2'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { ReactComponent as GoBack } from "../../../assets/images/back_button.svg"
 import { ReactComponent as Plus } from "../../../assets/images/plus_button_red.svg"
-// import { ReactComponent as Calendar } from "../../../assets/images/calendar.svg"
 import './StoryboxCreate.css';
 
 import dayjs, { Dayjs } from 'dayjs';
@@ -23,7 +23,7 @@ dayjs.locale('ko');
 interface MyWindow extends Window {
   Android?: {
     openGallery: () => void;
-    getSelectedImageUri: () => object | null;
+    getSelectedImage: () => string | null;
   };
 }
 
@@ -53,33 +53,46 @@ const StoryboxCreate = () => {
     finishedAt?: string;
   };
 
+  // base64 파일을 File 객체로 변환
+  const base64ToFile = (base64: string, filename: string): File => {
+    const arr = base64.split(',');
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const byteCharacters = atob(arr[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new File([byteArray], filename, { type: mime });
+  };
+
   // 사진을 클릭했을때 input 창 반응
   const ImageClick = () => {
     if (window.Android) {
         if (window.Android.openGallery) {
           window.Android.openGallery();
           // 갤러리를 열고 난 후 선택된 이미지 URI 검색
-          const selectedImageUri = window.Android.getSelectedImageUri();
+          const selectedImageUri = window.Android.getSelectedImage();
           if (selectedImageUri) {
-            console.log(selectedImageUri);
-            console.log(typeof(selectedImageUri));
-            // 컴포넌트에서 selectedImageUri 사용할 때 어떤 데이터를 가져와야되는지 찍어봐야됨
-            // setGroupImage(selectedImageUri);
+            // console.log(selectedImageUri);
+            setGroupImage(selectedImageUri);
+
+            // base64 문자열을 File 객체로 변환
+            const imageFile = base64ToFile(selectedImageUri, "selectedImage.jpg");
+            setFile(imageFile);  // File 객체 저장
           }
-          console.log('openGallety 호출 잘됨')
+          // console.log('openGallety 호출 잘됨')
         } else {
           const inputElement = document.getElementById("ImageInput");
           inputElement?.click();
-          console.log('openGallety 호출 안됨')
+          // console.log('openGallety 호출 안됨')
         }
     } else {
       const inputElement = document.getElementById("ImageInput");
       inputElement?.click();
-      console.log('안드로이드 접근 안됨')
+      // console.log('안드로이드 접근 안됨')
     }
 }
-
-
 
   // 이미지를 변경할 때의 로직
   const ImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,31 +154,40 @@ const StoryboxCreate = () => {
     }
   }, [storyboxId]);
 
+  const showErrorAlert = (text: string): void => {
+    Swal.fire({
+      icon: 'error',
+      title: text,
+      confirmButtonText: '확인'
+    });
+  }
+  
+
   // 스토리 박스 생성할때의 조건
   const checkData = () => {
     if (!groupName.trim()) {
-      alert('그룹 이름을 입력해주세요!')
+      showErrorAlert('그룹 이름을 \n입력해주세요!');
       return false;
     }
     if (groupName.length >= 20) {
-      alert('그룹 이름은 18자 이하로 입력해주세요!')
+      showErrorAlert('그룹 이름은 18자 \n이하로 입력해주세요!')
       return false;
     }
     if (!groupDetail.trim()) {
-      alert("그룹 소개글을 입력해주세요.");
+      showErrorAlert("그룹 소개글을 \n입력해주세요!");
       return false;
     } 
     if (groupDetail.trim().length >= 100) {
-      alert("그룹 소개글은 100자 이하로 입력해주세요.");
+      showErrorAlert("그룹 소개글은 100자 \n이하로 입력해주세요!");
       return false;
     }
     if (!value) {
-      alert("종료일자를 설정해주세요.");
+      showErrorAlert("종료일자를 \n설정해주세요!");
       return false;
     }
     const today = dayjs();
     if (value.isBefore(today, 'day') || value.isSame(today, 'day')) {
-      alert("종료시간은 오늘 날짜 이후여야 합니다.");
+      showErrorAlert("종료시간은 오늘 \n날짜 이후여야 합니다!");
       return false;
     }
     return true;
@@ -221,18 +243,19 @@ const StoryboxCreate = () => {
       json.finishedAt = value.format('YYYY-MM-DD');
     }
 
-    console.log(json);  
+    // console.log(json);  
     formData.append("storyBoxInfo", new Blob([JSON.stringify(json)], {type: 'application/json'}));
-
-    console.log(formDataToObject(formData));
 
     // post / put 의 차이로 다른 제출 
     isEditMode ? putStorybox(formData) : postStorybox(formData);
     dispatch(setTrigger(true)); // 리랜더링 하기 위해
-    console.log(trigger); 
     setIsModalOpen(false);
     navigate('/storybox', { replace : true })
   }
+
+  useEffect(()=>{
+    console.log(trigger);
+  },[trigger])
 
   // 수정하는 경우 기존의 박스 내용을 동기화
   const getStoryboxInfo = useCallback(async () => {
@@ -287,7 +310,8 @@ const StoryboxCreate = () => {
         onChange={(e) => setGroupName(e.target.value)}/>
         
         <Title>그룹소개글</Title>
-        <GroupDescription placeholder={`9기 버니즈의 추억을 위한 공간입니다. OOO하기위해 OOOO ~~ 매일 한개씩 업로드 필수입니다!`}
+        <GroupDescription placeholder={`SSAFY 9기 구미 1반 D102팀 추억 저장을 위한 공간이야! 
+잊을 수 없는 추억을 만들어보자~~`}
          rows={3} value={groupDetail}
          onChange={(e) => setGroupDetail(e.target.value)}/>
 
@@ -357,12 +381,6 @@ const GoBackSvg = styled(GoBack)`
 const MainWrap = styled.div`
   height: calc(100vh - 30px);
   margin : 10px 20px;
-
-  /* overflow-y: scroll; 
-  scrollbar-width: none; // 파이어폭스
-  &::-webkit-scrollbar { // 크롬, 사파리
-    display: none;
-  } */
 `
 
 const Title = styled.div`
