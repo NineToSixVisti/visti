@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -114,4 +115,11 @@ dependencies {
 
     //네이버 로그인
     implementation(Dependencies.NAVER)
+
+    // webview
+    implementation("com.google.accompanist:accompanist-webview:0.24.13-rc")
+
+    //fcm
+    implementation(platform(Dependencies.FIREBASE.FIREBASE_ANDROID))
+    implementation(Dependencies.FIREBASE.FIREBASE_MESSAGE)
 }
