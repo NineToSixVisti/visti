@@ -63,6 +63,11 @@ object Dependencies {
         const val COIL_COMPOSE = "io.coil-kt:coil-compose:${Versions.COIL_VERSION}"
     }
 
+    object FIREBASE {
+        const val FIREBASE_ANDROID = "com.google.firebase:firebase-bom:32.3.1"
+        const val FIREBASE_MESSAGE = "com.google.firebase:firebase-messaging-ktx"
+    }
+
     const val TIMBER = "com.jakewharton.timber:timber:5.0.1"
 
     const val GSON = "com.google.code.gson:gson:2.8.8"

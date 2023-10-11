@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal</title>
+    <link rel="stylesheet" href="<%= process.env.NODE_ENV === 'production' ? '/link/styles.css' : '/styles.css' %>">
+</head>
+<body>
+    <div class="overlay">
+        <div class="modal-container">
+            <div class="main-modal">
+                <img src="/link/visti-logo.png" alt="Visti Logo">
+                <p><%= modalText %></p> <!-- 이부분이 변경됩니다. -->
+            </div>
+            
+            <div class="foot-modal">
+                <div class="confirm-button" data-api-endpoint="<%= apiEndpoint %>"><%= buttonText %></div> <!-- 이부분이 변경됩니다. -->
+            </div>
+        </div>
+    </div>
+
+    <script src="<%= process.env.NODE_ENV === 'production' ? '/link/button.js' : '/button.js' %>"></script>
+</body>
+</html>
+

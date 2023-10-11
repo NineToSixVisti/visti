@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -79,7 +80,6 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
         StoryBox storyBox = storyBoxBuildDTO.toEntity(member, imageUrl);
 
-
         storyBoxRepository.save(storyBox);
 
         StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(member, storyBox, Position.HOST);
@@ -91,19 +91,58 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public BaseResponseDTO<String> enterStoryBox(Long storyBoxId, String email) {
-        Member member = getMember(email, memberRepository);
-//        Member member = getMemberBySecurity();
+//        Member _member = getMember(email, memberRepository);
+        Member _member = getMemberBySecurity();
+
+        if (email == null){
+            throw new ApiException(NO_MEMBER_ERROR);
+        }
+
+        Optional<StoryBox> _storyBox = storyBoxRepository.findById(storyBoxId);
+
+        if (_storyBox.isEmpty()){
+            throw new ApiException(NO_STORY_BOX_ERROR);
+        }
+
+        StoryBox storyBox = _storyBox.get();
+
+        if (storyBox.getStoryBoxMembers().size() >= 30){
+            throw new ApiException(MAX_MEMBER_QUOTA_REACHED_IN_STORYBOX);
+        }
 
         // 이미 가입된 스토리 박스인지 확인
-        List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
-        boolean isAlreadyJoined = storyBoxes.stream()
-                .anyMatch(storyBoxMember -> storyBoxMember.getStoryBox().getId().equals(storyBoxId));
+        List<StoryBoxMember> _storyBoxMembers = storyBox.getStoryBoxMembers();
 
-        if (!isAlreadyJoined) {
-            throw new ApiException(UNAUTHORIZED_MEMBER_ERROR);
+        boolean isMemberAlreadyJoin = _storyBoxMembers.stream()
+                .map(StoryBoxMember::getMember)
+                .anyMatch(member -> email.equals(member.getEmail()));
+
+        if (isMemberAlreadyJoin){
+            return new BaseResponseDTO<>("스토리-박스에 이미 참여 한 스토리박스입니다.", 200);
         }
+
+        // FCM 전송
+        String nickname = _member.getNickname();
+
+        _storyBoxMembers.forEach(
+                member -> {
+                    String fcmToken = member.getMember().getFcmToken();
+                    log.info(fcmToken + "===" + member.getMember().getEmail());
+                    try {
+                        fcmService.sendMessageTo(fcmToken, "Visti",
+                                nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",
+                                "",
+                                "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        // 방 참가 완료
+        StoryBoxMember newStoryBoxMember = StoryBoxMember.joinBox(_member, storyBox, Position.GUEST);
+        storyBoxMemberRepository.save(newStoryBoxMember);
 
         return new BaseResponseDTO<>("스토리-박스에 참가하셨습니다.", 200);
     }
@@ -151,7 +190,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<StoryBoxExposedDTO>> readMainPageStoryBoxes(String email) {
 
         Member member = getMember(email, memberRepository);
@@ -160,9 +199,12 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         List<StoryBoxMember> storyBoxes = member.getStoryBoxes();
         int forMainPage = 10;
 
+        LocalDateTime localDateTime = LocalDateTime.now();
+
         List<StoryBoxExposedDTO> responseStoryBox = storyBoxes.stream()
                 .map(StoryBoxMember::getStoryBox)
-                .sorted((sb1, sb2) -> sb2.getCreatedAt().compareTo(sb1.getCreatedAt())) // 내림차순 정렬
+                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
+                .sorted((sb1, sb2) -> sb1.getFinishedAt().compareTo(sb2.getFinishedAt())) // 내림차순 정렬
                 .limit(forMainPage)
                 .map(StoryBoxExposedDTO::of)
                 .toList();
@@ -171,7 +213,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readMyStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -188,7 +230,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> readStoryBoxes(Pageable pageable, String email){
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -204,7 +246,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
                 200, myStoryBoxes);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryBoxExposedDTO>> searchStoryBoxes(Pageable pageable, String email, String keyword) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -219,7 +261,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxInfoDTO> readStoryBoxInfo(Long id, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -236,7 +278,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readStoriesInStoryBox(Pageable pageable, Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -261,7 +303,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<MemberStoryBoxExposedDTO>> readMemberOfStoryBox(Long id, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -283,7 +325,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxDetailDTO> readStoryBoxDetail(Long id, String email) {
 
         StoryBox storyBox = getStoryBox(id, storyBoxRepository);
@@ -293,19 +335,25 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         return new BaseResponseDTO<StoryBoxDetailDTO>("스토리-박스 조회가 완료되었습니다.", 200, storyBoxInfoDTO);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryBoxExposedDTO> readLatestStoryBoxes(String email) {
         Member member = getMember(email, memberRepository);
 
         LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime fourDaysLater = localDateTime.plusDays(4);
 
         List<StoryBox> myStoryBoxes = member.getStoryBoxes().stream()
                 .map(StoryBoxMember::getStoryBox).toList();
 
         StoryBox _latestFutureStoryBox = myStoryBoxes.stream()
-                .filter(storyBox -> storyBox.getFinishedAt().isAfter(localDateTime))
+                .filter(storyBox -> {
+                    return !storyBox.getFinishedAt().isBefore(localDateTime)
+                            && !storyBox.getFinishedAt().isAfter(fourDaysLater);
+                })
                 .min(Comparator.comparing(StoryBox::getFinishedAt))
                 .orElse(null);
+
+
 
         if (_latestFutureStoryBox != null){
             StoryBoxExposedDTO latestFutureStoryBox = StoryBoxExposedDTO.of(_latestFutureStoryBox);
@@ -385,6 +433,7 @@ public class StoryBoxServiceImpl implements StoryBoxService {
         _storyBoxMembers.forEach(
                 member -> {
                     String fcmToken = member.getMember().getFcmToken();
+                    log.info(fcmToken + "===" + member.getMember().getEmail());
                     try {
                         fcmService.sendMessageTo(fcmToken, "Visti",
                                 nickname + "이 " + storyBox.getName() + "에 입장하셨습니다.",

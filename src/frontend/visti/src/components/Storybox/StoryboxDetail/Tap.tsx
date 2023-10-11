@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components';
-
 import { ReactComponent as Article } from "../../../assets/images/storybox_story.svg"
 import { ReactComponent as Member } from "../../../assets/images/storybox_member.svg"
 import { ReactComponent as Detail } from "../../../assets/images/stotybox_detail(paper).svg"
-
 
 type TapProps = {
   tap : string,
@@ -33,7 +31,6 @@ const TapWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   height: 40px;
-  /* background-color: lightcoral; */
 `
  
 const Box = styled.div<{ isMode: boolean }>`

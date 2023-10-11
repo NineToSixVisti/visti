@@ -6,6 +6,7 @@ import com.spring.visti.domain.member.entity.MemberLikeStory;
 import com.spring.visti.domain.member.repository.MemberRepository;
 import com.spring.visti.domain.member.repository.MemberLikeStoryRepository;
 import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryBuildDTO;
+import com.spring.visti.domain.storybox.dto.story.RequestDTO.StoryIncludeLikeDTO;
 import com.spring.visti.domain.storybox.dto.story.ResponseDTO.StoryExposedDTO;
 import com.spring.visti.domain.storybox.entity.Story;
 import com.spring.visti.domain.storybox.entity.StoryBox;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.spring.visti.utils.exception.ErrorCode.*;
@@ -62,6 +65,17 @@ public class StoryServiceImpl implements StoryService{
 
         StoryBox storyBox = getStoryBox(decryptedStoryBoxId, storyBoxRepository);
 
+        LocalDateTime finishedAt =  storyBox.getFinishedAt();
+        LocalDateTime now = LocalDateTime.now();
+
+        log.info("만료시간 = " + finishedAt);
+        log.info("현재 시간 = " + now);
+
+
+        if (now.isAfter(finishedAt)){
+            throw new ApiException(TIME_FINISHED_ERROR);
+        }
+
         int storiesInStoryBox = storyBox.getStories().size();
 
         if (storiesInStoryBox >= 100){
@@ -92,7 +106,7 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<StoryExposedDTO> readStory(Long storyId, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -110,7 +124,7 @@ public class StoryServiceImpl implements StoryService{
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readMyStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -129,32 +143,26 @@ public class StoryServiceImpl implements StoryService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<List<StoryExposedDTO>> readMainPageStories(String email) {
-        Member member = getMember(email, memberRepository);
-//        Member member = getMemberBySecurity();
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
-        List<Story> stories = member.getMemberStories();
-        int storiesSize = stories.size();
+//        List<Story> stories = member.getMemberStories();
         int forMainPage = 10;
 
-        List<StoryExposedDTO> responseStories = new ArrayList<>();
+//        List<Story> _stories = storyRepository.findRandomStoriesForMember(member.getId(), forMainPage);
 
-        if (storiesSize <= forMainPage){
-            Collections.shuffle(stories);
-
-            responseStories = stories.stream()
-                    .map(story -> StoryExposedDTO.of(story, true))
-                    .toList();
-        }else{
-            responseStories = sortList4MainPage(stories, storiesSize, forMainPage);
-        }
+        List<StoryIncludeLikeDTO> _stories = memberLikeStoryRepository.findRandomStoriesWithLikeInfo(member.getId());
+        List<StoryExposedDTO> responseStories = _stories.stream()
+                .map(_story -> StoryExposedDTO.of(_story.getStory(), _story.isLiked()))
+                .toList();
 
         return new BaseResponseDTO<List<StoryExposedDTO>>("메인페이지 용 셔플 스토리 제공되었습니다.", 200, responseStories);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseResponseDTO<Page<StoryExposedDTO>> readLikedStories(Pageable pageable, String email) {
         Member member = getMember(email, memberRepository);
 //        Member member = getMemberBySecurity();
@@ -203,8 +211,8 @@ public class StoryServiceImpl implements StoryService{
     public BaseResponseDTO<String> deleteStory(Long storyId, String email) {
 
         // 사용자 조회
-        Member member = getMember(email, memberRepository);
-//        Member member = getMemberBySecurity();
+//        Member member = getMember(email, memberRepository);
+        Member member = getMemberBySecurity();
 
         // 스토리 조회
         Story story = getStory(storyId, storyRepository);

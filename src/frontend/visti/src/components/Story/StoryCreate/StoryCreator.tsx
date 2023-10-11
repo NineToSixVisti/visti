@@ -32,9 +32,9 @@ const ImageContainer = styled.div`
 
   background-image: ${({ backgroundImage }: { backgroundImage: string }) => `url(${backgroundImage})`};
   @media (min-width: 768px) {
-   ;  
-  }
-`;
+  
+  };
+`
 
 const TextEditorStyle = styled.div`
   position: absolute;

@@ -11,11 +11,15 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EntityScan
 @Getter
 @NoArgsConstructor
 public class Member extends BaseEntity{
@@ -23,7 +27,7 @@ public class Member extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 50, nullable = false)
+    @Column(unique = true, length = 128, nullable = false)
     private String email;
 
     @Column
@@ -122,10 +126,16 @@ public class Member extends BaseEntity{
     }
 
     public void withdrawMember(){
-        this.email = null;
+        this.email = appendTimestampForDeletion(this.email);
         this.name = null;
         this.profilePath = null;
         this.status = false;
         this.refreshToken = null;
+    }
+
+    private static String appendTimestampForDeletion(String email) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        return timestamp + "_dt_" + email;
     }
 }
