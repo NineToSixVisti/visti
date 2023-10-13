@@ -54,7 +54,7 @@
 | <img src="https://github.com/NineToSixVisti/visti/assets/122581063/00bb1787-b5fb-438b-8cbe-0fcbf779692e"> | <img src="https://github.com/NineToSixVisti/visti/assets/122581063/00255102-5e89-4960-bb24-522692a3fcae"> |
 | `메인 화면`                                                                                               | `스토리 박스생성`                                                                                         |
 | <img src="https://github.com/NineToSixVisti/visti/assets/122581063/c7702306-c6cc-405c-9134-37af8d4d1a80"> | <img src="https://github.com/NineToSixVisti/visti/assets/122581063/413512f6-8d87-44e7-b7e2-09dd28fc4566"> |
-| `스토리 생성` 카테고리, 정렬                                                                              | `좋아요 페이지` 안주, 비슷한 술, 맛 보정, 리뷰,                                                           |
+| `스토리 생성`                                                                              | `좋아요 페이지`                                                           |
 
 <br>
 <br>
