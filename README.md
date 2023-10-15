@@ -5,7 +5,7 @@
 <br>
 <br>
 
-<img src="https://user-images.githubusercontent.com/59721896/231941106-837444e7-bc93-45f1-ae1a-38497ea4f45e.png"/>
+<img src="https://github.com/NineToSixVisti/visti/assets/122581063/ef81079d-af4e-4e49-a3c8-766a254b6c51"/>
 
 <br>
 <br>
@@ -13,7 +13,7 @@
 
 # 서비스 소개
 
-추억을 nft화시키고 친한사람들끼리 추억을 공유할 수 있는 sns 서비스
+추억을 NFT화시키고 친한사람들끼리 추억을 공유할 수 있는 sns 서비스
 
 [비스티 바로가기](https://)
 
@@ -23,9 +23,9 @@
 
 # 프로젝트 소개
 
-23.02.27 ~ 23.04.07 (6주)
+23.08.14 ~ 23.10.06 (6주)
 
-총 6명 (프론트 3 / 백 3)
+총 6명 (프론트 2 / 백 2 / 모바일 2)
 
 <br>
 <br>
@@ -33,7 +33,7 @@
 
 # 개발 환경
 
-**FE** | `React` `Redux` `TailWind CSS` `TypeScript`
+**FE** | `React` `Redux`  `TypeScript` 
 
 **BE** | `ElasticSearch` `RabbitMQ` `MySQL` `S3`
 
@@ -62,7 +62,7 @@
 
 # 아키텍처
 
-<img width="70%" src="https://user-images.githubusercontent.com/59721896/231405016-916dd3b6-6a2d-4218-8c7f-a9220382c459.png">
+<img width="70%" src="https://github.com/NineToSixVisti/visti/assets/122581063/bfa76df8-f0ab-4182-b08a-0f3b8c295230">
 
 <br>
 <br>
@@ -76,9 +76,8 @@
 <br>
 <br>
 
-# 디자인 가이드
-
-<img width="70%" src="https://user-images.githubusercontent.com/59721896/231400674-ca21c4b2-a593-4b05-af70-c87900272932.png">
+# 와이어 프레임
+https://www.figma.com/file/DBLzpID3epm1GBpNFf99oA/9To6_%EB%B9%84%EC%8A%A4%ED%8B%B0?type=design&node-id=0%3A1&mode=design&t=7QhgqdNQAlQ6aNUZ-1
 
 <br>
 <br>
