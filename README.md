@@ -35,13 +35,15 @@
 
 **FE** | `React` `Redux`  `TypeScript` 
 
-**BE** | `ElasticSearch` `RabbitMQ` `MySQL` `S3`
+**BE** | `Redis` `MySQL` `S3`
+
+**Mobile** | `Android` `Jetpack Compose`
 
 **BE - API** | `Java` `SpringBoot` `JPA` `SpringSecurity` `Swagger` `Postman`
 
-**BE - Analysis** | `Python` `Flask`
+**BE - Mobile** | `FireBaseCloud`
 
-**CI/CD** | `AWS` `EC2` `RDS` `Docker` `Jenkins` `Nginx` `Docker Compose`
+**CI/CD** | `AWS` `EC2` `Docker` `Jenkins` `Nginx`
 
 <br>
 <br>
