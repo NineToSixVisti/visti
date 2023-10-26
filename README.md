@@ -15,7 +15,7 @@
 
 추억을 NFT화시키고 친한사람들끼리 추억을 공유할 수 있는 sns 서비스
 
-[비스티 바로가기](https://)
+[비스티 바로가기](https://www.visti.com/storybox)
 
 <br>
 <br>
