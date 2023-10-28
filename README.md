@@ -33,7 +33,7 @@
 
 # 개발 환경
 
-**FE** | `React` `Redux`  `TypeScript` 
+**FE** | `React` `Redux`  `TypeScript`  `PWA`
 
 **BE** | `Redis` `MySQL` `S3`
 
