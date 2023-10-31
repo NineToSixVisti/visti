@@ -72,7 +72,7 @@
 
 # ERD
 
-<img width="70%" src="https://user-images.githubusercontent.com/59721896/231406400-f64002b7-f93c-40c3-9867-fad448ecc124.png">
+<img width="70%" src="">
 
 <br>
 <br>
