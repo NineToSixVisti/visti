@@ -22,7 +22,7 @@ class WebViewViewModel @Inject constructor(
     private val _accessToken = MutableStateFlow<StoryState>(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
-    val URL = "https://j9d102.p.ssafy.io"
+    val URL = "https://visti-story.com"
 
     init {
         getToken()
