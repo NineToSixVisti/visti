@@ -56,19 +56,18 @@ class StoryViewModel @Inject constructor(
     }
 
     fun setWebViewState(id: String): WebViewState {
-        Log.e("setWebview", "https://j9d102.p.ssafy.io/storybox/detail/$id")
         if (id.isNotBlank()) {
             enterStoryBox(id)
             return WebViewState(
                 WebContent.Url(
-                    url = "https://j9d102.p.ssafy.io/storybox/detail/$id",
+                    url = "https://visti-story.com/storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
         }
         return WebViewState(
             WebContent.Url(
-                url = "https://j9d102.p.ssafy.io/storybox",
+                url = "https://visti-story.com/storybox",
                 additionalHttpHeaders = emptyMap()
             )
         )

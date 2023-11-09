@@ -22,7 +22,7 @@ class ProfileViewModel @Inject constructor(
     repository: MemberInformationRepository,
 ) : ViewModel() {
 
-    private var myStoryLink = "http://j9d102.p.ssafy.io/storydetail/"
+    private var myStoryLink = "https://visti-story.com/storydetail/"
 
     private val _memberInformation = mutableStateOf(ProfileState())
     val memberInformation: State<ProfileState> = _memberInformation
