@@ -1,9 +1,3 @@
-# ignore 된 피알 목록
-
-<div align=center>
-
-<br>
-<br>
 
 <img src="https://github.com/NineToSixVisti/visti/assets/122581063/ef81079d-af4e-4e49-a3c8-766a254b6c51"/>
 
