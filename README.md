@@ -58,7 +58,7 @@
 
 # 아키텍처
 
-<img width="70%" src="https://github.com/NineToSixVisti/visti/assets/122581063/bfa76df8-f0ab-4182-b08a-0f3b8c295230">
+<img width="70%" src="https://github.com/NineToSixVisti/visti/blob/master/docs/visti_architecture.png">
 
 <br>
 <br>
