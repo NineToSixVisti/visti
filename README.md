@@ -73,7 +73,8 @@
 <br>
 
 # 와이어 프레임
-https://www.figma.com/file/DBLzpID3epm1GBpNFf99oA/9To6_%EB%B9%84%EC%8A%A4%ED%8B%B0?type=design&node-id=0%3A1&mode=design&t=7QhgqdNQAlQ6aNUZ-1
+[![전체 와이어프레임](https://github.com/NineToSixVisti/visti/assets/122589906/30694984-6181-4b49-b696-2629c68af68c)](https://github.com/NineToSixVisti/visti/tree/master/src/frontend/visti)
+
 
 <br>
 <br>
