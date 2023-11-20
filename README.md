@@ -66,7 +66,7 @@
 
 # ERD
 
-<img width="70%" src="">
+<img width="70%" src="https://github.com/NineToSixVisti/visti/blob/master/docs/visti_ERD.png">
 
 <br>
 <br>
