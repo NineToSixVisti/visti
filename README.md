@@ -58,7 +58,7 @@
 
 # 아키텍처
 
-<img width="70%" src="https://github.com/NineToSixVisti/visti/blob/master/docs/visti_architecture.png">
+<img width="70%" src="./docs/visti_architecture.png">
 
 <br>
 <br>
@@ -66,14 +66,15 @@
 
 # ERD
 
-<img width="70%" src="https://github.com/NineToSixVisti/visti/blob/master/docs/visti_ERD.png">
+<img width="70%" src="./docs/visti_ERD.png">
 
 <br>
 <br>
 <br>
 
 # 와이어 프레임
-[![전체 와이어프레임](https://github.com/NineToSixVisti/visti/assets/122589906/30694984-6181-4b49-b696-2629c68af68c)](https://github.com/NineToSixVisti/visti/tree/master/src/frontend/visti)
+[<img width="70%" src="./docs/전체 와이어 프레임.png">](https://github.com/NineToSixVisti/visti/tree/master/src/frontend/visti)
+
 
 
 <br>
