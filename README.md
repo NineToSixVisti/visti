@@ -73,7 +73,7 @@
 <br>
 
 # 와이어 프레임
-[<img width="70%" src="./docs/전체 와이어 프레임.png">](https://github.com/NineToSixVisti/visti/tree/master/src/frontend/visti)
+[<img width="70%" src="./docs/WireFrame.png">](https://github.com/NineToSixVisti/visti/tree/master/src/frontend/visti)
 
 
 
