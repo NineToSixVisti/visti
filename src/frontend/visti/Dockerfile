@@ -5,8 +5,6 @@ WORKDIR /app
 
 COPY ./package*.json ./
 
-RUN /usr/local/bin/node --max-old-space-size=4096 /usr/local/lib/node_modules/npm/bin/npm-cli.js install
-
 COPY . .
 
 RUN npm run build
