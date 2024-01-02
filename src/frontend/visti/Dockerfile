@@ -13,9 +13,6 @@ RUN npm run build
 
 FROM nginx:latest 
 
-COPY ./fullchain.pem /etc/letsencrypt/live/visti-story.com/fullchain.pem
-COPY ./privkey.pem /etc/letsencrypt/live/visti-story.com/privkey.pem
-
 COPY ./nginx.conf /etc/nginx/conf.d/react.conf
 
 COPY --from=builder /app/build /usr/share/nginx/html
