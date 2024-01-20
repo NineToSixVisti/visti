@@ -300,8 +300,7 @@ const StoryboxCreate = () => {
 
       <MainWrap>
         <Title>그룹이미지</Title>
-        <BoxImage onClick={ImageClick} backgroundImage={groupImage || process.env.PUBLIC_URL + '/assets/box_Image_input.svg'}>
-          <PlusSvg/>
+        <BoxImage backgroundImage={groupImage || process.env.PUBLIC_URL + '/assets/box_Image_input.svg'}>
         </BoxImage>
         <input id="ImageInput" type='file' accept='image/*' onChange={ImageChange} style={{display: 'none'}} />
 
@@ -400,12 +399,12 @@ const BoxImage = styled.div<{ backgroundImage: string }>`
   position: relative;
 `
 
-const PlusSvg = styled(Plus)`
-  position : absolute;
-  top : 2vh;
-  right : 4vw;
-  cursor: pointer;
-`
+// const PlusSvg = styled(Plus)`
+//   position : absolute;
+//   top : 2vh;
+//   right : 4vw;
+//   cursor: pointer;
+// `
 
 const Label = styled.label`
   display: flex;
