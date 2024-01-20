@@ -128,7 +128,7 @@ const Detail : React.FC<boxDetailProps> = ({id}) => {
               <StoryboxLink>
                 <p>
                   {/* {`${process.env.REACT_APP_SERVER}/link/visti/invite/${encryptedText}`} */}
-                  {`https://j9d102.p.ssafy.io/link/visti/invite/${encryptedText}`}
+                  {`https://visti-story.com/link/visti/invite/${encryptedText}`}
                 </p>
               </StoryboxLink>
             : null
