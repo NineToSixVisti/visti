@@ -96,17 +96,17 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(
-                            onClick = {
-                                navController.navigate(route = SettingNav.Subscription.route)
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_rocket),
-                                contentDescription = LikeSortType.UP.name,
-                                tint = iconColor,
-                            )
-                        }
+//                        IconButton(
+//                            onClick = {
+//                                navController.navigate(route = SettingNav.Subscription.route)
+//                            }
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.ic_rocket),
+//                                contentDescription = LikeSortType.UP.name,
+//                                tint = iconColor,
+//                            )
+//                        }
 
                         IconButton(
                             onClick = {
@@ -147,10 +147,10 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         image = painterResource(id = R.drawable.ic_box),
                         text = "Box"
                     ),
-                    ImageWithText(
-                        image = painterResource(id = R.drawable.ic_token),
-                        text = "NFT"
-                    )
+//                    ImageWithText(
+//                        image = painterResource(id = R.drawable.ic_token),
+//                        text = "NFT"
+//                    )
                 )
             ) {
                 selectedTabIndex = it

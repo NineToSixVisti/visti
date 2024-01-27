@@ -21,9 +21,9 @@ fun SettingSection(navController: NavController) {
         SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정") {
             navController.navigate(route = SettingNav.Notification.route)
         }
-        SettingButton(imageId = R.drawable.ic_info, text = "정보") {
-            navController.navigate(route = SettingNav.Information.route)
-        }
+//        SettingButton(imageId = R.drawable.ic_info, text = "정보") {
+//            navController.navigate(route = SettingNav.Information.route)
+//        }
         SettingButton(imageId = R.drawable.ic_person, text = "계정") {
             navController.navigate(route = SettingNav.UserAccount.route)
         }
