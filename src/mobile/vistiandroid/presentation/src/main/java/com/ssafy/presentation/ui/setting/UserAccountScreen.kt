@@ -40,18 +40,18 @@ fun UserAccountScreen(
                 Black
             }
 
-            DetailSettingButton("프로필 편집", colorState) {
-
-            }
-            DetailSettingButton("비밀번호 변경", colorState) {
-
-            }
+//            DetailSettingButton("프로필 편집", colorState) {
+//
+//            }
+//            DetailSettingButton("비밀번호 변경", colorState) {
+//
+//            }
             DetailSettingButton("계정 로그아웃", PrimaryColor) {
                 logOutState.value = true
             }
-            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
-                signOutState.value = true
-            }
+//            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
+//                signOutState.value = true
+//            }
 
             val isDarkTheme = isSystemInDarkTheme()
 
