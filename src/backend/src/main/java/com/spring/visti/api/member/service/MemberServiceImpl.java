@@ -268,7 +268,7 @@ public class MemberServiceImpl implements MemberService{
         String imageUrl;
         // 프로필 사진 변경->이전 사진 삭제(이전 사진이 있을 경우만)
         String originProfilePath = member.getProfilePath();
-        if (originProfilePath.length() > 0){
+        if (!originProfilePath.isEmpty()){
             int s3DomainLastIndex = originProfilePath.indexOf(".com/") + 5;
             if (s3DomainLastIndex > 0) {
                 String pathWithFilename = originProfilePath.substring(s3DomainLastIndex);
