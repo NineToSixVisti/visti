@@ -10,17 +10,17 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetHomeStoryBoxUseCase @Inject constructor(
-    private val repository: MemberInformationRepository
+    private val repository: MemberInformationRepository,
 ) {
     operator fun invoke(): Flow<Resource<List<StoryBox>>> = flow {
         try {
-            emit(Resource.Loading<List<StoryBox>>())
+            emit(Resource.Loading())
             val homeStoryBoxList = repository.getHomeMyStoryBox()
-            emit(Resource.Success<List<StoryBox>>(homeStoryBoxList))
+            emit(Resource.Success(homeStoryBoxList))
         } catch (e: HttpException) {
-            emit(Resource.Error<List<StoryBox>>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Error(e.localizedMessage ?: "Error occurred"))
         } catch (e: IOException) {
-            emit(Resource.Error<List<StoryBox>>("Failed to connect to server \uD83D\uDE22"))
+            emit(Resource.Error("Failed to connect to server \uD83D\uDE22"))
         }
     }
 }

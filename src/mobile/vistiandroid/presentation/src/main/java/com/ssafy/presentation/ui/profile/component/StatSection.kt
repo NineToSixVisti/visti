@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun StatSection(modifier: Modifier = Modifier, storyCount : String, storyBoxCount : String) {
+fun StatSection(modifier: Modifier = Modifier, storyCount: String, storyBoxCount: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,

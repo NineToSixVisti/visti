@@ -18,7 +18,7 @@ import com.ssafy.presentation.R
 
 @Composable
 fun ProfileDescription(
-    displayName: String, memberRole : MemberType
+    displayName: String, memberRole: MemberType,
 ) {
     val letterSpacing = 0.5.sp
     val lineHeight = 20.sp
@@ -34,7 +34,7 @@ fun ProfileDescription(
             letterSpacing = letterSpacing,
             lineHeight = lineHeight
         )
-        if(memberRole == MemberType.SUBSCRIPTION) {
+        if (memberRole == MemberType.SUBSCRIPTION) {
             Image(
                 painter = painterResource(id = R.drawable.ic_check),
                 contentDescription = LikeSortType.UP.name,

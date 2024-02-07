@@ -1,7 +1,6 @@
 package com.ssafy.presentation.ui.profile
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.domain.model.ImageWithText
 import com.ssafy.domain.model.LikeSortType
 import com.ssafy.presentation.R
-import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.profile.component.PostTabView
 import com.ssafy.presentation.ui.profile.component.ProfileSection
 import com.ssafy.presentation.ui.profile.component.SettingSection
@@ -56,7 +54,6 @@ private const val TAG = "ProfileScreen"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
-    Log.d(TAG, "ProfileScreen hilt viewModel id: ${viewModel.hashCode()}")
 
     val myStories = viewModel.myStories.collectAsLazyPagingItems()
     val lazyPagingItems = viewModel.myStoryBoxes.collectAsLazyPagingItems()
@@ -96,6 +93,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //                        IconButton(
 //                            onClick = {
 //                                navController.navigate(route = SettingNav.Subscription.route)
@@ -147,6 +145,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                         image = painterResource(id = R.drawable.ic_box),
                         text = "Box"
                     ),
+                    //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //                    ImageWithText(
 //                        image = painterResource(id = R.drawable.ic_token),
 //                        text = "NFT"
@@ -160,7 +159,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), navController: 
                     myStories,
                     memberInformation.stories,
                     navController,
-                    viewModel
                 )
 
                 1 -> StoryBoxLazyColumn(

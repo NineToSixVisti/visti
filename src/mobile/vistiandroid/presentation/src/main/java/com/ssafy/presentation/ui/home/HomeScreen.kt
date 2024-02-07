@@ -44,9 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -80,13 +79,11 @@ fun HomeScreen(
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
-    val lifecycleOwner = LocalLifecycleOwner.current
 
     // LifecycleObserver를 사용하여 onResume 이벤트 처리
     val observer = remember {
-        object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-            fun onResume() {
+        object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
                 // onResume 이벤트가 발생할 때마다 데이터 다시 로드
                 homeViewModel.getHomeStory()
                 homeViewModel.getHomeStoryBox()
@@ -106,10 +103,6 @@ fun HomeScreen(
     }
 
     when {
-        homeStorySate.error.isNotBlank() -> {
-
-        }
-
         homeStorySate.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -182,7 +175,7 @@ fun HomeContent(
     homeStoryList: List<HomeStory>,
     homeStoryBoxList: List<StoryBox>,
     memberInformation: Member,
-    navController: NavController
+    navController: NavController,
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -320,14 +313,6 @@ fun HomeToolBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-//            Image(
-//                painter = painter,
-//                contentDescription = "StoryBox",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .aspectRatio(3f / 2f)
-//                    .fillMaxSize()
-//            )
             val placedHolder = if (!isSystemInDarkTheme()) {
                 R.drawable.placeholder
             } else {

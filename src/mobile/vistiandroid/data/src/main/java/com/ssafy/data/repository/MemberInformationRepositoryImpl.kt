@@ -21,7 +21,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 class MemberInformationRepositoryImpl @Inject constructor(
-    private val api: VistiApi
+    private val api: VistiApi,
 ) : MemberInformationRepository {
     override suspend fun getMemberInformation(): Member {
         return api.getMemberInformation().detail.toDomain()
@@ -61,11 +61,12 @@ class MemberInformationRepositoryImpl @Inject constructor(
         val response = api.getHomeStoryBox().detail
 
         val currentCalendar = Calendar.getInstance()
-        if (response.size!=0) {
-            val lastStoryBoxDto = response[0]// TODO 하드코딩 고치기
+        if (response.isNotEmpty()) {
+            val lastStoryBoxDto = response[0]//TODO 하드코딩 고치기
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val targetCalendar = Calendar.getInstance()
-            targetCalendar.time = sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
+            targetCalendar.time =
+                sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
 
             var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
 

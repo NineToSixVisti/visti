@@ -1,6 +1,5 @@
 package com.ssafy.visti.di
 
-import com.ssafy.data.local.PreferenceDataSource
 import com.ssafy.data.remote.VistiApi
 import com.ssafy.data.remote.XAccessTokenInterceptor
 import com.ssafy.domain.model.Constants

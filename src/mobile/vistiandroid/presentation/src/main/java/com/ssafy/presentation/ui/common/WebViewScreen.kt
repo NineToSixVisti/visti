@@ -15,9 +15,8 @@ import com.google.accompanist.web.WebView
 @Composable
 fun WebViewScreen(
     id: String, mode: String,
-    viewModel: WebViewViewModel = hiltViewModel()
+    viewModel: WebViewViewModel = hiltViewModel(),
 ) {
-    //  Log.d(TAG, "MyStoryScreen hilt viewModel id: ${viewModel.hashCode()}")
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier

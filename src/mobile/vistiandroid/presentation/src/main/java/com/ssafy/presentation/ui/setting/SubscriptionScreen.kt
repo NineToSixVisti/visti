@@ -19,7 +19,7 @@ import com.ssafy.presentation.ui.setting.component.SubscriptionRadioGroup
 @Composable
 fun SubscriptionScreen(
     navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state = viewModel.memberInformation.value
 

@@ -39,7 +39,7 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideStoryRepository(
-        preferenceDataSource: PreferenceDataSource
+        preferenceDataSource: PreferenceDataSource,
     ): TokenRepository {
         return TokenRepositoryImpl(preferenceDataSource)
     }
@@ -48,7 +48,7 @@ class RepositoryModule {
     @Singleton
     fun provideUserRepository(
         api: VistiApi,
-        preferenceDataSource: PreferenceDataSource
+        preferenceDataSource: PreferenceDataSource,
     ): UserRepository {
         return UserRepositoryImpl(api, preferenceDataSource)
     }
@@ -58,6 +58,7 @@ class RepositoryModule {
     fun provideFcmRepository(api: VistiApi): FcmRepository {
         return FcmRepositoryImpl(api)
     }
+
     @Provides
     @Singleton
     fun storyBoxRepository(

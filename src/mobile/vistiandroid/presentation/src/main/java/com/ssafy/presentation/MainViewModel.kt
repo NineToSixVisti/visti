@@ -1,15 +1,10 @@
 package com.ssafy.presentation
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.fcm.FcmUseCase
-import com.ssafy.domain.usecase.memberinformation.GetMemberInformUseCase
 import com.ssafy.domain.usecase.story.StoryUseCase
-import com.ssafy.presentation.ui.home.component.MemberState
 import com.ssafy.presentation.ui.story.StoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,10 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val fcmUseCase: FcmUseCase,
     private val storyUseCase: StoryUseCase,
 ) : ViewModel() {
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
     init {

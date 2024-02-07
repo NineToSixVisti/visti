@@ -21,6 +21,7 @@ fun SettingSection(navController: NavController) {
         SettingButton(imageId = R.drawable.ic_notification, text = "알림 설정") {
             navController.navigate(route = SettingNav.Notification.route)
         }
+        //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //        SettingButton(imageId = R.drawable.ic_info, text = "정보") {
 //            navController.navigate(route = SettingNav.Information.route)
 //        }

@@ -11,17 +11,17 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetHomeStoryUseCase @Inject constructor(
-    private val repository: MemberInformationRepository
+    private val repository: MemberInformationRepository,
 ) {
     operator fun invoke(): Flow<Resource<List<HomeStory>>> = flow {
         try {
-            emit(Resource.Loading<List<HomeStory>>())
+            emit(Resource.Loading())
             val homeStoryList = repository.getHomeMyStories()
-            emit(Resource.Success<List<HomeStory>>(homeStoryList))
+            emit(Resource.Success(homeStoryList))
         } catch (e: HttpException) {
-            emit(Resource.Error<List<HomeStory>>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Error(e.localizedMessage ?: "Error occurred"))
         } catch (e: IOException) {
-            emit(Resource.Error<List<HomeStory>>("Failed to connect to server \uD83D\uDE22"))
+            emit(Resource.Error("Failed to connect to server \uD83D\uDE22"))
         }
     }
 }

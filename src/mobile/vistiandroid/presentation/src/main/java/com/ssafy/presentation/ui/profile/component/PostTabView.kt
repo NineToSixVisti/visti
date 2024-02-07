@@ -22,7 +22,7 @@ import com.ssafy.presentation.ui.theme.White
 fun PostTabView(
     modifier: Modifier = Modifier,
     imageWithText: List<ImageWithText>,
-    onTabSelected: (selectedIndex: Int) -> Unit
+    onTabSelected: (selectedIndex: Int) -> Unit,
 ) {
     var selectedTabIndex by remember {
         mutableIntStateOf(0)

@@ -15,14 +15,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
     private val storyUseCase: StoryUseCase,
 ) : ViewModel() {
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
-    val URL = "https://visti-story.com"
+    private val vistiUrl = "https://visti-story.com"
 
     init {
         getToken()
@@ -47,25 +48,25 @@ class WebViewViewModel @Inject constructor(
     }
 
     fun setWebViewState(id: String, mode: String): WebViewState {
-        Log.e("setWebViewState","$id,$mode")
+        Log.e("setWebViewState", "$id,$mode")
         return when (mode) {
             "storyBox" -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storybox/detail/$id",
+                    url = "$vistiUrl/storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             "story" -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storydetail/$id",
+                    url = "$vistiUrl/storydetail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             else -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storybox",
+                    url = "$vistiUrl/storybox",
                     additionalHttpHeaders = emptyMap()
                 )
             )

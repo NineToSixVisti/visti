@@ -9,7 +9,7 @@ data class Story(
     val blind: Boolean = false,
     val createdAt: String = "",
     val finishAt: String = "",
-    val like: Boolean = false
+    val like: Boolean = false,
 )
 
 data class StoryList(
@@ -23,7 +23,7 @@ data class StoryList(
     val sort: Sort = Sort(),
     val first: Boolean = false,
     val numberOfElements: Int = 0,
-    val empty: Boolean = true
+    val empty: Boolean = true,
 )
 
 data class StoryBox(
@@ -33,7 +33,7 @@ data class StoryBox(
     val name: String = "",
     val createdAt: String = "",
     val finishAt: String = "",
-    val blind: Boolean = false
+    val blind: Boolean = false,
 )
 
 data class StoryBoxList(
@@ -47,13 +47,13 @@ data class StoryBoxList(
     val sort: Sort = Sort(),
     val first: Boolean = false,
     val numberOfElements: Int = 0,
-    val empty: Boolean = true
+    val empty: Boolean = true,
 )
 
 data class Sort(
     val empty: Boolean = false,
     val sorted: Boolean = false,
-    val unsorted: Boolean = false
+    val unsorted: Boolean = false,
 )
 
 data class Pageable(
@@ -62,5 +62,5 @@ data class Pageable(
     val pageNumber: Int = 0,
     val pageSize: Int = 5,
     val paged: Boolean = true,
-    val unpaged: Boolean = false
+    val unpaged: Boolean = false,
 )

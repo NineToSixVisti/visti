@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LikeListViewModel @Inject constructor(
-    repository: LikedStoryRepository
+    repository: LikedStoryRepository,
 ) : ViewModel() {
 
     val likedStoriesByDescend: Flow<PagingData<Story>> =

@@ -106,7 +106,7 @@ fun SubscriptionTypeItem(
     price: String,
     modifier: Modifier,
     backgroundColor: Color,
-    textColor: Color
+    textColor: Color,
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),

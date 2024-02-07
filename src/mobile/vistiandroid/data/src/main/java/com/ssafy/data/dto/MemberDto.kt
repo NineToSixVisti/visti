@@ -3,7 +3,7 @@ package com.ssafy.data.dto
 import com.google.gson.annotations.SerializedName
 
 data class MemberResponse(
-    val message: String, val status : String, val detail : MemberDto
+    val message: String, val status: String, val detail: MemberDto,
 )
 
 data class MemberSimpleDto(
@@ -12,7 +12,7 @@ data class MemberSimpleDto(
     @SerializedName("role") val role: String,
     @SerializedName("memberType") val memberType: String,
     @SerializedName("dailyStory") val dailyStory: String,
-    @SerializedName("status") val status: Boolean
+    @SerializedName("status") val status: Boolean,
 )
 
 data class MemberDto(
@@ -24,5 +24,5 @@ data class MemberDto(
     @SerializedName("dailyStory") val dailyStory: String,
     @SerializedName("status") val status: Boolean,
     @SerializedName("storyBoxes") val storyBoxes: String,
-    @SerializedName("stories") val stories: String
+    @SerializedName("stories") val stories: String,
 )

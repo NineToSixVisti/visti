@@ -2,8 +2,8 @@ package com.ssafy.presentation.ui.home
 
 
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
     private val getHomeStoryUseCase: GetHomeStoryUseCase,
     private val getHomeStoryBoxUseCase: GetHomeStoryBoxUseCase,
-    private val fcmUseCase: FcmUseCase
+    private val fcmUseCase: FcmUseCase,
 ) : ViewModel() {
 
     private val _homeStoryState = mutableStateOf(HomeStoryState())
@@ -51,19 +51,19 @@ class HomeViewModel @Inject constructor(
     private var countDownTimer: CountDownTimer? = null
 
     var initialTotalTimeInMillis = 10000L
-    var timeLeft = mutableStateOf(initialTotalTimeInMillis)
+    var timeLeft = mutableLongStateOf(initialTotalTimeInMillis)
     val countDownInterval = 1000L // 1 seconds is the lowest
 
-    val timerText = mutableStateOf(timeLeft.value.timeFormat())
+    val timerText = mutableStateOf(timeLeft.longValue.timeFormat())
 
     val isPlaying = mutableStateOf(false)
 
-    fun startCountDownTimer() = viewModelScope.launch {
+    private fun startCountDownTimer() = viewModelScope.launch {
         isPlaying.value = true
         countDownTimer = object : CountDownTimer(initialTotalTimeInMillis, countDownInterval) {
             override fun onTick(currentTimeLeft: Long) {
                 timerText.value = currentTimeLeft.timeFormat()
-                timeLeft.value = currentTimeLeft
+                timeLeft.longValue = currentTimeLeft
             }
 
             override fun onFinish() {
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
         }.start()
     }
 
-    fun startTimer() = viewModelScope.launch {
+    private fun startTimer() = viewModelScope.launch {
         val updateIntervalMillis = 1000L
         while (true) {
             val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -95,21 +95,19 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun getFcmToken() {
+    private fun getFcmToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 return@OnCompleteListener
             }
             // token log 남기기
             if (task.result != null) {
-                Log.e("TAG", "getFcmToken: ${task.result}")
                 uploadFcmToken(task.result!!)
             }
         })
-//        createNotificationChannel(channel_id, "ecoMate")
     }
 
-    fun uploadFcmToken(fcmToken: String) {
+    private fun uploadFcmToken(fcmToken: String) {
         viewModelScope.launch {
             fcmUseCase.uploadFcmToken(fcmToken)
         }
@@ -149,7 +147,7 @@ class HomeViewModel @Inject constructor(
                         val targetCalendar = Calendar.getInstance()
                         targetCalendar.time =
                             sdf.parse(lastStoryBox.finishAt) ?: Calendar.getInstance().time
-                        var timeDiffInMillis =
+                        val timeDiffInMillis =
                             targetCalendar.timeInMillis - currentCalendar.timeInMillis
 
                         initialTotalTimeInMillis = timeDiffInMillis
@@ -181,66 +179,8 @@ class HomeViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-//    suspend fun getHomeLastStoryBox(): HomeLastStoryBox {
-//        val response = api.getHomeStoryBox().detail
-//
-//        val currentCalendar = Calendar.getInstance()
-//        if (response.size!=0) {
-//            val lastStoryBoxDto = response[0]// TODO 하드코딩 고치기
-//            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//            val targetCalendar = Calendar.getInstance()
-//            targetCalendar.time = sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
-//
-//            var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
-//
-//            if (timeDiffInMillis < 0) {
-//                timeDiffInMillis = 0
-//            }
-//
-//            return HomeLastStoryBox(
-//                lastStoryBoxDto.id,
-//                lastStoryBoxDto.encryptedId,
-//                lastStoryBoxDto.boxImgPath,
-//                lastStoryBoxDto.name,
-//                lastStoryBoxDto.createdAt,
-//                timeDiffInMillis,
-//                lastStoryBoxDto.blind
-//            )
-//        }
-//
-//        currentCalendar.timeInMillis
-//
-//        return HomeLastStoryBox(finishAt = currentCalendar.timeInMillis)
-//    }
 
-//    private fun getHomeLastStoryBox() {
-//        getHomeLastStoryBoxUseCase().onEach { result ->
-//            when (result) {
-//                is Resource.Success -> {
-//                    _homeLastStoryBoxState.value =
-//                        HomeLastStoryBoxState(storyBox = result.data ?: HomeLastStoryBox())
-//                    initialTotalTimeInMillis = result.data?.finishAt ?: 123456789L
-//                    if (result.data!!.id != -1)
-//                        startCountDownTimer()
-//                    else
-//                        startTimer()
-//
-//                }
-//
-//                is Resource.Error -> {
-//                    _homeLastStoryBoxState.value =
-//                        HomeLastStoryBoxState(error = result.message ?: "An error occurred")
-//                }
-//
-//                is Resource.Loading -> {
-//                    _homeLastStoryBoxState.value = HomeLastStoryBoxState(isLoading = true)
-//                }
-//            }
-//        }.launchIn(viewModelScope)
-//    }
-
-
-    fun getMemberInformation() {
+    private fun getMemberInformation() {
         getMemberInformUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {

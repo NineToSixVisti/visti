@@ -5,5 +5,5 @@ import com.ssafy.domain.model.user.UserToken
 data class TokenState(
     val isLoading: Boolean = false,
     val token: UserToken? = UserToken(),
-    var error: String = ""
+    var error: String = "",
 )

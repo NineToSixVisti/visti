@@ -6,17 +6,17 @@ import com.ssafy.presentation.NavigationRouteName.JOIN_AGREE
 import com.ssafy.presentation.NavigationRouteName.JOIN_EMAIL
 import com.ssafy.presentation.NavigationRouteName.JOIN_NICKNAME
 import com.ssafy.presentation.NavigationRouteName.JOIN_PASSWORD
-import com.ssafy.presentation.NavigationRouteName.SIGN_IN
 import com.ssafy.presentation.NavigationRouteName.MAIN
 import com.ssafy.presentation.NavigationRouteName.MAIN_HOME
 import com.ssafy.presentation.NavigationRouteName.MAIN_LIKE
 import com.ssafy.presentation.NavigationRouteName.MAIN_MEMORY
 import com.ssafy.presentation.NavigationRouteName.MAIN_PROFILE
 import com.ssafy.presentation.NavigationRouteName.SETTING_INFORMATION
-import com.ssafy.presentation.NavigationRouteName.WEB_VIEW
 import com.ssafy.presentation.NavigationRouteName.SETTING_NOTIFICATION
 import com.ssafy.presentation.NavigationRouteName.SETTING_SUBSCRIPTION
 import com.ssafy.presentation.NavigationRouteName.SETTING_USER_ACCOUNT
+import com.ssafy.presentation.NavigationRouteName.SIGN_IN
+import com.ssafy.presentation.NavigationRouteName.WEB_VIEW
 
 object NavigationRouteName {
     const val MAIN = "메인"
@@ -46,7 +46,7 @@ interface Destination {
 sealed class MainNav(
     override val route: String,
     @DrawableRes val icon: Int,
-    override val title: String
+    override val title: String,
 ) : Destination {
     object Home : MainNav(MAIN_HOME, R.drawable.ic_home, MAIN_HOME)
     object Memory : MainNav(MAIN_MEMORY, R.drawable.ic_memory, MAIN_MEMORY)
@@ -67,7 +67,7 @@ sealed class MainNav(
 
 sealed class SettingNav(
     override val route: String,
-    override val title: String
+    override val title: String,
 ) : Destination {
     object WebView : SettingNav(WEB_VIEW, WEB_VIEW)
     object Notification : SettingNav(SETTING_NOTIFICATION, SETTING_NOTIFICATION)
@@ -81,7 +81,7 @@ sealed class SettingNav(
 
 sealed class SignInNav(
     override val route: String,
-    override val title: String
+    override val title: String,
 ) : Destination {
     object SignIn : SignInNav(SIGN_IN, SIGN_IN)
     object Main : SignInNav(MAIN, MAIN)

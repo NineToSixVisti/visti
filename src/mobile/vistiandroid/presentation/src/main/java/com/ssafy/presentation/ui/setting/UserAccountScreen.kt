@@ -34,12 +34,12 @@ fun UserAccountScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
 
-            val colorState = if (isSystemInDarkTheme()) {
-                White
-            } else {
-                Black
-            }
-
+            //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
+//            val colorState = if (isSystemInDarkTheme()) {
+//                White
+//            } else {
+//                Black
+//            }
 //            DetailSettingButton("프로필 편집", colorState) {
 //
 //            }
@@ -49,6 +49,7 @@ fun UserAccountScreen(
             DetailSettingButton("계정 로그아웃", PrimaryColor) {
                 logOutState.value = true
             }
+            //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
 //                signOutState.value = true
 //            }

@@ -28,28 +28,14 @@ private const val TAG = "StoryScreen"
 fun StoryScreen(
     id: String,
     pickImageLauncher: ActivityResultLauncher<Intent>,
-    viewModel: StoryViewModel = hiltViewModel()
+    viewModel: StoryViewModel = hiltViewModel(),
 ) {
-//    val accessTokenState = viewModel.accessToken.collectAsState()
-//    Log.e("accessTokenState",accessTokenState.value.accessToken.toString())
-//    if(accessTokenState.value.accessToken=="accessToken")
-//    {
-//        navController.navigate(route = SignInNav.SignIn.route) {
-//            popUpTo(navController.graph.id) {
-//                inclusive = true
-//            }
-//        }
-//
-//    }
-//    else
-//    {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
             val webViewState = viewModel.setWebViewState(id)
-            val webViewNavigator = viewModel.webViewNavigator
 
             WebView(
                 state = webViewState,
@@ -81,15 +67,12 @@ fun StoryScreen(
                                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                     )
 
-                                    Log.d(TAG, "openGallery: open")
                                     // 결과 처리를 위한 ActivityResultLauncher를 호출하여 갤러리 화면을 엽니다.
                                     pickImageLauncher.launch(intent)
                                 }
 
                                 @JavascriptInterface
                                 fun getSelectedImage(): String? {
-                                    Log.d(TAG, "openGallery: $selectedImageUri")
-
                                     if (selectedImageUri != null) {
                                         val bitmap = selectedImageUri?.let {
                                             if (Build.VERSION.SDK_INT < 28) {
@@ -128,8 +111,6 @@ fun StoryScreen(
             )
         }
     }
-    //  }
-
 }
 
 fun bitmapToByteArray(bitmap: Bitmap): ByteArray {

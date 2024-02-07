@@ -10,19 +10,19 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetMemberInformUseCase @Inject constructor(
-    private val repository: MemberInformationRepository
+    private val repository: MemberInformationRepository,
 ) {
     operator fun invoke(): Flow<Resource<Member>> = flow {
         try {
-            emit(Resource.Loading<Member>())
+            emit(Resource.Loading())
             val memberInformation = repository.getMemberInformation()
-            emit(Resource.Success<Member>(memberInformation))
+            emit(Resource.Success(memberInformation))
         } catch (e: HttpException) {
-            emit(Resource.Error<Member>("${e.localizedMessage} HTTP Error"))
+            emit(Resource.Error("${e.localizedMessage} HTTP Error"))
         } catch (e: IOException) {
-            emit(Resource.Error<Member>("${e.localizedMessage} IO Error"))
+            emit(Resource.Error("${e.localizedMessage} IO Error"))
         } catch (e: Exception) {
-            emit(Resource.Error<Member>("${e.localizedMessage} Unknown Error"))
+            emit(Resource.Error("${e.localizedMessage} Unknown Error"))
         }
     }
 }

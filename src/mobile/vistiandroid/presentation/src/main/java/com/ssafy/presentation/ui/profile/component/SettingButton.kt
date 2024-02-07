@@ -21,7 +21,7 @@ import com.ssafy.presentation.ui.theme.White
 fun SettingButton(
     imageId: Int,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val iconColor = if (isSystemInDarkTheme()) {
         White

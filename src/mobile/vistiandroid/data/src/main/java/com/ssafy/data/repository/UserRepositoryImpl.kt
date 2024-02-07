@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val api: VistiApi,
-    private val preferenceDataSource: PreferenceDataSource
+    private val preferenceDataSource: PreferenceDataSource,
 ) : UserRepository {
     override suspend fun signIn(userBody: UserBody): UserToken {
         val response = api.signIn(userBody.toDomain()).detail.toDomain()

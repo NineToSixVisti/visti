@@ -7,7 +7,7 @@ import com.ssafy.data.repository.LikedStoryRepositoryImpl.Companion.NETWORK_STOR
 import com.ssafy.domain.model.Story
 
 class StoryPagingSource(
-    private val api: VistiApi
+    private val api: VistiApi,
 ) : PagingSource<Int, Story>() {
 
     override fun getRefreshKey(state: PagingState<Int, Story>): Int? {

@@ -16,7 +16,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -40,19 +43,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    companion object {
-        var selectedImageUri: Uri? = null
-        const val CHANNEL_ID = "visti_channel"
-        const val CHANNEL_NAME = "visti"
-    }
-
-    val mainViewModel: MainViewModel by viewModels()
-
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createNotificationChannel(CHANNEL_ID, CHANNEL_NAME)
+        createNotificationChannel()
 
         NaverIdLoginSDK.initialize(
             this@MainActivity,
@@ -77,15 +73,6 @@ class MainActivity : ComponentActivity() {
                     val mainNavController = rememberNavController()
                     val mainState = mainViewModel.accessToken.collectAsState()
                     when {
-//                        mainState.value.isLoading -> {
-//                            Box(
-//                                modifier = Modifier.fillMaxSize(),
-//                                contentAlignment = Alignment.Center
-//                            ) {
-//                                CircularProgressIndicator()
-//                            }
-//                        }
-
                         mainState.value.accessToken.isBlank() || mainState.value.accessToken == "accessToken" -> {
                             MainScreen(
                                 mainNavController,
@@ -112,11 +99,9 @@ class MainActivity : ComponentActivity() {
         ) {
             // 권한이 허용되지 않은 경우 권한 요청
             ActivityCompat.requestPermissions(
-                this, arrayOf<String>(permissionId),
+                this, arrayOf(permissionId),
                 REQUEST_PERMISSION
             )
-        } else {
-
         }
     }
 
@@ -129,15 +114,21 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    private fun createNotificationChannel(id: String, name: String) {
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(id, name, importance)
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
 
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    companion object {
+        var selectedImageUri: Uri? = null
+        const val CHANNEL_ID = "visti_channel"
+        const val CHANNEL_NAME = "visti"
     }
 }
 
@@ -147,7 +138,7 @@ fun MainScreen(
     mainNavController: NavHostController,
     context: Context,
     route: String,
-    pickImageLauncher: ActivityResultLauncher<Intent>
+    pickImageLauncher: ActivityResultLauncher<Intent>,
 ) {
 
     val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
@@ -163,8 +154,8 @@ fun MainScreen(
             }
         },
     ) {
+        Box(modifier = Modifier.padding(it))
         MainNavHost(
-            it,
             navController = mainNavController,
             context = context,
             route,

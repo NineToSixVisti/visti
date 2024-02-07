@@ -22,8 +22,6 @@ class ProfileViewModel @Inject constructor(
     repository: MemberInformationRepository,
 ) : ViewModel() {
 
-    private var myStoryLink = "https://visti-story.com/storydetail/"
-
     private val _memberInformation = mutableStateOf(ProfileState())
     val memberInformation: State<ProfileState> = _memberInformation
 
@@ -55,22 +53,5 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    var webViewState = WebViewState(
-        WebContent.Url(
-            url = "",
-            additionalHttpHeaders = emptyMap()
-        )
-    )
-
-    fun setWebViewState(id: String) {
-        Log.e("setWebView", id)
-        webViewState =  WebViewState(
-            WebContent.Url(
-                url = "$myStoryLink$id",
-                additionalHttpHeaders = emptyMap()
-            )
-        )
     }
 }

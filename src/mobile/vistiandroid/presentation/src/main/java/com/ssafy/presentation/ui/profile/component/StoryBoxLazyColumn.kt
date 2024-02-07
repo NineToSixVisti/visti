@@ -20,7 +20,7 @@ import com.ssafy.presentation.ui.like.component.LoadingView
 fun StoryBoxLazyColumn(
     boxes: LazyPagingItems<StoryBox>,
     storyBoxCount: String,
-    navController: NavController
+    navController: NavController,
 ) {
     when {
         boxes.loadState.refresh is LoadState.Loading || boxes.loadState.append is LoadState.Loading -> {
@@ -44,15 +44,13 @@ fun StoryBoxLazyColumn(
                 stringResource(R.string.empty_story_box)
             )
         }
-
-        else -> {}
     }
 
     LazyColumn {
         items(boxes.itemCount) { index ->
             val item = boxes[index]
             if (item != null) {
-                StoryBoxItem(item,navController)
+                StoryBoxItem(item, navController)
             }
         }
     }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 
 class AccountUseCase @Inject constructor(
-    private val repository: TokenRepository
+    private val repository: TokenRepository,
 ) {
     operator fun invoke(): Flow<Resource<Unit>> = flow {
         try {

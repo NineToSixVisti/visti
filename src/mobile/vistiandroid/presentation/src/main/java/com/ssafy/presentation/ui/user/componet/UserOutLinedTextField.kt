@@ -21,7 +21,7 @@ fun UserOutLinedTextField(
     hint: String,
     text: String,
     keyboardType: KeyboardType,
-    textState: (String) -> Unit
+    textState: (String) -> Unit,
 ) {
     OutlinedTextField(
         modifier = Modifier

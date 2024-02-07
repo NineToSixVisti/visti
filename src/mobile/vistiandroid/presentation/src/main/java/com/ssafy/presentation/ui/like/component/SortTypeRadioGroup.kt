@@ -28,7 +28,7 @@ import com.ssafy.presentation.ui.theme.SecondaryColor
 @Composable
 fun SortTypeRadioGroup(
     currentSortType: LikeSortType,
-    onSortTypeChanged: (LikeSortType) -> Unit
+    onSortTypeChanged: (LikeSortType) -> Unit,
 ) {
     val iconColor = if (isSystemInDarkTheme()) {
         LightBackgroundColor

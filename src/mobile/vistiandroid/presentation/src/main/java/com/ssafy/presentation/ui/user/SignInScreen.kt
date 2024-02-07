@@ -40,7 +40,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,13 +49,9 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.navercorp.nid.NaverIdLoginSDK
-import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
-import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
-import com.ssafy.presentation.ui.theme.Grey
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -65,14 +60,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val TAG = "SignInScreen"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
     navController: NavController,
     @ApplicationContext context: Context,
-    signInViewModel: SignInViewModel = hiltViewModel()
+    signInViewModel: SignInViewModel = hiltViewModel(),
 
-) {
+    ) {
     val signInScrollState = rememberScrollState()
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -81,13 +77,10 @@ fun SignInScreen(
     var signInEmailTextFieldState by remember { mutableStateOf("") }
     var signInPasswordTextFieldState by remember { mutableStateOf("") }
     val state by signInViewModel.userToken.collectAsState()
-    val name by signInViewModel.memberInformation.collectAsState()
 
     Scaffold(snackbarHost = {
         SnackbarHost(snackbarHostState)
     }) {
-        it
-
         when {
             state.error.isNotBlank() -> {
                 SideEffect {
@@ -116,40 +109,42 @@ fun SignInScreen(
                 signInViewModel.delete()
             }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(signInScrollState)
-                .padding(20.dp),
-        ) {
-            Image(
+        Box(modifier = Modifier.padding(it)) {
+            Column(
                 modifier = Modifier
-                    .padding(top = 60.dp, bottom = 65.dp)
-                    .height(70.dp)
-                    .fillMaxWidth(),
-                alignment = Alignment.Center,
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = stringResource(R.string.log_in_logo_description),
-                contentScale = ContentScale.FillHeight,
-            )
-            Text(
-                text = stringResource(R.string.email),
-                modifier = Modifier.padding(bottom = 5.dp)
-            )
-
-            UserOutLinedTextField(
-                "이메일을 입력하세요",
-                signInEmailTextFieldState,
-                KeyboardType.Email
+                    .fillMaxSize()
+                    .verticalScroll(signInScrollState)
+                    .padding(20.dp),
             ) {
-                signInEmailTextFieldState = it
-            }
+                Image(
+                    modifier = Modifier
+                        .padding(top = 60.dp, bottom = 65.dp)
+                        .height(70.dp)
+                        .fillMaxWidth(),
+                    alignment = Alignment.Center,
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = stringResource(R.string.log_in_logo_description),
+                    contentScale = ContentScale.FillHeight,
+                )
+                Text(
+                    text = stringResource(R.string.email),
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
 
-            Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+                UserOutLinedTextField(
+                    "이메일을 입력하세요",
+                    signInEmailTextFieldState,
+                    KeyboardType.Email
+                ) { email ->
+                    signInEmailTextFieldState = email
+                }
 
-            PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
-                signInPasswordTextFieldState = it
-            }
+                Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+
+                PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
+                    signInPasswordTextFieldState = it
+                }
+                //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //            Row(
 //                horizontalArrangement = Arrangement.SpaceBetween,
 //                modifier = Modifier
@@ -184,74 +179,75 @@ fun SignInScreen(
 //                }
 //            }
 
-            Box(modifier = Modifier.padding(15.dp))
-            SignInButton(
-                "비스티 로그인",
-                PrimaryColor,
-                Color.White,
-                R.drawable.logo_white,
-                20.dp
-            ) {
-                if (signInEmailTextFieldState.isBlank() || signInPasswordTextFieldState.isBlank()) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        snackbarHostState.showSnackbar("아이디 비밀번호 입력 값을 모두 기입하세요.")
-                    }
-                } else {
-                    signInViewModel.signIn(
-                        signInEmailTextFieldState,
-                        signInPasswordTextFieldState
-                    )
-                }
-            }
-            Box(modifier = Modifier.padding(5.dp))
-            SignInButton(
-                "카카오 로그인",
-                Color(0xFFFDDC3F),
-                Color.Black,
-                R.drawable.kakao,
-                30.dp
-            ) {
-
-                val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                    if (error != null) {
-                        Log.e(TAG, "카카오계정으로 로그인 실패1", error)
-
-                    } else if (token != null) {
-                        Log.i(TAG, "카카오계정으로 로그인 성공1 ${token.accessToken}")
-                        signInViewModel.socialSignIn("kakao", token.accessToken)
+                Box(modifier = Modifier.padding(15.dp))
+                SignInButton(
+                    "비스티 로그인",
+                    PrimaryColor,
+                    Color.White,
+                    R.drawable.logo_white,
+                    20.dp
+                ) {
+                    if (signInEmailTextFieldState.isBlank() || signInPasswordTextFieldState.isBlank()) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            snackbarHostState.showSnackbar("아이디 비밀번호 입력 값을 모두 기입하세요.")
+                        }
+                    } else {
+                        signInViewModel.signIn(
+                            signInEmailTextFieldState,
+                            signInPasswordTextFieldState
+                        )
                     }
                 }
+                Box(modifier = Modifier.padding(5.dp))
+                SignInButton(
+                    "카카오 로그인",
+                    Color(0xFFFDDC3F),
+                    Color.Black,
+                    R.drawable.kakao,
+                    30.dp
+                ) {
 
-// 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                    UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                    val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                         if (error != null) {
-                            Log.e(TAG, "카카오톡으로 로그인 실패2", error)
+                            Log.e(TAG, "카카오계정으로 로그인 실패1", error)
 
-                            // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-                            // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                return@loginWithKakaoTalk
-                            }
-
-                            // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                            UserApiClient.instance.loginWithKakaoAccount(
-                                context,
-                                callback = callback
-                            )
                         } else if (token != null) {
-                            Log.i(TAG, "카카오톡으로 로그인 성공2 ${token.accessToken}")
+                            Log.i(TAG, "카카오계정으로 로그인 성공1 ${token.accessToken}")
                             signInViewModel.socialSignIn("kakao", token.accessToken)
                         }
                     }
-                } else {
-                    UserApiClient.instance.loginWithKakaoAccount(
-                        context,
-                        callback = callback
-                    )
+
+// 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+                    if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                            if (error != null) {
+                                Log.e(TAG, "카카오톡으로 로그인 실패2", error)
+
+                                // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                                // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                    return@loginWithKakaoTalk
+                                }
+
+                                // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                                UserApiClient.instance.loginWithKakaoAccount(
+                                    context,
+                                    callback = callback
+                                )
+                            } else if (token != null) {
+                                Log.i(TAG, "카카오톡으로 로그인 성공2 ${token.accessToken}")
+                                signInViewModel.socialSignIn("kakao", token.accessToken)
+                            }
+                        }
+                    } else {
+                        UserApiClient.instance.loginWithKakaoAccount(
+                            context,
+                            callback = callback
+                        )
+                    }
                 }
-            }
-            Box(modifier = Modifier.padding(5.dp))
+                Box(modifier = Modifier.padding(5.dp))
+                //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //            SignInButton(
 //                "네이버 로그인",
 //                Color(0xFF03C75A),
@@ -281,6 +277,7 @@ fun SignInScreen(
 //                }
 //                NaverIdLoginSDK.authenticate(context, oauthLoginCallback)
 //            }
+            }
         }
     }
 }
@@ -293,7 +290,7 @@ fun SignInButton(
     textColor: Color,
     imageId: Int,
     imageSize: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier

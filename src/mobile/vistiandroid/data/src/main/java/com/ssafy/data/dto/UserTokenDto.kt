@@ -3,7 +3,7 @@ package com.ssafy.data.dto
 data class UserTokenResponse(
     val detail: UserTokenDto,
     val message: String,
-    val statusCode: Int
+    val statusCode: Int,
 )
 
 data class UserTokenDto(
@@ -11,10 +11,10 @@ data class UserTokenDto(
     val accessTokenExpireTime: String,
     val grantType: String,
     val refreshToken: String,
-    val refreshTokenExpireTime: String
+    val refreshTokenExpireTime: String,
 )
 
 data class UserBodyDto(
     val email: String,
-    val password: String
+    val password: String,
 )

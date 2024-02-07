@@ -4,9 +4,8 @@ import com.google.gson.annotations.SerializedName
 import com.ssafy.domain.model.Story
 import com.ssafy.domain.model.StoryBoxList
 
-
 data class StoryResponse(
-    val message: String, val status: String, val detail: StoryListDto
+    val message: String, val status: String, val detail: StoryListDto,
 )
 
 data class StoryDto(
@@ -18,7 +17,7 @@ data class StoryDto(
     @SerializedName("blind") val blind: Boolean = false,
     @SerializedName("createdAt") val createdAt: String = "",
     @SerializedName("finishAt") val finishAt: String = "",
-    @SerializedName("like") val like: Boolean = false
+    @SerializedName("like") val like: Boolean = false,
 )
 
 data class StoryListDto(
@@ -32,11 +31,11 @@ data class StoryListDto(
     @SerializedName("sort") val sort: SortDto = SortDto(),
     @SerializedName("first") val first: Boolean = false,
     @SerializedName("numberOfElements") val numberOfElements: Int = 0,
-    @SerializedName("empty") val empty: Boolean = true
+    @SerializedName("empty") val empty: Boolean = true,
 )
 
 data class StoryBoxResponse(
-    val message: String, val status: String, val detail: StoryBoxList
+    val message: String, val status: String, val detail: StoryBoxList,
 )
 
 data class StoryBoxDto(
@@ -46,7 +45,7 @@ data class StoryBoxDto(
     @SerializedName("name") val name: String = "",
     @SerializedName("createdAt") val createdAt: String = "",
     @SerializedName("finishedAt") val finishedAt: String = "",
-    @SerializedName("blind") val blind: Boolean = false
+    @SerializedName("blind") val blind: Boolean = false,
 )
 
 data class StoryBoxListDto(
@@ -60,13 +59,13 @@ data class StoryBoxListDto(
     @SerializedName("sort") val sort: SortDto = SortDto(),
     @SerializedName("first") val first: Boolean = false,
     @SerializedName("numberOfElements") val numberOfElements: Int = 0,
-    @SerializedName("empty") val empty: Boolean = true
+    @SerializedName("empty") val empty: Boolean = true,
 )
 
 data class SortDto(
     @SerializedName("empty") val empty: Boolean = false,
     @SerializedName("sorted") val sorted: Boolean = false,
-    @SerializedName("unsorted") val unsorted: Boolean = false
+    @SerializedName("unsorted") val unsorted: Boolean = false,
 )
 
 data class PageableDto(
@@ -75,5 +74,5 @@ data class PageableDto(
     @SerializedName("pageNumber") val pageNumber: Int = 0,
     @SerializedName("pageSize") val pageSize: Int = 5,
     @SerializedName("paged") val paged: Boolean = true,
-    @SerializedName("unpaged") val unpaged: Boolean = false
+    @SerializedName("unpaged") val unPaged: Boolean = false,
 )

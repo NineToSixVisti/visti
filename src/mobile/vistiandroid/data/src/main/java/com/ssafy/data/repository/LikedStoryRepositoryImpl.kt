@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LikedStoryRepositoryImpl @Inject constructor(
-    private val api: VistiApi
+    private val api: VistiApi,
 ) : LikedStoryRepository {
     override fun getLikedStories(sortingOption: LikeSortType): Flow<PagingData<Story>> {
         return Pager(

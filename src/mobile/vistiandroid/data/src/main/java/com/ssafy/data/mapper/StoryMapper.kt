@@ -13,14 +13,15 @@ import com.ssafy.domain.model.StoryBox
 import com.ssafy.domain.model.StoryBoxList
 import com.ssafy.domain.model.StoryList
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 fun StoryBoxDto.toDomain(): StoryBox {
     val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    val create = dateTimeFormat.parse(createdAt)
-    val finish = dateTimeFormat.parse(finishedAt)
 
-    // SimpleDateFormat을 사용하여 원하는 형식으로 날짜 포맷팅
+    val create: Date = requireNotNull(dateTimeFormat.parse(createdAt)) { "Unable to parse createdAt" }
+    val finish: Date = requireNotNull(dateTimeFormat.parse(finishedAt)) { "Unable to parse finishedAt" }
+
     val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
 
     return StoryBox(
@@ -36,6 +37,7 @@ fun StoryBoxDto.toDomain(): StoryBox {
 
 fun StoryBoxListDto.toDomain(): StoryBoxList {
     val contentList = content.map { it.toDomain() }
+
     return StoryBoxList(
         contentList,
         pageable.toDomain(),
@@ -56,7 +58,7 @@ fun SortDto.toDomain(): Sort {
 }
 
 fun PageableDto.toDomain(): Pageable {
-    return Pageable(sort.toDomain(), offset, pageNumber, pageSize, paged, unpaged)
+    return Pageable(sort.toDomain(), offset, pageNumber, pageSize, paged, unPaged)
 }
 
 fun StoryDto.toDomain(): Story {

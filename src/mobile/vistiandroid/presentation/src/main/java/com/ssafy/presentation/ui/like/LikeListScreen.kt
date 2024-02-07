@@ -87,7 +87,10 @@ fun LikeListScreen(navController: NavController) {
 }
 
 @Composable
-fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
+fun DisplayLikedStoriesByDescend(
+    viewModel: LikeListViewModel = hiltViewModel(),
+    navController: NavController,
+) {
     val likedStories = viewModel.likedStoriesByDescend
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -147,7 +150,10 @@ fun DisplayLikedStoriesByDescend(viewModel: LikeListViewModel = hiltViewModel(),
 }
 
 @Composable
-fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
+fun DisplayLikedStoriesByAscend(
+    viewModel: LikeListViewModel = hiltViewModel(),
+    navController: NavController,
+) {
     val likedStories = viewModel.likedStoriesByAscend
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -207,7 +213,10 @@ fun DisplayLikedStoriesByAscend(viewModel: LikeListViewModel = hiltViewModel(), 
 }
 
 @Composable
-fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel(), navController: NavController) {
+fun DisplayLikedStoriesByRandom(
+    viewModel: LikeListViewModel = hiltViewModel(),
+    navController: NavController,
+) {
     val likedStories = viewModel.likedStoriesByRandom
     val lazyLikedStories = likedStories.collectAsLazyPagingItems()
 
@@ -247,7 +256,7 @@ fun DisplayLikedStoriesByRandom(viewModel: LikeListViewModel = hiltViewModel(), 
     }
 }
 
-fun isContainsDateGroup(gridGroups: MutableList<GridGroup>, storyDate: String): GridGroup? {
+fun isContainsDateGroup(gridGroups: List<GridGroup>, storyDate: String): GridGroup? {
     return gridGroups.find { it.header == storyDate }
 }
 
@@ -267,7 +276,7 @@ fun formatStoryDate(date: Date?): String {
 
 fun updateGridGroups(
     lazyLikedStories: LazyPagingItems<Story>,
-    gridGroups: MutableList<GridGroup>
+    gridGroups: MutableList<GridGroup>,
 ) {
     for (index in 0 until lazyLikedStories.itemCount) {
         val story = lazyLikedStories[index] ?: return

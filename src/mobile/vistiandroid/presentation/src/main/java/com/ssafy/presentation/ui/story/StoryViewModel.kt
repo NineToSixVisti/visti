@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.story
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
@@ -21,16 +20,16 @@ import javax.inject.Inject
 @HiltViewModel
 class StoryViewModel @Inject constructor(
     private val storyUseCase: StoryUseCase,
-    private val storyBoxUseCase: StoryBoxUseCase
+    private val storyBoxUseCase: StoryBoxUseCase,
 ) : ViewModel() {
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
     init {
         getToken()
     }
 
-    fun enterStoryBox(storyBoxId: String) {
+    private fun enterStoryBox(storyBoxId: String) {
         viewModelScope.launch {
             storyBoxUseCase.enterStoryBox(storyBoxId)
         }
@@ -72,6 +71,6 @@ class StoryViewModel @Inject constructor(
             )
         )
     }
-
+    //TODO 이거 쓰는건가요?
     val webViewNavigator = WebViewNavigator(viewModelScope)
 }
