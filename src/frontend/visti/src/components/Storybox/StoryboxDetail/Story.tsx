@@ -26,15 +26,19 @@ interface StoryList {
 
 interface StoryProps {
   id ?: string
+  finishedAt: string;
 };
 
-const Story : React.FC<StoryProps> = ({id}) => {
+const Story : React.FC<StoryProps> = ({id, finishedAt}) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [storyList, setStoryList] = useState<StoryList[]>([]);
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver | null>(null);  
+  const finishedAtDate = new Date(finishedAt);
+  const now = new Date();
+  const isFinished = finishedAtDate < now;
 
   const lastBoxElementRef = useCallback(
     (node : HTMLDivElement | null) => {
@@ -100,7 +104,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
             <Empty />
             <p>스토리가 하나도 없어요</p>
             <p>추억을 저장해 볼까요?</p>
-            <CreatePostButton/>
+            {!isFinished && <CreatePostButton />}
           </EmptyWrap>
         ) : (
           <StoryWrap>
@@ -121,7 +125,7 @@ const Story : React.FC<StoryProps> = ({id}) => {
                 </StoryDiv>
               ))
             }
-            <CreatePostButton/>
+            {!isFinished && <CreatePostButton />}
           </StoryWrap>
         )
       }
