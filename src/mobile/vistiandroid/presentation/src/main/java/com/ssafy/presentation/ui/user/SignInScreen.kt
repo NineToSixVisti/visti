@@ -52,6 +52,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.ssafy.presentation.MainNav
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.common.PasswordOutLinedTextField
+import com.ssafy.presentation.ui.theme.Kakao
 import com.ssafy.presentation.ui.theme.PrimaryColor
 import com.ssafy.presentation.ui.user.componet.UserOutLinedTextField
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -85,7 +86,7 @@ fun SignInScreen(
             state.error.isNotBlank() -> {
                 SideEffect {
                     CoroutineScope(Dispatchers.Main).launch {
-                        snackbarHostState.showSnackbar("로그인에 실패하였습니다.")
+                        snackbarHostState.showSnackbar(context.getString(R.string.fail_login_message))
                     }
                     signInViewModel.delete()
                 }
@@ -141,7 +142,10 @@ fun SignInScreen(
 
                 Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
 
-                PasswordOutLinedTextField("비밀번호를 입력하세요", signInPasswordTextFieldState) {
+                PasswordOutLinedTextField(
+                    stringResource(R.string.input_password_message),
+                    signInPasswordTextFieldState
+                ) {
                     signInPasswordTextFieldState = it
                 }
                 //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
@@ -181,7 +185,7 @@ fun SignInScreen(
 
                 Box(modifier = Modifier.padding(15.dp))
                 SignInButton(
-                    "비스티 로그인",
+                    stringResource(R.string.visti_login),
                     PrimaryColor,
                     Color.White,
                     R.drawable.logo_white,
@@ -189,7 +193,7 @@ fun SignInScreen(
                 ) {
                     if (signInEmailTextFieldState.isBlank() || signInPasswordTextFieldState.isBlank()) {
                         CoroutineScope(Dispatchers.Main).launch {
-                            snackbarHostState.showSnackbar("아이디 비밀번호 입력 값을 모두 기입하세요.")
+                            snackbarHostState.showSnackbar(context.getString(R.string.error_input_id_password_message))
                         }
                     } else {
                         signInViewModel.signIn(
@@ -200,8 +204,8 @@ fun SignInScreen(
                 }
                 Box(modifier = Modifier.padding(5.dp))
                 SignInButton(
-                    "카카오 로그인",
-                    Color(0xFFFDDC3F),
+                    stringResource(R.string.kakao_login),
+                    Kakao,
                     Color.Black,
                     R.drawable.kakao,
                     30.dp
