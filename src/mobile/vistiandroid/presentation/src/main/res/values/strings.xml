@@ -15,6 +15,19 @@
     <string name="error_input_id_password_message">아이디 비밀번호 입력 값을 모두 기입하세요.</string>
     <string name="fail_login_message">로그인에 실패하였습니다.</string>
     <string name="password">비밀번호</string>
-    <string name="data_image_jpeg_base64">data:image/jpeg;base64,%1$s</string>
-    <string name="android">Android</string>
+    <string name="information">정보</string>
+    <string name="logout_message">계정 로그아웃</string>
+    <string name="reask_logout_message">로그아웃하시겠습니까?</string>
+    <string name="reask_leave_user_message">회원 탈퇴하시겠습니까?</string>
+    <string name="subscribe">구독</string>
+    <string name="notification">알림</string>
+    <string name="all_notification_title">모든 알림</string>
+    <string name="all_notification_content">모든 알림이 전송됩니다.</string>
+    <string name="story_notification_title">스토리 알림</string>
+    <string name="story_notification_content">스토리 알림이 전송됩니다.</string>
+    <string name="story_box_notification_title">스토리 박스 알림</string>
+    <string name="story_box_notification_content">스토리 박스 알림이 전송됩니다.</string>
+    <string name="personal_information_policy">개인정보처리방침</string>
+    <string name="opnesource_library">오픈소스 라이브러리</string>
+
 </resources>

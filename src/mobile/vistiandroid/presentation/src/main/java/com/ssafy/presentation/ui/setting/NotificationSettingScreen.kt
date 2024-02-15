@@ -9,8 +9,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.NotificationSwitch
 
@@ -26,7 +28,7 @@ fun NotificationSettingScreen(
 
     Scaffold(
         topBar = {
-            BackToolbar(text = "알림") {
+            BackToolbar(text = stringResource(R.string.notification)) {
                 navController.popBackStack()
             }
         }
@@ -36,13 +38,24 @@ fun NotificationSettingScreen(
                 .padding(innerPadding)
                 .padding(start = 8.dp, end = 8.dp)
         ) {
-            NotificationSwitch("모든 알림", "모든 알림이 전송됩니다.", allNotification) {
+            NotificationSwitch(
+                stringResource(R.string.all_notification_title),
+                stringResource(R.string.all_notification_content), allNotification
+            ) {
                 allNotification = it
             }
-            NotificationSwitch("스토리 알림", "스토리 알림이 전송됩니다.", storyNotification) {
+            NotificationSwitch(
+                stringResource(R.string.story_notification_title),
+                stringResource(R.string.story_notification_content), storyNotification
+            ) {
                 storyNotification = it
             }
-            NotificationSwitch("스토리 박스 알림", "스토리 박스 알림이 전송됩니다.", storyBoxNotification) {
+            NotificationSwitch(
+                stringResource(R.string.story_box_notification_title),
+                stringResource(
+                    R.string.story_box_notification_content
+                ), storyBoxNotification
+            ) {
                 storyBoxNotification = it
             }
         }

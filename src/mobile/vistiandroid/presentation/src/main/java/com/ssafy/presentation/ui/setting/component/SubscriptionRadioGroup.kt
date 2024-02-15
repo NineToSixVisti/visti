@@ -41,14 +41,13 @@ fun SubscriptionRadioGroup() {
     } else {
         DarkBackgroundColor
     }
-
     var selectedSubscriptionOption by remember {
         mutableStateOf(SubscriptionType.NORMAL)
     }
     val onSelectionChange = { type: SubscriptionType ->
         selectedSubscriptionOption = type
     }
-
+    //TODO 구독과 nft는 없어진 기능이기 때문에 굳이 하드코딩 제거 안함
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,

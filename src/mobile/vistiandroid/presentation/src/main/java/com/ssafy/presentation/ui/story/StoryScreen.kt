@@ -18,7 +18,6 @@ import com.google.accompanist.web.AccompanistWebChromeClient
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.ssafy.presentation.MainActivity.Companion.selectedImageUri
-import com.ssafy.presentation.R
 import java.io.ByteArrayOutputStream
 
 
@@ -88,16 +87,14 @@ fun StoryScreen(
                                                 ImageDecoder.decodeBitmap(source)
                                             }
                                         }
-
                                         if (bitmap != null) {
                                             val byteArray = bitmapToByteArray(bitmap)
-                                            return context.getString(
-                                                R.string.data_image_jpeg_base64,
+                                            return "data:image/jpeg;base64,${
                                                 Base64.encodeToString(
                                                     byteArray,
                                                     Base64.DEFAULT
                                                 )
-                                            )
+                                            }"
                                         }
                                     }
 
@@ -105,7 +102,7 @@ fun StoryScreen(
                                 }
 
                             },
-                            context.getString(R.string.android)
+                            "Android"
                         )
                     }
                 }

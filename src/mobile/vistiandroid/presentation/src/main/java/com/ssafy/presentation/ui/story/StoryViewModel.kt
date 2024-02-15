@@ -7,6 +7,7 @@ import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.story.StoryUseCase
 import com.ssafy.domain.usecase.storybox.StoryBoxUseCase
+import com.ssafy.presentation.ui.common.Network
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,14 +60,14 @@ class StoryViewModel @Inject constructor(
             enterStoryBox(id)
             return WebViewState(
                 WebContent.Url(
-                    url = "https://visti-story.com/storybox/detail/$id",
+                    url = "${Network.vistiStoryUrl}storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
         }
         return WebViewState(
             WebContent.Url(
-                url = "https://visti-story.com/storybox",
+                url = "${Network.vistiStoryUrl}storybox",
                 additionalHttpHeaders = emptyMap()
             )
         )

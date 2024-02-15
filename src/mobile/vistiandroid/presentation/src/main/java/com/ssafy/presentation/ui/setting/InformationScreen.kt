@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.DetailSettingButton
 import com.ssafy.presentation.ui.theme.Black
@@ -19,7 +21,7 @@ fun InformationScreen(
 ) {
     Scaffold(
         topBar = {
-            BackToolbar(text = "정보") {
+            BackToolbar(text = stringResource(R.string.information)) {
                 navController.popBackStack()
             }
         }
@@ -35,10 +37,10 @@ fun InformationScreen(
                 Black
             }
 
-            DetailSettingButton("개인정보처리방침", colorState) {
+            DetailSettingButton(stringResource(R.string.personal_information_policy), colorState) {
 
             }
-            DetailSettingButton("오픈소스 라이브러리", colorState) {
+            DetailSettingButton(stringResource(R.string.opnesource_library), colorState) {
 
             }
         }
