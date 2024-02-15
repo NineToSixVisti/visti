@@ -23,11 +23,10 @@ class SignInViewModel @Inject constructor(
     private val getMemberInformUseCase: GetMemberInformUseCase,
 ) : ViewModel() {
 
-    private val _userToken = MutableStateFlow<TokenState>(TokenState())
+    private val _userToken = MutableStateFlow(TokenState())
     val userToken: StateFlow<TokenState> = _userToken.asStateFlow()
 
     private val _memberInformation = MutableStateFlow(ProfileState())
-    val memberInformation: StateFlow<ProfileState> = _memberInformation.asStateFlow()
 
     init {
         getMemberInformation()

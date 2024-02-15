@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Log
 import android.webkit.JavascriptInterface
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import com.google.accompanist.web.AccompanistWebChromeClient
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.ssafy.presentation.MainActivity.Companion.selectedImageUri
+import com.ssafy.presentation.R
 import java.io.ByteArrayOutputStream
 
 
@@ -75,7 +75,7 @@ fun StoryScreen(
                                 fun getSelectedImage(): String? {
                                     if (selectedImageUri != null) {
                                         val bitmap = selectedImageUri?.let {
-                                            if (Build.VERSION.SDK_INT < 28) {
+                                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                                                 MediaStore.Images.Media.getBitmap(
                                                     context.contentResolver,
                                                     it
@@ -91,12 +91,13 @@ fun StoryScreen(
 
                                         if (bitmap != null) {
                                             val byteArray = bitmapToByteArray(bitmap)
-                                            return "data:image/jpeg;base64,${
+                                            return context.getString(
+                                                R.string.data_image_jpeg_base64,
                                                 Base64.encodeToString(
                                                     byteArray,
                                                     Base64.DEFAULT
                                                 )
-                                            }"
+                                            )
                                         }
                                     }
 
@@ -104,7 +105,7 @@ fun StoryScreen(
                                 }
 
                             },
-                            "Android"
+                            context.getString(R.string.android)
                         )
                     }
                 }

@@ -14,4 +14,7 @@
     <string name="kakao_login">카카오 로그인</string>
     <string name="error_input_id_password_message">아이디 비밀번호 입력 값을 모두 기입하세요.</string>
     <string name="fail_login_message">로그인에 실패하였습니다.</string>
+    <string name="password">비밀번호</string>
+    <string name="data_image_jpeg_base64">data:image/jpeg;base64,%1$s</string>
+    <string name="android">Android</string>
 </resources>

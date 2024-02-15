@@ -133,14 +133,14 @@ fun SignInScreen(
                 )
 
                 UserOutLinedTextField(
-                    "이메일을 입력하세요",
+                    stringResource(R.string.input_email_message),
                     signInEmailTextFieldState,
                     KeyboardType.Email
                 ) { email ->
                     signInEmailTextFieldState = email
                 }
 
-                Text(text = "비밀번호", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+                Text(text = stringResource(R.string.password), modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
 
                 PasswordOutLinedTextField(
                     stringResource(R.string.input_password_message),

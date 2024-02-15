@@ -3,7 +3,6 @@ package com.ssafy.presentation.ui.story
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
-import com.google.accompanist.web.WebViewNavigator
 import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.story.StoryUseCase
@@ -54,6 +53,7 @@ class StoryViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    //TODO 링크 localproperties에 숨겨야할듯?
     fun setWebViewState(id: String): WebViewState {
         if (id.isNotBlank()) {
             enterStoryBox(id)
@@ -71,6 +71,4 @@ class StoryViewModel @Inject constructor(
             )
         )
     }
-    //TODO 이거 쓰는건가요?
-    val webViewNavigator = WebViewNavigator(viewModelScope)
 }
