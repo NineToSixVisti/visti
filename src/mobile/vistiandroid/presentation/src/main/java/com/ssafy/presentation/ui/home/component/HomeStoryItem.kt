@@ -12,9 +12,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ssafy.domain.model.home.HomeStory
+import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.common.VistiImage
 import com.ssafy.presentation.ui.theme.PrimaryColor
@@ -33,7 +35,7 @@ fun HomeStoryItem(homeStory: HomeStory, navController: NavController) {
 
         Box(modifier = Modifier.size(200.dp)) {
 
-            VistiImage(homeStory.mainFilePath, "과거의 기록")
+            VistiImage(homeStory.mainFilePath, stringResource(R.string.past_story))
 
             if (homeStory.like) {
                 Icon(

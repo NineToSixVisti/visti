@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ssafy.presentation.R
 
 @Composable
 fun StatSection(modifier: Modifier = Modifier, storyCount: String, storyBoxCount: String) {
@@ -13,7 +15,7 @@ fun StatSection(modifier: Modifier = Modifier, storyCount: String, storyBoxCount
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier
     ) {
-        ProfileStat(numberText = storyCount, text = "스토리")
-        ProfileStat(numberText = storyBoxCount, text = "스토리 상자")
+        ProfileStat(numberText = storyCount, text = stringResource(R.string.story))
+        ProfileStat(numberText = storyBoxCount, text = stringResource(R.string.story_box))
     }
 }

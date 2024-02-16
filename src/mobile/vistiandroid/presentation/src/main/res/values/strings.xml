@@ -29,5 +29,22 @@
     <string name="story_box_notification_content">스토리 박스 알림이 전송됩니다.</string>
     <string name="personal_information_policy">개인정보처리방침</string>
     <string name="opnesource_library">오픈소스 라이브러리</string>
+    <string name="story">스토리</string>
+    <string name="story_box">스토리 상자</string>
+    <string name="notification_setting">알림 설정</string>
+    <string name="user">계정</string>
+    <string name="progress_story_message">진행중인 기록</string>
+    <string name="not_progress_story_message">진행중인 추억이 없어요.</string>
+    <string name="past_story">과거의 기록</string>
+    <string name="not_save_story_message">저장된 추억이 없어요.</string>
+    <string name="call_user_message">%1$s님</string>
+    <string name="of">의</string>
+    <string name="save_story_message">"보관된 추억은 "</string>
+    <string name="num_save_story_message">개입니다!</string>
+    <string name="multiplication">x</string>
+    <string name="story_famous_message">추억은 삶의 스케치북입니다.</string>
+    <string name="deadline_time_message">마감까지 남은 시간이에요!</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="dialog_complete">확인</string>
 
 </resources>

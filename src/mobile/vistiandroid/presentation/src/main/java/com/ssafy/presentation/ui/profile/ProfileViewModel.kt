@@ -1,12 +1,9 @@
 package com.ssafy.presentation.ui.profile
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.accompanist.web.WebContent
-import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Member
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.repository.MemberInformationRepository

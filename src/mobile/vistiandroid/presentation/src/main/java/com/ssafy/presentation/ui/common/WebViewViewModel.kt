@@ -1,6 +1,5 @@
 package com.ssafy.presentation.ui.common
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
@@ -48,7 +47,6 @@ class WebViewViewModel @Inject constructor(
     }
 
     fun setWebViewState(id: String, mode: String): WebViewState {
-        Log.e("setWebViewState", "$id,$mode")
         return when (mode) {
             "storyBox" -> WebViewState(
                 WebContent.Url(

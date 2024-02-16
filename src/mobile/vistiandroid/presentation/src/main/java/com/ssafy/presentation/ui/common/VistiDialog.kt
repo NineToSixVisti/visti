@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.presentation.R
@@ -75,7 +76,7 @@ fun VistiDialog(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.weight(1f),
                     ) {
-                        Text("취소", color = textColor)
+                        Text(stringResource(R.string.dialog_cancel), color = textColor)
                     }
                     TextButton(
                         onClick = { onConfirmation() },
@@ -83,7 +84,7 @@ fun VistiDialog(
                             .weight(1f)
                             .background(PrimaryColor),
                     ) {
-                        Text("확인", color = White)
+                        Text(stringResource(R.string.dialog_complete), color = White)
                     }
                 }
             }
