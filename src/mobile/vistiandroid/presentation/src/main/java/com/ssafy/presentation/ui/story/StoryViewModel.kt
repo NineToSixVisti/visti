@@ -54,7 +54,6 @@ class StoryViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    //TODO 링크 localproperties에 숨겨야할듯?
     fun setWebViewState(id: String): WebViewState {
         if (id.isNotBlank()) {
             enterStoryBox(id)

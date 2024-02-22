@@ -2,8 +2,8 @@ package com.ssafy.presentation.ui.home
 
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -48,44 +48,38 @@ class HomeViewModel @Inject constructor(
     private val _memberInformation = mutableStateOf(MemberState())
     val memberInformation: State<MemberState> = _memberInformation
 
-    private var countDownTimer: CountDownTimer? = null
+    val timerText = mutableStateOf("")
 
-    var initialTotalTimeInMillis = 10000L
-    var timeLeft = mutableLongStateOf(initialTotalTimeInMillis)
-    val countDownInterval = 1000L // 1 seconds is the lowest
+    private var isTimerRunning = true
 
-    val timerText = mutableStateOf(timeLeft.longValue.timeFormat())
-
-    val isPlaying = mutableStateOf(false)
-
-    private fun startCountDownTimer() = viewModelScope.launch {
-        isPlaying.value = true
-        countDownTimer = object : CountDownTimer(initialTotalTimeInMillis, countDownInterval) {
+    private fun startCountDownTimer(timeDiffInMillis: Long) = viewModelScope.launch {
+        object : CountDownTimer(timeDiffInMillis, DELAY_TIME) {
             override fun onTick(currentTimeLeft: Long) {
-                timerText.value = currentTimeLeft.timeFormat()
-                timeLeft.longValue = currentTimeLeft
+                if (!isTimerRunning) {
+                    timerText.value = currentTimeLeft.timeFormat()
+                }
             }
 
             override fun onFinish() {
-                timerText.value = initialTotalTimeInMillis.timeFormat()
-                isPlaying.value = false
+                timerText.value = timeDiffInMillis.timeFormat()
                 getHomeStoryBox()
             }
         }.start()
-    }
+    }//TODO ui는 정상적으로 보여도 코루틴 잡은 계속 살아있음...
+
 
     private fun startTimer() = viewModelScope.launch {
-        val updateIntervalMillis = 1000L
-        while (true) {
+        while (isTimerRunning) {
             val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             val currentTimeString = sdf.format(Calendar.getInstance().time)
             timerText.value = currentTimeString
             // TODO 만약에 밤 12시가 지나면 다시 호출해야할지도?
             if (currentTimeString == "00:00:00")
                 getHomeStoryBox()
-            delay(updateIntervalMillis)
+            delay(DELAY_TIME)
         }
     }
+
 
     init {
         getHomeStory()
@@ -150,10 +144,11 @@ class HomeViewModel @Inject constructor(
                         val timeDiffInMillis =
                             targetCalendar.timeInMillis - currentCalendar.timeInMillis
 
-                        initialTotalTimeInMillis = timeDiffInMillis
-                        if (initialTotalTimeInMillis > 345600000 || initialTotalTimeInMillis < 0) {//4일
+                        if (timeDiffInMillis > SHOW_TIME || timeDiffInMillis < 0) {
+                            isTimerRunning = true
                             startTimer()
                         } else {
+                            isTimerRunning = false
                             _homeLastStoryBoxState.value =
                                 HomeLastStoryBoxState(
                                     storyBox = HomeLastStoryBox(
@@ -161,9 +156,10 @@ class HomeViewModel @Inject constructor(
                                         name = lastStoryBox.name
                                     )
                                 )
-                            startCountDownTimer()
+                            startCountDownTimer(timeDiffInMillis)
                         }
                     } else {
+                        isTimerRunning = true
                         startTimer()
                     }
                 }
@@ -200,6 +196,11 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    companion object {
+        private const val DELAY_TIME = 1000L
+        private const val SHOW_TIME = 345600000 //4일
     }
 
 }

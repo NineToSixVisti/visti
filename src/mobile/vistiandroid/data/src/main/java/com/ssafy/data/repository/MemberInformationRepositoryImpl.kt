@@ -62,17 +62,18 @@ class MemberInformationRepositoryImpl @Inject constructor(
 
         val currentCalendar = Calendar.getInstance()
         if (response.isNotEmpty()) {
-            val lastStoryBoxDto = response[0]//TODO 하드코딩 고치기
+            val lastStoryBoxDto = response.first()
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val targetCalendar = Calendar.getInstance()
             targetCalendar.time =
                 sdf.parse(lastStoryBoxDto.finishedAt) ?: Calendar.getInstance().time
 
-            var timeDiffInMillis = targetCalendar.timeInMillis - currentCalendar.timeInMillis
-
-            if (timeDiffInMillis < 0) {
-                timeDiffInMillis = 0
-            }
+            val timeDiffInMillis =
+                if (targetCalendar.timeInMillis - currentCalendar.timeInMillis < 0) {
+                    0
+                } else {
+                    targetCalendar.timeInMillis - currentCalendar.timeInMillis
+                }
 
             return HomeLastStoryBox(
                 lastStoryBoxDto.id,

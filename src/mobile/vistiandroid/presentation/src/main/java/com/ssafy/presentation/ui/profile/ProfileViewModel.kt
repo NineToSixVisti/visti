@@ -29,7 +29,6 @@ class ProfileViewModel @Inject constructor(
         getMemberInformation()
     }
 
-
     private fun getMemberInformation() {
         getMemberInformUseCase().onEach { result ->
             when (result) {

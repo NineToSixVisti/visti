@@ -6,6 +6,7 @@ import com.google.accompanist.web.WebContent
 import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.story.StoryUseCase
+import com.ssafy.presentation.ui.common.Network.vistiStoryUrl
 import com.ssafy.presentation.ui.story.StoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +22,6 @@ class WebViewViewModel @Inject constructor(
 ) : ViewModel() {
     private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
-
-    private val vistiUrl = "https://visti-story.com"
 
     init {
         getToken()
@@ -50,21 +49,21 @@ class WebViewViewModel @Inject constructor(
         return when (mode) {
             "storyBox" -> WebViewState(
                 WebContent.Url(
-                    url = "$vistiUrl/storybox/detail/$id",
+                    url = "${vistiStoryUrl}storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             "story" -> WebViewState(
                 WebContent.Url(
-                    url = "$vistiUrl/storydetail/$id",
+                    url = "${vistiStoryUrl}storydetail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             else -> WebViewState(
                 WebContent.Url(
-                    url = "$vistiUrl/storybox",
+                    url = "${vistiStoryUrl}storybox",
                     additionalHttpHeaders = emptyMap()
                 )
             )

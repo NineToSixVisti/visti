@@ -23,6 +23,8 @@ fun WebViewScreen(
                 .padding(innerPadding)
         ) {
             val webViewState = viewModel.setWebViewState(id, mode)
+            val webViewClient = AccompanistWebViewClient()
+            val webChromeClient = AccompanistWebChromeClient()
 
             WebView(
                 state = webViewState,
@@ -51,5 +53,3 @@ fun WebViewScreen(
     }
 }
 
-val webViewClient = AccompanistWebViewClient()
-val webChromeClient = AccompanistWebChromeClient()

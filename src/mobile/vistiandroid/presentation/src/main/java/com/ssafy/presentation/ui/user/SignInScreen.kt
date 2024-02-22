@@ -68,8 +68,7 @@ fun SignInScreen(
     navController: NavController,
     @ApplicationContext context: Context,
     signInViewModel: SignInViewModel = hiltViewModel(),
-
-    ) {
+) {
     val signInScrollState = rememberScrollState()
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -140,7 +139,10 @@ fun SignInScreen(
                     signInEmailTextFieldState = email
                 }
 
-                Text(text = stringResource(R.string.password), modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+                Text(
+                    text = stringResource(R.string.password),
+                    modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
+                )
 
                 PasswordOutLinedTextField(
                     stringResource(R.string.input_password_message),

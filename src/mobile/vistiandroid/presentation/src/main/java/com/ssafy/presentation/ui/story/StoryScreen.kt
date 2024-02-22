@@ -35,6 +35,8 @@ fun StoryScreen(
                 .padding(innerPadding)
         ) {
             val webViewState = viewModel.setWebViewState(id)
+            val webViewClient = AccompanistWebViewClient()
+            val webChromeClient = AccompanistWebChromeClient()
 
             WebView(
                 state = webViewState,
@@ -109,6 +111,7 @@ fun StoryScreen(
             )
         }
     }
+
 }
 
 fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
@@ -116,6 +119,3 @@ fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
     return byteArrayOutputStream.toByteArray()
 }
-
-val webViewClient = AccompanistWebViewClient()
-val webChromeClient = AccompanistWebChromeClient()

@@ -127,8 +127,10 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         var selectedImageUri: Uri? = null
+        //TODO viewmodeol uri을 넣어도 되고, 그냥 activity부터 uri를 파라미터로 넘기는 것도 된다. 그리고 먼가 분기타는게 달라서 기능이 안됏던거일지도?
         const val CHANNEL_ID = "visti_channel"
         const val CHANNEL_NAME = "visti"
+        private const val REQUEST_PERMISSION = 1
     }
 }
 
@@ -140,7 +142,6 @@ fun MainScreen(
     route: String,
     pickImageLauncher: ActivityResultLauncher<Intent>,
 ) {
-
     val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Scaffold(
@@ -163,5 +164,3 @@ fun MainScreen(
         )
     }
 }
-
-private const val REQUEST_PERMISSION = 1
