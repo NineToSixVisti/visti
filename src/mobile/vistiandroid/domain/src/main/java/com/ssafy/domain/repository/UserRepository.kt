@@ -7,4 +7,5 @@ interface UserRepository {
     suspend fun signIn(userBody: UserBody): UserToken
     suspend fun socialSignUp(provider: String, accessToken: String): UserToken
 
+    suspend fun deleteUser(): String
 }
