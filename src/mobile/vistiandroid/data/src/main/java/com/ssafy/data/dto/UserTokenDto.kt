@@ -18,3 +18,9 @@ data class UserBodyDto(
     val email: String,
     val password: String
 )
+
+data class DeleteUserResponse(
+    val detail: String,
+    val message: String,
+    val statusCode: Int
+)

@@ -1,5 +1,6 @@
 package com.ssafy.presentation.ui.setting
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.kakao.sdk.user.UserApiClient
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiDialog
 import com.ssafy.presentation.ui.setting.component.BackToolbar
@@ -49,9 +51,9 @@ fun UserAccountScreen(
             DetailSettingButton("계정 로그아웃", PrimaryColor) {
                 logOutState.value = true
             }
-//            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
-//                signOutState.value = true
-//            }
+            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
+                signOutState.value = true
+            }
 
             val isDarkTheme = isSystemInDarkTheme()
 
@@ -77,7 +79,30 @@ fun UserAccountScreen(
             if (signOutState.value) {
                 VistiDialog(
                     onDismissRequest = { signOutState.value = false },
-                    onConfirmation = { signOutState.value = false },
+                    onConfirmation = {
+                        signOutState.value = false
+
+                        UserApiClient.instance.unlink { error ->
+                            if (error != null) {
+                                // 에러가 발생한 경우 처리
+                                Log.d("ohhuiju", "회원 탈퇴 실패: $error")
+                            } else {
+                                // 회원 탈퇴가 성공한 경우 처리
+                                Log.d("ohhuiju","카카오 소셜 로그인으로 연결된 계정을 회원 탈퇴했습니다.")
+
+                                viewModel.deleteUser()
+
+                                navController.navigate(SignInNav.SignIn.route) {
+                                    popUpTo(navController.graph.id) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+
+                                viewModel.removeToken()
+                            }
+                        }
+                    },
                     "회원 탈퇴하시겠습니까?",
                     isDarkTheme
                 )

@@ -1,5 +1,6 @@
 package com.ssafy.data.remote
 
+import com.ssafy.data.dto.DeleteUserResponse
 import com.ssafy.data.dto.HomeStoryBoxResponse
 import com.ssafy.data.dto.HomeStoryResponse
 import com.ssafy.data.dto.MemberResponse
@@ -55,4 +56,7 @@ interface VistiApi {
 
     @POST("/api/story-box/enter")
     suspend fun enterStoryBox(@Body storyBoxId: String)
+
+    @POST("/api/member/withdraw")
+    suspend fun deleteUser(): DeleteUserResponse
 }

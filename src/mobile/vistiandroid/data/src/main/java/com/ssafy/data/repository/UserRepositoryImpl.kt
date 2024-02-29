@@ -27,4 +27,8 @@ class UserRepositoryImpl @Inject constructor(
         preferenceDataSource.putString(REFRESH_TOKEN, response.refreshToken)
         return response
     }
+
+    override suspend fun deleteUser(): String {
+        return api.deleteUser().detail
+    }
 }
