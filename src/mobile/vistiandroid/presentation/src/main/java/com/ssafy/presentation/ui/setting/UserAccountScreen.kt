@@ -8,15 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ssafy.presentation.R
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiDialog
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.DetailSettingButton
-import com.ssafy.presentation.ui.theme.Black
 import com.ssafy.presentation.ui.theme.PrimaryColor
-import com.ssafy.presentation.ui.theme.White
 
 @Composable
 fun UserAccountScreen(
@@ -26,7 +26,7 @@ fun UserAccountScreen(
     val logOutState = remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
-        BackToolbar(text = "정보") {
+        BackToolbar(text = stringResource(R.string.information)) {
             navController.popBackStack()
         }
     }) { innerPadding ->
@@ -34,21 +34,22 @@ fun UserAccountScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
 
-            val colorState = if (isSystemInDarkTheme()) {
-                White
-            } else {
-                Black
-            }
-
+            //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
+//            val colorState = if (isSystemInDarkTheme()) {
+//                White
+//            } else {
+//                Black
+//            }
 //            DetailSettingButton("프로필 편집", colorState) {
 //
 //            }
 //            DetailSettingButton("비밀번호 변경", colorState) {
 //
 //            }
-            DetailSettingButton("계정 로그아웃", PrimaryColor) {
+            DetailSettingButton(stringResource(R.string.logout_message), PrimaryColor) {
                 logOutState.value = true
             }
+            //TODO 아직 기능이 안만들어져 ui만 있어 주석처리
 //            DetailSettingButton("계정 회원탈퇴", PrimaryColor) {
 //                signOutState.value = true
 //            }
@@ -69,7 +70,7 @@ fun UserAccountScreen(
                             launchSingleTop = true
                         }
                     },
-                    "로그아웃하시겠습니까?",
+                    stringResource(R.string.reask_logout_message),
                     isDarkTheme
                 )
             }
@@ -78,7 +79,7 @@ fun UserAccountScreen(
                 VistiDialog(
                     onDismissRequest = { signOutState.value = false },
                     onConfirmation = { signOutState.value = false },
-                    "회원 탈퇴하시겠습니까?",
+                    stringResource(R.string.reask_leave_user_message),
                     isDarkTheme
                 )
             }

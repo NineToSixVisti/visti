@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 fun DetailSettingButton(
     text: String,
     iconColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     TextButton(onClick = onClick) {
         Row(

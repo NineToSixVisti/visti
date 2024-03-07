@@ -11,19 +11,19 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SignUseCase @Inject constructor(
-    private val repository: UserRepository
+    private val repository: UserRepository,
 ) {
     operator fun invoke(email: String, password: String): Flow<Resource<UserToken>> = flow {
         try {
-            emit(Resource.Loading<UserToken>())
+            emit(Resource.Loading())
             val userTokenResponse = repository.signIn(UserBody(email, password))
-            emit(Resource.Success<UserToken>(userTokenResponse))
+            emit(Resource.Success(userTokenResponse))
         } catch (e: HttpException) {
-            emit(Resource.Error<UserToken>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Error(e.localizedMessage ?: "Error occurred"))
         } catch (e: IOException) {
-            emit(Resource.Error<UserToken>("Failed to connect to server \uD83D\uDE22"))
-        }catch (e: Exception){
-            emit(Resource.Error<UserToken>(e.localizedMessage ?: "Error occurred"))
+            emit(Resource.Error("Failed to connect to server \uD83D\uDE22"))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Error occurred"))
         }
     }
 }

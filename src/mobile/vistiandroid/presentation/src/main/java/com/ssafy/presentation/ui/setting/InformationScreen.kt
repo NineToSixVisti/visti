@@ -1,19 +1,14 @@
 package com.ssafy.presentation.ui.setting
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.ssafy.presentation.ui.profile.ProfileViewModel
+import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.DetailSettingButton
 import com.ssafy.presentation.ui.theme.Black
@@ -26,7 +21,7 @@ fun InformationScreen(
 ) {
     Scaffold(
         topBar = {
-            BackToolbar(text = "정보") {
+            BackToolbar(text = stringResource(R.string.information)) {
                 navController.popBackStack()
             }
         }
@@ -42,10 +37,10 @@ fun InformationScreen(
                 Black
             }
 
-            DetailSettingButton("개인정보처리방침", colorState) {
+            DetailSettingButton(stringResource(R.string.personal_information_policy), colorState) {
 
             }
-            DetailSettingButton("오픈소스 라이브러리", colorState) {
+            DetailSettingButton(stringResource(R.string.opnesource_library), colorState) {
 
             }
         }

@@ -16,25 +16,29 @@ import com.ssafy.presentation.ui.common.StoryItem
 import com.ssafy.presentation.ui.like.component.EmptyItemView
 import com.ssafy.presentation.ui.like.component.ErrorItem
 import com.ssafy.presentation.ui.like.component.LoadingView
-import com.ssafy.presentation.ui.profile.ProfileViewModel
 
 @Composable
-fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, navController: NavController, viewModel: ProfileViewModel) {
+fun StoryLazyVerticalGrid(
+    stories: LazyPagingItems<Story>,
+    storyCount: String,
+    navController: NavController,
+) {
     when {
         stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())
         }
 
-        stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
-            val errorState = stories.loadState.refresh as LoadState.Error
-            val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
-
-            ErrorItem(
-                message = errorMessage,
-                modifier = Modifier.fillMaxWidth(),
-                onClickRetry = { stories.retry() }
-            )
-        }
+        //TODO 이거 머죠? 위에꺼랑 조건이 똑같은데?
+//        stories.loadState.refresh is LoadState.Loading || stories.loadState.append is LoadState.Loading -> {
+//            val errorState = stories.loadState.refresh as LoadState.Error
+//            val errorMessage = errorState.error.localizedMessage ?: "An unknown error occurred"
+//
+//            ErrorItem(
+//                message = errorMessage,
+//                modifier = Modifier.fillMaxWidth(),
+//                onClickRetry = { stories.retry() }
+//            )
+//        }
 
         storyCount == "0" -> {
             EmptyItemView(
@@ -42,8 +46,6 @@ fun StoryLazyVerticalGrid(stories: LazyPagingItems<Story>, storyCount: String, n
                 stringResource(R.string.empty_story)
             )
         }
-
-        else -> {}
     }
 
     LazyVerticalGrid(

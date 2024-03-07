@@ -10,8 +10,9 @@ data class HomeStory(
     val like: Boolean,
     val mainFilePath: String,
     val mainFileType: String,
-    val storyBoxId: Int
+    val storyBoxId: Int,
 )
+
 data class HomeLastStoryBox(
     val id: Int = -1,
     val encryptedId: String = "",
@@ -19,5 +20,5 @@ data class HomeLastStoryBox(
     val name: String = "",
     val createdAt: String = "",
     val finishAt: Long = 0L,
-    val blind: Boolean = false
+    val blind: Boolean = false,
 )

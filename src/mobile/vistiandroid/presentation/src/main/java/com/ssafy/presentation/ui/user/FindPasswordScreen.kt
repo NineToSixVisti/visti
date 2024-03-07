@@ -14,11 +14,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.ssafy.presentation.R
 import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.Grey
@@ -35,7 +37,7 @@ fun FindPasswordScreen(navController: NavHostController) {
             .padding(20.dp)
     ) {
         Text(
-            text = "비밀번호 찾기",
+            text = stringResource(R.string.find_password),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp, bottom = 20.dp),
@@ -43,7 +45,7 @@ fun FindPasswordScreen(navController: NavHostController) {
             fontSize = 28.sp
         )
         Text(
-            text = "임시 비밀번호를 발급하시겠습니까? 버튼을 누르면 발급된 임시 비밀번호가 이메일로 전송됩니다. ",
+            text = stringResource(R.string.bring_temp_password_meesage),
             modifier = Modifier
                 .padding(
                     start = 25.dp, end = 25.dp,
@@ -54,7 +56,7 @@ fun FindPasswordScreen(navController: NavHostController) {
             color = Grey
         )
         Text(
-            text = "이메일",
+            text = stringResource(R.string.email),
             modifier = Modifier
                 .padding(bottom = 10.dp),
             textAlign = TextAlign.Center,
@@ -63,14 +65,14 @@ fun FindPasswordScreen(navController: NavHostController) {
         )
         var joinEmailTextFieldState by remember { mutableStateOf("") }
         UserOutLinedTextField(
-            hint = "이메일을 입력해주세요.",
+            hint = stringResource(R.string.input_email_message),
             text = joinEmailTextFieldState,
             keyboardType = KeyboardType.Email
         ) {
             joinEmailTextFieldState = it
         }
         Box(modifier = Modifier.padding(5.dp))
-        VistiButton("인증하기", PrimaryColor) {
+        VistiButton(stringResource(R.string.certify), PrimaryColor) {
             navController.navigate(route = SignInNav.SignIn.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true

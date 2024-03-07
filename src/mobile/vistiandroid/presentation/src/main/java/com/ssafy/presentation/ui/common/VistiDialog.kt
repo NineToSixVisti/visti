@@ -18,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.theme.Black
 import com.ssafy.presentation.ui.theme.DarkBackgroundColor
@@ -33,9 +33,9 @@ fun VistiDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     text: String,
-    isDarkTheme : Boolean
+    isDarkTheme: Boolean,
 ) {
-    val background = if(!isDarkTheme) LightBackgroundColor else DarkBackgroundColor
+    val background = if (!isDarkTheme) LightBackgroundColor else DarkBackgroundColor
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -43,19 +43,22 @@ fun VistiDialog(
             shape = RoundedCornerShape(8.dp),
         ) {
             Column(
-                modifier = Modifier.background(background)
-                    .fillMaxWidth().padding(top = 24.dp),
+                modifier = Modifier
+                    .background(background)
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val id = if(isDarkTheme) R.drawable.logo_white else R.drawable.logo_red
-                val textColor = if(isDarkTheme) White else Black
+                val id = if (isDarkTheme) R.drawable.logo_white else R.drawable.logo_red
+                val textColor = if (isDarkTheme) White else Black
                 Image(
                     painter = painterResource(id = id),
                     contentDescription = text,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .width(20.dp).height(20.dp),
+                        .width(20.dp)
+                        .height(20.dp),
                     alignment = Alignment.Center
                 )
                 Text(
@@ -73,13 +76,15 @@ fun VistiDialog(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.weight(1f),
                     ) {
-                        Text("취소", color = textColor)
+                        Text(stringResource(R.string.dialog_cancel), color = textColor)
                     }
                     TextButton(
                         onClick = { onConfirmation() },
-                        modifier = Modifier.weight(1f).background(PrimaryColor),
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(PrimaryColor),
                     ) {
-                        Text("확인", color = White)
+                        Text(stringResource(R.string.dialog_complete), color = White)
                     }
                 }
             }

@@ -6,7 +6,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class StoryBoxUseCase @Inject constructor(
-    private val repository: StoryBoxRepository
+    private val repository: StoryBoxRepository,
 ) {
     suspend fun enterStoryBox(storyBoxId: String) {
         try {

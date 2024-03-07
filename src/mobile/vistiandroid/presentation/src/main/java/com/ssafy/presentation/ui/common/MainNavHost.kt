@@ -34,13 +34,11 @@ import com.ssafy.presentation.ui.user.SignInScreen
 
 @Composable
 fun MainNavHost(
-    innerPaddings: PaddingValues,
     navController: NavHostController,
     context: Context,
     route: String,
-    pickImageLauncher: ActivityResultLauncher<Intent>
-
-) {
+    pickImageLauncher: ActivityResultLauncher<Intent>,
+    ) {
     NavHost(
         modifier = Modifier,
         navController = navController,
@@ -64,26 +62,22 @@ fun MainNavHost(
             Log.e("entry", id.toString())
             StoryScreen(id.toString(), pickImageLauncher)
         }
-//        composable(MainNav.Memory.route) {
-//            StoryScreen()
-//        }
+
         composable(MainNav.Like.route) {
             LikeListScreen(navController = navController)
         }
-
 
         composable(MainNav.Profile.route) {
             ProfileScreen(navController = navController)
         }
 
-        settingsGraph(navController, context = context)
+        settingsGraph(navController)
         signupGraph(navController, context = context)
     }
 }
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
-    context: Context
 ) {
     composable(route = "${SettingNav.WebView.route}/{id}/{mode}",
         arguments = listOf(navArgument("id") {
@@ -97,9 +91,7 @@ fun NavGraphBuilder.settingsGraph(
 
         )) { entry ->
         val id = entry.arguments?.getString("id")
-        Log.e("entry", id.toString())
         val mode = entry.arguments?.getString("mode")
-        Log.e("entry", mode.toString())
         WebViewScreen(id.toString(), mode.toString())
     }
 
@@ -123,14 +115,11 @@ fun NavGraphBuilder.settingsGraph(
 
 fun NavGraphBuilder.signupGraph(
     navController: NavHostController,
-    context: Context
+    context: Context,
 ) {
     composable(route = SignInNav.SignIn.route) {
         SignInScreen(navController, context)
     }
-//    composable(route = SignInNav.Main.route) {
-//        MainScreen(mainNavController, context)
-//    }
 
     composable(route = SignInNav.FindPassword.route) {
         FindPasswordScreen(navController = navController)

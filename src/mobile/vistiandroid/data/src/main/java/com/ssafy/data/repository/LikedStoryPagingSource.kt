@@ -9,7 +9,7 @@ import com.ssafy.domain.model.Story
 
 class LikedStoryPagingSource(
     private val api: VistiApi,
-    private val sortType: LikeSortType
+    private val sortType: LikeSortType,
 ) : PagingSource<Int, Story>() {
     override fun getRefreshKey(state: PagingState<Int, Story>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -26,7 +26,8 @@ class LikedStoryPagingSource(
 
         return try {
             val position = params.key ?: 0
-            val response = api.getLikedStories(page = position, NETWORK_STORY_PAGE_SIZE, likeSortType)
+            val response =
+                api.getLikedStories(page = position, NETWORK_STORY_PAGE_SIZE, likeSortType)
 
             LoadResult.Page(
                 data = response.detail.content,

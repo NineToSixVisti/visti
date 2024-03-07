@@ -18,7 +18,7 @@ fun NotificationSwitch(
     title: String,
     content: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
 
     Row(modifier = Modifier.padding(16.dp)) {

@@ -1,7 +1,5 @@
 package com.ssafy.presentation.ui.user
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.domain.model.Member
@@ -22,14 +20,13 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val signUseCase: SignUseCase,
     private val socialUseCase: SocialUseCase,
-    private val getMemberInformUseCase: GetMemberInformUseCase
+    private val getMemberInformUseCase: GetMemberInformUseCase,
 ) : ViewModel() {
 
-    private val _userToken = MutableStateFlow<TokenState>(TokenState())
+    private val _userToken = MutableStateFlow(TokenState())
     val userToken: StateFlow<TokenState> = _userToken.asStateFlow()
 
     private val _memberInformation = MutableStateFlow(ProfileState())
-    val memberInformation: StateFlow<ProfileState> = _memberInformation.asStateFlow()
 
     init {
         getMemberInformation()
@@ -75,6 +72,7 @@ class SignInViewModel @Inject constructor(
 
         }.launchIn(viewModelScope)
     }
+
     fun socialSignIn(provider: String, accessToken: String) {
         socialUseCase(provider, accessToken).onEach { result ->
             when (result) {

@@ -10,10 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.ssafy.presentation.ui.theme.UserCursorColor
 import com.ssafy.presentation.ui.theme.PrimaryColor
+import com.ssafy.presentation.ui.theme.UserUnfocusedBorderColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +22,7 @@ fun UserOutLinedTextField(
     hint: String,
     text: String,
     keyboardType: KeyboardType,
-    textState: (String) -> Unit
+    textState: (String) -> Unit,
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -38,8 +39,8 @@ fun UserOutLinedTextField(
         },
         singleLine = true,
         colors = outlinedTextFieldColors(
-            cursorColor = Color(0x44E03C31),
-            focusedBorderColor = PrimaryColor, unfocusedBorderColor = Color(0xFFEEEEEE)
+            cursorColor = UserCursorColor,
+            focusedBorderColor = PrimaryColor, unfocusedBorderColor = UserUnfocusedBorderColor
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType

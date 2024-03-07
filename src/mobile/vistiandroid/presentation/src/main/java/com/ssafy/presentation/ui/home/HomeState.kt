@@ -7,17 +7,18 @@ import com.ssafy.domain.model.home.HomeStory
 data class HomeStoryState(
     val isLoading: Boolean = false,
     val stories: List<HomeStory> = emptyList(),
-    val error: String = ""
+    val error: String = "",
 )
 
 data class HomeStoryBoxState(
     val isLoading: Boolean = false,
     val storyBoxList: List<StoryBox> = emptyList(),
-    val error: String = ""
+    val error: String = "",
 )
+
 data class HomeLastStoryBoxState(
     val isLoading: Boolean = false,
     val storyBox: HomeLastStoryBox = HomeLastStoryBox(),
-    val error: String = ""
+    val error: String = "",
 )
 

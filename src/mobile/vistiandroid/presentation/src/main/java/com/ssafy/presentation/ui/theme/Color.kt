@@ -25,3 +25,8 @@ val IndicatorBackgroundColor = Color(0x00000000)
 
 val Grey = Color(0xFF9796A1)
 val GreyLight = Color(0xFFC4C4C4)
+
+val Kakao = Color(0xFFFDDC3F)
+
+val UserCursorColor = Color(0x44E03C31)
+val UserUnfocusedBorderColor = Color(0xFFEEEEEE)

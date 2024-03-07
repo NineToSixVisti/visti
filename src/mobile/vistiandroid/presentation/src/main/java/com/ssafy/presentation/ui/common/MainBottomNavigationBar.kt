@@ -45,7 +45,7 @@ import com.ssafy.presentation.ui.theme.White
 @Composable
 fun MainBottomNavigationBar(
     navController: NavHostController,
-    navBackStackEntry: NavBackStackEntry?
+    navBackStackEntry: NavBackStackEntry?,
 ) {
     val bottomNavigationItems = listOf(
         MainNav.Home,
@@ -147,81 +147,4 @@ fun MainBottomNavigationBar(
             }
         }
     }
-//    if (visibleBottomBar) {
-//        NavigationBar(
-//            tonalElevation = 0.dp,
-//            modifier = Modifier
-//                .padding(15.dp)
-//                .navigationBarsPadding()
-//                .graphicsLayer {
-//                    shape = RoundedCornerShape(
-//                        40.dp
-//                    )
-//                    clip = true
-//                    shadowElevation = 10f
-//                },
-//            containerColor = NavigationBackgroundColor
-//        ) {
-//            bottomNavigationItems.forEach { item ->
-//                NavigationBarItem(
-//                    colors = NavigationBarItemDefaults.colors(
-//                        selectedIconColor = SecondaryColor,
-//                        selectedTextColor = SecondaryColor,
-//                        unselectedIconColor = White,
-//                        unselectedTextColor = White,
-//                        indicatorColor = Color.Transparent
-//                    ),
-//                    label = { Text(text = item.title) },
-//                    icon = { Icon(painter = painterResource(id = item.icon), item.route) },
-//                    selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true,
-//                    onClick = {
-//                        navController.navigate(item.route)
-//                    },
-//                    alwaysShowLabel = false
-//                )
-//            }
-//            NavigationBarItem(
-//                colors = NavigationBarItemDefaults.colors(
-//                    selectedIconColor = SecondaryColor,
-//                    selectedTextColor = SecondaryColor,
-//                    unselectedIconColor = White,
-//                    unselectedTextColor = White,
-//                    indicatorColor = Color.Transparent
-//                ),
-//                icon = {
-//                    Icon(
-//                        imageVector = Icons.Default.Close,
-//                        contentDescription = "navigation close"
-//                    )
-//                },
-//                onClick = {
-//                    visibleBottomBar = !visibleBottomBar
-//                },
-//                selected = false
-//            )// 종료 네비게이션 아이템
-//        }
-//    } else {
-//        Column(
-//            horizontalAlignment = Alignment.End,
-//            verticalArrangement = Arrangement.Bottom,
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            FloatingActionButton(
-//                containerColor = PrimaryColor,
-//                contentColor = White,
-//                onClick = { visibleBottomBar = !visibleBottomBar },
-//                modifier = Modifier
-//                    .padding(15.dp)
-//                    .navigationBarsPadding(),
-//                shape = RoundedCornerShape(40.dp)
-//            ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.baseline_category_24),
-//                    contentDescription = "navigation",
-//                    modifier = Modifier.padding(25.dp)
-//                )
-//            }
-//        }
-//    }
-
 }

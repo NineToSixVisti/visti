@@ -9,7 +9,7 @@ import com.ssafy.domain.model.Story
 data class GridGroup(val header: String, val stories: MutableList<Story>)
 
 fun LazyGridScope.header(
-    content: @Composable LazyGridItemScope.() -> Unit
+    content: @Composable LazyGridItemScope.() -> Unit,
 ) {
     item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }

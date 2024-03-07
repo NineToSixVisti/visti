@@ -26,7 +26,7 @@ import com.ssafy.presentation.ui.theme.LightBackgroundColor
 
 @Composable
 fun LoadingView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -40,7 +40,7 @@ fun LoadingView(
 @Composable
 fun EmptyItemView(
     modifier: Modifier = Modifier,
-    message: String
+    message: String,
 ) {
     Column(
         modifier = modifier,
@@ -56,7 +56,8 @@ fun EmptyItemView(
         Icon(
             painter = painterResource(id = R.drawable.ic_smile_sad),
             contentDescription = null,
-            modifier = Modifier.height(100.dp)
+            modifier = Modifier
+                .height(100.dp)
                 .padding(4.dp),
             tint = iconColor
         )
@@ -72,7 +73,8 @@ fun EmptyItemView(
 @Composable
 fun LoadingItem() {
     CircularProgressIndicator(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(16.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
     )
@@ -82,7 +84,7 @@ fun LoadingItem() {
 fun ErrorItem(
     message: String,
     modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    onClickRetry: () -> Unit,
 ) {
     Row(
         modifier = modifier.padding(16.dp),

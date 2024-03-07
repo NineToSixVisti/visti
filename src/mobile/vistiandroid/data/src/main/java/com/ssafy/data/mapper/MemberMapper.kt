@@ -19,7 +19,15 @@ fun MemberSimpleDto.toDomain(): MemberSimple {
 
 fun MemberDto.toDomain(): Member {
     return Member(
-        email, nickname, profilePath, mapMemberTypeToEnum(role), memberType, MAX_STORY - dailyStory.toInt(), status, storyBoxes, stories
+        email,
+        nickname,
+        profilePath,
+        mapMemberTypeToEnum(role),
+        memberType,
+        MAX_STORY - dailyStory.toInt(),
+        status,
+        storyBoxes,
+        stories
     )
 }
 

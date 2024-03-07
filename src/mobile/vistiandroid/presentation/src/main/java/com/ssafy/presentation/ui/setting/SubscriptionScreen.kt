@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ssafy.presentation.R
 import com.ssafy.presentation.ui.profile.ProfileViewModel
 import com.ssafy.presentation.ui.setting.component.BackToolbar
 import com.ssafy.presentation.ui.setting.component.SubscriptionRadioGroup
@@ -19,7 +21,7 @@ import com.ssafy.presentation.ui.setting.component.SubscriptionRadioGroup
 @Composable
 fun SubscriptionScreen(
     navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state = viewModel.memberInformation.value
 
@@ -45,7 +47,7 @@ fun SubscriptionScreen(
         else -> {
             Scaffold(
                 topBar = {
-                    BackToolbar(text = "구독") {
+                    BackToolbar(text = stringResource(R.string.subscribe)) {
                         navController.popBackStack()
                     }
                 }

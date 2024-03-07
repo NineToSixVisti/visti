@@ -39,14 +39,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -80,13 +80,11 @@ fun HomeScreen(
     val homeStorySate = homeViewModel.homeStoryState.value
     val homeStoryBoxState = homeViewModel.homeStoryBoxState.value
     val memberInformation = homeViewModel.memberInformation.value.memberInformation
-    val lifecycleOwner = LocalLifecycleOwner.current
 
     // LifecycleObserver를 사용하여 onResume 이벤트 처리
     val observer = remember {
-        object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-            fun onResume() {
+        object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
                 // onResume 이벤트가 발생할 때마다 데이터 다시 로드
                 homeViewModel.getHomeStory()
                 homeViewModel.getHomeStoryBox()
@@ -106,10 +104,6 @@ fun HomeScreen(
     }
 
     when {
-        homeStorySate.error.isNotBlank() -> {
-
-        }
-
         homeStorySate.isLoading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -182,7 +176,7 @@ fun HomeContent(
     homeStoryList: List<HomeStory>,
     homeStoryBoxList: List<StoryBox>,
     memberInformation: Member,
-    navController: NavController
+    navController: NavController,
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -196,7 +190,7 @@ fun HomeContent(
         HomeContentDes(memberInformation)
     }
     Text(
-        text = "진행중인 기록",
+        text = stringResource(R.string.progress_story_message),
         modifier = Modifier.padding(top = 20.dp, bottom = 5.dp),
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold
@@ -210,7 +204,7 @@ fun HomeContent(
             animationCalendar = R.raw.animation_scan
         )
         Text(
-            text = "진행중인 추억이 없어요.",
+            text = stringResource(R.string.not_progress_story_message),
             modifier = Modifier
                 .padding(top = 20.dp, bottom = 5.dp)
                 .fillMaxWidth(),
@@ -227,7 +221,7 @@ fun HomeContent(
     }
 
     Text(
-        text = "과거의 기록",
+        text = stringResource(R.string.past_story),
         modifier = Modifier.padding(top = 20.dp, bottom = 5.dp),
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold
@@ -241,7 +235,7 @@ fun HomeContent(
             animationCalendar = R.raw.animation_scan
         )
         Text(
-            text = "저장된 추억이 없어요.",
+            text = stringResource(R.string.not_save_story_message),
             modifier = Modifier
                 .padding(top = 20.dp, bottom = 5.dp)
                 .fillMaxWidth(),
@@ -268,11 +262,12 @@ fun HomeContentDes(memberInformation: Member) {
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = "${memberInformation.nickname}님", fontSize = 24.sp,
+                text = stringResource(R.string.call_user_message, memberInformation.nickname),
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "의",
+                text = stringResource(R.string.of),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(end = 20.dp)
@@ -280,7 +275,7 @@ fun HomeContentDes(memberInformation: Member) {
         }
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = "보관된 추억은 ", fontSize = 18.sp,
+                text = stringResource(R.string.save_story_message), fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
             )
             Text(
@@ -290,7 +285,7 @@ fun HomeContentDes(memberInformation: Member) {
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "개입니다!",
+                text = stringResource(R.string.num_save_story_message),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(end = 20.dp)
@@ -320,14 +315,6 @@ fun HomeToolBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-//            Image(
-//                painter = painter,
-//                contentDescription = "StoryBox",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .aspectRatio(3f / 2f)
-//                    .fillMaxSize()
-//            )
             val placedHolder = if (!isSystemInDarkTheme()) {
                 R.drawable.placeholder
             } else {
@@ -352,7 +339,7 @@ fun HomeToolBar(
                     painter = painterResource(id = R.drawable.ic_pencil),
                     contentDescription = "home toolbar pencil"
                 )
-                Text(text = "x", color = Color.White)
+                Text(text = stringResource(R.string.multiplication), color = Color.White)
                 Text(text = memberInformation.dailyStory.toString(), color = Color.White)
             }
         }
@@ -368,14 +355,14 @@ fun HomeToolBar(
 
         if (homeViewModel.homeLastStoryBoxState.value.storyBox.id == -1) {
             Text(
-                text = "추억은 삶의 스케치북입니다.",
+                text = stringResource(R.string.story_famous_message),
                 color = Color.White,
                 fontSize = 25.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         } else {
             Text(
-                text = "마감까지 남은 시간이에요!",
+                text = stringResource(R.string.deadline_time_message),
                 color = Color.White,
                 fontSize = 25.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)

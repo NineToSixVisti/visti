@@ -1,12 +1,12 @@
 package com.ssafy.presentation.ui.common
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
 import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.story.StoryUseCase
+import com.ssafy.presentation.ui.common.Network.vistiStoryUrl
 import com.ssafy.presentation.ui.story.StoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,14 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
     private val storyUseCase: StoryUseCase,
 ) : ViewModel() {
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
-
-    val URL = "https://visti-story.com"
 
     init {
         getToken()
@@ -47,25 +46,24 @@ class WebViewViewModel @Inject constructor(
     }
 
     fun setWebViewState(id: String, mode: String): WebViewState {
-        Log.e("setWebViewState","$id,$mode")
         return when (mode) {
             "storyBox" -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storybox/detail/$id",
+                    url = "${vistiStoryUrl}storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             "story" -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storydetail/$id",
+                    url = "${vistiStoryUrl}storydetail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
 
             else -> WebViewState(
                 WebContent.Url(
-                    url = "$URL/storybox",
+                    url = "${vistiStoryUrl}storybox",
                     additionalHttpHeaders = emptyMap()
                 )
             )

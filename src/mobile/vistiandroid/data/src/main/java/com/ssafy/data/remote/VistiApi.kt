@@ -20,7 +20,7 @@ interface VistiApi {
     @GET("/api/story-box/mystorybox")
     suspend fun getMyStoryBoxes(
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
     ): StoryBoxResponse
 
     @GET("/api/story/mystory")
@@ -30,7 +30,7 @@ interface VistiApi {
     suspend fun getLikedStories(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sorting_option") sortingOption: String
+        @Query("sorting_option") sortingOption: String,
     ): StoryResponse
 
     @POST("/api/member/signin")
@@ -39,7 +39,7 @@ interface VistiApi {
     @GET("/oauth/{provider}")
     suspend fun socialSignIn(
         @Path("provider") provider: String,
-        @Query("accessToken") accessToken: String
+        @Query("accessToken") accessToken: String,
     ): UserTokenResponse
 
     @GET("/api/story/mainpage")

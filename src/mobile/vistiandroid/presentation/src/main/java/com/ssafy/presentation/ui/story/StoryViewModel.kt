@@ -1,14 +1,13 @@
 package com.ssafy.presentation.ui.story
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.web.WebContent
-import com.google.accompanist.web.WebViewNavigator
 import com.google.accompanist.web.WebViewState
 import com.ssafy.domain.model.Resource
 import com.ssafy.domain.usecase.story.StoryUseCase
 import com.ssafy.domain.usecase.storybox.StoryBoxUseCase
+import com.ssafy.presentation.ui.common.Network
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,16 +20,16 @@ import javax.inject.Inject
 @HiltViewModel
 class StoryViewModel @Inject constructor(
     private val storyUseCase: StoryUseCase,
-    private val storyBoxUseCase: StoryBoxUseCase
+    private val storyBoxUseCase: StoryBoxUseCase,
 ) : ViewModel() {
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
     init {
         getToken()
     }
 
-    fun enterStoryBox(storyBoxId: String) {
+    private fun enterStoryBox(storyBoxId: String) {
         viewModelScope.launch {
             storyBoxUseCase.enterStoryBox(storyBoxId)
         }
@@ -60,18 +59,16 @@ class StoryViewModel @Inject constructor(
             enterStoryBox(id)
             return WebViewState(
                 WebContent.Url(
-                    url = "https://visti-story.com/storybox/detail/$id",
+                    url = "${Network.vistiStoryUrl}storybox/detail/$id",
                     additionalHttpHeaders = emptyMap()
                 )
             )
         }
         return WebViewState(
             WebContent.Url(
-                url = "https://visti-story.com/storybox",
+                url = "${Network.vistiStoryUrl}storybox",
                 additionalHttpHeaders = emptyMap()
             )
         )
     }
-
-    val webViewNavigator = WebViewNavigator(viewModelScope)
 }

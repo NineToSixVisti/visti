@@ -22,7 +22,7 @@ class PreferenceDataSource @Inject constructor(
         return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
-    val prefs by lazy { getPreference(context) }
+    private val prefs by lazy { getPreference(context) }
     private val editor by lazy { prefs.edit() }
 
     fun putString(key: String, data: String?) {

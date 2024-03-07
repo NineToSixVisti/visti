@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 fun ProfileStat(
     numberText: String,
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

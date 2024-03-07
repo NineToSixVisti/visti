@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.R
+import com.ssafy.presentation.SignInNav
 import com.ssafy.presentation.ui.common.VistiButton
 import com.ssafy.presentation.ui.theme.PrimaryColor
 

@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Log
 import android.webkit.JavascriptInterface
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
@@ -28,28 +27,16 @@ private const val TAG = "StoryScreen"
 fun StoryScreen(
     id: String,
     pickImageLauncher: ActivityResultLauncher<Intent>,
-    viewModel: StoryViewModel = hiltViewModel()
+    viewModel: StoryViewModel = hiltViewModel(),
 ) {
-//    val accessTokenState = viewModel.accessToken.collectAsState()
-//    Log.e("accessTokenState",accessTokenState.value.accessToken.toString())
-//    if(accessTokenState.value.accessToken=="accessToken")
-//    {
-//        navController.navigate(route = SignInNav.SignIn.route) {
-//            popUpTo(navController.graph.id) {
-//                inclusive = true
-//            }
-//        }
-//
-//    }
-//    else
-//    {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
             val webViewState = viewModel.setWebViewState(id)
-            val webViewNavigator = viewModel.webViewNavigator
+            val webViewClient = AccompanistWebViewClient()
+            val webChromeClient = AccompanistWebChromeClient()
 
             WebView(
                 state = webViewState,
@@ -81,18 +68,15 @@ fun StoryScreen(
                                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                     )
 
-                                    Log.d(TAG, "openGallery: open")
                                     // 결과 처리를 위한 ActivityResultLauncher를 호출하여 갤러리 화면을 엽니다.
                                     pickImageLauncher.launch(intent)
                                 }
 
                                 @JavascriptInterface
                                 fun getSelectedImage(): String? {
-                                    Log.d(TAG, "openGallery: $selectedImageUri")
-
                                     if (selectedImageUri != null) {
                                         val bitmap = selectedImageUri?.let {
-                                            if (Build.VERSION.SDK_INT < 28) {
+                                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                                                 MediaStore.Images.Media.getBitmap(
                                                     context.contentResolver,
                                                     it
@@ -105,7 +89,6 @@ fun StoryScreen(
                                                 ImageDecoder.decodeBitmap(source)
                                             }
                                         }
-
                                         if (bitmap != null) {
                                             val byteArray = bitmapToByteArray(bitmap)
                                             return "data:image/jpeg;base64,${
@@ -128,7 +111,6 @@ fun StoryScreen(
             )
         }
     }
-    //  }
 
 }
 
@@ -137,6 +119,3 @@ fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
     return byteArrayOutputStream.toByteArray()
 }
-
-val webViewClient = AccompanistWebViewClient()
-val webChromeClient = AccompanistWebChromeClient()

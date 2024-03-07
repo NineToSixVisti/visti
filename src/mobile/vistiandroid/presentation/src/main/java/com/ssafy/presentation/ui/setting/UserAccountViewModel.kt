@@ -18,7 +18,7 @@ class UserAccountViewModel @Inject constructor(
     private val accountUseCase: AccountUseCase,
 ) : ViewModel() {
 
-    private val _accessToken = MutableStateFlow<StoryState>(StoryState())
+    private val _accessToken = MutableStateFlow(StoryState())
     val accessToken: StateFlow<StoryState> = _accessToken.asStateFlow()
 
     fun removeToken() {

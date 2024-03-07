@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ssafy.domain.model.StoryBox
+import com.ssafy.presentation.R
 import com.ssafy.presentation.SettingNav
 import com.ssafy.presentation.ui.common.VistiImage
 import com.ssafy.presentation.ui.theme.Black20
@@ -38,7 +40,7 @@ fun HomeStoryBoxItem(homeStoryBox: StoryBox, navController: NavController) {
 
         Box(modifier = Modifier.size(200.dp)) {
 
-            VistiImage(homeStoryBox.boxImgPath, "진행중인 기록")
+            VistiImage(homeStoryBox.boxImgPath, stringResource(R.string.progress_story_message))
 
             Column(
                 modifier = Modifier

@@ -9,7 +9,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class StoryUseCase @Inject constructor(
-    private val repository: TokenRepository
+    private val repository: TokenRepository,
 ) {
     operator fun invoke(): Flow<Resource<String>> = flow {
         try {

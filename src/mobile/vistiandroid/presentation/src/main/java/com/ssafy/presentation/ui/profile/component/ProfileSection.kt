@@ -15,7 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.domain.model.MemberType
 
 @Composable
-fun ProfileSection(nickName : String, memberRole: MemberType, profileUrl: String?, storyCount : String, storyBoxCount : String) {
+fun ProfileSection(
+    nickName: String,
+    memberRole: MemberType,
+    profileUrl: String?,
+    storyCount: String,
+    storyBoxCount: String,
+) {
     Column(Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
